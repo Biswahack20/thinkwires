@@ -29,7 +29,7 @@ ENV NODE_ENV=production
 
 COPY --from=installer /app/apps/backend/package.json .
 COPY --from=installer /app/node_modules ./node_modules
-COPY --from=installer /app/apps/backend/dist ./dist
+COPY --from=installer /app/apps/backend/src ./src
 
 EXPOSE 5000
-CMD ["node", "dist/index.js"]
+CMD ["node", "src/server.js"]
