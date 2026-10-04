@@ -41,9 +41,7 @@ export function ThemeProvider({ children, defaultTheme }) {
       if (savedTheme === 'light' || savedTheme === 'dark') {
         return savedTheme;
       }
-      return window.matchMedia('(prefers-color-scheme: dark)').matches
-        ? 'dark'
-        : 'light';
+      return 'light';
     }
     return 'light';
   });
@@ -57,19 +55,7 @@ export function ThemeProvider({ children, defaultTheme }) {
     }
   }, [theme]);
 
-  // Listen for OS theme changes if user has not explicitly set a theme in localStorage
-  useEffect(() => {
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    const handleChange = (e) => {
-      const savedTheme = localStorage.getItem(STORAGE_KEY);
-      if (!savedTheme) {
-        setThemeState(e.matches ? 'dark' : 'light');
-      }
-    };
 
-    mediaQuery.addEventListener('change', handleChange);
-    return () => mediaQuery.removeEventListener('change', handleChange);
-  }, []);
 
   /**
    * Toggles the active theme between 'light' and 'dark'.
