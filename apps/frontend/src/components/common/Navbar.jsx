@@ -69,20 +69,23 @@ const Navbar = () => {
               <li>
                 <a
                   href="/"
-                  className={`${'Navbar-navLink'} ${'Navbar-active'}`}
+                  className={`Navbar-navLink ${(typeof window !== 'undefined' && window.location.pathname === '/') ? 'Navbar-active' : ''}`}
                 >
                   Home
                 </a>
               </li>
               <li>
-                <a href="/about" className={'Navbar-navLink'}>
+                <a 
+                  href="/about" 
+                  className={`Navbar-navLink ${(typeof window !== 'undefined' && window.location.pathname === '/about') ? 'Navbar-active' : ''}`}
+                >
                   About Us
                 </a>
               </li>
               <li className="Navbar-dropdownContainer">
                 <a
                   href="/services"
-                  className={'Navbar-navLink'}
+                  className={`Navbar-navLink ${(typeof window !== 'undefined' && window.location.pathname.startsWith('/services')) ? 'Navbar-active' : ''}`}
                   style={{ display: 'flex', alignItems: 'center', gap: '4px' }}
                 >
                   Services
@@ -124,27 +127,42 @@ const Navbar = () => {
                 </div>
               </li>
               <li>
-                <a href="/industries" className={'Navbar-navLink'}>
+                <a 
+                  href="/industries" 
+                  className={`Navbar-navLink ${(typeof window !== 'undefined' && window.location.pathname === '/industries') ? 'Navbar-active' : ''}`}
+                >
                   Industries
                 </a>
               </li>
               <li>
-                <a href="/hot-jobs" className={'Navbar-navLink'}>
+                <a 
+                  href="/hot-jobs" 
+                  className={`Navbar-navLink ${(typeof window !== 'undefined' && (window.location.pathname === '/hot-jobs' || window.location.pathname === '/jobs')) ? 'Navbar-active' : ''}`}
+                >
                   Hot Jobs
                 </a>
               </li>
               <li>
-                <a href="/talent-cloud" className={'Navbar-navLink'}>
+                <a 
+                  href="/talent-cloud" 
+                  className={`Navbar-navLink ${(typeof window !== 'undefined' && window.location.pathname === '/talent-cloud') ? 'Navbar-active' : ''}`}
+                >
                   Talent Cloud
                 </a>
               </li>
               <li>
-                <a href="/blog" className={'Navbar-navLink'}>
+                <a 
+                  href="/blog" 
+                  className={`Navbar-navLink ${(typeof window !== 'undefined' && window.location.pathname === '/blog') ? 'Navbar-active' : ''}`}
+                >
                   Blog
                 </a>
               </li>
               <li>
-                <a href="/contact" className={'Navbar-navLink'}>
+                <a 
+                  href="/contact" 
+                  className={`Navbar-navLink ${(typeof window !== 'undefined' && window.location.pathname === '/contact') ? 'Navbar-active' : ''}`}
+                >
                   Contact Us
                 </a>
               </li>
