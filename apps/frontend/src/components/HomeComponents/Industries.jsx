@@ -1,6 +1,7 @@
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchIndustries } from '../../store/slices/homeSlice';
+import SectionBadge from '../common/SectionBadge';
 
 const IconMonitor = () => (
   <svg
@@ -148,7 +149,7 @@ const Industries = () => {
     <section className={'Industries-section'}>
       <div className={'Industries-container'}>
         <div className={'Industries-header'}>
-          <span className={'Industries-subtitle'}>DOMAIN EXPERTISE</span>
+          <SectionBadge text="DOMAIN EXPERTISE" />
           <h2 className={'Industries-title'}>Industries We Empower</h2>
           <p className={'Industries-description'}>
             Supplying deep niche technical knowledge tailored to regulatory,

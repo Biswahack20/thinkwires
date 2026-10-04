@@ -1,42 +1,24 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
+import { fetchReports } from '../../store/slices/homeSlice';
+import SectionBadge from '../common/SectionBadge';
 
 const Reports = () => {
-  const reportsData = [
-    {
-      id: 1,
-      tag: 'AI & Data Science',
-      date: 'September 16, 2026',
-      title: 'Beyond the Code: How Data Science and AI...',
-      desc: "India's AI ecosystem is rapidly evolving. We explore how leading organizations are structuring their data teams and the back-end architectures driving them.",
-      image:
-        'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-    },
-    {
-      id: 2,
-      tag: 'Hiring Trends',
-      date: 'August 24, 2026',
-      title: "India's IT Job Market in 2026: Hiring Is...",
-      desc: 'Despite global headwinds, specialized engineering roles remain in high demand. See our comprehensive analysis on salary trends and retention strategies.',
-      image:
-        'https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-    },
-    {
-      id: 3,
-      tag: 'HR Technology',
-      date: 'August 01, 2026',
-      title: 'AI Recruitment in 2026: Smarter Matches, Longer Wait Times?',
-      desc: 'While automated screening and technical code evaluations have increased efficiency, average time-to-hire has shifted by 11 days due to multi-stage vetting.',
-      image:
-        'https://images.unsplash.com/photo-1573164713988-8665fc963095?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-    },
-  ];
+  const dispatch = useDispatch();
+  const { reports: reportsData, status } = useSelector((state) => state.home);
+
+  useEffect(() => {
+    if (status.reports === 'idle') {
+      dispatch(fetchReports());
+    }
+  }, [dispatch, status.reports]);
 
   return (
     <section className={'Reports-section'}>
       <div className={'Reports-container'}>
         <div className={'Reports-header'}>
           <div className={'Reports-headerLeft'}>
-            <span className={'Reports-subtitle'}>TALENT ADVISORY INSIGHTS</span>
+            <SectionBadge text="TALENT ADVISORY INSIGHTS" />
             <h2 className={'Reports-title'}>
               Our Latest Tech & Market Reports
             </h2>

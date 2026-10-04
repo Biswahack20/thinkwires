@@ -27,6 +27,28 @@ const Navbar = () => {
             <div className={'Navbar-topBarItem'}>
               <span>📞</span> +91 87225 55828
             </div>
+            <button 
+              onClick={toggleTheme}
+              className={'Navbar-topBarItem'}
+              aria-label="Toggle Theme"
+              style={{ 
+                background: 'none', 
+                border: 'none', 
+                color: 'inherit', 
+                cursor: 'pointer', 
+                padding: '0 0.5rem',
+                borderLeft: '1px solid var(--color-outline-variant)',
+                marginLeft: '0.5rem',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center'
+              }}
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <circle cx="12" cy="12" r="10"></circle>
+                <path d="M12 2a10 10 0 0 0 0 20V2z" fill="currentColor"></path>
+              </svg>
+            </button>
           </div>
         </div>
 
@@ -138,14 +160,6 @@ const Navbar = () => {
               className={'Navbar-btnOutline'}
             >
               Quick Apply
-            </button>
-            <button 
-              onClick={toggleTheme}
-              className={'Navbar-btnOutline'}
-              aria-label="Toggle Theme"
-              style={{ padding: '0.5rem', display: 'flex', alignItems: 'center' }}
-            >
-              {theme === 'dark' ? '☀️' : '🌙'}
             </button>
             <button className={'Navbar-userIconBtn'} aria-label="User Profile">
               <svg

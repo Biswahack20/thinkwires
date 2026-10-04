@@ -1,7 +1,8 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchOpenings } from '../../store/slices/homeSlice';
 import ApplyModal from '../common/ApplyModal';
+import SectionBadge from '../common/SectionBadge';
 
 const Openings = () => {
   const dispatch = useDispatch();
@@ -27,9 +28,7 @@ const Openings = () => {
       <div className={'Openings-container'}>
         <div className={'Openings-headerTop'}>
           <div className={'Openings-headerLeft'}>
-            <div className={'Openings-pipelineTag'}>
-              Live Deployment Pipeline
-            </div>
+            <SectionBadge text="Live Deployment Pipeline" />
             <h2 className={'Openings-title'}>High Priority Openings</h2>
             <p className={'Openings-subtext'}>
               Explore verified openings ready for immediate hire. Direct

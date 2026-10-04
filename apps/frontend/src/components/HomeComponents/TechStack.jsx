@@ -1,6 +1,7 @@
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchTechStack } from '../../store/slices/homeSlice';
+import SectionBadge from '../common/SectionBadge';
 
 const TechStack = () => {
   const dispatch = useDispatch();
@@ -22,9 +23,7 @@ const TechStack = () => {
       <div className={'TechStack-techStackContainer'}>
         <div className={'TechStack-techStackHeader'}>
           <div className={'TechStack-headerLeft'}>
-            <div className={'TechStack-label'}>
-              ENTERPRISE TECH STACK ECOSYSTEM
-            </div>
+            <SectionBadge text="ENTERPRISE TECH STACK ECOSYSTEM" />
             <div className={'TechStack-subtext'}>
               Engineered talent pools rigorously validated for leading
               enterprise platforms

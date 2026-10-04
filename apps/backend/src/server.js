@@ -178,6 +178,125 @@ app.post('/api/contact', (req, res) => {
   }
 });
 
+const processData = [
+  {
+    number: '01',
+    numberColor: '#bfdbfe',
+    title: 'Discovery & Scoping Call',
+    description: 'Share technical job descriptions and business constraints. Together we define tech stack nuances, seniorities, sprint cadences, and budget boundaries.',
+    delivery: 'Delivery: Tailored Talent Blueprint',
+    iconBg: '#eff6ff',
+    iconColor: '#3b82f6',
+    icon: 'search'
+  },
+  {
+    number: '02',
+    numberColor: '#cbd5e1',
+    title: 'Precision Pre-Vetted Match',
+    description: 'In just 48 to 72 hours, we source from our active bench and verified candidate pipelines. You receive curated dossiers with coding evaluations and notice verification.',
+    delivery: 'Delivery: Shortlist of Top 3 Contenders',
+    iconBg: '#eff6ff',
+    iconColor: '#3b82f6',
+    icon: 'users'
+  },
+  {
+    number: '03',
+    numberColor: '#bbf7d0',
+    title: 'Seamless Onboarding & Scale',
+    description: 'Our talent integrates immediately into your Slack, Jira, and Git repositories. ThinkWires oversees performance continuity, payroll, and scaling adjustments.',
+    delivery: 'Delivery: Instant Sprint Participation',
+    iconBg: '#22c55e',
+    iconColor: '#ffffff',
+    icon: 'check'
+  }
+];
+
+const capabilitiesData = [
+  {
+    id: 1,
+    eyebrow: '48-72 HR TURNAROUND',
+    eyebrowColor: '#4f46e5',
+    title: 'Staff Augmentation',
+    description: 'Scale your engineering and enterprise squads on-demand with senior pre-screened individual contributors or cohesive development pods.',
+    features: ['Flexible month-to-month contracts', 'Zero internal sourcing overhead', 'Instant replacement guarantee'],
+    iconBg: '#eef2ff',
+    iconColor: '#4f46e5',
+    icon: 'users',
+    linkColor: '#4f46e5',
+    linkText: 'Explore Staffing'
+  },
+  {
+    id: 2,
+    eyebrow: 'GLOBAL COMPLIANCE',
+    eyebrowColor: '#64748b',
+    title: 'Employer of Record (EOR)',
+    description: 'Hire anywhere in India, the US, and Canada without establishing foreign legal entities. We manage compliance, taxes, and local benefits seamlessly.',
+    features: ['Full statutory Indian & US compliance', 'Cross-currency automated payroll', 'IP & NDA contract protection'],
+    iconBg: '#e0f2fe',
+    iconColor: '#0ea5e9',
+    icon: 'globe',
+    linkColor: '#64748b',
+    linkText: 'Explore EOR Solutions'
+  },
+  {
+    id: 3,
+    eyebrow: 'EXECUTIVE PLACEMENT',
+    eyebrowColor: '#10b981',
+    title: 'Permanent & Search',
+    description: 'Precision headhunting for pivotal VP Engineering, Lead Architects, Product Directors, and niche domain specialists who drive longevity.',
+    features: ['Confidential executive sourcing', '90-day retention warranty', 'Behavioral & leadership appraisal'],
+    iconBg: '#dcfce7',
+    iconColor: '#10b981',
+    icon: 'star',
+    linkColor: '#10b981',
+    linkText: 'Explore Executive Search'
+  },
+  {
+    id: 4,
+    eyebrow: 'AUTOMATED OPERATIONS',
+    eyebrowColor: '#3b82f6',
+    title: 'Payroll Outsourcing',
+    description: 'End-to-end automated payroll execution, provident fund (PF) administration, ESIC compliance, tax withholdings, and employee self-service.',
+    features: ['100% statutory error-free record', 'Digital payslip dispatch portal', 'Direct tax authority remittances'],
+    iconBg: '#eef2ff',
+    iconColor: '#4f46e5',
+    icon: 'document',
+    linkColor: '#3b82f6',
+    linkText: 'Explore Payroll Systems'
+  }
+];
+
+const reportsData = [
+  {
+    id: 1,
+    tag: 'AI & Data Science',
+    date: 'September 16, 2026',
+    title: 'Beyond the Code: How Data Science and AI...',
+    desc: "India's AI ecosystem is rapidly evolving. We explore how leading organizations are structuring their data teams and the back-end architectures driving them.",
+    image: 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+  },
+  {
+    id: 2,
+    tag: 'Hiring Trends',
+    date: 'August 24, 2026',
+    title: "India's IT Job Market in 2026: Hiring Is...",
+    desc: 'Despite global headwinds, specialized engineering roles remain in high demand. See our comprehensive analysis on salary trends and retention strategies.',
+    image: 'https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+  },
+  {
+    id: 3,
+    tag: 'HR Technology',
+    date: 'August 01, 2026',
+    title: 'AI Recruitment in 2026: Smarter Matches, Longer Wait Times?',
+    desc: 'While automated screening and technical code evaluations have increased efficiency, average time-to-hire has shifted by 11 days due to multi-stage vetting.',
+    image: 'https://images.unsplash.com/photo-1573164713988-8665fc963095?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+  }
+];
+
+app.get('/api/process', (req, res) => res.json(processData));
+app.get('/api/capabilities', (req, res) => res.json(capabilitiesData));
+app.get('/api/reports', (req, res) => res.json(reportsData));
+
 app.listen(PORT, () => {
   console.log(`Backend server running on port ${PORT}`);
 });

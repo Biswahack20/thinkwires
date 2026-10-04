@@ -121,6 +121,7 @@ body {
   padding: 0;
   box-sizing: border-box;
   font-family:
+    'Plus Jakarta Sans',
     system-ui,
     -apple-system,
     BlinkMacSystemFont,
@@ -331,10 +332,6 @@ body {
 .Capabilities-capabilitiesSection {
   background-color:  var(--color-surface-container-lowest);
   padding: 80px 20px;
-  font-family:
-    system-ui,
-    -apple-system,
-    sans-serif;
 }
 
 .Capabilities-container {
@@ -552,10 +549,6 @@ body {
 .Industries-section {
   background-color:  var(--color-on-primary);
   padding: 6rem 2rem;
-  font-family:
-    system-ui,
-    -apple-system,
-    sans-serif;
   text-align: center;
 }
 
@@ -1000,6 +993,28 @@ body {
   }
 }
 
+/* --- Shared Section Badge --- */
+.section-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  background-color: var(--color-secondary-fixed);
+  color: var(--color-cobalt-bright);
+  padding: 0.5rem 1rem;
+  border-radius: var(--rounded);
+  font-size: 0.875rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.section-badge-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 @media (max-width: 768px) {
   .Openings-uploadCtaBanner {
     flex-direction: column;
@@ -1017,10 +1032,6 @@ body {
 .Process-section {
   background-color:  var(--color-slate-surface);
   padding: 6rem 2rem;
-  font-family:
-    system-ui,
-    -apple-system,
-    sans-serif;
 }
 
 .Process-container {
@@ -1145,10 +1156,6 @@ body {
 .Reports-section {
   background-color:  var(--color-slate-surface);
   padding: 6rem 2rem;
-  font-family:
-    system-ui,
-    -apple-system,
-    sans-serif;
 }
 
 .Reports-container {
@@ -1312,10 +1319,6 @@ body {
 .StatsJourney-section {
   background-color: #0b1120; /* Very dark blue matching the image */
   padding: 6rem 2rem;
-  font-family:
-    system-ui,
-    -apple-system,
-    sans-serif;
 }
 
 .StatsJourney-container {
@@ -1574,10 +1577,6 @@ body {
 .CTA-section {
   padding: 6rem 2rem;
   background-color:  var(--color-on-primary);
-  font-family:
-    system-ui,
-    -apple-system,
-    sans-serif;
   display: flex;
   justify-content: center;
 }
@@ -1817,10 +1816,6 @@ body {
 .Footer-footer {
   background-color:  var(--color-slate-surface);
   padding: 3rem 2rem 1.5rem;
-  font-family:
-    system-ui,
-    -apple-system,
-    sans-serif;
   border-top: 1px solid  var(--color-surface-container);
 }
 
