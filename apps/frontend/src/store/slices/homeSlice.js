@@ -31,6 +31,21 @@ export const fetchIndustries = createAsyncThunk(
   }
 );
 
+export const fetchProcess = createAsyncThunk('home/fetchProcess', async () => {
+  const response = await fetch(`${API_BASE}/process`);
+  return await response.json();
+});
+
+export const fetchCapabilities = createAsyncThunk('home/fetchCapabilities', async () => {
+  const response = await fetch(`${API_BASE}/capabilities`);
+  return await response.json();
+});
+
+export const fetchReports = createAsyncThunk('home/fetchReports', async () => {
+  const response = await fetch(`${API_BASE}/reports`);
+  return await response.json();
+});
+
 const homeSlice = createSlice({
   name: 'home',
   initialState: {
@@ -43,17 +58,26 @@ const homeSlice = createSlice({
       clientRetention: 0,
     },
     industries: [],
+    process: [],
+    capabilities: [],
+    reports: [],
     status: {
       techStack: 'idle',
       openings: 'idle',
       stats: 'idle',
       industries: 'idle',
+      process: 'idle',
+      capabilities: 'idle',
+      reports: 'idle',
     },
     errors: {
       techStack: null,
       openings: null,
       stats: null,
       industries: null,
+      process: null,
+      capabilities: null,
+      reports: null,
     },
   },
   reducers: {},
@@ -106,7 +130,19 @@ const homeSlice = createSlice({
       .addCase(fetchIndustries.rejected, (state, action) => {
         state.status.industries = 'failed';
         state.errors.industries = action.error.message;
-      });
+      })
+      // Process
+      .addCase(fetchProcess.pending, (state) => { state.status.process = 'loading'; })
+      .addCase(fetchProcess.fulfilled, (state, action) => { state.status.process = 'succeeded'; state.process = action.payload; })
+      .addCase(fetchProcess.rejected, (state, action) => { state.status.process = 'failed'; state.errors.process = action.error.message; })
+      // Capabilities
+      .addCase(fetchCapabilities.pending, (state) => { state.status.capabilities = 'loading'; })
+      .addCase(fetchCapabilities.fulfilled, (state, action) => { state.status.capabilities = 'succeeded'; state.capabilities = action.payload; })
+      .addCase(fetchCapabilities.rejected, (state, action) => { state.status.capabilities = 'failed'; state.errors.capabilities = action.error.message; })
+      // Reports
+      .addCase(fetchReports.pending, (state) => { state.status.reports = 'loading'; })
+      .addCase(fetchReports.fulfilled, (state, action) => { state.status.reports = 'succeeded'; state.reports = action.payload; })
+      .addCase(fetchReports.rejected, (state, action) => { state.status.reports = 'failed'; state.errors.reports = action.error.message; });
   },
 });
 

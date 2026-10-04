@@ -1,6 +1,7 @@
-import { useEffect } from 'react';
+import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchStats } from '../../store/slices/homeSlice';
+import SectionBadge from '../common/SectionBadge';
 
 const StatsJourney = () => {
   const dispatch = useDispatch();
@@ -86,7 +87,7 @@ const StatsJourney = () => {
 
         {/* Timeline Section */}
         <div className={'StatsJourney-timelineHeader'}>
-          <span className={'StatsJourney-timelineSubtitle'}>OUR JOURNEY</span>
+          <SectionBadge text="OUR JOURNEY" />
           <h2 className={'StatsJourney-timelineTitle'}>
             Milestones of Exponential Growth
           </h2>
