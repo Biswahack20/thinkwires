@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import logo from '../../assets/logo/logo.png';
 import ApplyModal from './ApplyModal';
 import { useTheme } from '../../useTheme';
@@ -6,6 +7,9 @@ import { useTheme } from '../../useTheme';
 const Navbar = () => {
   const [isApplyModalOpen, setIsApplyModalOpen] = useState(false);
   const { theme, toggleTheme } = useTheme();
+  const location = useLocation();
+  const isHome = location.pathname === '/';
+  const isAbout = location.pathname.startsWith('/about');
 
   return (
     <>
@@ -56,28 +60,31 @@ const Navbar = () => {
         <nav className={'Navbar-mainNav'}>
           <div className={'Navbar-leftNavGroup'}>
             <div className={'Navbar-logoContainer'}>
-              <a href="/">
+              <Link to="/">
                 <img
                   src={logo}
                   alt="ThinkWires Logo"
                   className={'Navbar-logo'}
                 />
-              </a>
+              </Link>
             </div>
 
             <ul className={'Navbar-navLinks'}>
               <li>
-                <a
-                  href="/"
-                  className={`${'Navbar-navLink'} ${'Navbar-active'}`}
+                <Link
+                  to="/"
+                  className={`${'Navbar-navLink'} ${isHome ? 'Navbar-active' : ''}`}
                 >
                   Home
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="/about" className={'Navbar-navLink'}>
+                <Link
+                  to="/about"
+                  className={`${'Navbar-navLink'} ${isAbout ? 'Navbar-active' : ''}`}
+                >
                   About Us
-                </a>
+                </Link>
               </li>
               <li className="Navbar-dropdownContainer">
                 <a

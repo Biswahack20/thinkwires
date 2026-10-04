@@ -2440,3 +2440,1397 @@ body {
     gap: 1.25rem;
   }
 }
+
+/* ==========================================================================
+   ABOUT PAGE STYLES
+   ========================================================================== */
+
+.AboutPage-wrapper {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-background);
+  color: var(--color-on-background);
+}
+
+.AboutPage-main {
+  flex: 1;
+}
+
+/* --- About Hero --- */
+.AboutHero-section {
+  padding: 4rem 2rem 5rem 2rem;
+  background: radial-gradient(circle at 80% 20%, rgba(37, 99, 235, 0.04) 0%, transparent 60%),
+              radial-gradient(circle at 10% 80%, rgba(34, 197, 94, 0.03) 0%, transparent 50%),
+              var(--color-background);
+  border-bottom: 1px solid var(--color-card-stroke);
+}
+
+.AboutHero-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 3.5rem;
+  align-items: center;
+}
+
+.AboutHero-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.AboutHero-breadcrumbs {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  color: var(--color-outline);
+}
+
+.AboutHero-breadcrumbSeparator {
+  opacity: 0.4;
+}
+
+.AboutHero-breadcrumbLink {
+  color: var(--color-outline);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.AboutHero-breadcrumbLink:hover {
+  color: var(--color-cobalt-bright);
+}
+
+.AboutHero-breadcrumbCurrent {
+  color: var(--color-cobalt-bright);
+  font-weight: 700;
+}
+
+.AboutHero-title {
+  font-size: 3rem;
+  font-weight: 800;
+  color: var(--color-navy-dark);
+  line-height: 1.15;
+  letter-spacing: -0.02em;
+  margin: 0.5rem 0 1.5rem 0;
+}
+
+.AboutHero-titleHighlight {
+  color: var(--color-cobalt-bright);
+  display: inline;
+}
+
+.AboutHero-description {
+  font-size: 1.125rem;
+  line-height: 1.75;
+  color: var(--color-outline);
+  margin-bottom: 2.25rem;
+  max-width: 600px;
+}
+
+.AboutHero-actions {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.AboutHero-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.875rem 1.65rem;
+  border-radius: var(--rounded);
+  font-size: 0.9375rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.AboutHero-btnPrimary {
+  background-color: var(--color-cobalt-bright);
+  color: var(--color-on-primary);
+  border: 1px solid var(--color-cobalt-bright);
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.25);
+}
+
+.AboutHero-btnPrimary:hover {
+  background-color: #1D4ED8;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(37, 99, 235, 0.35);
+}
+
+.AboutHero-btnOutline {
+  background-color: transparent;
+  color: var(--color-navy-dark);
+  border: 1.5px solid var(--color-card-stroke);
+}
+
+.AboutHero-btnOutline:hover {
+  background-color: var(--color-surface-container-low);
+  border-color: var(--color-outline-variant);
+  transform: translateY(-2px);
+}
+
+.AboutHero-mediaWrapper {
+  position: relative;
+  width: 100%;
+}
+
+.AboutHero-imageCard {
+  position: relative;
+  border-radius: var(--rounded-xl);
+  overflow: hidden;
+  box-shadow: var(--elevation-2);
+  border: 1px solid var(--color-card-stroke);
+  background-color: var(--color-surface-container-low);
+}
+
+.AboutHero-image {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  display: block;
+}
+
+.AboutHero-imageOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(15, 23, 42, 0.05) 0%, rgba(15, 23, 42, 0.4) 100%);
+  pointer-events: none;
+}
+
+.AboutHero-floatingBadge {
+  position: absolute;
+  bottom: 1.5rem;
+  left: 1.5rem;
+  right: 1.5rem;
+  background: rgba(15, 23, 42, 0.88);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: var(--rounded-lg);
+  padding: 0.875rem 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  color: #FFFFFF;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+}
+
+.AboutHero-floatingBadgeDot {
+  width: 10px;
+  height: 10px;
+  background-color: var(--color-emerald-accent);
+  border-radius: 50%;
+  box-shadow: 0 0 10px var(--color-emerald-accent);
+  flex-shrink: 0;
+}
+
+.AboutHero-floatingBadgeText {
+  display: flex;
+  flex-direction: column;
+}
+
+.AboutHero-floatingBadgeTitle {
+  font-size: 0.875rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+.AboutHero-floatingBadgeSubtitle {
+  font-size: 0.75rem;
+  color: #94A3B8;
+  font-weight: 500;
+}
+
+.AboutHero-techFrame {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(15, 23, 42, 0.8);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: var(--rounded-full);
+  padding: 0.35rem 0.75rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #FFFFFF;
+}
+
+.AboutHero-techStat {
+  color: #38BDF8;
+}
+
+.AboutHero-techStatus {
+  color: var(--color-emerald-accent);
+  font-size: 0.65rem;
+  letter-spacing: 0.05em;
+}
+
+/* --- Stats Strip --- */
+.StatsStrip-section {
+  padding: 0 2rem 3rem 2rem;
+  margin-top: -2rem;
+  position: relative;
+  z-index: 10;
+}
+
+.StatsStrip-container {
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.StatsStrip-card {
+  background-color: var(--color-surface-container-lowest);
+  border: 1px solid var(--color-card-stroke);
+  border-radius: var(--rounded-lg);
+  box-shadow: var(--elevation-2);
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  padding: 1.75rem 0;
+}
+
+.StatsStrip-item {
+  padding: 0 2rem;
+  border-right: 1px solid var(--color-card-stroke);
+  display: flex;
+  flex-direction: column;
+}
+
+.StatsStrip-item:last-child {
+  border-right: none;
+}
+
+.StatsStrip-topRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0.35rem;
+}
+
+.StatsStrip-value {
+  font-size: 2.25rem;
+  font-weight: 800;
+  color: var(--color-navy-dark);
+  letter-spacing: -0.02em;
+  display: flex;
+  align-items: baseline;
+}
+
+.StatsStrip-unit {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--color-cobalt-bright);
+  margin-left: 0.25rem;
+}
+
+.StatsStrip-indicatorDot {
+  width: 10px;
+  height: 10px;
+  background-color: var(--color-cobalt-bright);
+  border-radius: 50%;
+  box-shadow: 0 0 8px var(--color-cobalt-bright);
+}
+
+.StatsStrip-indicatorIcon {
+  color: var(--color-emerald-accent);
+  display: flex;
+  align-items: center;
+}
+
+.StatsStrip-indicatorIcon.shield {
+  color: var(--color-cobalt-bright);
+}
+
+.StatsStrip-label {
+  font-size: 0.9375rem;
+  font-weight: 700;
+  color: var(--color-navy-dark);
+  margin-bottom: 0.2rem;
+}
+
+.StatsStrip-subLabel {
+  font-size: 0.8125rem;
+  color: var(--color-outline);
+  line-height: 1.4;
+}
+
+/* --- Aggregator Model --- */
+.AggregatorModel-section {
+  padding: 5rem 2rem;
+  background-color: var(--color-slate-surface);
+  border-bottom: 1px solid var(--color-card-stroke);
+}
+
+.AggregatorModel-container {
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.AggregatorModel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 3.5rem;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.AggregatorModel-headerLeft {
+  max-width: 720px;
+}
+
+.AggregatorModel-title {
+  font-size: 2.35rem;
+  font-weight: 800;
+  color: var(--color-navy-dark);
+  letter-spacing: -0.02em;
+  margin: 0.5rem 0 1rem 0;
+}
+
+.AggregatorModel-subtitle {
+  font-size: 1.05rem;
+  line-height: 1.65;
+  color: var(--color-outline);
+}
+
+.AggregatorModel-statusBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  background-color: var(--color-surface-container-lowest);
+  border: 1px solid var(--color-card-stroke);
+  border-radius: var(--rounded-full);
+  padding: 0.5rem 1.15rem;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--color-navy-dark);
+  box-shadow: var(--elevation-1);
+}
+
+.AggregatorModel-statusDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--color-emerald-accent);
+  box-shadow: 0 0 8px var(--color-emerald-accent);
+}
+
+.AggregatorModel-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+}
+
+.AggregatorModel-card {
+  background-color: var(--color-surface-container-lowest);
+  border: 1px solid var(--color-card-stroke);
+  border-radius: var(--rounded-lg);
+  padding: 2rem 1.65rem;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.25s ease;
+  position: relative;
+}
+
+.AggregatorModel-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--color-cobalt-bright);
+  box-shadow: 0 14px 28px -6px rgba(37, 99, 235, 0.12);
+}
+
+.AggregatorModel-iconBox {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--rounded-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+
+.AggregatorModel-icon--blue {
+  background-color: #EFF6FF;
+  color: #2563EB;
+}
+
+.AggregatorModel-icon--dark {
+  background-color: var(--color-navy-dark);
+  color: #FFFFFF;
+}
+
+.AggregatorModel-icon--green {
+  background-color: #F0FDF4;
+  color: #16A34A;
+}
+
+.AggregatorModel-icon--indigo {
+  background-color: #EEF2FF;
+  color: #4F46E5;
+}
+
+.AggregatorModel-cardTitle {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--color-navy-dark);
+  margin-bottom: 0.75rem;
+  line-height: 1.35;
+}
+
+.AggregatorModel-cardDescription {
+  font-size: 0.875rem;
+  line-height: 1.65;
+  color: var(--color-outline);
+  margin-bottom: 1.75rem;
+  flex: 1;
+}
+
+.AggregatorModel-cardFooter {
+  padding-top: 1rem;
+  border-top: 1px solid var(--color-surface-container-low);
+}
+
+.AggregatorModel-cardLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--color-cobalt-bright);
+  text-decoration: none;
+  transition: gap 0.2s ease;
+}
+
+.AggregatorModel-cardLink:hover {
+  gap: 0.65rem;
+}
+
+/* --- Philosophy --- */
+.Philosophy-section {
+  padding: 5rem 2rem;
+  background-color: var(--color-background);
+}
+
+.Philosophy-container {
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.Philosophy-panel {
+  background-color: var(--color-navy-dark);
+  border-radius: var(--rounded-xl);
+  padding: 4rem 3.5rem;
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 3.5rem;
+  align-items: center;
+  color: #FFFFFF;
+  box-shadow: var(--elevation-3);
+  position: relative;
+  overflow: hidden;
+}
+
+.Philosophy-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--color-emerald-accent);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom: 1.25rem;
+}
+
+.Philosophy-badgeDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--color-emerald-accent);
+  box-shadow: 0 0 8px var(--color-emerald-accent);
+}
+
+.Philosophy-heading {
+  font-size: 2.25rem;
+  font-weight: 800;
+  line-height: 1.25;
+  color: #FFFFFF;
+  margin-bottom: 1.5rem;
+  letter-spacing: -0.01em;
+}
+
+.Philosophy-description {
+  font-size: 1.05rem;
+  line-height: 1.8;
+  color: #94A3B8;
+  margin-bottom: 2.5rem;
+}
+
+.Philosophy-metricsRow {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.Philosophy-metricCard {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: var(--rounded-md);
+  padding: 1.25rem 1.5rem;
+}
+
+.Philosophy-metricValue {
+  font-size: 2rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.25rem;
+}
+
+.Philosophy-metric--green {
+  color: #22C55E;
+}
+
+.Philosophy-metric--blue {
+  color: #38BDF8;
+}
+
+.Philosophy-metricLabel {
+  font-size: 0.8125rem;
+  color: #CBD5E1;
+  font-weight: 500;
+}
+
+.Philosophy-visual {
+  position: relative;
+}
+
+.Philosophy-imageWrapper {
+  position: relative;
+  border-radius: var(--rounded-lg);
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.5);
+}
+
+.Philosophy-image {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  display: block;
+}
+
+.Philosophy-imageOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 40%, rgba(15, 23, 42, 0.6) 100%);
+}
+
+.Philosophy-imageTag {
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: var(--rounded-full);
+  padding: 0.4rem 0.85rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #FFFFFF;
+}
+
+/* --- Leadership Team --- */
+.LeadershipTeam-section {
+  padding: 6rem 2rem;
+  background-color: var(--color-slate-surface);
+  border-bottom: 1px solid var(--color-card-stroke);
+}
+
+.LeadershipTeam-container {
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.LeadershipTeam-header {
+  text-align: center;
+  max-width: 720px;
+  margin: 0 auto 3.5rem auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.LeadershipTeam-title {
+  font-size: 2.35rem;
+  font-weight: 800;
+  color: var(--color-navy-dark);
+  letter-spacing: -0.02em;
+  margin: 0.5rem 0 1rem 0;
+}
+
+.LeadershipTeam-subtitle {
+  font-size: 1.05rem;
+  line-height: 1.65;
+  color: var(--color-outline);
+}
+
+.LeadershipTeam-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+}
+
+.LeadershipTeam-card {
+  background-color: var(--color-surface-container-lowest);
+  border: 1px solid var(--color-card-stroke);
+  border-radius: var(--rounded-lg);
+  padding: 2.25rem;
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--elevation-1);
+  transition: all 0.25s ease;
+}
+
+.LeadershipTeam-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--color-cobalt-bright);
+  box-shadow: var(--elevation-2);
+}
+
+.LeadershipTeam-card--wide {
+  grid-column: 1 / -1;
+  background: linear-gradient(135deg, #FFFFFF 0%, #F8FAFC 100%);
+  border-color: #CBD5E1;
+}
+
+.LeadershipTeam-cardTop {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.LeadershipTeam-avatarWrapper {
+  flex-shrink: 0;
+}
+
+.LeadershipTeam-avatar {
+  width: 60px;
+  height: 60px;
+  border-radius: var(--rounded-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.35rem;
+  font-weight: 800;
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.15);
+}
+
+.LeadershipTeam-info {
+  flex: 1;
+}
+
+.LeadershipTeam-nameRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.LeadershipTeam-name {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: var(--color-navy-dark);
+  margin: 0;
+}
+
+.LeadershipTeam-linkedin {
+  color: #0A66C2;
+  transition: opacity 0.2s;
+  display: flex;
+  align-items: center;
+}
+
+.LeadershipTeam-linkedin:hover {
+  opacity: 0.75;
+}
+
+.LeadershipTeam-designation {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-cobalt-bright);
+  margin: 0.25rem 0 0.5rem 0;
+}
+
+.LeadershipTeam-experienceBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--color-outline);
+  background-color: var(--color-surface-container-low);
+  padding: 0.25rem 0.65rem;
+  border-radius: var(--rounded-full);
+}
+
+.LeadershipTeam-experienceDot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+}
+
+.LeadershipTeam-bio {
+  font-size: 0.925rem;
+  line-height: 1.65;
+  color: var(--color-outline);
+  margin-bottom: 1.5rem;
+  flex: 1;
+}
+
+.LeadershipTeam-companiesBlock {
+  margin-bottom: 1.25rem;
+  padding: 1rem 1.25rem;
+  background-color: var(--color-slate-surface);
+  border-radius: var(--rounded-md);
+  border: 1px solid var(--color-card-stroke);
+}
+
+.LeadershipTeam-companiesTitle {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--color-outline);
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.LeadershipTeam-companyChips {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.LeadershipTeam-companyChip {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  padding: 0.35rem 0.75rem;
+  background-color: #FFFFFF;
+  border: 1px solid var(--color-card-stroke);
+  border-radius: var(--rounded-sm);
+  color: var(--color-navy-dark);
+}
+
+.LeadershipTeam-footerTag {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--color-cobalt-bright);
+  background-color: #EFF6FF;
+  padding: 0.35rem 0.85rem;
+  border-radius: var(--rounded-full);
+  width: fit-content;
+}
+
+.LeadershipTeam-footerTagIcon {
+  font-weight: 700;
+  opacity: 0.6;
+}
+
+/* --- Growth Timeline --- */
+.GrowthTimeline-section {
+  padding: 5rem 2rem;
+  background-color: var(--color-background);
+  border-bottom: 1px solid var(--color-card-stroke);
+}
+
+.GrowthTimeline-container {
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.GrowthTimeline-header {
+  text-align: center;
+  max-width: 720px;
+  margin: 0 auto 3.5rem auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.GrowthTimeline-title {
+  font-size: 2.35rem;
+  font-weight: 800;
+  color: var(--color-navy-dark);
+  letter-spacing: -0.02em;
+  margin: 0.5rem 0 1rem 0;
+}
+
+.GrowthTimeline-subtitle {
+  font-size: 1.05rem;
+  line-height: 1.65;
+  color: var(--color-outline);
+}
+
+.GrowthTimeline-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
+}
+
+.GrowthTimeline-card {
+  background-color: var(--color-surface-container-lowest);
+  border: 1px solid var(--color-card-stroke);
+  border-radius: var(--rounded-lg);
+  padding: 2rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.25s ease;
+}
+
+.GrowthTimeline-card:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--elevation-1);
+}
+
+.GrowthTimeline-card--active {
+  border-color: var(--color-cobalt-bright);
+  box-shadow: 0 8px 24px -4px rgba(37, 99, 235, 0.15);
+}
+
+.GrowthTimeline-card--future {
+  border-style: dashed;
+  border-color: var(--color-outline-variant);
+  background-color: var(--color-slate-surface);
+}
+
+.GrowthTimeline-cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.25rem;
+}
+
+.GrowthTimeline-year {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: var(--color-navy-dark);
+  letter-spacing: -0.02em;
+}
+
+.GrowthTimeline-tag {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 0.25rem 0.65rem;
+  border-radius: var(--rounded-full);
+}
+
+.GrowthTimeline-tag--default {
+  background-color: #F1F5F9;
+  color: var(--color-outline);
+}
+
+.GrowthTimeline-tag--active {
+  background-color: #EFF6FF;
+  color: var(--color-cobalt-bright);
+}
+
+.GrowthTimeline-tag--future {
+  background-color: #F0FDF4;
+  color: #16A34A;
+}
+
+.GrowthTimeline-cardTitle {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: var(--color-navy-dark);
+  margin-bottom: 0.5rem;
+}
+
+.GrowthTimeline-cardDescription {
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: var(--color-outline);
+  margin-bottom: 1.5rem;
+  flex: 1;
+}
+
+.GrowthTimeline-cardFooter {
+  margin-top: auto;
+  padding-top: 1rem;
+}
+
+.GrowthTimeline-stepIndicator {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.GrowthTimeline-stepDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--color-cobalt-bright);
+}
+
+.GrowthTimeline-stepLine {
+  height: 2px;
+  flex: 1;
+  background-color: var(--color-card-stroke);
+}
+
+/* --- Methodology --- */
+.Methodology-section {
+  padding: 5rem 2rem;
+  background-color: var(--color-slate-surface);
+  border-bottom: 1px solid var(--color-card-stroke);
+}
+
+.Methodology-container {
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.Methodology-header {
+  text-align: center;
+  max-width: 720px;
+  margin: 0 auto 3.5rem auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.Methodology-title {
+  font-size: 2.35rem;
+  font-weight: 800;
+  color: var(--color-navy-dark);
+  letter-spacing: -0.02em;
+  margin: 0.5rem 0 1rem 0;
+}
+
+.Methodology-subtitle {
+  font-size: 1.05rem;
+  line-height: 1.65;
+  color: var(--color-outline);
+}
+
+.Methodology-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+}
+
+.Methodology-card {
+  background-color: var(--color-surface-container-lowest);
+  border: 1px solid var(--color-card-stroke);
+  border-radius: var(--rounded-lg);
+  padding: 2.25rem;
+  display: flex;
+  flex-direction: column;
+  transition: all 0.25s ease;
+}
+
+.Methodology-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--color-cobalt-bright);
+  box-shadow: var(--elevation-2);
+}
+
+.Methodology-cardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+}
+
+.Methodology-stepNumber {
+  font-size: 2rem;
+  font-weight: 800;
+  color: var(--color-outline-variant);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+}
+
+.Methodology-iconBox {
+  width: 48px;
+  height: 48px;
+  border-radius: var(--rounded-md);
+  background-color: #EFF6FF;
+  color: var(--color-cobalt-bright);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.Methodology-cardTitle {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--color-navy-dark);
+  margin-bottom: 0.75rem;
+  line-height: 1.35;
+}
+
+.Methodology-cardDescription {
+  font-size: 0.9rem;
+  line-height: 1.65;
+  color: var(--color-outline);
+  margin-bottom: 1.5rem;
+  flex: 1;
+}
+
+.Methodology-cardFooter {
+  padding-top: 1rem;
+  border-top: 1px solid var(--color-surface-container-low);
+}
+
+.Methodology-statusTag {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--color-cobalt-bright);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+/* --- About CTA & Lead Capture --- */
+.AboutCTA-section {
+  padding: 6rem 2rem;
+  background-color: var(--color-navy-dark);
+  color: #FFFFFF;
+}
+
+.AboutCTA-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 4rem;
+  align-items: flex-start;
+}
+
+.AboutCTA-info {
+  max-width: 600px;
+}
+
+.AboutCTA-statusBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.9rem;
+  background: rgba(34, 197, 94, 0.12);
+  border: 1px solid rgba(34, 197, 94, 0.35);
+  border-radius: var(--rounded-full);
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: var(--color-emerald-accent);
+  letter-spacing: 0.05em;
+  margin-bottom: 1.5rem;
+}
+
+.AboutCTA-statusDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: var(--color-emerald-accent);
+  box-shadow: 0 0 8px var(--color-emerald-accent);
+}
+
+.AboutCTA-heading {
+  font-size: 2.5rem;
+  font-weight: 800;
+  line-height: 1.2;
+  color: #FFFFFF;
+  margin-bottom: 1.25rem;
+  letter-spacing: -0.01em;
+}
+
+.AboutCTA-description {
+  font-size: 1.05rem;
+  line-height: 1.7;
+  color: #94A3B8;
+  margin-bottom: 2.5rem;
+}
+
+.AboutCTA-contactDetails {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.AboutCTA-detailItem {
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+}
+
+.AboutCTA-iconBox {
+  width: 42px;
+  height: 42px;
+  border-radius: var(--rounded);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #38BDF8;
+  flex-shrink: 0;
+}
+
+.AboutCTA-detailTitle {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #64748B;
+  display: block;
+  margin-bottom: 0.25rem;
+}
+
+.AboutCTA-detailText {
+  font-size: 0.925rem;
+  color: #E2E8F0;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.AboutCTA-link {
+  color: #38BDF8;
+  text-decoration: none;
+  transition: text-decoration 0.2s;
+}
+
+.AboutCTA-link:hover {
+  text-decoration: underline;
+}
+
+.AboutCTA-formCard {
+  background-color: #FFFFFF;
+  border-radius: var(--rounded-xl);
+  padding: 2.5rem;
+  color: var(--color-navy-dark);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+}
+
+.AboutCTA-formTitle {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--color-navy-dark);
+  margin-bottom: 0.4rem;
+}
+
+.AboutCTA-formSubtitle {
+  font-size: 0.875rem;
+  color: var(--color-outline);
+  margin-bottom: 1.75rem;
+}
+
+.AboutCTA-errorAlert {
+  background-color: #FEF2F2;
+  border: 1px solid #FCA5A5;
+  color: #B91C1C;
+  padding: 0.75rem 1rem;
+  border-radius: var(--rounded);
+  font-size: 0.875rem;
+  margin-bottom: 1.25rem;
+}
+
+.AboutCTA-successBox {
+  padding: 2rem 1rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.AboutCTA-successHeading {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: var(--color-navy-dark);
+  margin: 1rem 0 0.5rem 0;
+}
+
+.AboutCTA-successMsg {
+  font-size: 0.925rem;
+  color: var(--color-outline);
+  line-height: 1.6;
+}
+
+.AboutCTA-fieldGroup {
+  margin-bottom: 1.25rem;
+}
+
+.AboutCTA-label {
+  display: block;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: var(--color-navy-dark);
+  margin-bottom: 0.4rem;
+}
+
+.AboutCTA-input,
+.AboutCTA-select,
+.AboutCTA-textarea {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1.5px solid var(--color-card-stroke);
+  border-radius: var(--rounded);
+  font-size: 0.9rem;
+  background-color: #F8FAFC;
+  color: var(--color-navy-dark);
+  outline: none;
+  transition: all 0.2s ease;
+  font-family: inherit;
+}
+
+.AboutCTA-input:focus,
+.AboutCTA-select:focus,
+.AboutCTA-textarea:focus {
+  border-color: var(--color-cobalt-bright);
+  background-color: #FFFFFF;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+}
+
+.AboutCTA-submitBtn {
+  width: 100%;
+  padding: 0.875rem 1.5rem;
+  background-color: var(--color-cobalt-bright);
+  color: #FFFFFF;
+  border: none;
+  border-radius: var(--rounded);
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 14px rgba(37, 99, 235, 0.35);
+  margin-top: 0.5rem;
+}
+
+.AboutCTA-submitBtn:hover:not(:disabled) {
+  background-color: #1D4ED8;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(37, 99, 235, 0.45);
+}
+
+.AboutCTA-submitBtn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.AboutCTA-guarantee {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  font-size: 0.75rem;
+  color: var(--color-outline);
+  margin-top: 1rem;
+}
+
+/* --- Responsive Adjustments for About Page --- */
+@media (max-width: 1024px) {
+  .AboutHero-container {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+
+  .StatsStrip-card {
+    grid-template-columns: repeat(2, 1fr);
+    row-gap: 2rem;
+  }
+
+  .StatsStrip-item:nth-child(2) {
+    border-right: none;
+  }
+
+  .AggregatorModel-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .Philosophy-panel {
+    grid-template-columns: 1fr;
+  }
+
+  .GrowthTimeline-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .AboutCTA-container {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .AboutHero-title {
+    font-size: 2.25rem;
+  }
+
+  .StatsStrip-card {
+    grid-template-columns: 1fr;
+    row-gap: 1.5rem;
+  }
+
+  .StatsStrip-item {
+    border-right: none;
+    border-bottom: 1px solid var(--color-card-stroke);
+    padding-bottom: 1.5rem;
+  }
+
+  .StatsStrip-item:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+  }
+
+  .AggregatorModel-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .Philosophy-panel {
+    padding: 2.5rem 1.75rem;
+  }
+
+  .Philosophy-heading {
+    font-size: 1.75rem;
+  }
+
+  .Philosophy-metricsRow {
+    flex-direction: column;
+  }
+
+  .LeadershipTeam-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .GrowthTimeline-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .Methodology-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .AboutCTA-heading {
+    font-size: 2rem;
+  }
+
+  .AboutCTA-formCard {
+    padding: 1.75rem;
+  }
+}
+
