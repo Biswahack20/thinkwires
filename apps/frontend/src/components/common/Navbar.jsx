@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import logo from '../../assets/logo/logo.png';
 import ApplyModal from './ApplyModal';
+import { useTheme } from '../../useTheme';
 
 const Navbar = () => {
   const [isApplyModalOpen, setIsApplyModalOpen] = useState(false);
+  const { theme, toggleTheme } = useTheme();
 
   return (
     <>
@@ -136,6 +138,14 @@ const Navbar = () => {
               className={'Navbar-btnOutline'}
             >
               Quick Apply
+            </button>
+            <button 
+              onClick={toggleTheme}
+              className={'Navbar-btnOutline'}
+              aria-label="Toggle Theme"
+              style={{ padding: '0.5rem', display: 'flex', alignItems: 'center' }}
+            >
+              {theme === 'dark' ? '☀️' : '🌙'}
             </button>
             <button className={'Navbar-userIconBtn'} aria-label="User Profile">
               <svg
