@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import HomePage from './pages/HomePage';
 import JobPage from './pages/JobPage';
+import BlogPage from './pages/BlogPage';
 
 function App() {
   const [currentPath, setCurrentPath] = useState(window.location.pathname);
@@ -14,6 +15,10 @@ function App() {
   }, []);
 
   // Route rendering based on path
+  if (currentPath === '/blog') {
+    return <BlogPage />;
+  }
+
   if (currentPath === '/') {
     return <HomePage />;
   }
@@ -22,3 +27,4 @@ function App() {
 }
 
 export default App;
+

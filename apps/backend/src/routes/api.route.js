@@ -8,7 +8,20 @@ const __dirname = path.dirname(__filename);
 
 // Adjust path since this is now in src/routes
 const mockData = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'seeds', 'mockData.json'), 'utf8'));
-const { initialTechStack, initialOpenings, industriesData, processData, capabilitiesData, reportsData, statsData, benefitsData, faqsData } = mockData;
+const {
+  initialTechStack,
+  initialOpenings,
+  industriesData,
+  processData,
+  capabilitiesData,
+  reportsData,
+  statsData,
+  benefitsData,
+  faqsData,
+  articlesData = [],
+  featuredArticleData = null,
+  researchersData = [],
+} = mockData;
 
 const router = express.Router();
 
@@ -22,6 +35,9 @@ let capabilities = [...capabilitiesData];
 let reports = [...reportsData];
 let benefits = benefitsData ? [...benefitsData] : [];
 let faqs = faqsData ? [...faqsData] : [];
+let articles = articlesData ? [...articlesData] : [];
+let featuredArticle = featuredArticleData ? { ...featuredArticleData } : null;
+let researchers = researchersData ? [...researchersData] : [];
 
 // --- Benefits ---
 router.get('/benefits', (req, res) => {
@@ -192,6 +208,64 @@ router.post('/contact', (req, res) => {
     res.json({ message: 'Callback requested successfully!' });
   } else {
     res.status(400).json({ error: 'Email and Phone are required' });
+  }
+});
+
+// --- Blog & Articles ---
+router.get('/articles', (req, res) => {
+  const { q, category } = req.query;
+  let filtered = [...articles];
+
+  if (q && q.trim() !== '') {
+    const query = q.trim().toLowerCase();
+    filtered = filtered.filter(
+      (art) =>
+        art.title.toLowerCase().includes(query) ||
+        art.excerpt.toLowerCase().includes(query) ||
+        (art.author && art.author.name.toLowerCase().includes(query)) ||
+        (art.badge && art.badge.toLowerCase().includes(query)) ||
+        (art.subCategory && art.subCategory.toLowerCase().includes(query))
+    );
+  }
+
+  if (category && category !== 'All' && category !== 'All Insights (15)') {
+    filtered = filtered.filter(
+      (art) =>
+        art.category === category ||
+        art.badge === category ||
+        art.subCategory === category
+    );
+  }
+
+  res.json(filtered);
+});
+
+router.get('/articles/featured', (req, res) => {
+  res.json(featuredArticle);
+});
+
+router.get('/articles/researchers', (req, res) => {
+  res.json(researchers);
+});
+
+router.get('/articles/:id', (req, res) => {
+  const article = articles.find((art) => art.id === req.params.id);
+  if (article) {
+    res.json(article);
+  } else if (featuredArticle && featuredArticle.id === req.params.id) {
+    res.json(featuredArticle);
+  } else {
+    res.status(404).json({ error: 'Article not found' });
+  }
+});
+
+router.post('/articles/newsletter', (req, res) => {
+  const { email, role } = req.body;
+  if (email && email.includes('@')) {
+    console.log('New Benchmark Dispatch Newsletter Subscription:', { email, role });
+    res.json({ success: true, message: 'Subscribed to Benchmark Dispatch successfully!' });
+  } else {
+    res.status(400).json({ error: 'Valid email is required' });
   }
 });
 
