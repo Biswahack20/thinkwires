@@ -18,14 +18,14 @@ const startServer = async () => {
         ? "✅ Database models synced with schema auto-alter enabled (development)"
         : "✅ Database models synced"
     );
-
-    app.listen(PORT, () => {
-      console.log(`🚀 Server running on http://localhost:${PORT}`);
-    });
   } catch (error) {
-    console.error("❌ Server failed:", error);
-    process.exit(1);
+    console.warn("⚠️ Database connection optional/bypassed:", error.message || error);
+    console.log("ℹ️ Operating with in-memory seed dataset for API routes.");
   }
+
+  app.listen(PORT, () => {
+    console.log(`🚀 Server running on http://localhost:${PORT}`);
+  });
 };
 
 startServer();
