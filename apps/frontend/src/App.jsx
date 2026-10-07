@@ -3,6 +3,7 @@ import HomePage from './pages/HomePage';
 import JobPage from './pages/JobPage';
 import BlogPage from './pages/BlogPage';
 
+
 function App() {
   const [currentPath, setCurrentPath] = useState(window.location.pathname);
 

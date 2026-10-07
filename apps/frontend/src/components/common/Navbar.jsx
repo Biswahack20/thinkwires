@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import logo from '../../assets/logo/logo.png';
 import ApplyModal from './ApplyModal';
 import { useTheme } from '../../useTheme';
@@ -6,6 +6,7 @@ import { useTheme } from '../../useTheme';
 const Navbar = () => {
   const [isApplyModalOpen, setIsApplyModalOpen] = useState(false);
   const { theme, toggleTheme } = useTheme();
+  const logoRef = useRef(null);
 
   return (
     <>
@@ -55,8 +56,8 @@ const Navbar = () => {
         {/* Main Navigation */}
         <nav className={'Navbar-mainNav'}>
           <div className={'Navbar-leftNavGroup'}>
-            <div className={'Navbar-logoContainer'}>
-              <a href="/">
+            <div className={'Navbar-logoContainer'} ref={logoRef}>
+              <a href="/" style={{ display: 'block', position: 'relative' }}>
                 <img
                   src={logo}
                   alt="ThinkWires Logo"
