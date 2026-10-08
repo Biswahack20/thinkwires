@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import logo from '../../assets/logo/logo.png';
 import ApplyModal from './ApplyModal';
@@ -7,9 +7,18 @@ import { useTheme } from '../../useTheme';
 const Navbar = () => {
   const [isApplyModalOpen, setIsApplyModalOpen] = useState(false);
   const { theme, toggleTheme } = useTheme();
+  const logoRef = useRef(null);
   const location = useLocation();
-  const isHome = location.pathname === '/';
-  const isAbout = location.pathname.startsWith('/about');
+  const pathname = location?.pathname || (typeof window !== 'undefined' ? window.location.pathname : '/');
+
+  const isHome = pathname === '/';
+  const isAbout = pathname.startsWith('/about');
+  const isServices = pathname.startsWith('/services');
+  const isIndustries = pathname === '/industries';
+  const isJobs = pathname === '/hot-jobs' || pathname === '/jobs';
+  const isTalentCloud = pathname === '/talent-cloud';
+  const isBlog = pathname === '/blog';
+  const isContact = pathname === '/contact';
 
   return (
     <>
@@ -59,8 +68,8 @@ const Navbar = () => {
         {/* Main Navigation */}
         <nav className={'Navbar-mainNav'}>
           <div className={'Navbar-leftNavGroup'}>
-            <div className={'Navbar-logoContainer'}>
-              <Link to="/">
+            <div className={'Navbar-logoContainer'} ref={logoRef}>
+              <Link to="/" style={{ display: 'block', position: 'relative' }}>
                 <img
                   src={logo}
                   alt="ThinkWires Logo"
@@ -73,7 +82,7 @@ const Navbar = () => {
               <li>
                 <Link
                   to="/"
-                  className={`${'Navbar-navLink'} ${isHome ? 'Navbar-active' : ''}`}
+                  className={`Navbar-navLink ${isHome ? 'Navbar-active' : ''}`}
                 >
                   Home
                 </Link>
@@ -81,7 +90,7 @@ const Navbar = () => {
               <li>
                 <Link
                   to="/about"
-                  className={`${'Navbar-navLink'} ${isAbout ? 'Navbar-active' : ''}`}
+                  className={`Navbar-navLink ${isAbout ? 'Navbar-active' : ''}`}
                 >
                   About Us
                 </Link>
@@ -89,7 +98,7 @@ const Navbar = () => {
               <li className="Navbar-dropdownContainer">
                 <a
                   href="/services"
-                  className={'Navbar-navLink'}
+                  className={`Navbar-navLink ${isServices ? 'Navbar-active' : ''}`}
                   style={{ display: 'flex', alignItems: 'center', gap: '4px' }}
                 >
                   Services
@@ -131,27 +140,42 @@ const Navbar = () => {
                 </div>
               </li>
               <li>
-                <a href="/industries" className={'Navbar-navLink'}>
+                <a 
+                  href="/industries" 
+                  className={`Navbar-navLink ${isIndustries ? 'Navbar-active' : ''}`}
+                >
                   Industries
                 </a>
               </li>
               <li>
-                <a href="/hot-jobs" className={'Navbar-navLink'}>
+                <Link 
+                  to="/hot-jobs" 
+                  className={`Navbar-navLink ${isJobs ? 'Navbar-active' : ''}`}
+                >
                   Hot Jobs
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="/talent-cloud" className={'Navbar-navLink'}>
+                <a 
+                  href="/talent-cloud" 
+                  className={`Navbar-navLink ${isTalentCloud ? 'Navbar-active' : ''}`}
+                >
                   Talent Cloud
                 </a>
               </li>
               <li>
-                <a href="/blog" className={'Navbar-navLink'}>
+                <Link 
+                  to="/blog" 
+                  className={`Navbar-navLink ${isBlog ? 'Navbar-active' : ''}`}
+                >
                   Blog
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="/contact" className={'Navbar-navLink'}>
+                <a 
+                  href="/contact" 
+                  className={`Navbar-navLink ${isContact ? 'Navbar-active' : ''}`}
+                >
                   Contact Us
                 </a>
               </li>
