@@ -200,7 +200,7 @@ router.post('/reports', (req, res) => {
   }
 });
 
-// --- Contact Form ---
+// --- Old Contact Form (kept for backward compat) ---
 router.post('/contact', (req, res) => {
   const { email, phone } = req.body;
   if (email && phone) {
@@ -287,6 +287,60 @@ router.post('/articles/newsletter', (req, res) => {
     res.status(400).json({ error: 'Valid email is required' });
   }
 });
+
+// --- Contact Page Data ---
+const contactData = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'seeds', 'contactData.json'), 'utf8'));
+
+// In-memory mutable contact page config (allows admin to update office/channel info)
+let contactPageData = { ...contactData };
+
+router.get('/contact', (req, res) => {
+  res.json(contactPageData);
+});
+
+// Update office locations dynamically
+router.post('/contact/offices', (req, res) => {
+  if (Array.isArray(req.body.officeLocations)) {
+    contactPageData.officeLocations = req.body.officeLocations;
+    res.json({ message: 'Office locations updated successfully', officeLocations: contactPageData.officeLocations });
+  } else {
+    res.status(400).json({ error: 'officeLocations must be an array of objects' });
+  }
+});
+
+// Update contact channels dynamically
+router.post('/contact/channels', (req, res) => {
+  if (Array.isArray(req.body.channels)) {
+    contactPageData.channels = req.body.channels;
+    res.json({ message: 'Contact channels updated successfully', channels: contactPageData.channels });
+  } else {
+    res.status(400).json({ error: 'channels must be an array of objects' });
+  }
+});
+
+// Update FAQ dynamically
+router.post('/contact/faq', (req, res) => {
+  if (Array.isArray(req.body.faq)) {
+    contactPageData.faq = req.body.faq;
+    res.json({ message: 'FAQ updated successfully', faq: contactPageData.faq });
+  } else {
+    res.status(400).json({ error: 'faq must be an array of objects' });
+  }
+});
+
+// Handle contact form submission
+router.post('/contact/message', (req, res) => {
+  const { fullName, workEmail, inquiryType } = req.body;
+  if (!fullName || !workEmail || !inquiryType) {
+    return res.status(400).json({ error: 'Full name, work email, and inquiry type are required' });
+  }
+  console.log('📨 New Contact Us Submission:', req.body);
+  res.json({
+    success: true,
+    message: 'Thank you for reaching out! A ThinkWires staffing director will respond within 5 business hours.'
+  });
+});
 });
 
 export default router;
+

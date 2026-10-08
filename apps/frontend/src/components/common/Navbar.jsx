@@ -9,17 +9,12 @@ const Navbar = () => {
   const { theme, toggleTheme } = useTheme();
   const logoRef = useRef(null);
   const location = useLocation();
-  const pathname = location?.pathname || (typeof window !== 'undefined' ? window.location.pathname : '/');
-
-  const isHome = pathname === '/';
-  const isAbout = pathname.startsWith('/about');
-  const isServices = pathname.startsWith('/services');
-  const isIndustries = pathname === '/industries';
-  const isJobs = pathname === '/hot-jobs' || pathname === '/jobs';
-  const isTalentCloud = pathname === '/talent-cloud';
-  const isBlog = pathname === '/blog';
-  const isContact = pathname === '/contact';
-
+<Link
+                  to="/contact"
+                  className={`Navbar-navLink ${isContact ? 'Navbar-active' : ''}`}
+                >
+                  Contact Us
+                </Link>
   return (
     <>
       <header className={'Navbar-navbarContainer'}>
@@ -171,13 +166,13 @@ const Navbar = () => {
                   Blog
                 </Link>
               </li>
-              <li>
-                <a 
-                  href="/contact" 
-                  className={`Navbar-navLink ${isContact ? 'Navbar-active' : ''}`}
+                            <li>
+                <Link
+                  to="/contact"
+                  className={`Navbar-navLink ${isContact ? "Navbar-active" : ""}`}
                 >
                   Contact Us
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
