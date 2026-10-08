@@ -5,7 +5,10 @@ import apiRoutes from './routes/api.route.js';
 const app = express();
 
 //Standard middleware
-app.use(cors());
+app.use(cors({
+  origin: true,
+  credentials: true
+}));
 app.use(express.json());
 
 

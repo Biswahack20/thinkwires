@@ -24,6 +24,8 @@ const Philosophy = ({ data }) => {
     ]
   } = data || {};
 
+  const resolvedImage = image || philosophyImg;
+
   return (
     <section className="Philosophy-section">
       <div className="Philosophy-container">
@@ -55,7 +57,7 @@ const Philosophy = ({ data }) => {
           <div className="Philosophy-visual">
             <div className="Philosophy-imageWrapper">
               <img
-                src={philosophyImg}
+                src={resolvedImage}
                 alt={imageAlt}
                 className="Philosophy-image"
                 loading="lazy"

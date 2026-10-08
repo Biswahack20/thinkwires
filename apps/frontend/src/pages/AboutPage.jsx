@@ -22,8 +22,10 @@ const AboutPage = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
     document.title = 'About Us | ThinkWires - Borderless Tech Talent & Workforce Advisory';
-    dispatch(fetchAboutData());
-  }, [dispatch]);
+    if (status === 'idle') {
+      dispatch(fetchAboutData());
+    }
+  }, [dispatch, status]);
 
   return (
     <div className="AboutPage-wrapper">

@@ -20,6 +20,8 @@ const AboutHero = ({ data }) => {
     ]
   } = data || {};
 
+  const resolvedImage = heroImage || heroImg;
+
   const handleScrollTo = (e, href) => {
     if (href.startsWith('#')) {
       e.preventDefault();
@@ -102,7 +104,7 @@ const AboutHero = ({ data }) => {
         <div className="AboutHero-mediaWrapper">
           <div className="AboutHero-imageCard">
             <img
-              src={heroImg}
+              src={resolvedImage}
               alt={heroImageAlt}
               className="AboutHero-image"
               loading="eager"

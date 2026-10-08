@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
-const API_BASE = 'http://localhost:5000/api';
+const API_BASE = import.meta.env.VITE_API_BASE_URL || '/api';
 
 export const fallbackAboutData = {
   hero: {
@@ -295,25 +295,19 @@ export const fetchAboutData = createAsyncThunk(
 
 export const submitConsultation = createAsyncThunk(
   'about/submitConsultation',
-  async (formData, { rejectWithValue }) => {
-    try {
-      const response = await fetch(`${API_BASE}/about/consultation`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData)
-      });
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.error || 'Failed to submit consultation request');
-      }
-      return await response.json();
-    } catch (err) {
-      console.warn('Backend unavailable, simulating successful local submission:', err.message);
-      return {
-        success: true,
-        message: 'Your talent strategy consultation request has been received. Our team will contact you within 5 hours.'
-      };
+  async (formData) => {
+    const response = await fetch(`${API_BASE}/about/consultation`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(formData)
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json().catch(() => ({}));
+      throw new Error(errorData.error || 'Failed to submit consultation');
     }
+
+    return response.json();
   }
 );
 
