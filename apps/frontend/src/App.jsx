@@ -1,31 +1,23 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import HomePage from './pages/HomePage';
+import AboutPage from './pages/AboutPage';
 import JobPage from './pages/JobPage';
 import BlogPage from './pages/BlogPage';
 
-
 function App() {
-  const [currentPath, setCurrentPath] = useState(window.location.pathname);
-
-  useEffect(() => {
-    const handlePopState = () => {
-      setCurrentPath(window.location.pathname);
-    };
-    window.addEventListener('popstate', handlePopState);
-    return () => window.removeEventListener('popstate', handlePopState);
-  }, []);
-
-  // Route rendering based on path
-  if (currentPath === '/blog') {
-    return <BlogPage />;
-  }
-
-  if (currentPath === '/') {
-    return <HomePage />;
-  }
-
-  return <JobPage />;
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/about" element={<AboutPage />} />
+        <Route path="/jobs" element={<JobPage />} />
+        <Route path="/hot-jobs" element={<JobPage />} />
+        <Route path="/blog" element={<BlogPage />} />
+        <Route path="*" element={<HomePage />} />
+      </Routes>
+    </BrowserRouter>
+  );
 }
 
 export default App;
-

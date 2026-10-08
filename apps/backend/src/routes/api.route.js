@@ -211,6 +211,25 @@ router.post('/contact', (req, res) => {
   }
 });
 
+// --- About Page Data ---
+const aboutData = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'seeds', 'aboutData.json'), 'utf8'));
+
+router.get('/about', (req, res) => {
+  res.json(aboutData);
+});
+
+router.post('/about/consultation', (req, res) => {
+  const { fullName, workEmail, phone, primaryNeed, techRoles } = req.body;
+  if (!fullName || !workEmail) {
+    return res.status(400).json({ error: 'Full name and work email are required' });
+  }
+  console.log('New About Page Talent Consultation Request:', { fullName, workEmail, phone, primaryNeed, techRoles });
+  res.json({
+    success: true,
+    message: 'Your talent strategy consultation request has been received. Our team will contact you within 5 hours.'
+  });
+});
+
 // --- Blog & Articles ---
 router.get('/articles', (req, res) => {
   const { q, category } = req.query;
@@ -267,6 +286,7 @@ router.post('/articles/newsletter', (req, res) => {
   } else {
     res.status(400).json({ error: 'Valid email is required' });
   }
+});
 });
 
 export default router;
