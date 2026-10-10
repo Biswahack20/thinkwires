@@ -2075,10 +2075,33 @@ body {
   border-bottom: 2px solid var(--color-outline-variant);
 }
 
-.Navbar-leftNavGroup {
+.Navbar-navigationContent {
   display: flex;
   align-items: center;
-  gap: 2rem; /* controls distance between logo and Home link */
+  justify-content: space-between;
+  flex: 1;
+  margin-left: 2rem;
+}
+
+.Navbar-mobileMenuToggle {
+  display: none;
+}
+
+.Navbar-servicesHeader {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.Navbar-servicesToggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  color: inherit;
 }
 
 .Navbar-logoContainer {
@@ -2226,7 +2249,8 @@ body {
   background-color:  var(--color-slate-surface);
   color:  var(--color-cobalt-bright);
 }
-/* --- ApplyModal --- */
+
+/* --- ApplyModal Base Styles --- */
 .ApplyModal-overlay {
   position: fixed;
   inset: 0;
@@ -2240,7 +2264,7 @@ body {
 }
 
 .ApplyModal-content {
-  background-color:  var(--color-on-primary);
+  background-color: var(--color-on-primary);
   border-radius: var(--rounded-md);
   width: 100%;
   max-width: 550px;
@@ -2249,6 +2273,7 @@ body {
     0 10px 10px -5px rgba(0, 0, 0, 0.04);
   position: relative;
   max-height: 90vh;
+  max-height: 90dvh;
   overflow-y: auto;
 }
 
@@ -2256,7 +2281,7 @@ body {
   position: absolute;
   top: 1rem;
   right: 1rem;
-  background:  var(--color-surface-container);
+  background: var(--color-surface-container);
   border: none;
   width: 32px;
   height: 32px;
@@ -2265,24 +2290,25 @@ body {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  color:  var(--color-outline-variant);
+  color: var(--color-outline-variant);
   transition: all 0.2s;
+  z-index: 2;
 }
 
 .ApplyModal-closeBtn:hover {
-  background:  var(--color-card-stroke);
-  color:  var(--color-navy-dark);
+  background: var(--color-card-stroke);
+  color: var(--color-navy-dark);
 }
 
 .ApplyModal-header {
   padding: 1.5rem 2rem;
-  border-bottom: 1px solid  var(--color-card-stroke);
-  background-color:  var(--color-slate-surface);
+  border-bottom: 1px solid var(--color-card-stroke);
+  background-color: var(--color-slate-surface);
   border-radius: 12px 12px 0 0;
 }
 
 .ApplyModal-intakeText {
-  color:  var(--color-primary-container);
+  color: var(--color-primary-container);
   font-size: 0.75rem;
   font-weight: 700;
   text-transform: uppercase;
@@ -2291,11 +2317,12 @@ body {
 }
 
 .ApplyModal-title {
-  color:  var(--color-navy-dark);
+  color: var(--color-navy-dark);
   font-size: 1.25rem;
   font-weight: 700;
   margin: 0;
   line-height: 1.4;
+  word-break: break-word;
 }
 
 .ApplyModal-form {
@@ -2321,27 +2348,29 @@ body {
 }
 
 .ApplyModal-fieldGroup label {
-  color:  var(--color-navy-dark);
+  color: var(--color-navy-dark);
   font-size: 0.8125rem;
   font-weight: 600;
 }
 
 .ApplyModal-fieldGroup input,
 .ApplyModal-fieldGroup select {
+  width: 100%;
+  box-sizing: border-box;
   padding: 0.75rem 1rem;
-  border: 1px solid  var(--color-card-stroke);
+  border: 1px solid var(--color-card-stroke);
   border-radius: 6px;
   font-size: 0.875rem;
-  color:  var(--color-navy-dark);
-  background-color:  var(--color-slate-surface);
+  color: var(--color-navy-dark);
+  background-color: var(--color-slate-surface);
   outline: none;
   transition: border-color 0.2s;
 }
 
 .ApplyModal-fieldGroup input:focus,
 .ApplyModal-fieldGroup select:focus {
-  border-color:  var(--color-cobalt-bright);
-  background-color:  var(--color-on-primary);
+  border-color: var(--color-cobalt-bright);
+  background-color: var(--color-on-primary);
 }
 
 .ApplyModal-fieldGroup input::placeholder {
@@ -2352,13 +2381,13 @@ body {
   position: relative;
   border: 2px dashed #cbd5e1;
   border-radius: var(--rounded);
-  background-color:  var(--color-slate-surface);
+  background-color: var(--color-slate-surface);
   transition: all 0.2s;
 }
 
 .ApplyModal-uploadBox:hover {
   border-color: #94a3b8;
-  background-color:  var(--color-surface-container);
+  background-color: var(--color-surface-container);
 }
 
 .ApplyModal-fileInput {
@@ -2380,19 +2409,21 @@ body {
 }
 
 .ApplyModal-uploadIcon {
-  color:  var(--color-primary-container);
+  color: var(--color-primary-container);
   margin-bottom: 0.75rem;
 }
 
 .ApplyModal-uploadText {
-  color:  var(--color-navy-dark);
+  color: var(--color-navy-dark);
   font-size: 0.875rem;
   font-weight: 600;
   margin: 0 0 0.25rem 0;
+  text-align: center;
+  word-break: break-word;
 }
 
 .ApplyModal-uploadSubText {
-  color:  var(--color-outline-variant);
+  color: var(--color-outline-variant);
   font-size: 0.75rem;
   margin: 0;
 }
@@ -2405,8 +2436,8 @@ body {
 }
 
 .ApplyModal-btnCancel {
-  background-color:  var(--color-surface-container);
-  color:  var(--color-outline);
+  background-color: var(--color-surface-container);
+  color: var(--color-outline);
   border: none;
   padding: 0.75rem 1.5rem;
   border-radius: 6px;
@@ -2417,13 +2448,13 @@ body {
 }
 
 .ApplyModal-btnCancel:hover {
-  background-color:  var(--color-card-stroke);
-  color:  var(--color-navy-dark);
+  background-color: var(--color-card-stroke);
+  color: var(--color-navy-dark);
 }
 
 .ApplyModal-btnSubmit {
-  background-color: #003399; /* Deep blue from screenshot */
-  color:  var(--color-on-primary);
+  background-color: #003399;
+  color: var(--color-on-primary);
   border: none;
   padding: 0.75rem 1.5rem;
   border-radius: 6px;
@@ -2437,10 +2468,821 @@ body {
   background-color: #002266;
 }
 
+/* ==========================================================================
+   RESPONSIVE DESIGN SYSTEM
+   Breakpoints: Mobile (320px-430px), Tablet (600px-820px), Laptop (1024px-1280px), Desktop (1440px+)
+   ========================================================================== */
+
+/* Layout & Overflow Containment */
+html,
+body {
+  width: 100%;
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  min-width: 320px;
+  overflow-wrap: break-word;
+}
+
+#root {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  overflow-x: clip;
+}
+
+img,
+video,
+canvas {
+  max-width: 100%;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+/* Section Container & Card Flexibility */
+.About-aboutContainer,
+.Capabilities-container,
+.Industries-container,
+.Openings-container,
+.Process-container,
+.Reports-container,
+.StatsJourney-container,
+.TechStack-techStackContainer,
+.CTA-container,
+.Footer-container {
+  width: 100%;
+  min-width: 0;
+}
+
+.About-aboutContent,
+.About-featuresGrid,
+.Capabilities-headerLeft,
+.Capabilities-headerRight,
+.Capabilities-card,
+.Industries-card,
+.Openings-card,
+.Process-card,
+.Reports-card,
+.StatsJourney-statCard,
+.StatsJourney-timelineCard,
+.CTA-card,
+.Footer-brandCol {
+  min-width: 0;
+}
+
+.About-title,
+.Capabilities-title,
+.Industries-title,
+.Openings-title,
+.Process-title,
+.Reports-title,
+.StatsJourney-timelineTitle,
+.CTA-employerTitle,
+.CTA-engineerTitle {
+  overflow-wrap: anywhere;
+}
+
+/* Consistent Responsive Section Spacing */
+.About-aboutSection,
+.Industries-section,
+.Openings-openingsSection,
+.Process-section,
+.Reports-section,
+.StatsJourney-section,
+.TechStack-techStackSection,
+.CTA-section,
+.Footer-footer {
+  padding-left: clamp(1rem, 4vw, 2rem);
+  padding-right: clamp(1rem, 4vw, 2rem);
+}
+
+/* --------------------------------------------------------------------------
+   1. LAPTOP SCREENS (1024px - 1280px)
+   -------------------------------------------------------------------------- */
+@media (min-width: 1024px) and (max-width: 1280px) {
+  .Navbar-mainNav {
+    padding: 0.75rem 1.25rem;
+  }
+
+  .Navbar-logoContainer {
+    width: 200px;
+  }
+
+  .Navbar-logo {
+    height: 145px;
+    left: -15px;
+  }
+
+  .Navbar-navigationContent {
+    margin-left: 1rem;
+  }
+
+  .Navbar-navLinks {
+    gap: 0.85rem;
+  }
+
+  .Navbar-navLink {
+    font-size: 0.8125rem;
+  }
+
+  .Navbar-actionButtons {
+    gap: 0.5rem;
+  }
+
+  .Navbar-btnPrimary,
+  .Navbar-btnOutline {
+    padding: 0.45rem 0.8rem;
+    font-size: 0.8125rem;
+  }
+
+  .About-aboutContainer {
+    gap: 2.5rem;
+  }
+
+  .Capabilities-cardsGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.25rem;
+  }
+
+  .Industries-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+  }
+
+  .Openings-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.25rem;
+  }
+
+  .Process-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+  }
+
+  .StatsJourney-statsGrid,
+  .StatsJourney-timelineGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.25rem;
+  }
+
+  .Reports-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+  }
+
+  .Footer-topSection {
+    grid-template-columns: 1.25fr 1fr 1fr 1.25fr;
+    gap: 1.5rem;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   2. TABLET SCREENS & BELOW (< 1024px)
+   -------------------------------------------------------------------------- */
+@media (max-width: 1023px) {
+  .Navbar-topBar {
+    padding: 0.45rem 1.25rem;
+    font-size: 0.71875rem;
+  }
+
+  .Navbar-topBarItem:nth-child(2) {
+    display: none; /* Hide non-critical tagline to prevent overflow */
+  }
+
+  .Navbar-mainNav {
+    padding: 0.75rem 1.25rem;
+    position: relative;
+  }
+
+  .Navbar-mobileMenuToggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: 1px solid var(--color-outline-variant);
+    border-radius: var(--rounded);
+    padding: 0.5rem;
+    cursor: pointer;
+    color: var(--color-on-surface);
+    transition: background-color 0.2s ease, border-color 0.2s ease;
+    z-index: 60;
+  }
+
+  .Navbar-mobileMenuToggle:hover {
+    background-color: var(--color-slate-surface);
+    border-color: var(--color-cobalt-bright);
+  }
+
+  .Navbar-navigationContent {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    width: 100%;
+    background-color: var(--color-surface);
+    border-bottom: 2px solid var(--color-outline-variant);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.15);
+    padding: 1.5rem 1.5rem 2rem;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 1.5rem;
+    max-height: calc(100vh - 80px);
+    overflow-y: auto;
+    z-index: 50;
+    margin-left: 0;
+  }
+
+  .Navbar-navigationContent.Navbar-mobileMenuOpen {
+    display: flex;
+  }
+
+  .Navbar-navLinks {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.25rem;
+    width: 100%;
+  }
+
+  .Navbar-navLink {
+    display: block;
+    padding: 0.75rem 0.5rem;
+    font-size: 1rem;
+    border-bottom: 1px solid var(--color-surface-container);
+  }
+
+  .Navbar-servicesHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    border-bottom: 1px solid var(--color-surface-container);
+  }
+
+  .Navbar-servicesHeader .Navbar-navLink {
+    border-bottom: none;
+    flex: 1;
+  }
+
+  .Navbar-servicesToggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: transparent;
+    border: none;
+    padding: 0.75rem;
+    cursor: pointer;
+    color: var(--color-on-surface-variant);
+    transition: transform 0.2s ease;
+  }
+
+  .Navbar-servicesOpen .Navbar-servicesToggle svg {
+    transform: rotate(180deg);
+  }
+
+  .Navbar-dropdownMenu {
+    position: static;
+    display: none;
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    box-shadow: none;
+    border: none;
+    background-color: var(--color-surface-container-low);
+    border-radius: var(--rounded);
+    padding: 0.5rem 0;
+    margin-top: 0.25rem;
+    margin-bottom: 0.5rem;
+    width: 100%;
+  }
+
+  .Navbar-servicesOpen .Navbar-dropdownMenu {
+    display: block;
+  }
+
+  .Navbar-dropdownItem {
+    padding: 0.625rem 1.25rem;
+    font-size: 0.875rem;
+  }
+
+  .Navbar-actionButtons {
+    flex-direction: column;
+    align-items: stretch;
+    width: 100%;
+    gap: 0.75rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--color-surface-container);
+  }
+
+  .Navbar-btnPrimary,
+  .Navbar-btnOutline {
+    width: 100%;
+    text-align: center;
+    padding: 0.75rem 1rem;
+    justify-content: center;
+  }
+
+  .Navbar-userIconBtn {
+    align-self: center;
+    margin-top: 0.25rem;
+  }
+
+  /* About */
+  .About-aboutSection {
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+  }
+
+  .About-aboutContainer {
+    flex-direction: column;
+    gap: 3rem;
+  }
+
+  .About-aboutContent {
+    max-width: 100%;
+  }
+
+  .About-featuresGrid {
+    width: 100%;
+  }
+
+  /* Process */
+  .Process-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* Reports */
+  .Reports-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  /* CTA */
+  .CTA-container {
+    flex-direction: column;
+    gap: 2rem;
+  }
+
+  .CTA-card {
+    width: 100%;
+  }
+
+  /* Footer */
+  .Footer-topSection {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 2rem;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   3. TABLETS & MID-SIZE SCREENS (<= 768px)
+   -------------------------------------------------------------------------- */
+@media (max-width: 768px) {
+  .Navbar-topBar {
+    padding: 0.4rem 1rem;
+  }
+
+  .Hero-heroSection {
+    min-height: clamp(340px, 60vh, 500px);
+    min-height: clamp(340px, 60svh, 500px);
+  }
+
+  .TechStack-techStackSection {
+    padding-top: 2.5rem;
+    padding-bottom: 2.5rem;
+  }
+
+  .TechStack-techStackHeader {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .TechStack-headerRight {
+    max-width: 100%;
+    font-size: clamp(0.75rem, 3.5vw, 0.875rem);
+  }
+
+  .TechStack-carouselWrapper {
+    mask-image: none;
+    -webkit-mask-image: none;
+  }
+
+  .Capabilities-capabilitiesSection {
+    padding: 3.5rem 1rem;
+  }
+
+  .Capabilities-header {
+    flex-direction: column;
+    align-items: flex-start;
+    margin-bottom: 2rem;
+    gap: 1rem;
+  }
+
+  .Capabilities-title {
+    font-size: clamp(1.75rem, 5vw, 2.5rem);
+  }
+
+  .Capabilities-headerRight {
+    width: 100%;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 1rem;
+  }
+
+  .Capabilities-cardsGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  .Capabilities-card {
+    padding: 1.5rem;
+  }
+
+  .Industries-section {
+    padding-top: 3.5rem;
+    padding-bottom: 3.5rem;
+  }
+
+  .Industries-header {
+    margin-bottom: 2rem;
+  }
+
+  .Industries-title {
+    font-size: clamp(1.75rem, 5vw, 2.5rem);
+  }
+
+  .Industries-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  .Industries-card {
+    padding: 1.5rem 1rem;
+  }
+
+  .Openings-openingsSection {
+    padding-top: 3.5rem;
+    padding-bottom: 3.5rem;
+  }
+
+  .Openings-headerTop {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .Openings-title {
+    font-size: clamp(1.75rem, 5vw, 2.5rem);
+  }
+
+  .Openings-filters {
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .Openings-filterBtn {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.8125rem;
+  }
+
+  .Openings-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .Openings-uploadCtaBanner {
+    flex-direction: column;
+    text-align: left;
+    align-items: stretch;
+    padding: 1.5rem;
+    gap: 1.25rem;
+  }
+
+  .Openings-uploadLeft {
+    flex-direction: row;
+    gap: 1rem;
+  }
+
+  .Openings-uploadBtn {
+    width: 100%;
+    text-align: center;
+    white-space: normal;
+  }
+
+  .Process-section {
+    padding-top: 3.5rem;
+    padding-bottom: 3.5rem;
+  }
+
+  .Process-header {
+    margin-bottom: 2rem;
+  }
+
+  .Process-title {
+    font-size: clamp(1.75rem, 5vw, 2.5rem);
+  }
+
+  .Process-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .Process-card {
+    padding: 1.5rem;
+  }
+
+  .StatsJourney-section {
+    padding-top: 3.5rem;
+    padding-bottom: 3.5rem;
+  }
+
+  .StatsJourney-statsGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  .StatsJourney-timelineGrid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .StatsJourney-statCard,
+  .StatsJourney-timelineCard {
+    padding: 1.5rem 1rem;
+  }
+
+  .StatsJourney-statValue {
+    font-size: clamp(2rem, 7vw, 2.75rem);
+  }
+
+  .StatsJourney-timelineTitle {
+    font-size: clamp(1.75rem, 5vw, 2.5rem);
+  }
+
+  .Reports-section {
+    padding-top: 3.5rem;
+    padding-bottom: 3.5rem;
+  }
+
+  .Reports-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .Reports-title {
+    font-size: clamp(1.75rem, 5vw, 2.5rem);
+  }
+
+  .Reports-grid {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  .Reports-imageContainer {
+    height: clamp(180px, 50vw, 240px);
+  }
+}
+
+/* --------------------------------------------------------------------------
+   4. SMALL TABLETS & LARGE MOBILE (<= 640px)
+   -------------------------------------------------------------------------- */
 @media (max-width: 640px) {
+  .Navbar-topBar {
+    flex-wrap: wrap;
+    gap: 0.35rem 0.75rem;
+    justify-content: space-between;
+    padding: 0.35rem 0.75rem;
+    font-size: 0.6875rem;
+  }
+
+  .Navbar-topBarLeft,
+  .Navbar-topBarRight {
+    gap: 0.75rem;
+  }
+
+  .Navbar-mainNav {
+    padding: 0.5rem 1rem;
+  }
+
+  .Navbar-logoContainer {
+    width: 170px;
+    height: 50px;
+  }
+
+  .Navbar-logo {
+    height: 130px;
+    left: -12px;
+  }
+
+  .About-aboutSection {
+    padding: 3rem 1rem;
+  }
+
+  .About-title {
+    font-size: clamp(1.75rem, 6vw, 2.25rem);
+  }
+
+  .About-featuresGrid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .Capabilities-cardsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .Capabilities-headerRight {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .Capabilities-scopeCallBtn {
+    width: 100%;
+    text-align: center;
+  }
+
+  .CTA-section {
+    padding: 3.5rem 1rem;
+  }
+
+  .CTA-card {
+    padding: 1.5rem 1.25rem;
+  }
+
+  .CTA-employerTitle,
+  .CTA-engineerTitle {
+    font-size: clamp(1.75rem, 7vw, 2.25rem);
+  }
+
+  .CTA-inputGroup {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .CTA-input,
+  .CTA-submitBtn,
+  .CTA-applyBtn {
+    width: 100%;
+  }
+
+  .Footer-footer {
+    padding: 2.5rem 1rem 1.5rem;
+  }
+
+  .Footer-topSection {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .Footer-brandDesc {
+    max-width: 100%;
+  }
+
+  .Footer-newsletterForm {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .Footer-newsletterBtn {
+    padding: 0.625rem 1rem;
+    width: 100%;
+  }
+
+  .Footer-bottomSection {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 1rem;
+  }
+
+  .Footer-bottomLinks {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem;
+  }
+
+  .ApplyModal-overlay {
+    padding: 0.5rem;
+  }
+
+  .ApplyModal-content {
+    max-height: 94dvh;
+  }
+
+  .ApplyModal-header {
+    padding: 1.25rem 1rem;
+  }
+
+  .ApplyModal-form {
+    padding: 1.25rem 1rem;
+    gap: 1rem;
+  }
+
   .ApplyModal-row {
     flex-direction: column;
-    gap: 1.25rem;
+    gap: 1rem;
+  }
+
+  .ApplyModal-uploadContent {
+    padding: 1.25rem 0.75rem;
+  }
+
+  .ApplyModal-actions {
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .ApplyModal-btnCancel,
+  .ApplyModal-btnSubmit {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    text-align: center;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   5. STANDARD MOBILE PHONES (<= 540px)
+   -------------------------------------------------------------------------- */
+@media (max-width: 540px) {
+  .Industries-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .StatsJourney-statsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .About-statsGrid {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .Openings-uploadLeft {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .Openings-cardFooter {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+
+  .Openings-applyBtn {
+    width: 100%;
+    text-align: center;
+  }
+}
+
+/* --------------------------------------------------------------------------
+   6. EXTRA-SMALL MOBILE PHONES (<= 380px)
+   -------------------------------------------------------------------------- */
+@media (max-width: 380px) {
+  .Navbar-topBarRight a[href^="mailto:"] {
+    display: none; /* Keep phone + theme toggle on <=380px to prevent overflow */
+  }
+
+  .Navbar-logoContainer {
+    width: 135px;
+    height: 40px;
+  }
+
+  .Navbar-logo {
+    height: 105px;
+    left: -10px;
+  }
+
+  .About-statBox {
+    padding: 1rem;
+  }
+
+  .Openings-card {
+    padding: 1rem;
+  }
+
+  .Openings-metaInfo {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .Capabilities-card {
+    padding: 1.25rem 1rem;
+  }
+
+  .CTA-card {
+    padding: 1.25rem 1rem;
   }
 }
 

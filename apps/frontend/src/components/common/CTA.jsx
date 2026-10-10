@@ -128,7 +128,7 @@ const CTA = () => {
           error: data.error || 'Failed to submit',
         });
       }
-    } catch (err) {
+    } catch {
       setStatus({
         loading: false,
         success: false,
