@@ -8,22 +8,17 @@ const Navbar = () => {
   const [isApplyModalOpen, setIsApplyModalOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isServicesOpen, setIsServicesOpen] = useState(false);
-  const { toggleTheme } = useTheme();
+  const { theme, toggleTheme } = useTheme();
+  const logoRef = useRef(null);
+  const location = useLocation();
 
   const closeMobileMenu = () => {
     setIsMobileMenuOpen(false);
     setIsServicesOpen(false);
   };
 
-  const { theme, toggleTheme } = useTheme();
-  const logoRef = useRef(null);
-  const location = useLocation();
-<Link
-                  to="/contact"
-                  className={`Navbar-navLink ${isContact ? 'Navbar-active' : ''}`}
-                >
-                  Contact Us
-                </Link>
+  const isActive = (path) => location.pathname === path ? 'Navbar-active' : '';
+
   return (
     <>
       <header className="Navbar-navbarContainer">
@@ -150,26 +145,20 @@ const Navbar = () => {
           >
             <ul className="Navbar-navLinks">
               <li>
-                <a
-                  href="/"
-                  className="Navbar-navLink Navbar-active"
-                  onClick={closeMobileMenu}
                 <Link
                   to="/"
-                  className={`Navbar-navLink ${isHome ? 'Navbar-active' : ''}`}
+                  className={`Navbar-navLink ${isActive('/')}`}
+                  onClick={closeMobileMenu}
                 >
                   Home
                 </Link>
               </li>
 
               <li>
-                <a
-                  href="/about"
-                  className="Navbar-navLink"
-                  onClick={closeMobileMenu}
                 <Link
                   to="/about"
-                  className={`Navbar-navLink ${isAbout ? 'Navbar-active' : ''}`}
+                  className={`Navbar-navLink ${isActive('/about')}`}
+                  onClick={closeMobileMenu}
                 >
                   About Us
                 </Link>
@@ -181,13 +170,13 @@ const Navbar = () => {
                 }`}
               >
                 <div className="Navbar-servicesHeader">
-                  <a
-                    href="/services"
-                    className="Navbar-navLink"
+                  <Link
+                    to="/services"
+                    className={`Navbar-navLink ${isActive('/services')}`}
                     onClick={closeMobileMenu}
                   >
                     Services
-                  </a>
+                  </Link>
 
                   <button
                     type="button"
@@ -213,54 +202,54 @@ const Navbar = () => {
                 </div>
 
                 <div className="Navbar-dropdownMenu">
-                  <a
-                    href="/services/staff-augmentation"
-                    className="Navbar-dropdownItem"
+                  <Link
+                    to="/services/staff-augmentation"
+                    className={`Navbar-dropdownItem ${isActive('/services/staff-augmentation')}`}
                     onClick={closeMobileMenu}
                   >
                     Staff Augmentation
-                  </a>
+                  </Link>
 
-                  <a
-                    href="/services/eor"
-                    className="Navbar-dropdownItem"
+                  <Link
+                    to="/services/eor"
+                    className={`Navbar-dropdownItem ${isActive('/services/eor')}`}
                     onClick={closeMobileMenu}
                   >
                     Employer of Record (EOR)
-                  </a>
+                  </Link>
 
-                  <a
-                    href="/services/permanent-staffing"
-                    className="Navbar-dropdownItem"
+                  <Link
+                    to="/services/permanent-staffing"
+                    className={`Navbar-dropdownItem ${isActive('/services/permanent-staffing')}`}
                     onClick={closeMobileMenu}
                   >
                     Permanent Staffing &amp; Executive Search
-                  </a>
+                  </Link>
 
-                  <a
-                    href="/services/payroll"
-                    className="Navbar-dropdownItem"
+                  <Link
+                    to="/services/payroll"
+                    className={`Navbar-dropdownItem ${isActive('/services/payroll')}`}
                     onClick={closeMobileMenu}
                   >
                     Payroll Outsourcing
-                  </a>
+                  </Link>
                 </div>
               </li>
 
               <li>
-                <a
-                  href="/industries"
-                  className="Navbar-navLink"
+                <Link
+                  to="/industries"
+                  className={`Navbar-navLink ${isActive('/industries')}`}
                   onClick={closeMobileMenu}
                 >
                   Industries
-                </a>
+                </Link>
               </li>
 
               <li>
-                <a
-                  href="/hot-jobs"
-                  className="Navbar-navLink"
+                <Link
+                  to="/hot-jobs"
+                  className={`Navbar-navLink ${isActive('/hot-jobs')}`}
                   onClick={closeMobileMenu}
                 >
                   Hot Jobs
@@ -268,19 +257,19 @@ const Navbar = () => {
               </li>
 
               <li>
-                <a
-                  href="/talent-cloud"
-                  className="Navbar-navLink"
+                <Link
+                  to="/talent-cloud"
+                  className={`Navbar-navLink ${isActive('/talent-cloud')}`}
                   onClick={closeMobileMenu}
                 >
                   Talent Cloud
-                </a>
+                </Link>
               </li>
 
               <li>
-                <a
-                  href="/blog"
-                  className="Navbar-navLink"
+                <Link
+                  to="/blog"
+                  className={`Navbar-navLink ${isActive('/blog')}`}
                   onClick={closeMobileMenu}
                 >
                   Blog
@@ -288,9 +277,9 @@ const Navbar = () => {
               </li>
 
               <li>
-                <a
-                  href="/contact"
-                  className="Navbar-navLink"
+                <Link
+                  to="/contact"
+                  className={`Navbar-navLink ${isActive('/contact')}`}
                   onClick={closeMobileMenu}
                 >
                   Contact Us

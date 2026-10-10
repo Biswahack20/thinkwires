@@ -340,7 +340,6 @@ router.post('/contact/message', (req, res) => {
     message: 'Thank you for reaching out! A ThinkWires staffing director will respond within 5 business hours.'
   });
 });
-});
 
 export default router;
 
