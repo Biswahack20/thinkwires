@@ -1,5 +1,5 @@
-
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import logo from '../../assets/logo/logo.png';
 import ApplyModal from './ApplyModal';
 import { useTheme } from '../../useTheme';
@@ -15,6 +15,15 @@ const Navbar = () => {
     setIsServicesOpen(false);
   };
 
+  const { theme, toggleTheme } = useTheme();
+  const logoRef = useRef(null);
+  const location = useLocation();
+<Link
+                  to="/contact"
+                  className={`Navbar-navLink ${isContact ? 'Navbar-active' : ''}`}
+                >
+                  Contact Us
+                </Link>
   return (
     <>
       <header className="Navbar-navbarContainer">
@@ -145,9 +154,12 @@ const Navbar = () => {
                   href="/"
                   className="Navbar-navLink Navbar-active"
                   onClick={closeMobileMenu}
+                <Link
+                  to="/"
+                  className={`Navbar-navLink ${isHome ? 'Navbar-active' : ''}`}
                 >
                   Home
-                </a>
+                </Link>
               </li>
 
               <li>
@@ -155,9 +167,12 @@ const Navbar = () => {
                   href="/about"
                   className="Navbar-navLink"
                   onClick={closeMobileMenu}
+                <Link
+                  to="/about"
+                  className={`Navbar-navLink ${isAbout ? 'Navbar-active' : ''}`}
                 >
                   About Us
-                </a>
+                </Link>
               </li>
 
               <li
@@ -249,7 +264,7 @@ const Navbar = () => {
                   onClick={closeMobileMenu}
                 >
                   Hot Jobs
-                </a>
+                </Link>
               </li>
 
               <li>
@@ -269,7 +284,7 @@ const Navbar = () => {
                   onClick={closeMobileMenu}
                 >
                   Blog
-                </a>
+                </Link>
               </li>
 
               <li>
@@ -279,7 +294,7 @@ const Navbar = () => {
                   onClick={closeMobileMenu}
                 >
                   Contact Us
-                </a>
+                </Link>
               </li>
             </ul>
 
