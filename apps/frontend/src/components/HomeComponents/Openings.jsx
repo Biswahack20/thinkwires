@@ -57,7 +57,7 @@ const Openings = () => {
   });
 
   return (
-    <section className={'Openings-openingsSection'}>
+    <section className={'Openings-openingsSection'} id="hot-jobs">
       <div className={'Openings-container'}>
         <div className={'Openings-headerTop'}>
           <div className={'Openings-headerLeft'}>
@@ -69,10 +69,13 @@ const Openings = () => {
             </p>
           </div>
           <div className={'Openings-headerRight'}>
-            <span className="material-symbols-outlined" style={{ color: 'var(--color-emerald-accent)', fontSize: '20px' }}>bolt</span> 130+{' '}
-            <span style={{ fontWeight: 500, color: '#64748b' }}>
-              Verified Tech Roles
-            </span>
+            <span className="material-symbols-outlined" style={{ color: 'var(--color-emerald-accent)', fontSize: '24px' }}>bolt</span>
+            <div style={{ display: 'flex', flexDirection: 'column', lineHeight: 1.2 }}>
+              <span style={{ fontWeight: 800, fontSize: '1.25rem', color: 'var(--color-navy-dark)' }}>130+</span>
+              <span style={{ fontWeight: 500, fontSize: '0.75rem', color: '#64748b' }}>
+                Verified Tech Roles
+              </span>
+            </div>
           </div>
         </div>
 
@@ -89,7 +92,7 @@ const Openings = () => {
         </div>
 
         {status.openings === 'loading' ? (
-          <div>Loading priority openings...</div>
+          <div style={{ padding: '3rem', textAlign: 'center', color: '#64748b' }}>Loading priority openings...</div>
         ) : (
           <div className={'Openings-grid'}>
             {filteredOpenings.map((job) => (
@@ -105,21 +108,27 @@ const Openings = () => {
                     </div>
                   </div>
                   <div
-                    className={`Openings-badge Openings-${job.tagColor || 'blue'}`}
+                    className={`Openings-badge Openings-${job.tagColor || 'green'}`}
                   >
-                    • {job.tag}
+                    <span className="Openings-pulseDot"></span>
+                    {job.tag}
                   </div>
                 </div>
 
                 <div className={'Openings-metaInfo'}>
                   <div className={'Openings-metaItem'}>
-                    <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>location_on</span> {job.location}
+                    <span className="material-symbols-outlined" style={{ fontSize: '18px', color: 'var(--color-secondary)' }}>
+                      {job.location && job.location.toLowerCase().includes('remote') ? 'home_work' : 'location_on'}
+                    </span>
+                    <span>{job.location}</span>
                   </div>
                   <div className={'Openings-metaItem'}>
-                    <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>schedule</span> {job.experience}
+                    <span className="material-symbols-outlined" style={{ fontSize: '18px', color: 'var(--color-secondary)' }}>schedule</span>
+                    <span>{job.experience}</span>
                   </div>
                   <div className={'Openings-metaItem'}>
-                    <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>payments</span> {job.salary}
+                    <span className="material-symbols-outlined" style={{ fontSize: '18px', color: 'var(--color-secondary)' }}>payments</span>
+                    <span>{job.salary}</span>
                   </div>
                 </div>
 
@@ -157,19 +166,7 @@ const Openings = () => {
         <div className={'Openings-uploadCtaBanner'}>
           <div className={'Openings-uploadLeft'}>
             <div className={'Openings-uploadIcon'}>
-              <svg
-                width="24"
-                height="24"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
-                <polygon points="12 11 13.5 13.5 16.5 14 14.5 16.5 15 19.5 12 18 9 19.5 9.5 16.5 7.5 14 10.5 13.5 12 11"></polygon>
-              </svg>
+              <span className="material-symbols-outlined" style={{ fontSize: '30px' }}>folder_special</span>
             </div>
             <div className={'Openings-uploadText'}>
               <h4>Looking for unlisted or confidential enterprise openings?</h4>

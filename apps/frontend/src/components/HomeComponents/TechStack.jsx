@@ -15,36 +15,41 @@ const TechStack = () => {
     }
   }, [dispatch, status.techStack]);
 
-  // For the infinite carousel effect, we duplicate the array so it scrolls seamlessly
-  const carouselItems = [...technologies, ...technologies];
+  const defaultTechs = [
+    'SAP HANA',
+    'Adobe AEM',
+    'Node / Python',
+    'Teamcenter PLM',
+    'AWS & Azure',
+    'Salesforce CRM',
+    'Oracle DB',
+    'Kubernetes',
+  ];
+
+  const items = technologies && technologies.length > 0 ? technologies : defaultTechs;
 
   return (
-    <section className={'TechStack-techStackSection'}>
-      <div className={'TechStack-techStackContainer'}>
-        <div className={'TechStack-techStackHeader'}>
-          <div className={'TechStack-headerLeft'}>
-            <SectionBadge text="ENTERPRISE TECH STACK ECOSYSTEM" />
-            <div className={'TechStack-subtext'}>
-              Engineered talent pools rigorously validated for leading
-              enterprise platforms
-            </div>
+    <section className="TechStack-techStackSection">
+      <div className="TechStack-techStackContainer">
+        <div className="TechStack-techStackHeader">
+          <div className="TechStack-headerLeft">
+            <span className="TechStack-eyebrow">Enterprise Tech Stack Ecosystem</span>
+            <p className="TechStack-subtext">
+              Engineered talent pools rigorously validated for leading enterprise platforms
+            </p>
           </div>
-          <div className={'TechStack-headerRight'}>
-            <span>✓</span> Pre-screened Bench Available
+          <div className="TechStack-headerRight">
+            <span className="material-symbols-outlined text-[16px]">check_circle</span>
+            <span>Pre-screened Bench Available</span>
           </div>
         </div>
 
-        <div className={'TechStack-carouselWrapper'}>
-          {status.techStack !== 'loading' && (
-            <div className={'TechStack-pillTrack'}>
-              {carouselItems.map((tech, index) => (
-                <div key={index} className={'TechStack-pill'}>
-                  {tech}
-                </div>
-              ))}
+        <div className="TechStack-grid">
+          {items.slice(0, 8).map((tech, index) => (
+            <div key={index} className="TechStack-gridCard group">
+              <span className="TechStack-cardText">{tech}</span>
             </div>
-          )}
-          {status.techStack === 'loading' && <div>Loading ecosystem...</div>}
+          ))}
         </div>
       </div>
     </section>

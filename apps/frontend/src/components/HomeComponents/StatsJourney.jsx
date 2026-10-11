@@ -37,72 +37,73 @@ const StatsJourney = () => {
   ];
 
   return (
-    <section className={'StatsJourney-section'}>
-      <div className={'StatsJourney-container'}>
-        {/* Stats Section */}
-        <div className={'StatsJourney-statsGrid'}>
-          <div className={'StatsJourney-statCard'}>
-            <div className={'StatsJourney-statValue'}>
+    <section className="StatsJourney-section">
+      <div className="StatsJourney-container">
+        {/* Stats Telemetry Section */}
+        <div className="StatsJourney-statsGrid">
+          <div className="StatsJourney-statCard">
+            <div className="StatsJourney-statValue">
               {stats.jobsFilled}
-              <span className={'StatsJourney-statAccent'}>+</span>
+              <span className="StatsJourney-statAccent">+</span>
             </div>
-            <h4 className={'StatsJourney-statTitle'}>HOT TECH JOBS FILLED</h4>
-            <p className={'StatsJourney-statDesc'}>
-              Across Tier-1 IT & Product Firms
+            <h4 className="StatsJourney-statTitle">HOT TECH JOBS FILLED</h4>
+            <p className="StatsJourney-statDesc">
+              Across Tier-1 IT &amp; Product Firms
             </p>
           </div>
-          <div className={'StatsJourney-statCard'}>
-            <div className={'StatsJourney-statValue'}>
+          <div className="StatsJourney-statCard">
+            <div className="StatsJourney-statValue">
               {stats.corePlacements}
-              <span className={'StatsJourney-statAccent'}>+</span>
+              <span className="StatsJourney-statAccent">+</span>
             </div>
-            <h4 className={'StatsJourney-statTitle'}>
+            <h4 className="StatsJourney-statTitle">
               ON-ROLL CORE PLACEMENTS
             </h4>
-            <p className={'StatsJourney-statDesc'}>
+            <p className="StatsJourney-statDesc">
               Full-time permanent engineering leaders
             </p>
           </div>
-          <div className={'StatsJourney-statCard'}>
-            <div className={'StatsJourney-statValue'}>
+          <div className="StatsJourney-statCard">
+            <div className="StatsJourney-statValue">
               {stats.contingentHired}
-              <span className={'StatsJourney-statAccent'}>+</span>
+              <span className="StatsJourney-statAccent">+</span>
             </div>
-            <h4 className={'StatsJourney-statTitle'}>TOTAL CONTINGENT HIRED</h4>
-            <p className={'StatsJourney-statDesc'}>
+            <h4 className="StatsJourney-statTitle">TOTAL CONTINGENT HIRED</h4>
+            <p className="StatsJourney-statDesc">
               Deployed in agile enterprise squads
             </p>
           </div>
-          <div className={'StatsJourney-statCard'}>
-            <div className={'StatsJourney-statValue'}>
+          <div className="StatsJourney-statCard">
+            <div className="StatsJourney-statValue">
               {stats.clientRetention}
-              <span className={'StatsJourney-statAccent'}>%</span>
+              <span className="StatsJourney-statAccent">%</span>
             </div>
-            <h4 className={'StatsJourney-statTitle'}>CLIENT RETENTION RATE</h4>
-            <p className={'StatsJourney-statDesc'}>
+            <h4 className="StatsJourney-statTitle">CLIENT RETENTION RATE</h4>
+            <p className="StatsJourney-statDesc">
               Repeat multi-quarter staffing engagements
             </p>
           </div>
         </div>
 
         {/* Timeline Section */}
-        <div className={'StatsJourney-timelineHeader'}>
-          <SectionBadge text="OUR JOURNEY" />
-          <h2 className={'StatsJourney-timelineTitle'}>
+        <div className="StatsJourney-timelineHeader">
+          <span className="StatsJourney-timelineTag">OUR JOURNEY</span>
+          <h2 className="StatsJourney-timelineTitle">
             Milestones of Exponential Growth
           </h2>
-          <p className={'StatsJourney-timelineDesc'}>
-            From visionary inception in Noida to an international tech workforce
-            catalyst.
+          <p className="StatsJourney-timelineDesc">
+            From visionary inception in Noida to an international tech workforce catalyst.
           </p>
         </div>
 
-        <div className={'StatsJourney-timelineGrid'}>
+        <div className="StatsJourney-timelineGrid">
           {timelineData.map((item, index) => (
-            <div key={index} className={'StatsJourney-timelineCard'}>
-              <h3 className={'StatsJourney-timelineYear'}>{item.year}</h3>
-              <h4 className={'StatsJourney-timelineCardTitle'}>{item.title}</h4>
-              <p className={'StatsJourney-timelineCardDesc'}>{item.desc}</p>
+            <div key={index} className="StatsJourney-timelineCard">
+              <h3 className={`StatsJourney-timelineYear ${index % 2 === 0 ? 'text-emerald-accent' : 'text-primary-fixed'}`}>
+                {item.year}
+              </h3>
+              <h4 className="StatsJourney-timelineCardTitle">{item.title}</h4>
+              <p className="StatsJourney-timelineCardDesc">{item.desc}</p>
             </div>
           ))}
         </div>

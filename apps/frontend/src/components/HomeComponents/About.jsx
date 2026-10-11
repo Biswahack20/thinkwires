@@ -1,64 +1,55 @@
 import React from 'react';
-import SectionBadge from '../common/SectionBadge';
+import { Link } from 'react-router-dom';
 
 const About = () => {
   return (
-    <section className={'About-aboutSection'}>
-      <div className={'About-aboutContainer'}>
+    <section className="About-aboutSection">
+      <div className="About-aboutContainer">
         {/* Left Content */}
-        <div className={'About-aboutContent'}>
-          <SectionBadge 
-            text="About ThinkWires" 
-            icon={
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <rect x="4" y="2" width="16" height="20" rx="2" ry="2"></rect>
-                <line x1="9" y1="6" x2="9.01" y2="6"></line>
-                <line x1="15" y1="6" x2="15.01" y2="6"></line>
-                <line x1="9" y1="10" x2="9.01" y2="10"></line>
-                <line x1="15" y1="10" x2="15.01" y2="10"></line>
-                <line x1="9" y1="14" x2="9.01" y2="14"></line>
-                <line x1="15" y1="14" x2="15.01" y2="14"></line>
-                <line x1="9" y1="18" x2="9.01" y2="18"></line>
-                <line x1="15" y1="18" x2="15.01" y2="18"></line>
-              </svg>
-            } 
-          />
+        <div className="About-aboutContent">
+          <div className="About-brandBadge">
+            <span className="material-symbols-outlined text-[16px]">corporate_fare</span>
+            <span>About ThinkWires</span>
+          </div>
 
-          <h2 className={'About-title'}>
+          <h2 className="About-title">
             Bridging Human Ingenuity With Borderless Tech Precision
           </h2>
 
-          <p className={'About-description'}>
+          <p className="About-description">
             Established in 2022 and operating as a premier Private Limited
             workforce advisory, ThinkWires provides equal access to high-impact
             career opportunities while transforming enterprise talent deployment
             across India, the United States, and Canada.
           </p>
 
-          <p className={'About-description'}>
+          <p className="About-description">
             Beyond engineering staff augmentation, we provide turnkey payroll
             administration and multilingual talent sourcing across BFSI, Life
             Sciences, Cloud infrastructure, and advanced manufacturing sectors.
           </p>
 
-          <div className={'About-statsGrid'}>
-            <div className={'About-statBox'}>
-              <div className={'About-statValue'}>2022</div>
-              <div className={'About-statText'}>
-                Incorporated & rapidly scaled to bilateral enterprise corridors
+          <div className="About-statsGrid">
+            <div className="About-statBox">
+              <div className="About-statValue">2022</div>
+              <div className="About-statText">
+                Incorporated &amp; rapidly scaled to bilateral enterprise corridors
               </div>
             </div>
-            <div className={'About-statBox'}>
-              <div className={'About-statValue'}>100%</div>
-              <div className={'About-statText'}>
-                Compliant cross-border hiring, EOR & payroll assurance
+            <div className="About-statBox">
+              <div className="About-statValue text-tertiary">100%</div>
+              <div className="About-statText">
+                Compliant cross-border hiring, EOR &amp; payroll assurance
               </div>
             </div>
           </div>
 
-          <button className={'About-readMoreBtn'}>
-            Read Full Executive Story <span>→</span>
-          </button>
+          <div className="pt-2">
+            <Link to="/about" className="About-readMoreBtn">
+              <span>Read Full Executive Story</span>
+              <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
+            </Link>
+          </div>
         </div>
 
         {/* Right Grid */}
