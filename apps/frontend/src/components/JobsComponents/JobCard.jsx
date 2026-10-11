@@ -61,22 +61,34 @@ const JobCard = ({ job, onApplyClick }) => {
       <div className="JobCard-specsGrid">
         <div className="JobCard-specItem">
           <span className="JobCard-specLabel">Location</span>
-          <span className="JobCard-specVal">📍 {job.location}</span>
+          <span className="JobCard-specVal">
+            <span className="material-symbols-outlined" style={{ fontSize: '15px', verticalAlign: 'middle', marginRight: '4px' }}>location_on</span>
+            {job.location}
+          </span>
         </div>
 
         <div className="JobCard-specItem">
           <span className="JobCard-specLabel">Experience</span>
-          <span className="JobCard-specVal">💼 {job.experience}</span>
+          <span className="JobCard-specVal">
+            <span className="material-symbols-outlined" style={{ fontSize: '15px', verticalAlign: 'middle', marginRight: '4px' }}>work</span>
+            {job.experience}
+          </span>
         </div>
 
         <div className="JobCard-specItem">
           <span className="JobCard-specLabel">Budget Range</span>
-          <span className="JobCard-specVal JobCard-salaryVal">💰 {job.salary}</span>
+          <span className="JobCard-specVal JobCard-salaryVal">
+            <span className="material-symbols-outlined" style={{ fontSize: '15px', verticalAlign: 'middle', marginRight: '4px' }}>payments</span>
+            {job.salary}
+          </span>
         </div>
 
         <div className="JobCard-specItem">
           <span className="JobCard-specLabel">Joining / Tier</span>
-          <span className="JobCard-specVal">⚡ {job.joining || '< 15 Days'}</span>
+          <span className="JobCard-specVal">
+            <span className="material-symbols-outlined" style={{ fontSize: '15px', verticalAlign: 'middle', marginRight: '4px' }}>bolt</span>
+            {job.joining || '< 15 Days'}
+          </span>
         </div>
       </div>
 

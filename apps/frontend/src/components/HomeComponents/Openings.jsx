@@ -15,6 +15,8 @@ const Openings = () => {
     }
   }, [dispatch, status.openings]);
 
+  const [activeFilter, setActiveFilter] = useState('All Roles (4)');
+
   const filters = [
     'All Roles (4)',
     'SAP & Enterprise',
@@ -22,6 +24,37 @@ const Openings = () => {
     'Platform Architecture',
     'PLM & Systems',
   ];
+
+  const filteredOpenings = openings.filter((job) => {
+    if (activeFilter === 'All Roles (4)') return true;
+    if (activeFilter === 'SAP & Enterprise') {
+      return (
+        job.title.toLowerCase().includes('sap') ||
+        job.skills.some((s) => s.toLowerCase().includes('sap') || s.toLowerCase().includes('abap'))
+      );
+    }
+    if (activeFilter === 'Full Stack & AEM') {
+      return (
+        job.title.toLowerCase().includes('aem') ||
+        job.title.toLowerCase().includes('full stack') ||
+        job.skills.some((s) => s.toLowerCase().includes('aem') || s.toLowerCase().includes('react'))
+      );
+    }
+    if (activeFilter === 'Platform Architecture') {
+      return (
+        job.title.toLowerCase().includes('architect') ||
+        job.skills.some((s) => s.toLowerCase().includes('ach') || s.toLowerCase().includes('platform'))
+      );
+    }
+    if (activeFilter === 'PLM & Systems') {
+      return (
+        job.title.toLowerCase().includes('plm') ||
+        job.title.toLowerCase().includes('teamcenter') ||
+        job.skills.some((s) => s.toLowerCase().includes('plm') || s.toLowerCase().includes('bmide'))
+      );
+    }
+    return true;
+  });
 
   return (
     <section className={'Openings-openingsSection'}>
@@ -36,7 +69,7 @@ const Openings = () => {
             </p>
           </div>
           <div className={'Openings-headerRight'}>
-            <span>⚡</span> 130+{' '}
+            <span className="material-symbols-outlined" style={{ color: 'var(--color-emerald-accent)', fontSize: '20px' }}>bolt</span> 130+{' '}
             <span style={{ fontWeight: 500, color: '#64748b' }}>
               Verified Tech Roles
             </span>
@@ -47,7 +80,8 @@ const Openings = () => {
           {filters.map((f, i) => (
             <button
               key={i}
-              className={`${'Openings-filterBtn'} ${i === 0 ? 'Openings-active' : ''}`}
+              onClick={() => setActiveFilter(f)}
+              className={`${'Openings-filterBtn'} ${activeFilter === f ? 'Openings-active' : ''}`}
             >
               {f}
             </button>
@@ -58,7 +92,7 @@ const Openings = () => {
           <div>Loading priority openings...</div>
         ) : (
           <div className={'Openings-grid'}>
-            {openings.map((job) => (
+            {filteredOpenings.map((job) => (
               <div key={job.id} className={'Openings-card'}>
                 <div className={'Openings-cardHeader'}>
                   <div className={'Openings-companyInfo'}>
@@ -79,13 +113,13 @@ const Openings = () => {
 
                 <div className={'Openings-metaInfo'}>
                   <div className={'Openings-metaItem'}>
-                    <span>📍</span> {job.location}
+                    <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>location_on</span> {job.location}
                   </div>
                   <div className={'Openings-metaItem'}>
-                    <span>⏱️</span> {job.experience}
+                    <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>schedule</span> {job.experience}
                   </div>
                   <div className={'Openings-metaItem'}>
-                    <span>💰</span> {job.salary}
+                    <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>payments</span> {job.salary}
                   </div>
                 </div>
 

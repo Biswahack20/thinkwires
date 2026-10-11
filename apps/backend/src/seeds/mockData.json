@@ -28,7 +28,13 @@
       "salary": "₹10 - 15 LPA",
       "joining": "< 15 Days",
       "description": "Professionals with hands-on experience in ABAP development and HANA-based solutions, along with strong expertise in form development, CDS Views, AMDP...",
-      "skills": ["SAP ABAP", "HANA Database", "CDS views", "RICEF", "AMDP"],
+      "skills": [
+        "SAP ABAP",
+        "HANA Database",
+        "CDS views",
+        "RICEF",
+        "AMDP"
+      ],
       "workMode": "On-site",
       "department": "SAP & Enterprise",
       "postedDate": "2026-10-04",
@@ -48,7 +54,13 @@
       "salary": "₹20+ LPA / Direct",
       "joining": "Principal Tier",
       "description": "Design and build a standalone, high-throughput, fault-tolerant Payment Processing & Ledger Platform from scratch. Core responsibilities include low-...",
-      "skills": ["node.js", "TypeScript", "ACH Systems", "Distributed Ledger", "Python"],
+      "skills": [
+        "node.js",
+        "TypeScript",
+        "ACH Systems",
+        "Distributed Ledger",
+        "Python"
+      ],
       "workMode": "Remote",
       "department": "Full Stack & Frontend",
       "postedDate": "2026-10-03",
@@ -68,7 +80,13 @@
       "salary": "Market Premium",
       "joining": "Contract / C2H",
       "description": "Key locations across Bangalore, Chennai, and Hyderabad. Implement scalable AEM Cloud Service micro-sites with modern Web SDK integration, Java OSGi...",
-      "skills": ["Adobe AEM 6.5", "Cloud Services", "Web SDK", "Java OSGi", "React.js"],
+      "skills": [
+        "Adobe AEM 6.5",
+        "Cloud Services",
+        "Web SDK",
+        "Java OSGi",
+        "React.js"
+      ],
       "workMode": "Hybrid",
       "department": "Full Stack & Frontend",
       "postedDate": "2026-10-02",
@@ -88,7 +106,13 @@
       "salary": "₹30 - 40 LPA",
       "joining": "15–30 Days",
       "description": "Design, develop, and deploy production-scale LLMs, diffusion systems, and multi-modal computer vision models. Deep expertise in PyTorch and LangChain...",
-      "skills": ["LLMs", "PyTorch", "LangChain", "Vision Transformers", "Vector DBs"],
+      "skills": [
+        "LLMs",
+        "PyTorch",
+        "LangChain",
+        "Vision Transformers",
+        "Vector DBs"
+      ],
       "workMode": "Remote",
       "department": "AI & Data Engineering",
       "postedDate": "2026-10-01",
@@ -108,7 +132,13 @@
       "salary": "Premium CTC",
       "joining": "Multi-Cloud",
       "description": "Hands-on Cloud Architect passionate about building the next generation of enterprise AI/ML platforms. Focus on high scalability, multi-region Kubernetes...",
-      "skills": ["AWS & Azure", "MLOps", "Kubernetes", "Terraform", "CI/CD"],
+      "skills": [
+        "AWS & Azure",
+        "MLOps",
+        "Kubernetes",
+        "Terraform",
+        "CI/CD"
+      ],
       "workMode": "On-site",
       "department": "Cloud & DevOps",
       "postedDate": "2026-09-30",
@@ -128,7 +158,13 @@
       "salary": "Open CTC",
       "joining": "Low-Latency",
       "description": "Responsible for designing, developing, testing, debugging, and maintaining high-performance low-latency enterprise software solutions in Modern C++...",
-      "skills": ["Modern C++", "Multi-threading", "Linux Kernel", "Low Latency", "IPC / Socket"],
+      "skills": [
+        "Modern C++",
+        "Multi-threading",
+        "Linux Kernel",
+        "Low Latency",
+        "IPC / Socket"
+      ],
       "workMode": "Remote",
       "department": "Full Stack & Frontend",
       "postedDate": "2026-09-29",
@@ -148,7 +184,14 @@
       "salary": "₹22 - 32 LPA",
       "joining": "< 30 Days",
       "description": "Architect robust infrastructure as code (IaC) using Terraform, manage production EKS/GKE Kubernetes clusters, and optimize CI/CD pipelines for zero-downtime releases.",
-      "skills": ["Kubernetes", "Terraform", "AWS", "Helm", "Docker", "Prometheus"],
+      "skills": [
+        "Kubernetes",
+        "Terraform",
+        "AWS",
+        "Helm",
+        "Docker",
+        "Prometheus"
+      ],
       "workMode": "Hybrid",
       "department": "Cloud & DevOps",
       "postedDate": "2026-09-28",
@@ -168,7 +211,13 @@
       "salary": "₹28 - 38 LPA",
       "joining": "15 Days",
       "description": "Lead the frontend architecture of complex enterprise dashboards. Drive SSR/SSG patterns using Next.js 15, TailwindCSS, Redux Toolkit, and micro-frontend design.",
-      "skills": ["React.js", "Next.js", "Redux Toolkit", "TypeScript", "Tailwind CSS"],
+      "skills": [
+        "React.js",
+        "Next.js",
+        "Redux Toolkit",
+        "TypeScript",
+        "Tailwind CSS"
+      ],
       "workMode": "Hybrid",
       "department": "Full Stack & Frontend",
       "postedDate": "2026-09-27",
@@ -188,7 +237,14 @@
       "salary": "₹18 - 25 LPA",
       "joining": "Immediate",
       "description": "Lead 24/7 SOC operations, incident response, vulnerability assessment (VAPT), and zero-trust framework enforcement across multi-cloud enterprise networks.",
-      "skills": ["SOC Operations", "SIEM", "VAPT", "Zero Trust", "ISO 27001", "Wireshark"],
+      "skills": [
+        "SOC Operations",
+        "SIEM",
+        "VAPT",
+        "Zero Trust",
+        "ISO 27001",
+        "Wireshark"
+      ],
       "workMode": "On-site",
       "department": "Cyber Security",
       "postedDate": "2026-09-26",
@@ -208,7 +264,14 @@
       "salary": "₹35 - 45 LPA",
       "joining": "< 30 Days",
       "description": "Build modern data stack pipelines connecting Kafka streams to Snowflake data warehouses. Deep knowledge of PySpark, dbt, and Airflow workflow orchestration.",
-      "skills": ["Snowflake", "PySpark", "Apache Kafka", "dbt", "Airflow", "Python"],
+      "skills": [
+        "Snowflake",
+        "PySpark",
+        "Apache Kafka",
+        "dbt",
+        "Airflow",
+        "Python"
+      ],
       "workMode": "Remote",
       "department": "AI & Data Engineering",
       "postedDate": "2026-09-25",
@@ -228,7 +291,14 @@
       "salary": "₹16 - 22 LPA",
       "joining": "< 15 Days",
       "description": "Implement end-to-end automated UI and API testing frameworks using Playwright, Cypress, and JavaScript/TypeScript integrated into Jenkins CI/CD.",
-      "skills": ["Playwright", "Cypress", "JavaScript", "Selenium", "API Testing", "Postman"],
+      "skills": [
+        "Playwright",
+        "Cypress",
+        "JavaScript",
+        "Selenium",
+        "API Testing",
+        "Postman"
+      ],
       "workMode": "Remote",
       "department": "QA & Testing",
       "postedDate": "2026-09-24",
@@ -248,7 +318,13 @@
       "salary": "₹24 - 34 LPA",
       "joining": "30 Days",
       "description": "Architect complex Sales Cloud and Service Cloud integrations with LWC (Lightning Web Components), Apex, and REST APIs for Fortune 500 enterprise clients.",
-      "skills": ["Salesforce CRM", "Apex", "LWC", "Sales Cloud", "Integration APIs"],
+      "skills": [
+        "Salesforce CRM",
+        "Apex",
+        "LWC",
+        "Sales Cloud",
+        "Integration APIs"
+      ],
       "workMode": "Hybrid",
       "department": "SAP & Enterprise",
       "postedDate": "2026-09-23",
@@ -338,7 +414,11 @@
       "eyebrowColor": "#4f46e5",
       "title": "Staff Augmentation",
       "description": "Scale your engineering and enterprise squads on-demand with senior pre-screened individual contributors or cohesive development pods.",
-      "features": ["Flexible month-to-month contracts", "Zero internal sourcing overhead", "Instant replacement guarantee"],
+      "features": [
+        "Flexible month-to-month contracts",
+        "Zero internal sourcing overhead",
+        "Instant replacement guarantee"
+      ],
       "iconBg": "#eef2ff",
       "iconColor": "#4f46e5",
       "icon": "users",
@@ -351,7 +431,11 @@
       "eyebrowColor": "#64748b",
       "title": "Employer of Record (EOR)",
       "description": "Hire anywhere in India, the US, and Canada without establishing foreign legal entities. We manage compliance, taxes, and local benefits seamlessly.",
-      "features": ["Full statutory Indian & US compliance", "Cross-currency automated payroll", "IP & NDA contract protection"],
+      "features": [
+        "Full statutory Indian & US compliance",
+        "Cross-currency automated payroll",
+        "IP & NDA contract protection"
+      ],
       "iconBg": "#e0f2fe",
       "iconColor": "#0ea5e9",
       "icon": "globe",
@@ -364,7 +448,11 @@
       "eyebrowColor": "#10b981",
       "title": "Permanent & Search",
       "description": "Precision headhunting for pivotal VP Engineering, Lead Architects, Product Directors, and niche domain specialists who drive longevity.",
-      "features": ["Confidential executive sourcing", "90-day retention warranty", "Behavioral & leadership appraisal"],
+      "features": [
+        "Confidential executive sourcing",
+        "90-day retention warranty",
+        "Behavioral & leadership appraisal"
+      ],
       "iconBg": "#dcfce7",
       "iconColor": "#10b981",
       "icon": "star",
@@ -377,7 +465,11 @@
       "eyebrowColor": "#3b82f6",
       "title": "Payroll Outsourcing",
       "description": "End-to-end automated payroll execution, provident fund (PF) administration, ESIC compliance, tax withholdings, and employee self-service.",
-      "features": ["100% statutory error-free record", "Digital payslip dispatch portal", "Direct tax authority remittances"],
+      "features": [
+        "100% statutory error-free record",
+        "Digital payslip dispatch portal",
+        "Direct tax authority remittances"
+      ],
       "iconBg": "#eef2ff",
       "iconColor": "#4f46e5",
       "icon": "document",
@@ -489,9 +581,21 @@
     "primaryFinding": "Global GCC capability share in tier-1 Indian centers rose from 24% maintenance to 68% high-order machine learning IP generation in 2026.",
     "category": "AI & Data Science",
     "categories": [
-      { "name": "AI & Data Science", "bg": "#dbeafe", "color": "#1e40af" },
-      { "name": "GCC Trends", "bg": "#f1f5f9", "color": "#475569" },
-      { "name": "Strategic Shift", "bg": "#dcfce7", "color": "#166534" }
+      {
+        "name": "AI & Data Science",
+        "bg": "#dbeafe",
+        "color": "#1e40af"
+      },
+      {
+        "name": "GCC Trends",
+        "bg": "#f1f5f9",
+        "color": "#475569"
+      },
+      {
+        "name": "Strategic Shift",
+        "bg": "#dcfce7",
+        "color": "#166534"
+      }
     ],
     "author": {
       "name": "Research & Advisory Team",
@@ -676,5 +780,733 @@
       "organization": "Advising North American and European Fortune 500 GCCs",
       "avatar": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=200"
     }
-  ]
+  ],
+  "industriesPageData": {
+    "hero": {
+      "badge1": "12+ Specialized Industry Sectors",
+      "badge2": "Pre-screened Domain SMEs",
+      "badge3": "Cross-Border Regulatory Compliance",
+      "title": "Domain Expertise &",
+      "titleHighlight": "Industries We Empower",
+      "subtitle": "In today's competitive landscape, organizations require diverse hiring skills to identify and attract top talent across multiple sectors and industries. From healthcare and technology to finance, logistics, and manufacturing, effective hiring strategies demand a mix of market knowledge, adaptability, and industry-specific insight.",
+      "stats": [
+        {
+          "value": "48",
+          "unit": "h",
+          "label": "Fast-Track SME Match",
+          "accent": "green"
+        },
+        {
+          "value": "100",
+          "unit": "%",
+          "label": "Audit Pass Rate",
+          "accent": "blue"
+        },
+        {
+          "value": "98.4",
+          "unit": "%",
+          "label": "POD Retention (12mo)",
+          "accent": "green"
+        },
+        {
+          "value": "0",
+          "unit": "#",
+          "label": "Statutory Violations",
+          "accent": "green"
+        }
+      ]
+    },
+    "sectorTabs": [
+      {
+        "key": "all",
+        "label": "All Sectors"
+      },
+      {
+        "key": "tech",
+        "label": "Tech & Digital"
+      },
+      {
+        "key": "financial",
+        "label": "Financial Services"
+      },
+      {
+        "key": "healthcare",
+        "label": "Healthcare & Life Sciences"
+      },
+      {
+        "key": "industrial",
+        "label": "Industrial & Engineering"
+      },
+      {
+        "key": "defense",
+        "label": "Defense & Public"
+      }
+    ],
+    "sectors": [
+      {
+        "id": "tech",
+        "filter": "tech",
+        "title": "Enterprise Software & Cloud Platforms",
+        "desc": "Distributed microservices, hyperscale cloud architecture, and multi-tenant SaaS platforms built for zero-downtime reliability.",
+        "icon": "cloud",
+        "iconBg": "rgba(37, 99, 235, 0.1)",
+        "iconColor": "#2563EB",
+        "badgeText": "Hyperscale Verified",
+        "badgeColor": "rgba(37, 99, 235, 0.1)",
+        "badgeDot": "#2563EB",
+        "complianceText": "SOC 2 Type II, ISO 27001, GDPR, FedRAMP High",
+        "placements": [
+          "Kubernetes Architects",
+          "Golang / Rust Systems",
+          "Distributed Systems Lead",
+          "Cloud Security Ops"
+        ],
+        "podsDeployed": "38+"
+      },
+      {
+        "id": "financial",
+        "filter": "financial",
+        "title": "Core Banking & FinTech Protocols",
+        "desc": "High-throughput payment rails, ISO 20022 messaging integrations, algorithmic settlement, and ledger reconciliation pods.",
+        "icon": "account_balance",
+        "iconBg": "rgba(0, 55, 176, 0.1)",
+        "iconColor": "#0037B0",
+        "badgeText": "PCI-DSS 4.0 Cleared",
+        "badgeColor": "rgba(0, 55, 176, 0.1)",
+        "badgeDot": "#0037B0",
+        "complianceText": "PCI-DSS 4.0, GLBA, FINRA, ISO 20022 Rails",
+        "placements": [
+          "ACH / FedNow Engineers",
+          "Low-Latency C++ Devs",
+          "Smart Contract Auditors",
+          "FinOps Architects"
+        ],
+        "podsDeployed": "29+"
+      },
+      {
+        "id": "healthcare",
+        "filter": "healthcare",
+        "title": "HealthTech & Life Sciences",
+        "desc": "HIPAA-hardened clinical trial suites, HL7 FHIR interoperability layers, and FDA 21 CFR Part 11 compliant medical imaging pipelines.",
+        "icon": "medical_services",
+        "iconBg": "rgba(34, 197, 94, 0.1)",
+        "iconColor": "#16A34A",
+        "badgeText": "FDA 21 CFR Compliant",
+        "badgeColor": "rgba(34, 197, 94, 0.1)",
+        "badgeDot": "#16A34A",
+        "complianceText": "HIPAA Omnibus, HL7 / FHIR, FDA 21 CFR Part 11, HITRUST",
+        "placements": [
+          "Bio-Stats Engineers",
+          "FHIR API Specialists",
+          "Clinical QA Automation",
+          "Health Data Scientists"
+        ],
+        "podsDeployed": "24+"
+      },
+      {
+        "id": "industrial",
+        "filter": "industrial",
+        "title": "Automotive & Autonomous Systems",
+        "desc": "ISO 26262 ASIL-D functional safety pods, AUTOSAR Classic/Adaptive stacks, and drive-by-wire RTOS firmware development.",
+        "icon": "directions_car",
+        "iconBg": "rgba(79, 70, 229, 0.1)",
+        "iconColor": "#4F46E5",
+        "badgeText": "ASIL-D Certified",
+        "badgeColor": "rgba(79, 70, 229, 0.1)",
+        "badgeDot": "#4F46E5",
+        "complianceText": "ISO 26262 ASIL-D, AUTOSAR, ASPICE Level 3, MISRA C++",
+        "placements": [
+          "Embedded RTOS Leads",
+          "AUTOSAR Architects",
+          "CAN/LIN Bus Engineers",
+          "ADAS Simulation Techs"
+        ],
+        "podsDeployed": "21+"
+      },
+      {
+        "id": "defense",
+        "filter": "defense",
+        "title": "Aerospace & Mission-Critical Defense",
+        "desc": "DO-178C avionics software, air-gapped SCADA telemetries, and ITAR-cleared aerospace engineering units.",
+        "icon": "shield",
+        "iconBg": "rgba(15, 23, 42, 0.1)",
+        "iconColor": "#0F172A",
+        "badgeText": "ITAR / DO-178C",
+        "badgeColor": "rgba(15, 23, 42, 0.1)",
+        "badgeDot": "#0F172A",
+        "complianceText": "DO-178C Level A, DO-254, ITAR Clearance, NIST SP 800-171",
+        "placements": [
+          "Avionics Software Leads",
+          "SCADA Security SMEs",
+          "Guidance & Navigation",
+          "FPGA Hardware Engineers"
+        ],
+        "podsDeployed": "16+"
+      },
+      {
+        "id": "tech",
+        "filter": "tech",
+        "title": "AI, GenAI & Cognitive Architectures",
+        "desc": "Large language model fine-tuning, retrieval-augmented generation (RAG) pipelines, and low-latency inference cluster scaling.",
+        "icon": "psychology",
+        "iconBg": "rgba(147, 51, 234, 0.1)",
+        "iconColor": "#9333EA",
+        "badgeText": "NVIDIA Stack Calibrated",
+        "badgeColor": "rgba(147, 51, 234, 0.1)",
+        "badgeDot": "#9333EA",
+        "complianceText": "EU AI Act Alignment, NIST AI RMF, Responsible AI Audits",
+        "placements": [
+          "LLM Systems Engineers",
+          "Vector DB Architects",
+          "MLOps Infrastructure",
+          "Computer Vision Leads"
+        ],
+        "podsDeployed": "32+"
+      }
+    ],
+    "featureComparison": {
+      "badge": "Engineering Precision Matters",
+      "title": "Why Industry-Specific Staffing Protects Enterprise Velocity",
+      "subtitle": "Commodity staffing agencies forward generic resumes without technical screening. ThinkWires deploys calibrated engineering pods vetted by veteran domain architects.",
+      "generalistCard": {
+        "title": "Generalist Staffing",
+        "subtitle": "Transactional Brokerage",
+        "points": [
+          {
+            "title": "Keyword matching without domain grasp",
+            "desc": "Resumes filtered only via automated ATS parsers with no technical coding verification."
+          },
+          {
+            "title": "Zero regulatory comprehension",
+            "desc": "Candidates require months of internal onboarding before learning FDA, HIPAA, or DO-178C guidelines."
+          },
+          {
+            "title": "Uncapped liability risks",
+            "desc": "Informal contractor arrangements leaving your enterprise exposed to misclassification and tax penalties."
+          },
+          {
+            "title": "High 90-day churn",
+            "desc": "High friction ramp-up leading to delayed project deliverables and recurring candidate backfills."
+          }
+        ],
+        "metricLabel": "Average Time-to-Productivity",
+        "metricValue": "60-90",
+        "metricUnit": "Days"
+      },
+      "thinkWiresCard": {
+        "title": "ThinkWires Pods",
+        "subtitle": "Domain-Calibrated Teams",
+        "tierBadge": "Enterprise Tier",
+        "points": [
+          {
+            "title": "Architect-led technical vetting",
+            "desc": "Every specialist undergoes live whiteboarding and system architecture evaluations with our Lead SMEs."
+          },
+          {
+            "title": "Pre-certified compliance readiness",
+            "desc": "Engineers onboard already trained in ISO 26262, AUTOSAR, HIPAA, SOC 2, or PCI-DSS workflows."
+          },
+          {
+            "title": "Full EOR indemnity & governance",
+            "desc": "Complete legal liability protection, statutory local compliance, and IP ownership across Canada, US & Global."
+          },
+          {
+            "title": "98.4% Retention across project cycles",
+            "desc": "High cultural alignment, dedicated talent success leads, and performance-incentivized retention."
+          }
+        ],
+        "metricLabel": "Average Time-to-Productivity",
+        "metricValue": "Day 1",
+        "metricUnit": "Velocity"
+      }
+    },
+    "caseStudies": {
+      "badge": "Real-World Case Studies",
+      "title": "Proven Results in Regulated Environments",
+      "ctaText": "Request Detailed Case Folios",
+      "items": [
+        {
+          "tag": "Healthcare & Life Sciences",
+          "tagVariant": "green",
+          "location": "Boston, MA",
+          "title": "48-Hour FDA 21 CFR Compliance Deployment",
+          "desc": "A clinical trials software provider faced critical audit remediation deadlines. ThinkWires mobilized a pod of 4 Bio-Stats engineers and a Regulatory QA Lead within 48 hours.",
+          "metrics": [
+            {
+              "label": "Turnaround Time",
+              "value": "Under 48 Hours"
+            },
+            {
+              "label": "Audit Remediation",
+              "value": "100% Passed (Zero Non-Conformances)",
+              "highlight": "green"
+            },
+            {
+              "label": "Engagement Scope",
+              "value": "14-Month Retainer"
+            }
+          ],
+          "progressVariant": "green",
+          "progressLabel": "Project Delivered Ahead of FDA Submission"
+        },
+        {
+          "tag": "FinTech & Core Banking",
+          "tagVariant": "blue",
+          "location": "New York / Toronto",
+          "title": "15+ ISO 20022 Payment Architects for US Unicorn",
+          "desc": "Scalable payment rail modernization to adopt real-time FedNow and ISO 20022 messaging protocols across cross-border settlement infrastructure.",
+          "metrics": [
+            {
+              "label": "Team Scaled",
+              "value": "15 Specialized Engineers"
+            },
+            {
+              "label": "Throughput Latency",
+              "value": "-42% Latency Reduction",
+              "highlight": "blue"
+            },
+            {
+              "label": "Compliance",
+              "value": "PCI-DSS 4.0 Verified"
+            }
+          ],
+          "progressVariant": "blue",
+          "progressLabel": "Cross-Border Settlement Pod Live"
+        },
+        {
+          "tag": "Autonomous Mobility",
+          "tagVariant": "dark",
+          "location": "Munich / Detroit",
+          "title": "Zero Compliance Breaches in AUTOSAR ASIL-D Pod",
+          "desc": "Deployment of an 8-person embedded firmware safety squad for a tier-1 automotive supplier working on next-generation drive-by-wire steering systems.",
+          "metrics": [
+            {
+              "label": "Safety Rating",
+              "value": "ASIL-D Standard Achieved"
+            },
+            {
+              "label": "Defect Density",
+              "value": "0.02 bugs / 1,000 LOC",
+              "highlight": "green"
+            },
+            {
+              "label": "Talent Longevity",
+              "value": "24+ Months Continuous"
+            }
+          ],
+          "progressVariant": "dark",
+          "progressLabel": "Production Ready Vehicle Launch"
+        }
+      ]
+    },
+    "capabilityBriefing": {
+      "badge": "Global Staffing Intelligence",
+      "title": "Need domain-certified engineers for your sector?",
+      "description": "Request a customized industry capability briefing. We evaluate your tech architecture, compliance benchmarks, and provide an instant talent availability map.",
+      "features": [
+        {
+          "icon": "schedule",
+          "text": "48-hour shortlist SLA with pre-cleared engineers"
+        },
+        {
+          "icon": "gavel",
+          "text": "100% compliant cross-border EOR contracts (US, Canada, Global)"
+        },
+        {
+          "icon": "shield",
+          "text": "Pre-screened against FDA, HIPAA, PCI-DSS, and ISO protocols"
+        }
+      ],
+      "formCard": {
+        "title": "Request Industry Capability Briefing",
+        "subtitle": "Confidential briefing tailored to your sector constraints.",
+        "industryOptions": [
+          "Life Sciences & Healthcare",
+          "Banking & FinTech (BFSI)",
+          "Automotive & Mobility",
+          "Manufacturing & Telecom",
+          "Technology & Cloud Software",
+          "Defense & Aerospace",
+          "Semiconductor & Hardware",
+          "Logistics & Supply Chain"
+        ],
+        "podSizeOptions": [
+          "1 - 3 Senior Specialists",
+          "4 - 10 Engineered Pod",
+          "10+ Scaled Global Pod",
+          "Executive / Architect Search"
+        ],
+        "privacyNote": "Non-disclosure assured. We never distribute engineer profiles without mutual confidentiality agreements."
+      }
+    }
+  },
+  "benchData": {
+    "hero": {
+      "liveBadge": "LIVE REPOSITORY — 142 PRE-VETTED TALENTS ACCESSIBLE",
+      "unlockLatency": "Average dossier unlock latency: 4 mins",
+      "headline": "Verified Technical Dossiers Ready for",
+      "headlineHighlight": "48-Hour Deployment.",
+      "description": "Bypass 4-week recruitment lag. Inspect pre-audited production codebases, live system design rubric ratings, and secure direct initial technical rounds with senior specialists across India, US, and Canada.",
+      "slaAssurance": {
+        "title": "ThinkWires Execution SLA",
+        "badge": "Guaranteed",
+        "matchSla": "5-Hour Match",
+        "matchDesc": "Dossier sent to your inbox",
+        "deploymentSla": "7-Day Deployment",
+        "deploymentDesc": "From first interview to active sprint",
+        "supportNote": "Supported by 740+ recruiters",
+        "indemnityNote": "100% Indemnified EOR"
+      },
+      "trustBadges": [
+        {
+          "icon": "timer",
+          "title": "5-Hour Dossier",
+          "subtitle": "Dispatch SLA"
+        },
+        {
+          "icon": "terminal",
+          "title": "Architect-Led Code",
+          "subtitle": "Real PRs Vetted"
+        },
+        {
+          "icon": "verified",
+          "title": "100% Indemnified",
+          "subtitle": "Full EOR Shield"
+        },
+        {
+          "icon": "cached",
+          "title": "90-Day Free",
+          "subtitle": "Replacement Cover"
+        },
+        {
+          "icon": "account_balance",
+          "title": "0% Upfront",
+          "subtitle": "Pay after hire"
+        }
+      ]
+    },
+    "specialties": [
+      {
+        "key": "all",
+        "label": "All Specialties (142)"
+      },
+      {
+        "key": "genai",
+        "label": "Generative AI & LLMs (24)"
+      },
+      {
+        "key": "cloud",
+        "label": "Cloud & DevOps / SRE (38)"
+      },
+      {
+        "key": "sap",
+        "label": "Enterprise SAP & ERP (19)"
+      },
+      {
+        "key": "systems",
+        "label": "Distributed Systems (35)"
+      },
+      {
+        "key": "data",
+        "label": "Data & Snowflake (26)"
+      }
+    ],
+    "candidates": [
+      {
+        "id": "TW-BENCH-902",
+        "initials": "AR",
+        "title": "Lead Cloud Infrastructure & Platform Architect",
+        "experience": "11+ Yrs Experience",
+        "years": 11,
+        "specialty": "cloud",
+        "seniorityTier": "staff",
+        "location": "Bengaluru (EST Overlap)",
+        "locationType": "us-overlap",
+        "background": "Tier-1 Fintech & SaaS",
+        "availability": "Ready in 24h",
+        "urgency": "immediate",
+        "technicalRating": 98,
+        "evaluatedFocus": "Evaluated: Distributed Architecture, Istio Ingress, Concurrency",
+        "engineeringProof": "Reduced AWS infra spend by $1.2M/yr while scaling payment gateway to 45k TPS with zero ledger anomalies.",
+        "skills": [
+          "AWS EKS",
+          "Terraform",
+          "Istio Mesh",
+          "FinOps",
+          "Go",
+          "Kubernetes"
+        ],
+        "dossier": {
+          "videoDuration": "03:48 MIN",
+          "videoTitle": "Technical Intro & System Architecture Walkthrough",
+          "videoDesc": "Candidate walks through high-concurrency Istio ingress patterns, zero-downtime blue/green migration, and automated FinOps telemetry.",
+          "rubric": {
+            "systemDesign": "98/100",
+            "systemDesignNote": "Top 1.2% Percentile",
+            "cleanCode": "99/100",
+            "cleanCodeNote": "Cyclomatic Score: A+",
+            "eorCompliance": "100%",
+            "eorComplianceNote": "BGV & KYC Cleared"
+          },
+          "evaluatorNotes": "Exceptional mastery over multi-tenant Kubernetes topologies. Demonstrated how they managed pod disruption budgets across 8 AWS availability zones with zero downtime under payment flash sales.",
+          "evaluatorAuthor": "Vetted by Anurag S., Principal Staff Architect (Ex-Razorpay, ThinkWires Technical Council)"
+        }
+      },
+      {
+        "id": "TW-BENCH-884",
+        "initials": "VK",
+        "title": "Principal Generative AI & LLM Systems Engineer",
+        "experience": "9+ Yrs (4 Yrs GenAI)",
+        "years": 9,
+        "specialty": "genai",
+        "seniorityTier": "staff",
+        "location": "Hyderabad / Remote Global",
+        "locationType": "remote",
+        "background": "Production RAG At Scale",
+        "availability": "Immediate Availability",
+        "urgency": "immediate",
+        "technicalRating": 96,
+        "evaluatedFocus": "Evaluated: Low-Latency vLLM Inference, Triton Server, Guardrails",
+        "engineeringProof": "Engineered sovereign agentic RAG pipeline handling 3.5M daily document queries at <320ms TTFT.",
+        "skills": [
+          "PyTorch",
+          "LangChain",
+          "vLLM",
+          "Pinecone",
+          "Triton",
+          "Python"
+        ],
+        "dossier": {
+          "videoDuration": "04:12 MIN",
+          "videoTitle": "Agentic Reasoning & Low-Latency LLM Serving Architecture",
+          "videoDesc": "Detailed explanation of vLLM PagedAttention tuning, multi-vector indexing with Pinecone, and self-correcting RAG guards.",
+          "rubric": {
+            "systemDesign": "96/100",
+            "systemDesignNote": "Top 2.1% Percentile",
+            "cleanCode": "97/100",
+            "cleanCodeNote": "Cyclomatic Score: A+",
+            "eorCompliance": "100%",
+            "eorComplianceNote": "BGV & KYC Cleared"
+          },
+          "evaluatorNotes": "In-depth understanding of GPU memory bandwidth constraints, KV cache optimizations, and Triton inference server orchestration.",
+          "evaluatorAuthor": "Vetted by Dr. S. Kulkarni, AI Council Chair (ThinkWires)"
+        }
+      },
+      {
+        "id": "TW-BENCH-741",
+        "initials": "PS",
+        "title": "Lead SAP ABAP on HANA & S/4 Cloud Specialist",
+        "experience": "8+ Yrs (4 Greenfield S/4)",
+        "years": 8,
+        "specialty": "sap",
+        "seniorityTier": "staff",
+        "location": "Pune / Noida / Hybrid",
+        "locationType": "hybrid",
+        "background": "Fortune 500 Proven",
+        "availability": "Immediate Joining",
+        "urgency": "immediate",
+        "technicalRating": 95,
+        "evaluatedFocus": "Evaluated: CDS Views, AMDP, OData v4 Integration, Code Pushdown",
+        "engineeringProof": "Spearheaded core manufacturing logistics migration to SAP S/4HANA with 100% custom RICEF remediation.",
+        "skills": [
+          "SAP S/4 HANA",
+          "CDS Views",
+          "AMDP",
+          "Fiori",
+          "OData v4",
+          "ABAP Cloud"
+        ],
+        "dossier": {
+          "videoDuration": "03:30 MIN",
+          "videoTitle": "S/4HANA Greenfield Architecture & CDS Optimization",
+          "videoDesc": "Walkthrough of high-volume financial accounting document processing and code pushdown patterns in SAP HANA database engine.",
+          "rubric": {
+            "systemDesign": "95/100",
+            "systemDesignNote": "Top 3% Percentile",
+            "cleanCode": "96/100",
+            "cleanCodeNote": "Standard Clean ABAP",
+            "eorCompliance": "100%",
+            "eorComplianceNote": "BGV & KYC Cleared"
+          },
+          "evaluatorNotes": "Demonstrated seamless migration from classic ECC to clean-core S/4HANA with zero customer downtime.",
+          "evaluatorAuthor": "Vetted by Rajeshwar M., SAP Practice Director (ThinkWires)"
+        }
+      },
+      {
+        "id": "TW-BENCH-655",
+        "initials": "RT",
+        "title": "Senior Adobe AEM Full Stack Architect (Cloud Service)",
+        "experience": "8+ Yrs Experience",
+        "years": 8,
+        "specialty": "systems",
+        "seniorityTier": "staff",
+        "location": "Chennai / Remote",
+        "locationType": "remote",
+        "background": "AEMaaCS Certified",
+        "availability": "Available in 48h",
+        "urgency": "immediate",
+        "technicalRating": 94,
+        "evaluatedFocus": "Evaluated: Headless GraphQL, Sling Models, Dispatcher Caching",
+        "engineeringProof": "Led omnichannel headless re-architecture achieving 99 Lighthouse performance across 14 localized domains.",
+        "skills": [
+          "AEMaaCS",
+          "OSGi",
+          "React",
+          "Adobe Target",
+          "HTL / Sling",
+          "GraphQL"
+        ],
+        "dossier": {
+          "videoDuration": "04:05 MIN",
+          "videoTitle": "Headless AEM Componentry & Cloud Manager Pipelines",
+          "videoDesc": "Walkthrough of Cloud Service deployment rules, Adobe Web SDK tag management, and multi-site management (MSM) best practices.",
+          "rubric": {
+            "systemDesign": "94/100",
+            "systemDesignNote": "Top 4% Percentile",
+            "cleanCode": "95/100",
+            "cleanCodeNote": "Modular Sling Models",
+            "eorCompliance": "100%",
+            "eorComplianceNote": "BGV & KYC Cleared"
+          },
+          "evaluatorNotes": "Strong mastery of Adobe Experience Platform Web SDK and seamless SPA editor integration.",
+          "evaluatorAuthor": "Vetted by Vikram N., Digital Experience Lead (ThinkWires)"
+        }
+      },
+      {
+        "id": "TW-BENCH-512",
+        "initials": "SM",
+        "title": "Staff Distributed Systems & Payment Platform Engineer",
+        "experience": "10+ Yrs Experience",
+        "years": 10,
+        "specialty": "systems",
+        "seniorityTier": "staff",
+        "location": "Pan-India (Full US Shift)",
+        "locationType": "us-overlap",
+        "background": "High-Throughput Core Banking",
+        "availability": "Available in 7 Days",
+        "urgency": "7days",
+        "technicalRating": 99,
+        "evaluatedFocus": "Evaluated: High Availability, Zero-Loss Reconciliations, Consensus",
+        "engineeringProof": "Architected real-time distributed ACH ledger processing $800M monthly volume with sub-millisecond locks.",
+        "skills": [
+          "Java 21",
+          "Rust",
+          "Kafka Streams",
+          "Distributed Locks",
+          "SOC2 Type II",
+          "PostgreSQL"
+        ],
+        "dossier": {
+          "videoDuration": "05:10 MIN",
+          "videoTitle": "Zero-Loss Financial Transaction Processing with Kafka",
+          "videoDesc": "Explanation of idempotency tokens, two-phase commits, distributed state stores, and disaster recovery orchestration.",
+          "rubric": {
+            "systemDesign": "99/100",
+            "systemDesignNote": "Top 0.8% Percentile",
+            "cleanCode": "99/100",
+            "cleanCodeNote": "Zero Sonar Warnings",
+            "eorCompliance": "100%",
+            "eorComplianceNote": "BGV & KYC Cleared"
+          },
+          "evaluatorNotes": "Phenomenal clarity on distributed ledger consistency, raft consensus, and transactional isolation levels.",
+          "evaluatorAuthor": "Vetted by Hardik P., Fintech Systems Lead (ThinkWires)"
+        }
+      },
+      {
+        "id": "TW-BENCH-389",
+        "initials": "NA",
+        "title": "Senior Snowflake Data Platform & dbt Architect",
+        "experience": "7+ Yrs Experience",
+        "years": 7,
+        "specialty": "data",
+        "seniorityTier": "senior",
+        "location": "Gurugram / Remote",
+        "locationType": "hybrid",
+        "background": "Modern Data Stack",
+        "availability": "Immediate Joining",
+        "urgency": "immediate",
+        "technicalRating": 95,
+        "evaluatedFocus": "Evaluated: Dimensional Data Modeling, Snowpipe CDC, Query FinOps",
+        "engineeringProof": "Cut analytical query latency by 68% and optimized cloud warehouse computing credits by 42% via dbt models.",
+        "skills": [
+          "Snowflake",
+          "dbt Core",
+          "Airflow",
+          "PySpark",
+          "Databricks",
+          "SQL"
+        ],
+        "dossier": {
+          "videoDuration": "03:55 MIN",
+          "videoTitle": "Snowpipe Streaming & FinOps Warehouse Architectures",
+          "videoDesc": "Designing multi-cluster warehouse auto-scaling, dynamic data masking for GDPR compliance, and incremental dbt models.",
+          "rubric": {
+            "systemDesign": "95/100",
+            "systemDesignNote": "Top 3% Percentile",
+            "cleanCode": "96/100",
+            "cleanCodeNote": "Dry Modular SQL",
+            "eorCompliance": "100%",
+            "eorComplianceNote": "BGV & KYC Cleared"
+          },
+          "evaluatorNotes": "Exceptional expertise in cost-governed data pipelines and zero-copy cloning for QA verification.",
+          "evaluatorAuthor": "Vetted by Tanya S., Principal Data Architect (ThinkWires)"
+        }
+      }
+    ],
+    "dossierFeatures": [
+      {
+        "icon": "code_blocks",
+        "title": "Real PR & GitHub Audit",
+        "description": "We inspect actual pull requests, branch management, unit test coverage (>85%), and cyclomatic code complexity ratings.",
+        "tag": "Automated SonarQube Proof"
+      },
+      {
+        "icon": "architecture",
+        "title": "Architect Rubric Scorecard",
+        "description": "60-minute recorded system design session evaluated by ThinkWires Principal Reviewers against CAP theorem, caching, and resiliency.",
+        "tag": "Standardized 100-pt Scale"
+      },
+      {
+        "icon": "play_circle",
+        "title": "4-Min Technical Video Intro",
+        "description": "Candidate verbally explains their toughest production architectural failure, how they resolved it, and communicates in executive English.",
+        "tag": "Verify Soft Skills Instantly"
+      },
+      {
+        "icon": "shield_person",
+        "title": "Pre-Cleared EOR Compliance",
+        "description": "Dual criminal background checks, past employer statutory PF verification, degrees validated, and immediate IP agreement readiness.",
+        "tag": "Zero Legal Drag"
+      }
+    ],
+    "vettingGates": [
+      {
+        "step": "01",
+        "badge": "Gate 1: Repository Audit",
+        "title": "Deep Code & Concurrency Review",
+        "description": "No synthetic multiple-choice tests. Candidates submit production-grade repositories or solve architecture problems live. Evaluated for thread safety, edge case handling, and algorithmic efficiency.",
+        "stat": "Filtered: 68% drop rate"
+      },
+      {
+        "step": "02",
+        "badge": "Gate 2: Architecture Defense",
+        "title": "Live System Architecture Defense",
+        "description": "Candidates defend trade-offs in high-concurrency distributed caching, microservice decomposition, and data consistency under failure modes before ThinkWires Principal Architects.",
+        "stat": "Filtered: 82% cumulative drop"
+      },
+      {
+        "step": "03",
+        "badge": "Gate 3: Executive Vetting",
+        "title": "Bilateral EOR & Communication Bar",
+        "description": "Strict executive English communication appraisal, timezone discipline check, identity validation, and bilateral IP contract signing.",
+        "stat": "Final Pass Rate: 3.4%"
+      }
+    ],
+    "requisitionCTA": {
+      "eyebrow": "NEED BESPOKE TALENT PODS?",
+      "title": "Can't Find the Exact Stack on Today's Active Bench?",
+      "description": "Deploy a custom requisition. Our dedicated sourcing team will curate and evaluate 3 blind candidate dossiers matching your exact stack within 48 to 72 hours.",
+      "ctaLabel": "Dispatch Custom Pod Requisition"
+    }
+  }
 }

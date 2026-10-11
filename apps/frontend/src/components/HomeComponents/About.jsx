@@ -65,7 +65,9 @@ const About = () => {
         <div className={'About-featuresGrid'}>
           {/* Feature 1 */}
           <div className={'About-featureCard'}>
-            <div className={`${'About-iconWrapper'} ${'About-blue'}`}>💡</div>
+            <div className={`${'About-iconWrapper'} ${'About-blue'}`}>
+              <span className="material-symbols-outlined" style={{ fontSize: '24px' }}>lightbulb</span>
+            </div>
             <h3 className={'About-featureTitle'}>Innovation First</h3>
             <p className={'About-featureDesc'}>
               We constantly integrate AI matching algorithms and data-driven
@@ -75,7 +77,9 @@ const About = () => {
 
           {/* Feature 2 */}
           <div className={'About-featureCard'}>
-            <div className={`${'About-iconWrapper'} ${'About-gray'}`}>⚙️</div>
+            <div className={`${'About-iconWrapper'} ${'About-gray'}`}>
+              <span className="material-symbols-outlined" style={{ fontSize: '24px' }}>tune</span>
+            </div>
             <h3 className={'About-featureTitle'}>Agile Adaptability</h3>
             <p className={'About-featureDesc'}>
               Rapidly structuring dedicated pods for greenfield software builds,
@@ -85,7 +89,9 @@ const About = () => {
 
           {/* Feature 3 */}
           <div className={'About-featureCard'}>
-            <div className={`${'About-iconWrapper'} ${'About-green'}`}>🌍</div>
+            <div className={`${'About-iconWrapper'} ${'About-green'}`}>
+              <span className="material-symbols-outlined" style={{ fontSize: '24px' }}>public</span>
+            </div>
             <h3 className={'About-featureTitle'}>Global Reach</h3>
             <p className={'About-featureDesc'}>
               Borders are no barrier to top engineering talent. Coordinated
@@ -95,7 +101,9 @@ const About = () => {
 
           {/* Feature 4 */}
           <div className={'About-featureCard'}>
-            <div className={`${'About-iconWrapper'} ${'About-indigo'}`}>🛡️</div>
+            <div className={`${'About-iconWrapper'} ${'About-indigo'}`}>
+              <span className="material-symbols-outlined" style={{ fontSize: '24px' }}>verified_user</span>
+            </div>
             <h3 className={'About-featureTitle'}>Zero-Compromise Vetting</h3>
             <p className={'About-featureDesc'}>
               Multi-tiered technical interviews, code evaluations, and

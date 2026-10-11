@@ -5,27 +5,22 @@ import SectionBadge from '../common/SectionBadge';
 const ContactHero = ({ data }) => {
   const {
     badge = 'Contact ThinkWires • We Respond Within 5 Hours',
-    breadcrumbs = [
-      { label: 'Home', href: '/' },
-      { label: 'Contact Us', href: '/contact' }
-    ],
     heading = "Let's Build Your",
     headingHighlight = 'Next Engineering Squad.',
     description = 'Our staffing directors are ready. Reach out and receive pre-vetted profiles in under 5 hours.'
   } = data || {};
 
-  return (
-    <section className="ContactHero-section">
-      {/* Background decorative orbs */}
-      <div className="ContactHero-orb ContactHero-orb--blue" aria-hidden="true"></div>
-      <div className="ContactHero-orb ContactHero-orb--green" aria-hidden="true"></div>
-
-      <div className="ContactHero-container">
-        {/* Breadcrumb */}
-        <nav className="ContactHero-breadcrumbs" aria-label="Breadcrumb">
-          {breadcrumbs.map((crumb, idx) => (
-            <span key={idx} className="ContactHero-breadcrumbItem">
-              {idx > 0 && <span className="ContactHero-breadcrumbSep">›</span>}
+    return (
+      <section className="ContactHero-section">
+        {/* Background decorative orbs */}
+        <div className="ContactHero-orb ContactHero-orb--blue" aria-hidden="true"></div>
+        <div className="ContactHero-orb ContactHero-orb--green" aria-hidden="true"></div>
+        <div className="ContactHero-container">
+         
+          {/* <nav className="ContactHero-breadcrumbs" aria-label="Breadcrumb">
+            {breadcrumbs.map((crumb, idx) => (
+              <span key={idx} className="ContactHero-breadcrumbItem">
+                {idx > 0 && <span className="ContactHero-breadcrumbSep">›</span>}
               {idx === breadcrumbs.length - 1 ? (
                 <span className="ContactHero-breadcrumbCurrent">{crumb.label}</span>
               ) : (
@@ -35,7 +30,8 @@ const ContactHero = ({ data }) => {
               )}
             </span>
           ))}
-        </nav>
+        </nav> */}
+
 
         {/* Badge */}
         <SectionBadge

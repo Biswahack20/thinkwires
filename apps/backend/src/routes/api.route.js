@@ -21,6 +21,8 @@ const {
   articlesData = [],
   featuredArticleData = null,
   researchersData = [],
+  industriesPageData = null,
+  benchData = null,
 } = mockData;
 
 const router = express.Router();
@@ -38,6 +40,13 @@ let faqs = faqsData ? [...faqsData] : [];
 let articles = articlesData ? [...articlesData] : [];
 let featuredArticle = featuredArticleData ? { ...featuredArticleData } : null;
 let researchers = researchersData ? [...researchersData] : [];
+let bench = benchData ? { ...benchData } : {
+  statsBadges: [],
+  specialtyFilters: [],
+  talents: [],
+  dossierFeatures: [],
+  vettingGates: []
+};
 
 // --- Benefits ---
 router.get('/benefits', (req, res) => {
@@ -148,7 +157,7 @@ router.post('/stats', (req, res) => {
   }
 });
 
-// --- Industries ---
+// --- Industries (Home summary) ---
 router.get('/industries', (req, res) => {
   res.json(industries);
 });
@@ -158,6 +167,26 @@ router.post('/industries', (req, res) => {
     res.json({ message: 'Industries updated successfully', industries });
   } else {
     res.status(400).json({ error: 'industries must be an array of objects' });
+  }
+});
+
+// --- Industries Page Full Dynamic Data (Hero, Sector Tabs, Sectors, Comparison, Case Studies, Briefing) ---
+let currentIndustriesPageData = industriesPageData ? { ...industriesPageData } : {};
+
+router.get('/industries-page', (req, res) => {
+  res.json(currentIndustriesPageData);
+});
+
+router.get('/sector-catalog', (req, res) => {
+  res.json(currentIndustriesPageData.sectors || []);
+});
+
+router.post('/industries-page', (req, res) => {
+  if (req.body.industriesPageData) {
+    currentIndustriesPageData = { ...currentIndustriesPageData, ...req.body.industriesPageData };
+    res.json({ message: 'Industries page data updated successfully', industriesPageData: currentIndustriesPageData });
+  } else {
+    res.status(400).json({ error: 'industriesPageData object is required in body' });
   }
 });
 
@@ -338,6 +367,171 @@ router.post('/contact/message', (req, res) => {
   res.json({
     success: true,
     message: 'Thank you for reaching out! A ThinkWires staffing director will respond within 5 business hours.'
+  });
+});
+
+// --- Bench / Talent Cloud Endpoints ---
+router.get('/bench', (req, res) => {
+  const rawCandidates = bench.candidates || bench.talents || [];
+  const normalizedTalents = rawCandidates.map((c) => ({
+    id: c.id,
+    code: c.id || c.code,
+    role: c.title || c.role,
+    title: c.title || c.role,
+    initials: c.initials || 'TW',
+    specialty: c.specialty === 'genai' ? 'GenAI & LLMs' :
+               c.specialty === 'cloud' ? 'Cloud & DevOps' :
+               c.specialty === 'sap' ? 'SAP & Enterprise' :
+               c.specialty === 'systems' ? 'Systems & Distributed' :
+               c.specialty === 'data' ? 'Data & Analytics' : (c.specialty || 'Engineering'),
+    experienceLevel: c.seniorityTier === 'staff' ? 'Staff/Principal (10+y)' :
+                     c.seniorityTier === 'senior' ? 'Senior (6-9y)' : 'Lead (8+y)',
+    yearsExp: c.experience || `${c.years || 8}+ Yrs Exp`,
+    location: c.location || 'Remote Global',
+    score: c.technicalRating || c.score || 96,
+    urgency: c.availability || c.urgency || 'Immediate (24-48h)',
+    hourlyRate: c.hourlyRate || '$55 - $75',
+    proofQuote: c.engineeringProof || c.proofQuote || 'Architected and scaled production enterprise systems with zero downtime.',
+    skills: c.skills || [],
+    rubric: c.dossier?.rubric ? {
+      systemDesign: parseInt(c.dossier.rubric.systemDesign) || 98,
+      codeQuality: parseInt(c.dossier.rubric.cleanCode) || 97,
+      liveDebugging: 99,
+      communication: 96
+    } : (c.rubric || { systemDesign: 98, codeQuality: 97, liveDebugging: 99, communication: 96 }),
+    bio: c.dossier?.evaluatorNotes || c.bio,
+    dossier: c.dossier
+  }));
+
+  const specialtyFilters = [
+    { label: 'All Engineering', count: 142 },
+    { label: 'GenAI & LLMs', count: 38 },
+    { label: 'Cloud & DevOps', count: 31 },
+    { label: 'SAP & Enterprise', count: 24 },
+    { label: 'Systems & Distributed', count: 27 },
+    { label: 'Data & Analytics', count: 22 }
+  ];
+
+  const filterOptions = {
+    urgency: ['All Urgency', 'Immediate (24-48h)', 'Ready in 24h', 'Immediate Availability', 'Immediate Joining', 'Available in 48h', 'Available in 7 Days'],
+    experience: ['All Experience', 'Staff/Principal (10+y)', 'Senior (6-9y)', 'Lead (8+y)'],
+    locations: ['All Locations', 'Bengaluru (EST Overlap)', 'Hyderabad / Remote Global', 'Pune / Noida / Hybrid', 'Chennai / Remote', 'Pan-India (Full US Shift)', 'Gurugram / Remote'],
+    sortOptions: ['Highest Score', 'Fastest Availability', 'Lowest Rate']
+  };
+
+  const responsePayload = {
+    ...bench,
+    hero: bench.hero || {
+      liveBadge: "142 PRE-VETTED TALENTS ON ACTIVE BENCH",
+      title: "Engineers on the Bench. Available to Deploy in 48 Hours.",
+      subtitle: "Bypass the 60-day hiring cycle. Access active ThinkWires senior contractors, fully vetted with verified code commits, system design scores, and instant contract execution.",
+      slaCard: {
+        tag: "48-HOUR SLA ASSURANCE",
+        title: "Instant Pod Matching & Zero-Friction EOR Onboarding",
+        description: "Every engineer has cleared multi-stage system architecture audits and is cleared for immediate client sprints."
+      }
+    },
+    specialtyFilters,
+    filterOptions,
+    talents: normalizedTalents,
+    candidates: rawCandidates,
+    dossierFeatures: bench.dossierFeatures?.map((f, i) => ({
+      step: `0${i + 1}`,
+      icon: f.icon === 'code_blocks' ? 'terminal' :
+            f.icon === 'architecture' ? 'rule' :
+            f.icon === 'play_circle' ? 'videocam' : 'verified',
+      title: f.title,
+      description: f.description,
+      highlight: f.tag || 'Verified Assessment'
+    })) || [],
+    vettingGates: bench.vettingGates?.map((g) => ({
+      gateNumber: `GATE ${g.step}`,
+      title: g.title,
+      passRate: g.stat || 'Pass Rate Calibrated',
+      details: [
+        g.description,
+        g.badge
+      ],
+      badge: g.badge
+    })) || [],
+    requisitionCta: bench.requisitionCTA ? {
+      tag: bench.requisitionCTA.eyebrow,
+      title: bench.requisitionCTA.title,
+      description: bench.requisitionCTA.description,
+      primaryBtn: { text: bench.requisitionCTA.ctaLabel, link: '/contact' },
+      secondaryBtn: { text: 'Speak with a Director', link: '/contact' }
+    } : null
+  };
+
+  res.json(responsePayload);
+});
+
+router.get('/bench/talents', (req, res) => {
+  const { q, specialty, urgency, experience, location, sort } = req.query;
+  let filtered = [...(bench.talents || [])];
+
+  if (q && q.trim()) {
+    const query = q.trim().toLowerCase();
+    filtered = filtered.filter(
+      (t) =>
+        t.role.toLowerCase().includes(query) ||
+        t.code.toLowerCase().includes(query) ||
+        t.skills.some((s) => s.toLowerCase().includes(query)) ||
+        t.proofQuote.toLowerCase().includes(query)
+    );
+  }
+
+  if (specialty && specialty !== 'All' && specialty !== 'All Engineering') {
+    filtered = filtered.filter((t) => t.specialty === specialty);
+  }
+
+  if (urgency && urgency !== 'All Urgency' && urgency !== 'All') {
+    filtered = filtered.filter((t) => t.urgency === urgency);
+  }
+
+  if (experience && experience !== 'All Experience' && experience !== 'All') {
+    filtered = filtered.filter((t) => t.experienceLevel === experience);
+  }
+
+  if (location && location !== 'All Locations' && location !== 'All') {
+    filtered = filtered.filter((t) => t.location === location);
+  }
+
+  if (sort === 'Highest Score') {
+    filtered.sort((a, b) => b.score - a.score);
+  } else if (sort === 'Fastest Availability') {
+    const urgencyOrder = { 'Immediate (24-48h)': 1, 'Within 1 Week': 2, 'Within 2 Weeks': 3 };
+    filtered.sort((a, b) => (urgencyOrder[a.urgency] || 99) - (urgencyOrder[b.urgency] || 99));
+  } else if (sort === 'Lowest Rate') {
+    filtered.sort((a, b) => {
+      const rateA = parseInt(a.hourlyRate.replace(/[^0-9]/g, '')) || 0;
+      const rateB = parseInt(b.hourlyRate.replace(/[^0-9]/g, '')) || 0;
+      return rateA - rateB;
+    });
+  }
+
+  res.json(filtered);
+});
+
+router.get('/bench/talents/:id', (req, res) => {
+  const talent = (bench.talents || []).find((t) => t.id === req.params.id || t.code === req.params.id);
+  if (talent) {
+    res.json(talent);
+  } else {
+    res.status(404).json({ error: 'Talent not found' });
+  }
+});
+
+router.post('/bench/book-interview', (req, res) => {
+  const { talentId, talentCode, workEmail, companyName, hiringManager, timeSlot } = req.body;
+  if (!talentCode || !workEmail) {
+    return res.status(400).json({ error: 'Talent code and work email are required' });
+  }
+  console.log('⚡ Bench Interview Booked:', { talentId, talentCode, workEmail, companyName, hiringManager, timeSlot });
+  res.json({
+    success: true,
+    message: `Interview request confirmed for ${talentCode}. Calendar invites sent to ${workEmail}.`,
+    bookingRef: `TW-${Date.now().toString(36).toUpperCase()}`
   });
 });
 
