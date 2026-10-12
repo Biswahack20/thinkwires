@@ -109,9 +109,9 @@ const Footer = () => {
             <h4 className={'Footer-colTitle'}>CORE SERVICES</h4>
             <ul className={'Footer-linkList'}>
               <li>
-                <a href="#" className={'Footer-linkItem'}>
+                <Link to="/services/staff-augmentation" className={'Footer-linkItem'}>
                   Staff Augmentation
-                </a>
+                </Link>
               </li>
               <li>
                 <Link to="/services/eor" className={'Footer-linkItem'}>
@@ -119,14 +119,14 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <a href="#" className={'Footer-linkItem'}>
+                <Link to="/services/executive-search" className={'Footer-linkItem'}>
                   Executive Search
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className={'Footer-linkItem'}>
-                  Permanent Placement
-                </a>
+                <Link to="/services/permanent-staffing" className={'Footer-linkItem'}>
+                  Permanent Staffing
+                </Link>
               </li>
               <li>
                 <Link to="/services/payroll" className={'Footer-linkItem'}>

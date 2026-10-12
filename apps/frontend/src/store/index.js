@@ -7,6 +7,8 @@ import industriesReducer from './slices/industriesSlice';
 import benchReducer from './slices/benchSlice';
 import payrollReducer from './slices/payrollSlice';
 import eorReducer from './slices/eorSlice';
+import staffAugmentationReducer from './slices/staffAugmentationSlice';
+import permanentStaffingReducer from './slices/permanentStaffingSlice';
 
 export const store = configureStore({
   reducer: {
@@ -18,5 +20,7 @@ export const store = configureStore({
     bench: benchReducer,
     payroll: payrollReducer,
     eor: eorReducer,
+    staffAugmentation: staffAugmentationReducer,
+    permanentStaffing: permanentStaffingReducer,
   },
 });

@@ -25,10 +25,14 @@ const {
   benchData = null,
   payrollData = null,
   eorData = null,
+  staffAugmentationData = null,
+  permanentStaffingData = null,
 } = mockData;
 
 let currentPayrollData = payrollData ? { ...payrollData } : null;
 let currentEorData = eorData ? { ...eorData } : null;
+let currentStaffAugmentationData = staffAugmentationData ? { ...staffAugmentationData } : null;
+let currentPermanentStaffingData = permanentStaffingData ? { ...permanentStaffingData } : null;
 
 const router = express.Router();
 
@@ -587,8 +591,71 @@ router.post('/eor/consultation', (req, res) => {
   }
   console.log('🌐 New EOR Consultation Request:', { fullName, workEmail, companyName, targetGeo, headcount, projectDetails });
   res.json({
+// --- Staff Augmentation Endpoints ---
+router.get('/staff-augmentation', (req, res) => {
+  res.json(currentStaffAugmentationData);
+});
+
+router.post('/staff-augmentation', (req, res) => {
+  if (req.body.staffAugmentationData) {
+    currentStaffAugmentationData = { ...currentStaffAugmentationData, ...req.body.staffAugmentationData };
+    res.json({ message: 'Staff augmentation data updated successfully', staffAugmentationData: currentStaffAugmentationData });
+  } else {
+    res.status(400).json({ error: 'staffAugmentationData object is required in body' });
+  }
+});
+
+router.post('/staff-augmentation/consultation', (req, res) => {
+  const { name, email, phone, company, roleNeeded, preferredTime, details } = req.body;
+  if (!name || !email || !company) {
+    return res.status(400).json({ error: 'Name, email, and company name are required.' });
+  }
+  console.log('🚀 New Staff Augmentation Workforce Strategy Request:', { name, email, phone, company, roleNeeded, preferredTime, details });
+  res.json({
     success: true,
-    message: 'Thank you! Your EOR inquiry has been prioritized. An enterprise talent director will reach out within 5 hours.'
+    message: 'Thank you! Your workforce consultation request has been received. A Senior Talent Architect will reach out within 5 hours.'
+  });
+});
+
+// --- Permanent Staffing & Executive Search Endpoints ---
+router.get('/permanent-staffing', (req, res) => {
+  res.json(currentPermanentStaffingData);
+});
+
+router.get('/executive-search', (req, res) => {
+  res.json(currentPermanentStaffingData);
+});
+
+router.post('/permanent-staffing', (req, res) => {
+  if (req.body.permanentStaffingData) {
+    currentPermanentStaffingData = { ...currentPermanentStaffingData, ...req.body.permanentStaffingData };
+    res.json({ message: 'Permanent staffing data updated successfully', permanentStaffingData: currentPermanentStaffingData });
+  } else {
+    res.status(400).json({ error: 'permanentStaffingData object is required in body' });
+  }
+});
+
+router.post('/permanent-staffing/consultation', (req, res) => {
+  const { fullName, workEmail, companyName, directPhone, mandateHierarchy, targetTimeline, mandateScope, isConfidential } = req.body;
+  if (!fullName || !workEmail || !companyName) {
+    return res.status(400).json({ error: 'Full name, work email, and company name are required.' });
+  }
+  console.log('🏛️ New Executive Search Mandate Request:', { fullName, workEmail, companyName, directPhone, mandateHierarchy, targetTimeline, mandateScope, isConfidential });
+  res.json({
+    success: true,
+    message: 'Thank you! Your confidential executive search mandate has been registered. A Managing Partner will connect within 2 hours.'
+  });
+});
+
+router.post('/executive-search/consultation', (req, res) => {
+  const { fullName, workEmail, companyName, directPhone, mandateHierarchy, targetTimeline, mandateScope, isConfidential } = req.body;
+  if (!fullName || !workEmail || !companyName) {
+    return res.status(400).json({ error: 'Full name, work email, and company name are required.' });
+  }
+  console.log('🏛️ New Executive Search Mandate Request:', { fullName, workEmail, companyName, directPhone, mandateHierarchy, targetTimeline, mandateScope, isConfidential });
+  res.json({
+    success: true,
+    message: 'Thank you! Your confidential executive search mandate has been registered. A Managing Partner will connect within 2 hours.'
   });
 });
 
