@@ -9,7 +9,8 @@ import IndustriesPage from './pages/IndustriesPage';
 import BenchPage from './pages/BenchPage';
 import PayrollPage from './pages/PayrollPage';
 import EorPage from './pages/EorPage';
-
+import StaffAugmentationPage from './pages/StaffAugmentationPage';
+import PermanentStaffingPage from './pages/PermanentStaffingPage';
 
 function App() {
   return (
@@ -24,6 +25,15 @@ function App() {
         <Route path="/hot-jobs" element={<JobPage />} />
         <Route path="/blog" element={<BlogPage />} />
         <Route path="/contact" element={<ContactPage />} />
+        {/* Services Routes */}
+        <Route path="/services/staff-augmentation" element={<StaffAugmentationPage />} />
+        <Route path="/staff-augmentation" element={<StaffAugmentationPage />} />
+        <Route path="/services/permanent-staffing" element={<PermanentStaffingPage />} />
+        <Route path="/permanent-staffing" element={<PermanentStaffingPage />} />
+        <Route path="/services/permanent-staffing-and-executive-search" element={<PermanentStaffingPage />} />
+        <Route path="/permanent-staffing-and-executive-search" element={<PermanentStaffingPage />} />
+        <Route path="/services/executive-search" element={<PermanentStaffingPage />} />
+        <Route path="/executive-search" element={<PermanentStaffingPage />} />
         <Route path="/services/payroll" element={<PayrollPage />} />
         <Route path="/payroll" element={<PayrollPage />} />
         <Route path="/payroll-outsourcing" element={<PayrollPage />} />

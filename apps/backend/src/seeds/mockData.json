@@ -1892,5 +1892,488 @@
       ],
       "hq": "Corporate Headquarters: Sector 62, Electronic City, Noida, UP 201309 • Operations in Silicon Valley & Toronto"
     }
+  },
+  "staffAugmentationData": {
+    "hero": {
+      "badge": "ENTERPRISE TECH STAFF AUGMENTATION • 48-HR POD DISPATCH",
+      "heading": "Scale High-Velocity Engineering Squads Without Long-Term Overhead.",
+      "description": "Access pre-vetted L5/L7 enterprise tech talent in 48 hours. Flexible engagement models that seamlessly integrate with your existing Jira, Slack, and agile sprint cadences.",
+      "ctaConsultationText": "Schedule Workforce Consultation",
+      "ctaBenchText": "Explore Available Bench (48h SLA)",
+      "trustLine": "Trusted by high-growth scale-ups & Global 2000 enterprises across US, Canada & India",
+      "talentReadiness": {
+        "acceptanceRate": "3.4%",
+        "acceptanceDesc": "Acceptance rate across 45,000+ vetted senior engineers",
+        "velocity": "Avg 48 Hours",
+        "velocityPct": 88,
+        "guaranteeTitle": "Zero Idle Cost Guarantee",
+        "guaranteeSub": "15-Day Roll-off flexibility"
+      }
+    },
+    "valueProps": [
+      {
+        "icon": "published_with_changes",
+        "title": "Flexible Hiring",
+        "description": "Scale up or down smoothly with a transparent 15-day notice period. Zero long-term lock-ins.",
+        "accent": "primary"
+      },
+      {
+        "icon": "savings",
+        "title": "Cost-Effective",
+        "description": "Up to 40% reduction versus onshore agency markups, with zero equipment, benefits, or tax headaches.",
+        "accent": "emerald"
+      },
+      {
+        "icon": "psychology",
+        "title": "Expert Talent",
+        "description": "Vetted senior engineers across Cloud, SAP, Databricks, AI/ML, and modern Full-Stack stacks.",
+        "accent": "cobalt"
+      },
+      {
+        "icon": "speed",
+        "title": "Rapid Pod Dispatch",
+        "description": "Pre-vetted engineering squads deployed to active sprints in as little as 48 hours with full NDA protection.",
+        "accent": "navy"
+      }
+    ],
+    "solutions": {
+      "eyebrow": "Our Solutions",
+      "heading": "On-Demand Talent Solutions by ThinkWires",
+      "description": "We provide enterprise solutions that are fast, business-focused, and tailored to mission-critical engineering initiatives.",
+      "pillars": [
+        {
+          "icon": "bolt",
+          "title": "Efficient Solutions",
+          "description": "Streamlined 3-step intake, live coding assessment, and match deployment in under 5 working days, bypassing standard multi-month hiring cycles.",
+          "footerKey": "Intake to Onboard",
+          "footerVal": "48 - 72 Hours"
+        },
+        {
+          "icon": "domain_verification",
+          "title": "Business-Focused",
+          "description": "Domain pods tuned for fintech security, HIPAA compliance, e-commerce scale, and enterprise ERP migrations without onboarding friction.",
+          "footerKey": "Specialized Pods",
+          "footerVal": "BFSI, Health, Retail"
+        },
+        {
+          "icon": "sync_alt",
+          "title": "Seamless Integration",
+          "description": "Pre-configured dev environments, signed NDAs, code repository clearances, and overlap across US EST, PST, or European time zones.",
+          "footerKey": "Standup Overlap",
+          "footerVal": "4 - 6 Hours / Day"
+        }
+      ],
+      "spotlight": {
+        "badge": "Workforce Governance Framework",
+        "title": "People4People • Turnkey Workforce Management",
+        "description": "People4People by ThinkWires delivers rigorous third-party contingent workforce administration. From contract compliance and hardware provision to bi-weekly velocity reporting and instant replacement guarantees, we manage workforce operations so your engineering leads can focus on shipping.",
+        "bullets": [
+          "Automated Performance Audits",
+          "No-Questions-Asked Replacements",
+          "100% IP Transfer & Non-Compete"
+        ],
+        "metrics": [
+          { "label": "Sprint Alignment", "value": "100%" },
+          { "label": "Resource Retention", "value": "96.8%" },
+          { "label": "Billing Transparency", "value": "Net-30 / Timecards" }
+        ]
+      }
+    },
+    "benefits": {
+      "eyebrow": "Key Benefits",
+      "heading": "Strategic Advantages of Technical Staff Augmentation",
+      "description": "Discover why high-growth enterprises leverage ThinkWires talent augmentation to de-risk engineering roadmaps and accelerate feature delivery.",
+      "cards": [
+        {
+          "icon": "account_balance_wallet",
+          "title": "Cost-Effective Solution",
+          "description": "Eliminate recruitment commissions, severance, medical benefits, and hardware provision costs. Pay solely for productive engineering hours on your roadmap.",
+          "stat": "Up to 40% Operational Savings",
+          "iconStat": "trending_down",
+          "accent": "primary"
+        },
+        {
+          "icon": "trending_up",
+          "title": "Rapid Scaling & Flexibility",
+          "description": "Scale capacity up or down dynamically during quarterly release crunches or seasonal surges. Eliminate headcount commitments that outlive specific features.",
+          "stat": "15-Day Scaling Notice",
+          "iconStat": "tune",
+          "accent": "emerald"
+        },
+        {
+          "icon": "hub",
+          "title": "Specialized Domain Expertise",
+          "description": "Instant access to niche architects: SAP HANA, Databricks, Distributed Systems, Kubernetes, Rust/Go, and Enterprise Generative AI implementations.",
+          "stat": "Top Tier Subject Matter Experts",
+          "iconStat": "stars",
+          "accent": "cobalt"
+        },
+        {
+          "icon": "rocket_launch",
+          "title": "3x Faster Time-to-Market",
+          "description": "Accelerate release cycles by onboarding day-one ready engineers with verified technical depth. Bypass the standard 60-day tech interview pipeline and maintain steady sprint velocity without diverting internal team leads from architecture tasks.",
+          "stat": "Immediate Standup & Jira Delivery",
+          "iconStat": "speed",
+          "accent": "primary"
+        },
+        {
+          "icon": "gavel",
+          "title": "Reduced Hiring Risk",
+          "description": "Mitigate costly mis-hires with our 90-day retention and continuous replacement guarantee, backed by multi-stage code reviews and client verification.",
+          "stat": "Replacement Guarantee",
+          "iconStat": "security",
+          "accent": "emerald"
+        }
+      ]
+    },
+    "bench": {
+      "eyebrow": "Live Talent Bench",
+      "heading": "Pre-Vetted Engineers Available in 48 Hours",
+      "description": "Ready to join your team with background checks and technical vetting complete.",
+      "activeCount": "38 Engineers Active on Bench",
+      "engineers": [
+        {
+          "initials": "DA",
+          "role": "Lead Cloud Architect",
+          "stack": "AWS / GCP / Terraform",
+          "sla": "48h SLA",
+          "experience": "9+ Years",
+          "overlap": "US EST (6h)",
+          "skills": ["Kubernetes", "Go", "Kafka", "FinOps"]
+        },
+        {
+          "initials": "RK",
+          "role": "Sr. Full-Stack Engineer",
+          "stack": "Next.js / Node / TypeScript",
+          "sla": "48h SLA",
+          "experience": "7+ Years",
+          "overlap": "US PST (5h)",
+          "skills": ["React", "GraphQL", "PostgreSQL", "Tailwind"]
+        },
+        {
+          "initials": "MS",
+          "role": "Data & AI Architect",
+          "stack": "Databricks / Python / LLMs",
+          "sla": "48h SLA",
+          "experience": "8+ Years",
+          "overlap": "US EST (5h)",
+          "skills": ["PySpark", "LangChain", "Snowflake", "Vector DBs"]
+        }
+      ]
+    },
+    "comparison": {
+      "eyebrow": "Compare Engagement Models",
+      "heading": "Why Augment Your Tech Teams With ThinkWires?",
+      "description": "Compare models to choose the right delivery structure for your engineering roadmap.",
+      "rows": [
+        {
+          "feature": "Scale your lineup as needed",
+          "aug": "15-Day Notice",
+          "pods": "Sprint Milestones",
+          "trad": "Fixed Scope SOW"
+        },
+        {
+          "feature": "Direct dev integration into daily standups",
+          "aug": "Full Daily Integration",
+          "pods": "Integrated via Lead",
+          "trad": "Weekly / Monthly Status"
+        },
+        {
+          "feature": "Dedicated squad assigned to your backlog",
+          "aug": "Assigned per role",
+          "pods": "Full Squad",
+          "trad": "Shared Agency Pool"
+        },
+        {
+          "feature": "Technical management & task direction",
+          "aug": "Client Direct Control",
+          "pods": "Co-Managed by Pod Lead",
+          "trad": "Vendor Managed (Black Box)"
+        },
+        {
+          "feature": "IP & Codebase Ownership",
+          "aug": "100% Client Owned",
+          "pods": "100% Client Owned",
+          "trad": "Subject to Contract Terms"
+        },
+        {
+          "feature": "Average Deployment SLA",
+          "aug": "48 Hours",
+          "pods": "1 - 2 Weeks",
+          "trad": "6 - 8 Weeks"
+        }
+      ]
+    },
+    "faqs": [
+      {
+        "question": "What is staff augmentation and how does it differ from traditional hiring?",
+        "answer": "Staff augmentation is a flexible hiring model where you add skilled technical specialists directly to your existing internal team on a project basis. Unlike traditional hiring, it allows you to scale up capacity quickly without long-term severance commitments, costly benefits packages, or multi-month recruitment delays. You maintain full operational control over daily sprints and technical direction, while ThinkWires manages HR, compliance, payroll, and infrastructure support."
+      },
+      {
+        "question": "How quickly can you provide staff augmentation resources?",
+        "answer": "Our active bench allows us to deploy pre-vetted engineers (Full-Stack, Cloud, Data) in as little as 48 hours. For specialized or bespoke architectural skill sets, our talent network connects you with vetted profiles typically within 1 to 2 weeks."
+      },
+      {
+        "question": "What are the cost benefits compared to full-time hiring?",
+        "answer": "Staff augmentation eliminates overhead costs associated with full-time staff—such as benefits packages, local payroll taxes, high-spec hardware provisioning, workspace leases, and onboarding overhead. You only pay for active engineering hours, reducing effective engineering costs by up to 40% compared to onshore full-time equivalents."
+      },
+      {
+        "question": "How do you ensure the quality and cultural fit of augmented staff?",
+        "answer": "We run a 4-tier evaluation: technical assessments, live code architecture reviews, background checks, and spoken communication/cultural fit interviews. You receive transparent candidate summaries and interview each resource directly prior to onboarding. If an engineer is not the right fit, we provide a replacement within 5 working days."
+      },
+      {
+        "question": "Can we scale up or down the augmented team as project needs change?",
+        "answer": "Yes. One of the core benefits of our engagement model is agility. You can add engineers for critical sprints or reduce squad size with a standard 15-day notice period. This protects your runway while giving you elasticity to tackle roadmap milestones."
+      }
+    ],
+    "consultation": {
+      "eyebrow": "Direct Channel",
+      "heading": "Schedule a Workforce Strategy Call",
+      "description": "Speak directly with an Enterprise Talent Partner to calibrate your tech stack needs, budget constraints, and delivery timelines.",
+      "hotline": "+91 89205 55626",
+      "hubs": "Noida Sector 63 (India) • San Francisco • Austin • Toronto",
+      "sla": "5-Hour Response SLA",
+      "certifications": "ISO 27001 • SOC 2 Type II Compliant • 100% NDA Protection Prior to Discussion"
+    }
+  },
+  "permanentStaffingData": {
+    "hero": {
+      "badge": "EXECUTIVE SEARCH & PERMANENT TALENT ACQUISITION • 90-DAY GUARANTEE",
+      "heading": "Secure Visionary Tech Leadership & Core Permanent Engineering Talent",
+      "description": "From principal architects to C-suite executive leaders (CTO, VP of Engineering, CPO), ThinkWires delivers verified transformational talent that drives long-term organizational growth across North America and APAC GCCs.",
+      "ctaSearchText": "Initiate Executive Search",
+      "ctaRolesText": "View Specialized Practice Roles",
+      "proofStats": [
+        {
+          "icon": "verified",
+          "value": "90-Day",
+          "label": "Placement Guarantee",
+          "color": "emerald"
+        },
+        {
+          "icon": "schedule",
+          "value": "14 Days",
+          "label": "Average Shortlist SLA",
+          "color": "primary"
+        },
+        {
+          "icon": "diamond",
+          "value": "Top 3.4%",
+          "label": "Vetted Talent Network",
+          "color": "cobalt"
+        }
+      ]
+    },
+    "pillars": {
+      "eyebrow": "Architectural Foundation",
+      "heading": "Strategic Talent Architecture",
+      "description": "Permanent staffing is an institutional asset allocation decision. Our search architecture removes asymmetric information and locks down elite leadership with unmatched retention longevity.",
+      "slaBadge": "Institutional Executive SLA Enforced",
+      "items": [
+        {
+          "step": "PILLAR // 01",
+          "icon": "travel_explore",
+          "title": "Comprehensive Talent Search",
+          "description": "Multi-channel direct sourcing and exhaustive market intelligence mapping across Tier-1 global product engineering companies and regional GCCs. We tap confidential passive candidate pools unavailable through generic job portals.",
+          "points": [
+            "Passive candidate mapping across Fortune 500 tech nodes",
+            "Deep intelligence dossiers with compensation benchmarks",
+            "Pre-vetted engineering leadership availability pipeline"
+          ],
+          "accent": "primary"
+        },
+        {
+          "step": "PILLAR // 02",
+          "icon": "psychology",
+          "title": "Rigorous Multi-Tier Assessment",
+          "description": "Every profile passes high-order scrutiny before reaching executive committee review. We conduct deep architectural problem-solving audits, distributed systems stress tests, and leadership emotional intelligence appraisals.",
+          "points": [
+            "Senior Peer-Level Architecture & Code Reviews",
+            "Hogan-aligned behavioral leadership psychometrics",
+            "360° confidential supervisory and peer references"
+          ],
+          "accent": "cobalt"
+        },
+        {
+          "step": "PILLAR // 03",
+          "icon": "shield",
+          "title": "Executive Search Services",
+          "description": "High-stakes executive mandates carried out under ironclad non-disclosure agreements. We manage delicate board interactions, succession transitions, and cross-border executive relocations with complete operational discretion.",
+          "points": [
+            "Confidential C-level & VP mandate representation",
+            "Board-level competency & governance alignment",
+            "Executive compensation packaging & LTI structuring"
+          ],
+          "accent": "emerald"
+        },
+        {
+          "step": "PILLAR // 04",
+          "icon": "handshake",
+          "title": "Long-Term Partnership & Retention",
+          "description": "Placement day is the starting line. Our 90-day replacement guarantee is paired with structured day-30, day-60, and day-90 stakeholder alignment reviews ensuring organizational assimilation and peak productivity.",
+          "points": [
+            "Contractual 90-Day no-cost replacement guarantee",
+            "First 100 days executive onboarding integration",
+            "Ongoing organizational retention health check-ins"
+          ],
+          "accent": "primary"
+        }
+      ]
+    },
+    "process": {
+      "eyebrow": "Precision Methodology",
+      "heading": "Structured 4-Step Recruitment Process",
+      "description": "From intake calibration to executive day one, our delivery roadmap is engineered for speed without compromising rigorous quality standards.",
+      "steps": [
+        {
+          "step": "1",
+          "phase": "Phase I: Days 1–3",
+          "title": "Requirements Analysis & Competency Matrix",
+          "description": "Collaborative alignment with C-suite and technical leads. We construct a multi-dimensional scorecard defining technical non-negotiables, leadership style, and expected outcomes.",
+          "deliverable": "Role Blueprint & Scorecard"
+        },
+        {
+          "step": "2",
+          "phase": "Phase II: Days 4–10",
+          "title": "Talent Sourcing & Passive Intelligence",
+          "description": "Executing deep market sweeps across target enterprise ecosystems. Discreet approach vectors initiate exploratory discussions with passive high-performing industry leaders.",
+          "deliverable": "Initial Market Map of 25+ Candidates"
+        },
+        {
+          "step": "3",
+          "phase": "Phase III: Days 11–18",
+          "title": "Deep Screening & Leadership Assessment",
+          "description": "Multi-stage evaluations conducted by our domain practice heads. Only top candidates surpassing rigorous cultural and technical bars are submitted.",
+          "deliverable": "Curated Dossier of 3–5 Finalists"
+        },
+        {
+          "step": "4",
+          "phase": "Phase IV: Days 19–30+",
+          "title": "Placement, Offer & Executive Onboarding",
+          "description": "Strategic compensation calibration, counter-offer mitigation, and background verification. ThinkWires facilitates transition through day 90 and beyond.",
+          "deliverable": "Signed Mandate & Onboarding Plan"
+        }
+      ],
+      "metricsStrip": {
+        "retention": "98.2%",
+        "retentionLabel": "Executive Retention at 12 Months",
+        "retentionDesc": "Our placements stay, scale teams, and deliver substantial shareholder value.",
+        "acceptance": "94.6%",
+        "acceptanceLabel": "First-Offer Acceptance Rate"
+      }
+    },
+    "roles": {
+      "eyebrow": "Practice Disciplines",
+      "heading": "Specialized Permanent Roles We Place",
+      "description": "Specialized recruitment teams dedicated solely to specific technical and operational domains.",
+      "items": [
+        {
+          "badge": "Executive Board",
+          "icon": "token",
+          "title": "C-Suite & VP Leadership",
+          "description": "Visionary leaders who define technology roadmaps, govern massive engineering organizations, and communicate with corporate boards.",
+          "positions": [
+            { "title": "Chief Technology Officer (CTO)", "sla": "Avg. 22d SLA" },
+            { "title": "VP of Global Engineering", "sla": "Avg. 18d SLA" },
+            { "title": "Chief Information Officer (CIO)", "sla": "Avg. 25d SLA" }
+          ],
+          "tags": ["P&L Ownership", "Scale: 500+ Eng", "Board Governance"]
+        },
+        {
+          "badge": "Infrastructure",
+          "icon": "cloud_sync",
+          "title": "Cloud & Principal Architects",
+          "description": "Core platform builders spearheading modern cloud infrastructure, zero-trust security postures, and multi-region resilience.",
+          "positions": [
+            { "title": "Principal Enterprise Architect", "sla": "Avg. 14d SLA" },
+            { "title": "Head of Cloud & Site Reliability", "sla": "Avg. 12d SLA" },
+            { "title": "Chief Security Architect", "sla": "Avg. 19d SLA" }
+          ],
+          "tags": ["AWS / GCP / Azure", "Kubernetes", "Multi-Cloud"]
+        },
+        {
+          "badge": "Applied Intelligence",
+          "icon": "hub",
+          "title": "AI / ML & Data Directors",
+          "description": "Pioneers translating foundational model capabilities and enterprise data lakes into production-grade cognitive systems.",
+          "positions": [
+            { "title": "Director of Applied Machine Learning", "sla": "Avg. 16d SLA" },
+            { "title": "Chief Data Officer (CDO)", "sla": "Avg. 21d SLA" },
+            { "title": "Lead AI Solutions Architect", "sla": "Avg. 15d SLA" }
+          ],
+          "tags": ["LLM Orchestration", "PyTorch", "Snowflake"]
+        },
+        {
+          "badge": "Core ERP Systems",
+          "icon": "database",
+          "title": "SAP & ERP Practice Leaders",
+          "description": "Seasoned functional and technical captains leading complex global S/4HANA migrations and unified digital core integrations.",
+          "positions": [
+            { "title": "SAP S/4HANA Transformation Lead", "sla": "Avg. 14d SLA" },
+            { "title": "Oracle Cloud ERP Program Director", "sla": "Avg. 17d SLA" },
+            { "title": "Senior Principal ABAP / BTP Architect", "sla": "Avg. 11d SLA" }
+          ],
+          "tags": ["S/4HANA", "SAP BTP", "Supply Chain"]
+        },
+        {
+          "badge": "Governance & Strategy",
+          "icon": "security",
+          "title": "Cybersecurity & CISO",
+          "description": "Defenders protecting critical institutional infrastructure, global regulatory compliance, and incident containment posture.",
+          "positions": [
+            { "title": "Chief Information Security Officer (CISO)", "sla": "Avg. 20d SLA" },
+            { "title": "Head of AppSec & DevSecOps", "sla": "Avg. 13d SLA" },
+            { "title": "VP Product Management (SaaS)", "sla": "Avg. 15d SLA" }
+          ],
+          "tags": ["SOC 2 / ISO", "Zero Trust", "Threat Intel"]
+        },
+        {
+          "badge": "Core Software",
+          "icon": "terminal",
+          "title": "Principal Software Engineers",
+          "description": "Elite individual contributors delivering low-latency architectures, robust distributed systems, and core foundation services.",
+          "positions": [
+            { "title": "Staff Distributed Systems Engineer", "sla": "Avg. 10d SLA" },
+            { "title": "Principal Full-Stack Architect", "sla": "Avg. 9d SLA" },
+            { "title": "Head of Engineering Operations", "sla": "Avg. 16d SLA" }
+          ],
+          "tags": ["Go / Rust / Java", "React / Node.js", "gRPC / Kafka"]
+        }
+      ]
+    },
+    "faqs": [
+      {
+        "question": "What is the difference between permanent staffing and temporary staffing?",
+        "answer": "Permanent staffing focuses on placing candidates in full-time, long-term positions directly on your corporate payroll, whereas temporary or augmented staffing deploys external specialists for designated project lifecycles. Permanent placements involve exhaustive cultural fit evaluation, long-term equity/compensation design, and succession planning, making them ideal for building core, highly committed organizational teams."
+      },
+      {
+        "question": "How long does the permanent recruitment process typically take?",
+        "answer": "Timelines depend on domain rarity and seniority. For core engineering and managerial roles, ThinkWires delivers qualified shortlists within 7–14 business days, with final placement completed in 2–4 weeks. Specialized C-suite or VP searches typically require 6–10 weeks to accommodate discreet passive talent engagement, deep multi-stakeholder interviews, and executive notice periods."
+      },
+      {
+        "question": "What industries and roles do you specialize in?",
+        "answer": "We specialize in deep technology verticals: Enterprise SaaS, Banking & FinTech, Life Sciences, Cloud Infrastructure, Telecommunications, and Global Capability Centers (GCCs). Our role expertise spans Principal Architects, Engineering Managers, Data Science Leads, SAP/ERP Champions, Product Leaders, CISOs, VPs of Engineering, and C-suite officers (CTO, CIO)."
+      },
+      {
+        "question": "Do you offer a guarantee on permanent placements?",
+        "answer": "Yes. Every permanent placement executed by ThinkWires is safeguarded by our formal 90-day replacement guarantee. In the uncommon event that a placed leader departs or fails to meet documented competency objectives within 90 calendar days, ThinkWires immediately initiates an expedited search and delivers a fully qualified replacement at zero additional placement fee."
+      },
+      {
+        "question": "How do you ensure cultural fit for permanent positions?",
+        "answer": "Cultural alignment is assessed quantitatively through structured behavioral models and qualitative situational analysis. Before sourcing candidates, we immerse our recruitment leads into your executive cadence, core leadership values, and operating velocity. Candidates are rigorously tested for work ethic, ambiguity handling, feedback receptiveness, and management style before board presentation."
+      }
+    ],
+    "consultation": {
+      "eyebrow": "Confidential Mandate Desk",
+      "heading": "Initiate Executive Search Mandate",
+      "description": "Connect directly with our senior talent acquisition partners. We will formulate a preliminary market intelligence brief and talent acquisition roadmap within 24 business hours.",
+      "hotline": "+91 89205 55626",
+      "hotlineAvailability": "Available 09:00 AM – 19:00 PM IST • Mon – Fri",
+      "hubs": [
+        { "title": "Noida HQ Operations", "address": "Tower B, Sector 62, Electronic City, Noida, UP 201309" },
+        { "title": "North American Delivery Hub", "address": "San Francisco • Toronto Delivery Center" }
+      ],
+      "confidentialityNote": "All client inquiries are bound by mutual NDA terms upon initial transmission. No information is disclosed without explicit board-level approval."
+    }
   }
 }
