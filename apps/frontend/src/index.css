@@ -2335,6 +2335,16 @@ body {
   justify-content: center;
   border: none;
   cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.Navbar-userIconBtn:hover {
+  background-color: var(--color-primary-container);
+  transform: translateY(-1px);
+}
+
+.Navbar-userIconBtn:active {
+  transform: translateY(0);
 }
 
 .Navbar-dropdownContainer {
@@ -2938,7 +2948,7 @@ textarea {
   }
 
   .About-aboutContainer {
-    flex-direction: column;
+    grid-template-columns: 1fr;
     gap: 3rem;
   }
 
@@ -3358,7 +3368,7 @@ textarea {
   }
 
   .About-statsGrid {
-    flex-direction: column;
+    grid-template-columns: 1fr;
     gap: 1rem;
   }
 
@@ -12881,6 +12891,10 @@ textarea {
 }
 
 @media (max-width: 640px) {
+  .BenchGrid-grid {
+    grid-template-columns: 1fr;
+  }
+
   .BenchCard-footer {
     grid-template-columns: 1fr;
   }
@@ -20682,6 +20696,183 @@ textarea {
 [data-theme="dark"] .FindTalent-table td {
   border-top-color: rgba(255, 255, 255, 0.08);
 }
+
+/* ==========================================================================
+   SMOOTH SCROLL ANIMATIONS & RESPONSIVE REACTIVITY ENHANCEMENTS
+   ========================================================================== */
+
+/* --- 1. Global Smooth Scroll Behavior --- */
+html {
+  scroll-behavior: smooth;
+}
+
+/* --- 2. Smooth Scroll Reveal System (IntersectionObserver-Driven) --- */
+/* Fallback: Pure CSS ensures content is 100% visible if JS is disabled or fails */
+.tw-scroll-reveal {
+  opacity: 1;
+  transform: none;
+}
+
+/* When JS animation manager is active, below-the-fold unrevealed elements start subtle */
+html.tw-scroll-anim-ready .tw-scroll-reveal:not(.tw-revealed):not(.tw-revealed-done) {
+  opacity: 0;
+  transform: translateY(32px);
+  will-change: opacity, transform;
+}
+
+/* When scrolled into viewport: gentle fade-in and upward glide */
+html.tw-scroll-anim-ready .tw-scroll-reveal.tw-revealed {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Stagger delays for sibling cards and items in grids */
+html.tw-scroll-anim-ready .tw-scroll-reveal.tw-stagger-0 { transition-delay: 0s; }
+html.tw-scroll-anim-ready .tw-scroll-reveal.tw-stagger-1 { transition-delay: 0.1s; }
+html.tw-scroll-anim-ready .tw-scroll-reveal.tw-stagger-2 { transition-delay: 0.2s; }
+html.tw-scroll-anim-ready .tw-scroll-reveal.tw-stagger-3 { transition-delay: 0.3s; }
+html.tw-scroll-anim-ready .tw-scroll-reveal.tw-stagger-4 { transition-delay: 0.4s; }
+
+/* Fully completed revealed state: restore natural styling without specificity clashes */
+.tw-revealed-done {
+  opacity: 1;
+  transform: none;
+}
+
+/* --- 3. Accessibility: Prefers Reduced Motion Overrides --- */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto !important;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+
+  .tw-scroll-reveal,
+  html.tw-scroll-anim-ready .tw-scroll-reveal:not(.tw-revealed):not(.tw-revealed-done),
+  html.tw-scroll-anim-ready .tw-scroll-reveal.tw-revealed,
+  .tw-revealed-done {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
+/* --- 4. Print Overrides: Guarantee full visibility --- */
+@media print {
+  .tw-scroll-reveal,
+  html.tw-scroll-anim-ready .tw-scroll-reveal:not(.tw-revealed):not(.tw-revealed-done),
+  html.tw-scroll-anim-ready .tw-scroll-reveal.tw-revealed,
+  .tw-revealed-done {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
+/* --- 5. Interactive Reactivity & Tactile States --- */
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--color-cobalt-bright, #2563eb);
+  outline-offset: 2px;
+}
+
+button:active:not(:disabled),
+a[class*="btn"]:active,
+[class*="-btn"]:active:not(:disabled) {
+  transform: scale(0.985);
+  transition: transform 0.1s ease;
+}
+
+/* Smooth transitions for interactive elements without altering existing visual styling */
+button,
+a,
+input,
+select,
+textarea {
+  transition-property: color, background-color, border-color, box-shadow, transform, opacity;
+  transition-duration: 0.2s;
+  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* --- 6. Mobile & Cross-Device Responsive Polish --- */
+/* Touch momentum scrolling for all wide table wrappers */
+.StaffAug-tableCard,
+.FindTalent-tableCard,
+.CandidatePortal-tableCard,
+[class*="-tableCard"],
+[class*="-tableWrapper"] {
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Single-column grid overrides on small mobile screens to prevent overflow */
+@media (max-width: 480px) {
+  .FeaturedPositions-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .AboutHero-floatingBadge {
+    left: 0.75rem;
+    right: 0.75rem;
+    bottom: 0.75rem;
+    padding: 0.65rem 0.85rem;
+  }
+
+  .FindTalent-form {
+    padding: 1.25rem 1rem;
+  }
+
+  .FindTalent-formFooter {
+    margin: 1rem -1rem -1rem -1rem;
+    padding: 1.25rem 1rem;
+  }
+
+  .CandidatePortal-pageContainer {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .JobSearch-subFiltersRow {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+
+  .JobSearch-statusSortGroup {
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .JobCard-card {
+    padding: 1.25rem 1rem;
+  }
+}
+
+/* Page wrapper containment to prevent horizontal overflow */
+.AboutPage-wrapper,
+.ContactPage-wrapper,
+.FindTalentPage-wrapper,
+.CandidatePortalPage-wrapper,
+.BenchPage-root,
+.IndustriesPage-page {
+  width: 100%;
+  max-width: 100vw;
+  min-width: 0;
+  overflow-x: clip;
+}
+
 
 
 
