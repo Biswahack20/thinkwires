@@ -1,9 +1,10 @@
 import React, { Suspense } from 'react';
 import Navbar from '../components/common/Navbar';
-import Hero from '../components/HomeComponents/Hero';
+// import Hero from '../components/HomeComponents/Hero';
+import NewHero from '../components/HomeComponents/NewHero';
 import TechStack from '../components/HomeComponents/TechStack';
 import About from '../components/HomeComponents/About';
-import Footer from '../components/common/Footer';
+import Footer from '../components/common/Footer'; 
 
 const Capabilities = React.lazy(() => import('../components/HomeComponents/Capabilities'));
 const Openings = React.lazy(() => import('../components/HomeComponents/Openings'));
@@ -18,7 +19,8 @@ const HomePage = () => {
     <div>
       <Navbar />
       <main>
-        <Hero />
+        {/* <Hero /> */}
+        <NewHero />
         <TechStack />
         <About />
         <Suspense fallback={<div style={{ padding: '2rem', textAlign: 'center' }}>Loading...</div>}>
