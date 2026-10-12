@@ -13,10 +13,12 @@ import StaffAugmentationPage from './pages/StaffAugmentationPage';
 import PermanentStaffingPage from './pages/PermanentStaffingPage';
 import FindTalentPage from './pages/FindTalentPage';
 import CandidatePortalPage from './pages/CandidatePortalPage';
+import ScrollAnimationManager from './components/common/ScrollAnimationManager';
 
 function App() {
   return (
     <BrowserRouter>
+      <ScrollAnimationManager />
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/about" element={<AboutPage />} />
