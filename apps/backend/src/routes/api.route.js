@@ -27,12 +27,16 @@ const {
   eorData = null,
   staffAugmentationData = null,
   permanentStaffingData = null,
+  findTalentData = null,
+  candidatePortalData = null,
 } = mockData;
 
 let currentPayrollData = payrollData ? { ...payrollData } : null;
 let currentEorData = eorData ? { ...eorData } : null;
 let currentStaffAugmentationData = staffAugmentationData ? { ...staffAugmentationData } : null;
 let currentPermanentStaffingData = permanentStaffingData ? { ...permanentStaffingData } : null;
+let currentFindTalentData = findTalentData ? { ...findTalentData } : null;
+let currentCandidatePortalData = candidatePortalData ? { ...candidatePortalData } : null;
 
 const router = express.Router();
 
@@ -591,6 +595,11 @@ router.post('/eor/consultation', (req, res) => {
   }
   console.log('🌐 New EOR Consultation Request:', { fullName, workEmail, companyName, targetGeo, headcount, projectDetails });
   res.json({
+    success: true,
+    message: 'Thank you! Your EOR workforce consultation request has been received. Our Global Compliance Specialist will reach out within 4 hours.'
+  });
+});
+
 // --- Staff Augmentation Endpoints ---
 router.get('/staff-augmentation', (req, res) => {
   res.json(currentStaffAugmentationData);
@@ -656,6 +665,68 @@ router.post('/executive-search/consultation', (req, res) => {
   res.json({
     success: true,
     message: 'Thank you! Your confidential executive search mandate has been registered. A Managing Partner will connect within 2 hours.'
+  });
+});
+
+// --- Find Talent & Enterprise Requisition Endpoints ---
+router.get('/find-talent', (req, res) => {
+  res.json(currentFindTalentData);
+});
+
+router.post('/find-talent/requisition', (req, res) => {
+  const {
+    engagementModel,
+    targetRole,
+    headcount,
+    seniority,
+    techStack,
+    deploymentUrgency,
+    workArrangement,
+    budgetEnvelope,
+    fullName,
+    corporateEmail,
+    company,
+    phone,
+    jobDescription
+  } = req.body;
+
+  if (!fullName || !corporateEmail || !company || !targetRole) {
+    return res.status(400).json({ error: 'Full name, corporate email, company, and target role are required.' });
+  }
+
+  console.log('⚡ New Enterprise Talent Requisition Logged:', {
+    engagementModel,
+    targetRole,
+    headcount,
+    seniority,
+    techStack,
+    deploymentUrgency,
+    workArrangement,
+    budgetEnvelope,
+    fullName,
+    corporateEmail,
+    company,
+    phone,
+    jobDescription
+  });
+
+  res.json({
+    success: true,
+    message: 'Requisition logged with Enterprise Queue. 3 candidate dossiers will be delivered within 5 hours.'
+  });
+});
+
+// --- Candidate Portal Endpoints ---
+router.get('/candidate-portal', (req, res) => {
+  res.json(currentCandidatePortalData);
+});
+
+router.post('/candidate-portal/timesheet', (req, res) => {
+  const { hours, weekEnding, comments } = req.body;
+  console.log('⏱️ Candidate Weekly Timesheet Submitted:', { hours, weekEnding, comments });
+  res.json({
+    success: true,
+    message: 'Weekly timesheet submitted successfully and forwarded to client approval desk.'
   });
 });
 

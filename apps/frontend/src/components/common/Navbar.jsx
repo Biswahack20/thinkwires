@@ -307,11 +307,12 @@ const Navbar = () => {
                 Quick Apply
               </button>
 
-              <button
-                type="button"
+              <Link
+                to="/candidate-portal"
                 className="Navbar-userIconBtn"
-                aria-label="User Profile"
+                aria-label="Candidate Portal"
                 onClick={closeMobileMenu}
+                title="Candidate Portal"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -323,7 +324,7 @@ const Navbar = () => {
                 >
                   <path d="M3 14s-1 0-1-1 1-4 6-4 6 1 6 4-1 1-1 1H3Zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" />
                 </svg>
-              </button>
+              </Link>
             </div>
           </div>
         </nav>

@@ -9,6 +9,8 @@ import payrollReducer from './slices/payrollSlice';
 import eorReducer from './slices/eorSlice';
 import staffAugmentationReducer from './slices/staffAugmentationSlice';
 import permanentStaffingReducer from './slices/permanentStaffingSlice';
+import findTalentReducer from './slices/findTalentSlice';
+import candidatePortalReducer from './slices/candidatePortalSlice';
 
 export const store = configureStore({
   reducer: {
@@ -22,5 +24,7 @@ export const store = configureStore({
     eor: eorReducer,
     staffAugmentation: staffAugmentationReducer,
     permanentStaffing: permanentStaffingReducer,
+    findTalent: findTalentReducer,
+    candidatePortal: candidatePortalReducer,
   },
 });
