@@ -23,7 +23,12 @@ const {
   researchersData = [],
   industriesPageData = null,
   benchData = null,
+  payrollData = null,
+  eorData = null,
 } = mockData;
+
+let currentPayrollData = payrollData ? { ...payrollData } : null;
+let currentEorData = eorData ? { ...eorData } : null;
 
 const router = express.Router();
 
@@ -532,6 +537,58 @@ router.post('/bench/book-interview', (req, res) => {
     success: true,
     message: `Interview request confirmed for ${talentCode}. Calendar invites sent to ${workEmail}.`,
     bookingRef: `TW-${Date.now().toString(36).toUpperCase()}`
+  });
+});
+
+// --- Payroll Outsourcing Endpoints ---
+router.get('/payroll', (req, res) => {
+  res.json(currentPayrollData);
+});
+
+router.post('/payroll', (req, res) => {
+  if (req.body.payrollData) {
+    currentPayrollData = { ...currentPayrollData, ...req.body.payrollData };
+    res.json({ message: 'Payroll data updated successfully', payrollData: currentPayrollData });
+  } else {
+    res.status(400).json({ error: 'payrollData object is required in body' });
+  }
+});
+
+router.post('/payroll/consultation', (req, res) => {
+  const { companyName, fullName, employeeSize, serviceReq, phoneNumber, emailAddress } = req.body;
+  if (!companyName || !fullName || !emailAddress) {
+    return res.status(400).json({ error: 'Company name, full name, and email are required.' });
+  }
+  console.log('📋 New Payroll Outsourcing Consultation Request:', { companyName, fullName, employeeSize, serviceReq, phoneNumber, emailAddress });
+  res.json({
+    success: true,
+    message: 'Thank you! Your payroll consultation request has been queued. Our compliance lead will call within 120 minutes.'
+  });
+});
+
+// --- Employer of Record (EOR) Endpoints ---
+router.get('/eor', (req, res) => {
+  res.json(currentEorData);
+});
+
+router.post('/eor', (req, res) => {
+  if (req.body.eorData) {
+    currentEorData = { ...currentEorData, ...req.body.eorData };
+    res.json({ message: 'EOR data updated successfully', eorData: currentEorData });
+  } else {
+    res.status(400).json({ error: 'eorData object is required in body' });
+  }
+});
+
+router.post('/eor/consultation', (req, res) => {
+  const { fullName, workEmail, companyName, targetGeo, headcount, projectDetails } = req.body;
+  if (!fullName || !workEmail || !companyName) {
+    return res.status(400).json({ error: 'Full name, work email, and company name are required.' });
+  }
+  console.log('🌐 New EOR Consultation Request:', { fullName, workEmail, companyName, targetGeo, headcount, projectDetails });
+  res.json({
+    success: true,
+    message: 'Thank you! Your EOR inquiry has been prioritized. An enterprise talent director will reach out within 5 hours.'
   });
 });
 

@@ -1508,5 +1508,389 @@
       "description": "Deploy a custom requisition. Our dedicated sourcing team will curate and evaluate 3 blind candidate dossiers matching your exact stack within 48 to 72 hours.",
       "ctaLabel": "Dispatch Custom Pod Requisition"
     }
+  },
+  "payrollData": {
+    "hero": {
+      "badge": "THIRD-PARTY PAYROLL OUTSOURCING • 100% STATUTORY COMPLIANCE",
+      "heading": "Streamline Complex Multi-Jurisdiction Payroll With",
+      "headingHighlight": "Zero Compliance Risk",
+      "description": "Automate salary disbursements, tax withholdings, EPF/ESI statutory contributions, and labor compliance in India and cross-border with 100% precision and guaranteed on-time credit.",
+      "ctaConsultationText": "Request Payroll Consultation",
+      "ctaComplianceText": "Download Compliance Checklist",
+      "trustMetrics": [
+        { "value": "100%", "label": "Regulatory Compliance", "icon": "policy" },
+        { "value": "0% Error", "label": "Processing SLA", "icon": "timer_off" },
+        { "value": "10 - 10k+", "label": "Employee Headcount", "icon": "groups" }
+      ],
+      "telemetryCard": {
+        "title": "Monthly Auto-Disbursement Engine",
+        "statusBadge": "LIVE AUDIT PASS",
+        "batchMonth": "Current Batch Run (October 2025)",
+        "reconciledText": "100% Reconciled",
+        "totalAmount": "₹ 8,42,19,450",
+        "breakdown": [
+          { "label": "Net Salary Disbursement", "percentage": "74.2%", "color": "cobalt-bright" },
+          { "label": "EPF + ESI + Professional Tax Filings", "percentage": "16.8%", "color": "emerald-accent" },
+          { "label": "TDS Deductions (Form 24Q SLA)", "percentage": "9.0%", "color": "secondary-container" }
+        ],
+        "auditLogs": [
+          { "icon": "check_circle", "title": "Form 16 Automated Issuance", "status": "Instant", "color": "emerald-accent" },
+          { "icon": "security", "title": "SOC 2 Type II Regulated Ledger", "status": "Verified", "color": "text-muted" },
+          { "icon": "account_balance", "title": "HDFC / ICICI / Axis Direct API Batch", "status": "Zero-Bounce", "color": "cobalt-glow" }
+        ]
+      }
+    },
+    "pillarsSection": {
+      "eyebrow": "End-to-End Governance",
+      "heading": "Four Pillars of ThinkWires Institutional Payroll Management",
+      "description": "We combine statutory domain mastery with state-of-the-art computational infrastructure to insulate your organization from regulatory penalties, computational leakage, and operational drag.",
+      "pillars": [
+        {
+          "step": "01. Compliance Shield",
+          "title": "100% Regulatory Compliance",
+          "description": "Complete oversight of EPF, ESI, Gratuity provisions, Professional Tax challans, TDS/Form 16 filings, and regional labor welfare fund compliance with zero tolerance for deadlines missed.",
+          "icon": "verified_user",
+          "highlight": "Zero Statutory Penalties Guaranteed"
+        },
+        {
+          "step": "02. Mathematical Precision",
+          "title": "Precise Legal & Compensation Math",
+          "description": "Meticulous basic, HRA, special allowances, overtime schemes, expense reimbursements, and statutory deductions calculated to the nearest rupee without friction or manual calculation defects.",
+          "icon": "calculate",
+          "highlight": "Dual Multi-Tier Validation"
+        },
+        {
+          "step": "03. Operational Velocity",
+          "title": "Optimized Cost & Turnaround",
+          "description": "Slash in-house human resource operational overhead by up to 50% with cloud payroll automation, eliminate expensive internal software licenses, and accelerate month-end closing cycles.",
+          "icon": "trending_up",
+          "highlight": "Up to 50% Overhead Reduction"
+        },
+        {
+          "step": "04. Data Fortress",
+          "title": "Enterprise Security & Access Control",
+          "description": "SOC 2 Type II and ISO 27001 audited data isolation, hardware encrypted salary registers, role-based hierarchy views, and frictionless employee self-service credentialing.",
+          "icon": "enhanced_encryption",
+          "highlight": "256-Bit Encrypted Registers"
+        }
+      ]
+    },
+    "beneficiariesSection": {
+      "eyebrow": "Architected For Scale",
+      "heading": "Who Benefits From ThinkWires Payroll Outsourcing?",
+      "description": "From fast-moving venture startups to multi-entity foreign subsidiaries, our payroll model dynamically flexes around headcount and regulatory jurisdictions.",
+      "segments": [
+        {
+          "step": "01",
+          "icon": "rocket_launch",
+          "title": "Startups & Fast-Growing Scaleups",
+          "description": "Eliminate the need to hire internal HR administrators or purchase expensive payroll licenses. Focus engineering capital directly on core product iterations.",
+          "points": [
+            "Agile month-to-month onboarding",
+            "Direct integration with employee offer letters",
+            "Zero setup penalty for shifting headcount"
+          ]
+        },
+        {
+          "step": "02",
+          "icon": "domain",
+          "title": "Large MNCs & Global Enterprises",
+          "description": "Institutional-grade reconciliation across multi-city branches, diverse collective wage bands, and statutory audit-ready balance sheets for thousands of personnel.",
+          "points": [
+            "Dedicated on-shore compliance manager",
+            "Comprehensive annual statutory audits",
+            "Multi-level approval role matrices"
+          ]
+        },
+        {
+          "step": "03",
+          "icon": "hub",
+          "title": "Recruitment Agencies & Staffing Subcontractors",
+          "description": "Seamless third-party payroll fulfillment for deployed IT and functional contractors. We act as your invisible backend engine with white-labeled salary slips.",
+          "points": [
+            "White-label automated pay slips",
+            "Contingent worker labor compliance",
+            "Weekly or bi-weekly disbursement runs"
+          ]
+        },
+        {
+          "step": "04",
+          "icon": "public",
+          "title": "Cross-Border GCCs & Remote Tech Pods",
+          "description": "Enabling North American and European enterprises to seamlessly operate Global Capability Centers (GCCs) in India without establishing separate internal payroll departments.",
+          "points": [
+            "FX-compliant foreign remittances",
+            "Double taxation treaty adherence",
+            "Cross-timezone enterprise SLA support"
+          ]
+        }
+      ]
+    },
+    "featuresSection": {
+      "eyebrow": "Enterprise Operational Capabilities",
+      "heading": "Engineered For Zero Friction, Maximum Accuracy",
+      "description": "Every touchpoint in the ThinkWires payroll framework is backed by an iron-clad SLA, robust banking APIs, and proactive regulatory filings.",
+      "features": [
+        {
+          "icon": "gavel",
+          "title": "Taxation & Statutory Audit Readiness",
+          "description": "We manage monthly computation of Tax Deducted at Source (TDS), quarterly e-TDS returns (Form 24Q), automated distribution of digitally signed Form 16s, and full adherence to Employee Provident Fund (PF) and State Insurance (ESI) laws.",
+          "tags": ["PF Challan ECR", "Form 24Q Returns", "Form 16 Generation"],
+          "accent": "primary"
+        },
+        {
+          "icon": "payments",
+          "title": "On-Time Salary Guarantee Across Gateways",
+          "description": "Direct integration with major Tier-1 banking channels ensures salaries credit precisely on schedule (weekly, bi-weekly, or monthly). We eliminate settlement bottlenecks through pre-funded escrow processing and NACH protocol integration.",
+          "tags": ["Direct Host-to-Host NEFT/RTGS", "Real-Time Bounce Handling", "Zero-Delay Guarantee"],
+          "accent": "cobalt-bright"
+        },
+        {
+          "icon": "receipt_long",
+          "title": "Automated Pay-Slips & Year-End Tax Reports",
+          "description": "Empower your staff with password-protected, encrypted pay slips delivered automatically via email and accessible through self-service web portals. Employees can easily model tax regimes (Old vs. New) and submit investment declarations.",
+          "tags": ["Encrypted PDF Pay-Slips", "Self-Service Tax Portal", "IT Declaration Engine"],
+          "accent": "tertiary"
+        },
+        {
+          "icon": "support_agent",
+          "title": "Dedicated Compliance Officer & 24/7 Desk",
+          "description": "Never get stuck in a ticket queue. You are paired with a designated Chartered Payroll Specialist and compliance counsel who actively monitors changing state government notifications and handles employee inquiries on your behalf.",
+          "tags": ["Named Compliance Manager", "Sub-Hour Query Resolution", "Statutory Notice Defence"],
+          "accent": "navy-dark"
+        }
+      ]
+    },
+    "consultationSection": {
+      "eyebrow": "Enterprise Consultation",
+      "heading": "Get Started with ThinkWires HR Today!",
+      "description": "Avoid payroll errors, compliance risks, and time-consuming internal administration. Partner with ThinkWires HR and experience seamless, institutional payroll management.",
+      "hqDetails": {
+        "title": "Direct Corporate Headquarters",
+        "address": "Plot No. 20, Block H-1/A, Sector 63, Noida, Uttar Pradesh 201301",
+        "hotline": "+91 89205 55626",
+        "email": "contact@thinkwires.com",
+        "hours": "09:00 AM – 19:00 PM IST (Mon–Sat)",
+        "regions": ["United States", "Canada Hub", "India Central"]
+      }
+    }
+  },
+  "eorData": {
+    "hero": {
+      "badge": "GLOBAL EMPLOYER OF RECORD (EOR) • 100% REGULATORY COMPLIANCE",
+      "heading": "Make Contract & Global Hiring Effortless With a Modern EOR",
+      "description": "Deploy, manage, and pay contingent engineering talent locally and internationally through ThinkWires on-demand EOR platform without foreign entity setup or compliance risk.",
+      "badges": [
+        { "icon": "bolt", "text": "5-Day Fast-Track Onboarding" },
+        { "icon": "domain_disabled", "text": "Zero Foreign Entity Needed" },
+        { "icon": "verified", "text": "Universal Cross-Border Benefits & Tax Compliance" }
+      ],
+      "ctaScheduleText": "Schedule EOR Consultation",
+      "ctaExploreText": "Explore Global Hubs & Rates",
+      "complianceDeck": {
+        "title": "Live Compliance Engine",
+        "subtitle": "Multi-Jurisdiction",
+        "targetCoverage": "India • US • CA • GCC",
+        "avgProvisioning": "< 120 Hours",
+        "statusRows": [
+          { "icon": "gavel", "title": "Legal Employer Liability", "desc": "100% Absorbed by ThinkWires EOR", "status": "Active Shield", "statusType": "emerald" },
+          { "icon": "security", "title": "IP Assignment & NDAs", "desc": "Ironclad Direct Client Assignment", "status": "Secured", "statusType": "cobalt" },
+          { "icon": "account_balance", "title": "Statutory Withholdings", "desc": "PF, ESI, TDS, 1099/W2 Equiv.", "status": "Compliant", "statusType": "emerald" }
+        ],
+        "hotline": "+91 89205 55626",
+        "slaText": "24/7 SLAs"
+      }
+    },
+    "kpiStrip": [
+      { "value": "5 Days", "label": "Full Contractor Onboarding", "accent": "primary" },
+      { "value": "0%", "label": "Foreign Entity Liability", "accent": "primary-container" },
+      { "value": "100%", "label": "Statutory & Tax Compliance", "accent": "tertiary" },
+      { "value": "30+", "label": "Enterprise Hubs Covered", "accent": "secondary" }
+    ],
+    "explanationSection": {
+      "eyebrow": "Operational Blueprint",
+      "heading": "What is an Employer of Record (EOR) for Staffing?",
+      "description1": "When expanding engineering squads or engaging high-caliber contractors, an Employer of Record (EOR) acts as the official legal employer for contingent talent while your engineering leads maintain 100% operational command.",
+      "description2": "ThinkWires assumes complete institutional responsibility: background checks, mandatory insurance coverage, compliant tax withholdings, local labor law compliance, and tier-1 benefits. This safeguards your enterprise against misclassification liabilities and bureaucratic gridlock.",
+      "highlights": [
+        { "icon": "verified_user", "title": "Background Verification", "desc": "Deep identity, criminal, academic, and credential audits prior to day one." },
+        { "icon": "receipt_long", "title": "Tax Withholding", "desc": "Automated TDS, state, national, and regional wage deduplication filing." },
+        { "icon": "health_and_safety", "title": "Statutory Insurances", "desc": "Workers comp, medical cover, EPF, and liability protection pre-bundled." },
+        { "icon": "shield", "title": "IP Assignment Shield", "desc": "Unconditional IP transfer guarantees all software artifacts belong directly to you." }
+      ],
+      "separationModel": {
+        "title": "The ThinkWires EOR Separation Model",
+        "clientDirects": {
+          "title": "You Direct (Day-to-Day)",
+          "points": [
+            "Technical Architecture & Code",
+            "Sprint Cycles & Backlog",
+            "Team Culture & Performance",
+            "Candidate Selection"
+          ]
+        },
+        "thinkWiresManages": {
+          "title": "ThinkWires Employs (Legal)",
+          "points": [
+            "Local Employment Contract",
+            "Monthly Payroll & Direct Deposit",
+            "Taxes & Statutory Remittances",
+            "Severance & Labor Defense"
+          ]
+        },
+        "bannerImage": "https://lh3.googleusercontent.com/aida-public/AB6AXuAakPyWRNusR7xJyTMixaIPJy4qkWx9l8hdZoWwwl4_aFVZL0aO2dFtk6K8AskatQjeaRUqNG2n1VqFvDsKKtKDaHEfRyszGd1XfmH3o73wcFw8pb_LdzyTddX_4VYNIJ-EcRIFF24txRjwCcXCnV9U_RGzH5koFCSOsDoKbAZAKcdCkGrMckae9mEJWEmhxUSjS_W0wpB97Eudm_csK9TcyQyTLEzgjlIOZ3c6pVC2ckTk8ceyoOdK4A",
+        "bannerCaption": "Compliant Cross-Border Squads in Canada, US, India & GCC"
+      }
+    },
+    "capabilitiesSection": {
+      "eyebrow": "Enterprise Infrastructure",
+      "heading": "Engineered for Frictionless Global Talent Deployment",
+      "description": "Complete end-to-end legal, fiscal, and personnel infrastructure built to handle hyper-growth engineering squads.",
+      "capabilities": [
+        {
+          "icon": "policy",
+          "tag": "Zero Disruption Guarantee",
+          "title": "Simplified Regulatory Processes",
+          "description": "Seamless onboarding that strictly aligns with municipal, state, and central compliance standards in India, the United States, and Canada. We absorb the operational exposure so contractors can start delivering immediate client impact.",
+          "bullets": [
+            "We handle the complete risks of compliance and regulatory consistency",
+            "Agile support tailored for dynamic, fast-scaling engineering roadmaps",
+            "Custom contracts perfectly aligned with unique institutional policies"
+          ],
+          "footerLeft": "SLA: 100% Audit Readiness",
+          "footerRight": "Standard in all EOR Tiers",
+          "accent": "primary"
+        },
+        {
+          "icon": "card_membership",
+          "tag": "Candidate Attraction Edge",
+          "title": "Enterprise Employee Benefits",
+          "description": "Succeed in today's fiercely competitive talent landscape. ThinkWires bundles executive-grade healthcare and wellness coverage with high-touch support, providing contingent hires with enterprise security and giving your firm an unparalleled hiring advantage.",
+          "bullets": [
+            "Universal PTO eligibility across any state or province",
+            "Predictable, fixed monthly copays for healthcare and outpatient coverage",
+            "Customizable insurance tiers for niche specialists and interim teams"
+          ],
+          "footerLeft": "Retention Boost: +38% Contract Tenure",
+          "footerRight": "Comprehensive Cover",
+          "accent": "tertiary"
+        },
+        {
+          "icon": "speed",
+          "tag": "Velocity Focus",
+          "title": "Rapid 5-Day Onboarding",
+          "description": "Speed up global deployment with automated digital workflows and real-time dispatch alerts. Our streamlined hiring pipeline removes paperwork friction, empowering talent to push pull requests by day five.",
+          "bullets": [
+            "Massively reduces operational overhead for in-house HR & legal teams",
+            "Fully configured workstation and device provisioning coordination",
+            "Paperless digital signing & verification via mobile-friendly portals"
+          ],
+          "footerLeft": "Workflow: 100% Digital Document Vault",
+          "footerRight": "Turnkey Setup",
+          "accent": "cobalt-bright"
+        },
+        {
+          "icon": "calculate",
+          "tag": "Precision Payroll",
+          "title": "Tax Retention & Statutory Filings",
+          "description": "Maintain uncompromising payroll compliance across tightly governed tax authorities. ThinkWires experts handle multi-level liabilities so you avoid double taxation risks and penalty exposures.",
+          "bullets": [
+            "Administration of multi-level tax liabilities (EPF, ESI, TDS, W-2, 1099)",
+            "Real-time tracking of legislative and labor statute updates",
+            "Scalable banking rails for guaranteed on-time remuneration payouts"
+          ],
+          "footerLeft": "Accuracy: 99.98% On-Time Processing",
+          "footerRight": "Institutional Scale",
+          "accent": "navy-dark"
+        }
+      ]
+    },
+    "comparisonSection": {
+      "eyebrow": "Strategic Advantage",
+      "heading": "Why Partner with ThinkWires EOR?",
+      "description": "Establishing a foreign subsidiary drains financial capital and consumes executive attention. Compare the traditional route against our agile EOR framework.",
+      "rows": [
+        {
+          "factor": "Time to First Hire",
+          "traditional": "4 to 9 Months",
+          "eor": "Under 5 Days",
+          "eorIcon": "verified",
+          "eorColor": "emerald-accent"
+        },
+        {
+          "factor": "Setup & Capital Outlay",
+          "traditional": "$50,000 – $120,000+",
+          "eor": "$0 Entity Capital",
+          "eorIcon": "check_circle",
+          "eorColor": "primary"
+        },
+        {
+          "factor": "Local Corporate Governance",
+          "traditional": "Resident directors, local bank accounts, annual filings",
+          "eor": "100% Handled by ThinkWires",
+          "eorIcon": "shield",
+          "eorColor": "emerald-accent"
+        },
+        {
+          "factor": "Compliance & Labor Defense",
+          "traditional": "Direct company legal exposure",
+          "eor": "ThinkWires assumes legal liability",
+          "eorIcon": "verified_user",
+          "eorColor": "tertiary-container"
+        },
+        {
+          "factor": "Offboarding & Termination",
+          "traditional": "Complex severance disputes, high legal fees",
+          "eor": "Turnkey compliant offboarding & release",
+          "eorIcon": "bolt",
+          "eorColor": "primary"
+        }
+      ],
+      "strip": {
+        "title": "Expanding into India, US, or Canada?",
+        "subtitle": "Tap into immediate access to top 1% engineers without setting up local payroll infrastructure.",
+        "ctaText": "Request Country Pricing"
+      }
+    },
+    "faqSection": {
+      "eyebrow": "Clear Answers",
+      "heading": "Frequently Asked Questions",
+      "description": "Everything enterprise stakeholders need to understand about compliance boundaries, IP safeguarding, and fast-track employment.",
+      "sidebar": {
+        "title": "Need tailored contract clauses?",
+        "desc": "Our legal counsel configures customized service level agreements and master services contracts for high-compliance sectors.",
+        "phone": "+91 89205 55626",
+        "actionText": "Speak directly with Legal Operations"
+      },
+      "items": [
+        {
+          "question": "What are the benefits of partnering with an EOR?",
+          "answer": "Working with an Employer of Record (EOR) provides clear advantages: simplified compliance, minimized risk, improved HR processes, access to global talent, and greater workforce flexibility. ThinkWires absorbs local labor law liabilities, files statutory taxes, and provisions comprehensive benefits so you scale without administrative overhead."
+        },
+        {
+          "question": "How can EOR help my business grow internationally?",
+          "answer": "An EOR drives business growth through local expertise, strict compliance, streamlined payroll and benefits, and effective risk management. Instead of spending 6–9 months and $50k+ creating regional legal subsidiaries in India, North America, or the GCC, ThinkWires enables day-five deployment of verified engineering teams using our existing legal infrastructure."
+        },
+        {
+          "question": "How do I pick the right EOR partner for my business?",
+          "answer": "Choosing the ideal EOR partner entails evaluating their physical regional presence, technology portal capabilities, multi-currency processing rails, responsiveness of candidate support, and verified compliance certifications (such as ISO 27001 and SOC 2 Type II). ThinkWires pairs on-the-ground presence in Noida HQ, San Francisco, and Toronto with 24/7 dedicated account directors."
+        },
+        {
+          "question": "How does IP ownership and non-disclosure work under an EOR?",
+          "answer": "Intellectual Property ownership is strictly guarded via bi-lateral and tri-partite employment contracts. Under ThinkWires EOR covenants, all contractor inventions, source code, patents, and technical artifacts are automatically assigned directly to your company upon creation, supported by strict institutional NDAs valid in international jurisdictions."
+        }
+      ]
+    },
+    "consultationSection": {
+      "eyebrow": "Fast-Track Evaluation",
+      "heading": "Ready to Simplify Contract & Global Hiring?",
+      "description": "Speak with our senior cross-border EOR advisors. We will review your contractor headcounts, assess tax obligations, and generate a customized pricing matrix in under 5 business hours.",
+      "benefits": [
+        "Guaranteed 5-Hour SLA Business Response",
+        "SOC 2 Type II • ISO 27001 Certified Infrastructure",
+        "Instant WhatsApp Connect: +91 89205 55626"
+      ],
+      "hq": "Corporate Headquarters: Sector 62, Electronic City, Noida, UP 201309 • Operations in Silicon Valley & Toronto"
+    }
   }
 }

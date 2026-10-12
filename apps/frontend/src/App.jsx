@@ -7,6 +7,8 @@ import BlogPage from './pages/BlogPage';
 import ContactPage from './pages/ContactPage';
 import IndustriesPage from './pages/IndustriesPage';
 import BenchPage from './pages/BenchPage';
+import PayrollPage from './pages/PayrollPage';
+import EorPage from './pages/EorPage';
 
 
 function App() {
@@ -22,6 +24,12 @@ function App() {
         <Route path="/hot-jobs" element={<JobPage />} />
         <Route path="/blog" element={<BlogPage />} />
         <Route path="/contact" element={<ContactPage />} />
+        <Route path="/services/payroll" element={<PayrollPage />} />
+        <Route path="/payroll" element={<PayrollPage />} />
+        <Route path="/payroll-outsourcing" element={<PayrollPage />} />
+        <Route path="/services/eor" element={<EorPage />} />
+        <Route path="/eor" element={<EorPage />} />
+        <Route path="/employer-of-record" element={<EorPage />} />
         <Route path="*" element={<HomePage />} />
       </Routes>
     </BrowserRouter>
