@@ -11,6 +11,8 @@ import PayrollPage from './pages/PayrollPage';
 import EorPage from './pages/EorPage';
 import StaffAugmentationPage from './pages/StaffAugmentationPage';
 import PermanentStaffingPage from './pages/PermanentStaffingPage';
+import FindTalentPage from './pages/FindTalentPage';
+import CandidatePortalPage from './pages/CandidatePortalPage';
 
 function App() {
   return (
@@ -25,6 +27,12 @@ function App() {
         <Route path="/hot-jobs" element={<JobPage />} />
         <Route path="/blog" element={<BlogPage />} />
         <Route path="/contact" element={<ContactPage />} />
+        {/* Find Talent & Candidate Portal */}
+        <Route path="/find-talent" element={<FindTalentPage />} />
+        <Route path="/hire-talent" element={<FindTalentPage />} />
+        <Route path="/candidate-portal" element={<CandidatePortalPage />} />
+        <Route path="/portal" element={<CandidatePortalPage />} />
+        <Route path="/candidate" element={<CandidatePortalPage />} />
         {/* Services Routes */}
         <Route path="/services/staff-augmentation" element={<StaffAugmentationPage />} />
         <Route path="/staff-augmentation" element={<StaffAugmentationPage />} />
