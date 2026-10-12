@@ -5,6 +5,8 @@ import blogReducer from './slices/blogSlice';
 import contactReducer from './slices/contactSlice';
 import industriesReducer from './slices/industriesSlice';
 import benchReducer from './slices/benchSlice';
+import payrollReducer from './slices/payrollSlice';
+import eorReducer from './slices/eorSlice';
 
 export const store = configureStore({
   reducer: {
@@ -14,5 +16,7 @@ export const store = configureStore({
     contact: contactReducer,
     industries: industriesReducer,
     bench: benchReducer,
+    payroll: payrollReducer,
+    eor: eorReducer,
   },
 });

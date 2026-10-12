@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const IconUpload = () => (
   <svg
@@ -113,9 +114,9 @@ const Footer = () => {
                 </a>
               </li>
               <li>
-                <a href="#" className={'Footer-linkItem'}>
+                <Link to="/services/eor" className={'Footer-linkItem'}>
                   Employer of Record (EOR)
-                </a>
+                </Link>
               </li>
               <li>
                 <a href="#" className={'Footer-linkItem'}>
@@ -128,9 +129,9 @@ const Footer = () => {
                 </a>
               </li>
               <li>
-                <a href="#" className={'Footer-linkItem'}>
+                <Link to="/services/payroll" className={'Footer-linkItem'}>
                   Payroll Outsourcing
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
