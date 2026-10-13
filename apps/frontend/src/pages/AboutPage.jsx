@@ -5,12 +5,14 @@ import Navbar from '../components/common/Navbar';
 import Footer from '../components/common/Footer';
 import AboutHero from '../components/AboutComponents/AboutHero';
 import StatsStrip from '../components/AboutComponents/StatsStrip';
+import CompanyOverview from '../components/AboutComponents/CompanyOverview';
 import AggregatorModel from '../components/AboutComponents/AggregatorModel';
 import Philosophy from '../components/AboutComponents/Philosophy';
 import LeadershipTeam from '../components/AboutComponents/LeadershipTeam';
 import GrowthTimeline from '../components/AboutComponents/GrowthTimeline';
 import Methodology from '../components/AboutComponents/Methodology';
 import AboutCTA from '../components/AboutComponents/AboutCTA';
+
 
 const AboutPage = () => {
   const dispatch = useDispatch();
@@ -21,7 +23,7 @@ const AboutPage = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    document.title = 'About Us | ThinkWires - Borderless Tech Talent & Workforce Advisory';
+    document.title = 'About Us | ThinkWires — Borderless Tech Talent & Workforce Advisory';
     if (status === 'idle') {
       dispatch(fetchAboutData());
     }
@@ -30,15 +32,33 @@ const AboutPage = () => {
   return (
     <div className="AboutPage-wrapper">
       <Navbar />
-      <main className="AboutPage-main">
-        <AboutHero data={aboutData.hero} />
-        <StatsStrip stats={aboutData.statsStrip} />
+      <main className="AboutPage-main" id="main-content">
+        {/* 1. Hero Section */}
+        <AboutHero data={aboutData.hero || aboutData.company} />
+
+        {/* 2. Horizontal Key Metrics Strip */}
+        <StatsStrip stats={aboutData.statsStrip || aboutData.stats} />
+
+        {/* 3. Company Overview & Core Mission */}
+        <CompanyOverview company={aboutData.company} />
+
+        {/* 4. The ThinkWires Aggregator Model */}
         <AggregatorModel data={aboutData.aggregatorModel} />
+
+        {/* 5. Our Core Philosophy (Deep Navy Editorial) */}
         <Philosophy data={aboutData.philosophy} />
-        <LeadershipTeam data={aboutData.leadershipTeam} />
+
+        {/* 6. Executive Leadership Team (3+2 Arrangement) */}
+        <LeadershipTeam data={aboutData.leadershipTeam || { members: aboutData.leadership }} />
+
+        {/* 7. Our Growth Journey & Separated Future Roadmap */}
         <GrowthTimeline data={aboutData.growthTimeline} />
+
+        {/* 8. Methodology (Spec to Squad) */}
         <Methodology data={aboutData.methodology} />
-        <AboutCTA data={aboutData.ctaSection} />
+
+        {/* 9. Strategy Consultation & Direct Operations */}
+        <AboutCTA data={aboutData.ctaSection || aboutData.contact} />
       </main>
       <Footer />
     </div>
