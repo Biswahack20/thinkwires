@@ -13,6 +13,7 @@ import StaffAugmentationPage from './pages/StaffAugmentationPage';
 import PermanentStaffingPage from './pages/PermanentStaffingPage';
 import FindTalentPage from './pages/FindTalentPage';
 import CandidatePortalPage from './pages/CandidatePortalPage';
+import LegalPage from './pages/LegalPage';
 import ScrollAnimationManager from './components/common/ScrollAnimationManager';
 
 function App() {
@@ -36,6 +37,7 @@ function App() {
         <Route path="/portal" element={<CandidatePortalPage />} />
         <Route path="/candidate" element={<CandidatePortalPage />} />
         {/* Services Routes */}
+        <Route path="/services" element={<StaffAugmentationPage />} />
         <Route path="/services/staff-augmentation" element={<StaffAugmentationPage />} />
         <Route path="/staff-augmentation" element={<StaffAugmentationPage />} />
         <Route path="/services/permanent-staffing" element={<PermanentStaffingPage />} />
@@ -50,6 +52,15 @@ function App() {
         <Route path="/services/eor" element={<EorPage />} />
         <Route path="/eor" element={<EorPage />} />
         <Route path="/employer-of-record" element={<EorPage />} />
+        {/* Legal & Compliance Routes */}
+        <Route path="/privacy" element={<LegalPage />} />
+        <Route path="/privacy-policy" element={<LegalPage />} />
+        <Route path="/terms" element={<LegalPage />} />
+        <Route path="/terms-of-service" element={<LegalPage />} />
+        <Route path="/security" element={<LegalPage />} />
+        <Route path="/compliance" element={<LegalPage />} />
+        <Route path="/cookies" element={<LegalPage />} />
+        <Route path="/cookie-settings" element={<LegalPage />} />
         <Route path="*" element={<HomePage />} />
       </Routes>
     </BrowserRouter>

@@ -1,129 +1,28 @@
 import React, { useState } from 'react';
 import JobCard from './JobCard';
 
-const MOCK_FEATURED_JOBS = [
-  {
-    id: 'job-1',
-    company: 'Enterprise Cloud Systems',
-    title: 'Lead SAP S/4HANA Enterprise Architect',
-    location: 'New York, NY (Hybrid)',
-    type: 'Full-Time',
-    workMode: 'Hybrid',
-    experience: 'Senior',
-    experienceText: '8+ Yrs Exp',
-    salary: '₹1.35 Cr – ₹1.60 Cr / yr',
-    department: 'SAP & Enterprise',
-    tag: 'Greenfield',
-    tagColor: 'blue',
-    skills: ['SAP S/4HANA', 'ABAP Cloud', 'Fiori', 'Enterprise Integration'],
-    description: 'Lead multi-region SAP S/4HANA transformations for Fortune 500 BFSI & manufacturing enterprise clients. Architecture, migration strategy, and pod leadership.',
-    postedTime: 'Updated Today'
-  },
-  {
-    id: 'job-2',
-    company: 'FinTech Velocity Pod',
-    title: 'Senior Full Stack React & Node.js Engineer',
-    location: 'Remote (US/Canada)',
-    type: 'Full-Time',
-    workMode: 'Remote',
-    experience: 'Senior',
-    experienceText: '5+ Yrs Exp',
-    salary: '₹1.15 Cr – ₹1.40 Cr / yr',
-    department: 'Full Stack & Frontend',
-    tag: '100% Remote',
-    tagColor: 'green',
-    skills: ['React 19', 'TypeScript', 'Node.js', 'PostgreSQL', 'GraphQL'],
-    description: 'Design and build high-frequency financial trading analytics dashboards and low-latency microservices with modern TypeScript and React.',
-    postedTime: '2 hours ago'
-  },
-  {
-    id: 'job-3',
-    company: 'CloudSphere Mobility',
-    title: 'Principal DevOps & Kubernetes Architect',
-    location: 'Toronto, ON / Remote',
-    type: 'Contract / C2C',
-    workMode: 'Remote',
-    experience: 'Lead',
-    experienceText: '7+ Yrs Exp',
-    salary: '₹7,800 – ₹10,250 / hr',
-    department: 'Cloud & DevOps',
-    tag: 'High Rate C2C',
-    tagColor: 'purple',
-    skills: ['Kubernetes', 'AWS', 'Terraform', 'CI/CD Pipelines', 'Istio'],
-    description: 'Oversee zero-downtime multi-cloud container orchestration, Infrastructure-as-Code automation, and security hardening for global SaaS platform.',
-    postedTime: '1 day ago'
-  },
-  {
-    id: 'job-4',
-    company: 'HealthTech AI Platform',
-    title: 'Senior AI / LLM Infrastructure Engineer',
-    location: 'San Francisco, CA / Remote',
-    type: 'Full-Time',
-    workMode: 'Remote',
-    experience: 'Senior',
-    experienceText: '4+ Yrs Exp',
-    salary: '₹1.45 Cr – ₹1.75 Cr + Equity',
-    department: 'AI & Data Engineering',
-    tag: 'Direct Client',
-    tagColor: 'amber',
-    skills: ['Python', 'PyTorch', 'LangChain', 'Vector DBs', 'Distributed Systems'],
-    description: 'Deploy fine-tuned domain-specific LLM models into HIPAA-compliant clinical workflows. Build scalable inference engines and retrieval pipelines.',
-    postedTime: 'Just now'
-  },
-  {
-    id: 'job-5',
-    company: 'CyberGuard Systems',
-    title: 'Principal Cloud Security & Compliance Specialist',
-    location: 'Bengaluru, India (Hybrid)',
-    type: 'Full-Time',
-    workMode: 'Hybrid',
-    experience: 'Senior',
-    experienceText: '6+ Yrs Exp',
-    salary: '₹32 LPA – ₹45 LPA',
-    department: 'Cyber Security',
-    tag: 'Urgent Hire',
-    tagColor: 'red',
-    skills: ['SOC 2', 'ISO 27001', 'Cloud Security', 'Penetration Testing', 'IAM'],
-    description: 'Audit and fortify multi-region cloud infrastructures across AWS & Azure. Formulate threat detection guardrails and incident response protocols.',
-    postedTime: '1 day ago'
-  },
-  {
-    id: 'job-6',
-    company: 'OmniChain Logistics',
-    title: 'Senior AEM & Java Experience Platform Dev',
-    location: 'Chicago, IL / Remote',
-    type: 'Full-Time',
-    workMode: 'Remote',
-    experience: 'Mid',
-    experienceText: '5+ Yrs Exp',
-    salary: '₹1.10 Cr – ₹1.30 Cr / yr',
-    department: 'Full Stack & Frontend',
-    tag: 'Global Scale',
-    tagColor: 'blue',
-    skills: ['Adobe Experience Manager (AEM)', 'Java Spring', 'OSGi', 'HTL'],
-    description: 'Architect scalable digital customer touchpoints on AEM as a Cloud Service for global supply chain and e-commerce enterprise portals.',
-    postedTime: '3 days ago'
-  }
-];
-
-const FeaturedPositions = ({ jobsList, onApplyClick, activeCategory, setActiveCategory }) => {
+const FeaturedPositions = ({ jobsList = [], onApplyClick, activeCategory, setActiveCategory }) => {
   const [visibleCount, setVisibleCount] = useState(6);
 
-  const jobsToDisplay = jobsList && jobsList.length > 0 ? jobsList : MOCK_FEATURED_JOBS;
+  const jobsToDisplay = Array.isArray(jobsList) ? jobsList : [];
 
   const categories = [
     'All Roles',
-    'Full Stack & Frontend',
     'SAP & Enterprise',
+    'Full Stack & Frontend',
     'Cloud & DevOps',
     'AI & Data Engineering',
-    'Cyber Security'
+    'FinTech & Systems'
   ];
 
   // Filter jobs based on active category
   const filteredJobs = jobsToDisplay.filter((job) => {
     if (!activeCategory || activeCategory === 'All Roles') return true;
-    return job.department === activeCategory || job.tag === activeCategory;
+    return (
+      job.department === activeCategory ||
+      (job.category && job.category.toLowerCase().includes(activeCategory.toLowerCase())) ||
+      job.tag === activeCategory
+    );
   });
 
   const displayedJobs = filteredJobs.slice(0, visibleCount);
@@ -131,11 +30,11 @@ const FeaturedPositions = ({ jobsList, onApplyClick, activeCategory, setActiveCa
   return (
     <section className="FeaturedPositions-section" id="featured-positions">
       <div className="FeaturedPositions-container">
-        {/* Figma Design Section Header */}
+        {/* Section Header */}
         <div className="FeaturedPositions-figmaHeader">
           <div className="FeaturedPositions-headerTitleCol">
             <div className="FeaturedPositions-curatedBadge">
-              ✨ CURATED HIGH-IMPACT ROLES
+              CURATED HIGH-IMPACT ROLES
             </div>
             <h2 className="FeaturedPositions-mainHeading">Featured Positions</h2>
           </div>
@@ -173,7 +72,9 @@ const FeaturedPositions = ({ jobsList, onApplyClick, activeCategory, setActiveCa
           </div>
         ) : (
           <div className="FeaturedPositions-emptyState">
-            <div className="FeaturedPositions-emptyIcon">🔍</div>
+            <span className="material-symbols-outlined" style={{ fontSize: '48px', color: '#94a3b8', marginBottom: '0.75rem' }}>
+              search_off
+            </span>
             <h3>No positions found matching this criteria</h3>
             <p>Try resetting your filter or searching with different keywords.</p>
             <button 

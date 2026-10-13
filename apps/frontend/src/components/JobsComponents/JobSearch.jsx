@@ -9,12 +9,18 @@ const JobSearch = ({
   setExperienceFilter,
   workMode,
   setWorkMode,
+  jobMode = 'All Types',
+  setJobMode,
+  noticePeriod = 'All Notice',
+  setNoticePeriod,
   sortBy,
   setSortBy,
   totalResults,
   onSearchSubmit
 }) => {
-  const workModes = ['All Modes', 'Remote', 'Hybrid', 'On-site'];
+  const workModes = ['All Modes', 'Work From Home', 'Hybrid', 'Work From Office'];
+  const jobModes = ['All Types', 'Permanent', 'Contract', 'Contract to Hire'];
+  const noticePeriods = ['All Notice', 'Immediate', 'On Notice Period', '< 30 Days', '> 30 Days'];
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
@@ -98,8 +104,8 @@ const JobSearch = ({
           </button>
         </div>
 
-        {/* Row 2: Work Mode Pills & Status Bar */}
-        <div className="JobSearch-subFiltersRow">
+        {/* Row 2: Secondary Filter Bars (Work Mode & Job Mode & Notice) */}
+        <div className="JobSearch-subFiltersRow" style={{ flexWrap: 'wrap', gap: '1rem', rowGap: '0.85rem' }}>
           {/* Work Mode Filter Pills */}
           <div className="JobSearch-workModeGroup">
             <span className="JobSearch-workModeLabel">WORK MODE:</span>
@@ -117,10 +123,48 @@ const JobSearch = ({
             </div>
           </div>
 
+          {/* Job Mode Filter Pills */}
+          {setJobMode && (
+            <div className="JobSearch-workModeGroup">
+              <span className="JobSearch-workModeLabel">JOB MODE:</span>
+              <div className="JobSearch-modePillsList">
+                {jobModes.map((jm) => (
+                  <button
+                    key={jm}
+                    type="button"
+                    className={`JobSearch-modePill ${jobMode === jm ? 'JobSearch-activeModePill' : ''}`}
+                    onClick={() => setJobMode(jm)}
+                  >
+                    {jm}
+                  </button>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Notice Period Filter Select */}
+          {setNoticePeriod && (
+            <div className="JobSearch-workModeGroup" style={{ alignItems: 'center' }}>
+              <span className="JobSearch-workModeLabel">NOTICE:</span>
+              <select
+                className="JobSearch-sortSelect"
+                style={{ padding: '0.3rem 0.6rem', fontSize: '0.78rem' }}
+                value={noticePeriod}
+                onChange={(e) => setNoticePeriod(e.target.value)}
+              >
+                {noticePeriods.map((np) => (
+                  <option key={np} value={np}>{np}</option>
+                ))}
+              </select>
+            </div>
+          )}
+
           {/* Right Status Indicator & Sorting */}
-          <div className="JobSearch-statusSortGroup">
+          <div className="JobSearch-statusSortGroup" style={{ marginLeft: 'auto' }}>
             <div className="JobSearch-rolesCounter">
-              <span className="JobSearch-greenDot">⚡</span>
+              <span className="material-symbols-outlined" style={{ fontSize: '16px', color: '#16a34a', marginRight: '4px' }}>
+                bolt
+              </span>
               <span className="JobSearch-rolesCountText">
                 <strong>{totalResults}</strong> Open Tech Roles
               </span>

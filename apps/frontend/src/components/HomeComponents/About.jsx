@@ -1,5 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import AnimatedCounter from '../common/AnimatedCounter';
 
 const About = () => {
   return (
@@ -31,13 +32,17 @@ const About = () => {
 
           <div className="About-statsGrid">
             <div className="About-statBox">
-              <div className="About-statValue">2022</div>
+              <div className="About-statValue">
+                <AnimatedCounter value={2022} duration={1600} />
+              </div>
               <div className="About-statText">
                 Incorporated &amp; rapidly scaled to bilateral enterprise corridors
               </div>
             </div>
             <div className="About-statBox">
-              <div className="About-statValue text-tertiary">100%</div>
+              <div className="About-statValue text-tertiary">
+                <AnimatedCounter value={100} suffix="%" duration={1800} />
+              </div>
               <div className="About-statText">
                 Compliant cross-border hiring, EOR &amp; payroll assurance
               </div>

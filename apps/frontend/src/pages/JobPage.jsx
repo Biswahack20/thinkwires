@@ -35,6 +35,8 @@ const JobPage = () => {
   const [locationFilter, setLocationFilter] = useState('All');
   const [experienceFilter, setExperienceFilter] = useState('All');
   const [workMode, setWorkMode] = useState('All Modes');
+  const [jobMode, setJobMode] = useState('All Types');
+  const [noticePeriod, setNoticePeriod] = useState('All Notice');
   const [departmentFilter, setDepartmentFilter] = useState('All Roles');
   const [sortBy, setSortBy] = useState('Newest First');
 
@@ -46,16 +48,18 @@ const JobPage = () => {
         location: locationFilter,
         experience: experienceFilter,
         workMode: workMode,
+        jobMode: jobMode,
+        noticePeriod: noticePeriod,
         department: departmentFilter,
         sort: sortBy,
       })
     );
-  }, [dispatch, searchQuery, locationFilter, experienceFilter, workMode, departmentFilter, sortBy]);
+  }, [dispatch, searchQuery, locationFilter, experienceFilter, workMode, jobMode, noticePeriod, departmentFilter, sortBy]);
 
   // Trigger search on filter changes or initial load
   useEffect(() => {
     loadJobsFromBackend();
-  }, [departmentFilter, workMode, sortBy, loadJobsFromBackend]);
+  }, [departmentFilter, workMode, jobMode, noticePeriod, sortBy, loadJobsFromBackend]);
 
   // Handle Search button submit
   const handleSearchSubmit = () => {
@@ -81,6 +85,10 @@ const JobPage = () => {
             setExperienceFilter={setExperienceFilter}
             workMode={workMode}
             setWorkMode={setWorkMode}
+            jobMode={jobMode}
+            setJobMode={setJobMode}
+            noticePeriod={noticePeriod}
+            setNoticePeriod={setNoticePeriod}
             sortBy={sortBy}
             setSortBy={setSortBy}
             totalResults={openings.length}

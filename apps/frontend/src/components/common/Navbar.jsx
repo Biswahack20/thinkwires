@@ -82,13 +82,13 @@ const Navbar = () => {
         {/* Main Navigation */}
         <nav className="Navbar-mainNav" aria-label="Main navigation">
           <div className="Navbar-logoContainer">
-            <a href="/" onClick={closeMobileMenu} aria-label="ThinkWires Home">
+            <Link to="/" onClick={closeMobileMenu} aria-label="ThinkWires Home">
               <img
                 src={logo}
                 alt="ThinkWires Logo"
                 className="Navbar-logo"
               />
-            </a>
+            </Link>
           </div>
 
           {/* Mobile Menu Toggle */}
@@ -288,13 +288,13 @@ const Navbar = () => {
             </ul>
 
             <div className="Navbar-actionButtons">
-              <a
-                href="/find-talent"
+              <Link
+                to="/find-talent"
                 className="Navbar-btnPrimary"
                 onClick={closeMobileMenu}
               >
                 Find Talent
-              </a>
+              </Link>
 
               <button
                 type="button"

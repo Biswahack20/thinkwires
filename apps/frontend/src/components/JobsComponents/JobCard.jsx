@@ -33,12 +33,22 @@ const JobCard = ({ job, onApplyClick }) => {
         <span className="JobCard-categoryText">
           {job.category || 'ENTERPRISE SYSTEMS • CONTRACT'}
         </span>
-        <span 
-          className="JobCard-badgePill"
-          style={getBadgeStyle(job.badgeColor)}
-        >
-          {job.badge || job.tag || 'Immediate Joining'}
-        </span>
+        <div style={{ display: 'flex', gap: '0.4rem', alignItems: 'center', flexWrap: 'wrap' }}>
+          {job.jobMode && (
+            <span 
+              className="JobCard-modePill"
+              style={{ fontSize: '0.72rem', padding: '0.2rem 0.55rem', borderRadius: '4px', fontWeight: 600, background: 'rgba(37, 99, 235, 0.08)', color: '#2563eb', border: '1px solid rgba(37, 99, 235, 0.2)' }}
+            >
+              {job.jobMode}
+            </span>
+          )}
+          <span 
+            className="JobCard-badgePill"
+            style={getBadgeStyle(job.badgeColor)}
+          >
+            {job.badge || job.tag || 'Immediate Joining'}
+          </span>
+        </div>
       </div>
 
       {/* Main Title & Logo Row */}
@@ -60,18 +70,20 @@ const JobCard = ({ job, onApplyClick }) => {
       {/* 4 Specs Grid */}
       <div className="JobCard-specsGrid">
         <div className="JobCard-specItem">
-          <span className="JobCard-specLabel">Location</span>
+          <span className="JobCard-specLabel">Location & Mode</span>
           <span className="JobCard-specVal">
-            <span className="material-symbols-outlined" style={{ fontSize: '15px', verticalAlign: 'middle', marginRight: '4px' }}>location_on</span>
-            {job.location}
+            <span className="material-symbols-outlined" style={{ fontSize: '15px', verticalAlign: 'middle', marginRight: '4px' }}>
+              {job.workMode === 'Work From Home' ? 'home' : job.workMode === 'Work From Office' ? 'domain' : 'location_on'}
+            </span>
+            {job.location} ({job.workMode || 'Hybrid'})
           </span>
         </div>
 
         <div className="JobCard-specItem">
-          <span className="JobCard-specLabel">Experience</span>
+          <span className="JobCard-specLabel">Experience & Type</span>
           <span className="JobCard-specVal">
             <span className="material-symbols-outlined" style={{ fontSize: '15px', verticalAlign: 'middle', marginRight: '4px' }}>work</span>
-            {job.experience}
+            {job.experience} • {job.jobMode || 'Permanent'}
           </span>
         </div>
 
@@ -84,10 +96,10 @@ const JobCard = ({ job, onApplyClick }) => {
         </div>
 
         <div className="JobCard-specItem">
-          <span className="JobCard-specLabel">Joining / Tier</span>
+          <span className="JobCard-specLabel">Notice Period</span>
           <span className="JobCard-specVal">
-            <span className="material-symbols-outlined" style={{ fontSize: '15px', verticalAlign: 'middle', marginRight: '4px' }}>bolt</span>
-            {job.joining || '< 15 Days'}
+            <span className="material-symbols-outlined" style={{ fontSize: '15px', verticalAlign: 'middle', marginRight: '4px' }}>timer</span>
+            {job.noticePeriod || job.joining || 'Immediate'}
           </span>
         </div>
       </div>

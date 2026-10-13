@@ -5,6 +5,7 @@ import NewHero from '../components/HomeComponents/NewHero';
 import TechStack from '../components/HomeComponents/TechStack';
 import About from '../components/HomeComponents/About';
 import Footer from '../components/common/Footer'; 
+import useLenisScroll from '../hooks/useLenisScroll';
 
 const Capabilities = React.lazy(() => import('../components/HomeComponents/Capabilities'));
 const Openings = React.lazy(() => import('../components/HomeComponents/Openings'));
@@ -15,6 +16,8 @@ const Reports = React.lazy(() => import('../components/HomeComponents/Reports'))
 const CTA = React.lazy(() => import('../components/common/CTA'));
 
 const HomePage = () => {
+  useLenisScroll();
+
   return (
     <div>
       <Navbar />

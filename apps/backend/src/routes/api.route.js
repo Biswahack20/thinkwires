@@ -86,8 +86,22 @@ router.post('/tech-stack', (req, res) => {
 
 // --- Openings ---
 router.get('/openings', (req, res) => {
-  const { q, location, experience, workMode, department, sort } = req.query;
-  let filtered = [...openings];
+  const { q, location, experience, workMode, jobMode, noticePeriod, department, sort } = req.query;
+  
+  // Always read freshest dataset from mockData.json as single source of truth
+  let sourceOpenings = openings;
+  try {
+    const rawData = fs.readFileSync(path.join(__dirname, '..', 'seeds', 'mockData.json'), 'utf8');
+    const parsed = JSON.parse(rawData);
+    if (Array.isArray(parsed.initialOpenings) && parsed.initialOpenings.length > 0) {
+      sourceOpenings = parsed.initialOpenings;
+      openings = [...sourceOpenings];
+    }
+  } catch (readErr) {
+    console.warn('Fallback to memory openings:', readErr.message);
+  }
+
+  let filtered = [...sourceOpenings];
 
   // Search keyword (q)
   if (q && q.trim() !== '') {
@@ -98,7 +112,10 @@ router.get('/openings', (req, res) => {
       const matchCategory = job.category && job.category.toLowerCase().includes(search);
       const matchDesc = job.description && job.description.toLowerCase().includes(search);
       const matchSkills = job.skills && job.skills.some((s) => s.toLowerCase().includes(search));
-      return matchTitle || matchCompany || matchCategory || matchDesc || matchSkills;
+      const matchJobMode = job.jobMode && job.jobMode.toLowerCase().includes(search);
+      const matchWorkMode = job.workMode && job.workMode.toLowerCase().includes(search);
+      const matchNotice = job.noticePeriod && job.noticePeriod.toLowerCase().includes(search);
+      return matchTitle || matchCompany || matchCategory || matchDesc || matchSkills || matchJobMode || matchWorkMode || matchNotice;
     });
   }
 
@@ -107,7 +124,13 @@ router.get('/openings', (req, res) => {
     const loc = location.toLowerCase();
     filtered = filtered.filter((job) => {
       if (!job.location) return false;
-      if (loc === 'remote') return job.location.toLowerCase().includes('remote') || job.workMode === 'Remote';
+      if (loc === 'remote') {
+        return (
+          job.location.toLowerCase().includes('remote') ||
+          job.workMode === 'Work From Home' ||
+          job.workMode === 'Remote'
+        );
+      }
       return job.location.toLowerCase().includes(loc);
     });
   }
@@ -121,9 +144,41 @@ router.get('/openings', (req, res) => {
     });
   }
 
-  // Work Mode filter
-  if (workMode && workMode !== 'All Modes') {
-    filtered = filtered.filter((job) => job.workMode === workMode || (job.location && job.location.toLowerCase().includes(workMode.toLowerCase())));
+  // Work Mode filter (supports Work From Home, Work From Office, Hybrid, and legacy Remote / On-site)
+  if (workMode && workMode !== 'All Modes' && workMode !== 'All') {
+    const targetMode = workMode.toLowerCase();
+    filtered = filtered.filter((job) => {
+      const jw = (job.workMode || '').toLowerCase();
+      const jl = (job.location || '').toLowerCase();
+      if (targetMode === 'work from home' || targetMode === 'remote') {
+        return jw === 'work from home' || jw === 'remote' || jl.includes('remote');
+      }
+      if (targetMode === 'work from office' || targetMode === 'on-site') {
+        return jw === 'work from office' || jw === 'on-site' || jw.includes('office');
+      }
+      if (targetMode === 'hybrid') {
+        return jw === 'hybrid' || jl.includes('hybrid');
+      }
+      return jw === targetMode;
+    });
+  }
+
+  // Job Mode filter (Permanent, Contract, Contract to Hire)
+  if (jobMode && jobMode !== 'All Modes' && jobMode !== 'All Types' && jobMode !== 'All') {
+    const targetJobMode = jobMode.toLowerCase();
+    filtered = filtered.filter((job) => {
+      const jm = (job.jobMode || '').toLowerCase();
+      return jm === targetJobMode;
+    });
+  }
+
+  // Notice Period filter (Immediate, On Notice Period, < 30 Days, > 30 Days)
+  if (noticePeriod && noticePeriod !== 'All Notice' && noticePeriod !== 'All') {
+    const targetNotice = noticePeriod.toLowerCase();
+    filtered = filtered.filter((job) => {
+      const jn = (job.noticePeriod || '').toLowerCase();
+      return jn === targetNotice;
+    });
   }
 
   // Department / Category filter

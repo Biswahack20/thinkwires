@@ -1,8 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { fetchCapabilities } from '../../store/slices/homeSlice';
 import SectionBadge from '../common/SectionBadge';
 import ApplyModal from '../common/ApplyModal';
+
+const getCapabilityRoute = (cap) => {
+  const title = (cap.title || '').toLowerCase();
+  if (title.includes('staff') || title.includes('augmentation')) return '/services/staff-augmentation';
+  if (title.includes('eor') || title.includes('employer')) return '/services/eor';
+  if (title.includes('permanent') || title.includes('search')) return '/services/permanent-staffing';
+  if (title.includes('payroll')) return '/services/payroll';
+  return '/services';
+};
 
 const getCapabilityMaterialIcon = (iconName) => {
   switch (iconName) {
@@ -95,14 +105,14 @@ const Capabilities = () => {
                     ))}
                   </ul>
                 </div>
-                <div className="Capabilities-cardFooter">
+                <Link to={getCapabilityRoute(cap)} className="Capabilities-cardFooter" style={{ textDecoration: 'none' }}>
                   <span className="Capabilities-footerLinkText" style={{ color: cap.linkColor }}>
                     {cap.linkText}
                   </span>
                   <span className="material-symbols-outlined text-[18px] Capabilities-footerArrow" style={{ color: cap.linkColor }}>
                     arrow_forward
                   </span>
-                </div>
+                </Link>
               </div>
             ))
           )}

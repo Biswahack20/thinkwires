@@ -8,7 +8,7 @@ const JobsHero = ({ children }) => {
         <div className="JobsHero-topBadge">
           <span className="JobsHero-pulseDot"></span>
           <span className="JobsHero-topBadgeText">
-            🚀 DIRECT CLIENT ENGINEERING OPENINGS • Updated Today
+            DIRECT CLIENT ENGINEERING OPENINGS • Updated Today
           </span>
         </div>
 
@@ -27,15 +27,15 @@ const JobsHero = ({ children }) => {
         {/* Value Pills Bar */}
         <div className="JobsHero-valuePillsRow">
           <div className="JobsHero-valuePill">
-            <span className="JobsHero-pillIconGreen">✓</span>
+            <span className="material-symbols-outlined" style={{ fontSize: '16px', color: '#16a34a' }}>check_circle</span>
             <span>Direct Client Hiring</span>
           </div>
           <div className="JobsHero-valuePill">
-            <span className="JobsHero-pillIconBlue">💼</span>
+            <span className="material-symbols-outlined" style={{ fontSize: '16px', color: '#2563eb' }}>work</span>
             <span>Zero Placement Cut</span>
           </div>
           <div className="JobsHero-valuePill">
-            <span className="JobsHero-pillIconYellow">⚡</span>
+            <span className="material-symbols-outlined" style={{ fontSize: '16px', color: '#eab308' }}>bolt</span>
             <span>Fast 48-Hour Interview Turnaround</span>
           </div>
         </div>

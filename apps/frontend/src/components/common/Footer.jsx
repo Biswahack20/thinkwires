@@ -80,26 +80,42 @@ const Footer = () => {
       <div className={'Footer-container'}>
         <div className={'Footer-topSection'}>
           <div className={'Footer-brandCol'}>
-            <div className={'Footer-logo'}>
+            <Link to="/" className={'Footer-logo'} aria-label="ThinkWires Home">
               <img
                 src={logoImg}
                 alt="ThinkWires"
                 className={'Footer-logoImg'}
               />
-            </div>
+            </Link>
             <p className={'Footer-brandDesc'}>
               Architecting elite workforce solutions, borderless global
               engineering teams, and hyper-scalable enterprise talent ecosystems
               across North America, India, and emerging tech corridors.
             </p>
             <div className={'Footer-socialLinks'}>
-              <a href="#" className={'Footer-socialIcon'}>
+              <a
+                href="https://www.linkedin.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={'Footer-socialIcon'}
+                aria-label="LinkedIn"
+              >
                 <IconUpload />
               </a>
-              <a href="#" className={'Footer-socialIcon'}>
+              <a
+                href="https://twitter.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className={'Footer-socialIcon'}
+                aria-label="Share"
+              >
                 <IconShare />
               </a>
-              <a href="#" className={'Footer-socialIcon'}>
+              <a
+                href="mailto:info@thinkwires.com"
+                className={'Footer-socialIcon'}
+                aria-label="Contact via Email"
+              >
                 <IconMail />
               </a>
             </div>
@@ -140,29 +156,29 @@ const Footer = () => {
             <h4 className={'Footer-colTitle'}>INDUSTRIES</h4>
             <ul className={'Footer-linkList'}>
               <li>
-                <a href="#" className={'Footer-linkItem'}>
+                <Link to="/industries" className={'Footer-linkItem'}>
                   Information Technology
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className={'Footer-linkItem'}>
+                <Link to="/industries" className={'Footer-linkItem'}>
                   BFSI &amp; Fintech
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className={'Footer-linkItem'}>
+                <Link to="/industries" className={'Footer-linkItem'}>
                   Healthcare &amp; Life Sciences
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className={'Footer-linkItem'}>
+                <Link to="/industries" className={'Footer-linkItem'}>
                   Engineering &amp; Telecom
-                </a>
+                </Link>
               </li>
               <li>
-                <a href="#" className={'Footer-linkItem'}>
+                <Link to="/industries" className={'Footer-linkItem'}>
                   E-Commerce &amp; Retail
-                </a>
+                </Link>
               </li>
             </ul>
           </div>
@@ -212,18 +228,18 @@ const Footer = () => {
             &amp; Global Talent Architecture
           </div>
           <div className={'Footer-bottomLinks'}>
-            <a href="#" className={'Footer-bottomLink'}>
+            <Link to="/privacy" className={'Footer-bottomLink'}>
               Privacy Policy
-            </a>
-            <a href="#" className={'Footer-bottomLink'}>
+            </Link>
+            <Link to="/terms" className={'Footer-bottomLink'}>
               Terms of Service
-            </a>
-            <a href="#" className={'Footer-bottomLink'}>
+            </Link>
+            <Link to="/security" className={'Footer-bottomLink'}>
               Security &amp; Compliance
-            </a>
-            <a href="#" className={'Footer-bottomLink'}>
+            </Link>
+            <Link to="/cookies" className={'Footer-bottomLink'}>
               Cookie Settings
-            </a>
+            </Link>
           </div>
         </div>
       </div>
