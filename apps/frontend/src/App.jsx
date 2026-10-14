@@ -7,11 +7,19 @@ import BlogPage from './pages/BlogPage';
 import ContactPage from './pages/ContactPage';
 import IndustriesPage from './pages/IndustriesPage';
 import BenchPage from './pages/BenchPage';
-
+import PayrollPage from './pages/PayrollPage';
+import EorPage from './pages/EorPage';
+import StaffAugmentationPage from './pages/StaffAugmentationPage';
+import PermanentStaffingPage from './pages/PermanentStaffingPage';
+import FindTalentPage from './pages/FindTalentPage';
+import CandidatePortalPage from './pages/CandidatePortalPage';
+import LegalPage from './pages/LegalPage';
+import ScrollAnimationManager from './components/common/ScrollAnimationManager';
 
 function App() {
   return (
     <BrowserRouter>
+      <ScrollAnimationManager />
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/about" element={<AboutPage />} />
@@ -22,6 +30,37 @@ function App() {
         <Route path="/hot-jobs" element={<JobPage />} />
         <Route path="/blog" element={<BlogPage />} />
         <Route path="/contact" element={<ContactPage />} />
+        {/* Find Talent & Candidate Portal */}
+        <Route path="/find-talent" element={<FindTalentPage />} />
+        <Route path="/hire-talent" element={<FindTalentPage />} />
+        <Route path="/candidate-portal" element={<CandidatePortalPage />} />
+        <Route path="/portal" element={<CandidatePortalPage />} />
+        <Route path="/candidate" element={<CandidatePortalPage />} />
+        {/* Services Routes */}
+        <Route path="/services" element={<StaffAugmentationPage />} />
+        <Route path="/services/staff-augmentation" element={<StaffAugmentationPage />} />
+        <Route path="/staff-augmentation" element={<StaffAugmentationPage />} />
+        <Route path="/services/permanent-staffing" element={<PermanentStaffingPage />} />
+        <Route path="/permanent-staffing" element={<PermanentStaffingPage />} />
+        <Route path="/services/permanent-staffing-and-executive-search" element={<PermanentStaffingPage />} />
+        <Route path="/permanent-staffing-and-executive-search" element={<PermanentStaffingPage />} />
+        <Route path="/services/executive-search" element={<PermanentStaffingPage />} />
+        <Route path="/executive-search" element={<PermanentStaffingPage />} />
+        <Route path="/services/payroll" element={<PayrollPage />} />
+        <Route path="/payroll" element={<PayrollPage />} />
+        <Route path="/payroll-outsourcing" element={<PayrollPage />} />
+        <Route path="/services/eor" element={<EorPage />} />
+        <Route path="/eor" element={<EorPage />} />
+        <Route path="/employer-of-record" element={<EorPage />} />
+        {/* Legal & Compliance Routes */}
+        <Route path="/privacy" element={<LegalPage />} />
+        <Route path="/privacy-policy" element={<LegalPage />} />
+        <Route path="/terms" element={<LegalPage />} />
+        <Route path="/terms-of-service" element={<LegalPage />} />
+        <Route path="/security" element={<LegalPage />} />
+        <Route path="/compliance" element={<LegalPage />} />
+        <Route path="/cookies" element={<LegalPage />} />
+        <Route path="/cookie-settings" element={<LegalPage />} />
         <Route path="*" element={<HomePage />} />
       </Routes>
     </BrowserRouter>

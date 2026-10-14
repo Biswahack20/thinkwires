@@ -82,13 +82,13 @@ const Navbar = () => {
         {/* Main Navigation */}
         <nav className="Navbar-mainNav" aria-label="Main navigation">
           <div className="Navbar-logoContainer">
-            <a href="/" onClick={closeMobileMenu} aria-label="ThinkWires Home">
+            <Link to="/" onClick={closeMobileMenu} aria-label="ThinkWires Home">
               <img
                 src={logo}
                 alt="ThinkWires Logo"
                 className="Navbar-logo"
               />
-            </a>
+            </Link>
           </div>
 
           {/* Mobile Menu Toggle */}
@@ -288,13 +288,13 @@ const Navbar = () => {
             </ul>
 
             <div className="Navbar-actionButtons">
-              <a
-                href="/find-talent"
+              <Link
+                to="/find-talent"
                 className="Navbar-btnPrimary"
                 onClick={closeMobileMenu}
               >
                 Find Talent
-              </a>
+              </Link>
 
               <button
                 type="button"
@@ -307,11 +307,12 @@ const Navbar = () => {
                 Quick Apply
               </button>
 
-              <button
-                type="button"
+              <Link
+                to="/candidate-portal"
                 className="Navbar-userIconBtn"
-                aria-label="User Profile"
+                aria-label="Candidate Portal"
                 onClick={closeMobileMenu}
+                title="Candidate Portal"
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -323,7 +324,7 @@ const Navbar = () => {
                 >
                   <path d="M3 14s-1 0-1-1 1-4 6-4 6 1 6 4-1 1-1 1H3Zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" />
                 </svg>
-              </button>
+              </Link>
             </div>
           </div>
         </nav>

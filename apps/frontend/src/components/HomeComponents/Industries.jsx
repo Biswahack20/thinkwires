@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { fetchIndustries } from '../../store/slices/homeSlice';
 
 const getIndustryMaterialIcon = (iconName) => {
@@ -45,7 +46,7 @@ const Industries = () => {
 
         <div className="Industries-grid">
           {industries.map((ind) => (
-            <div key={ind.id} className="Industries-card group">
+            <Link key={ind.id} to="/industries" className="Industries-card group" style={{ textDecoration: 'none', color: 'inherit' }}>
               <div className={`Industries-iconWrapper Industries-${ind.color} group-hover:scale-110 transition-transform`}>
                 <span className="material-symbols-outlined text-[26px]">
                   {getIndustryMaterialIcon(ind.icon)}
@@ -53,7 +54,7 @@ const Industries = () => {
               </div>
               <h3 className="Industries-cardTitle">{ind.name}</h3>
               <p className="Industries-cardDesc">{ind.desc}</p>
-            </div>
+            </Link>
           ))}
         </div>
       </div>

@@ -23,7 +23,20 @@ const {
   researchersData = [],
   industriesPageData = null,
   benchData = null,
+  payrollData = null,
+  eorData = null,
+  staffAugmentationData = null,
+  permanentStaffingData = null,
+  findTalentData = null,
+  candidatePortalData = null,
 } = mockData;
+
+let currentPayrollData = payrollData ? { ...payrollData } : null;
+let currentEorData = eorData ? { ...eorData } : null;
+let currentStaffAugmentationData = staffAugmentationData ? { ...staffAugmentationData } : null;
+let currentPermanentStaffingData = permanentStaffingData ? { ...permanentStaffingData } : null;
+let currentFindTalentData = findTalentData ? { ...findTalentData } : null;
+let currentCandidatePortalData = candidatePortalData ? { ...candidatePortalData } : null;
 
 const router = express.Router();
 
@@ -73,8 +86,22 @@ router.post('/tech-stack', (req, res) => {
 
 // --- Openings ---
 router.get('/openings', (req, res) => {
-  const { q, location, experience, workMode, department, sort } = req.query;
-  let filtered = [...openings];
+  const { q, location, experience, workMode, jobMode, noticePeriod, department, sort } = req.query;
+  
+  // Always read freshest dataset from mockData.json as single source of truth
+  let sourceOpenings = openings;
+  try {
+    const rawData = fs.readFileSync(path.join(__dirname, '..', 'seeds', 'mockData.json'), 'utf8');
+    const parsed = JSON.parse(rawData);
+    if (Array.isArray(parsed.initialOpenings) && parsed.initialOpenings.length > 0) {
+      sourceOpenings = parsed.initialOpenings;
+      openings = [...sourceOpenings];
+    }
+  } catch (readErr) {
+    console.warn('Fallback to memory openings:', readErr.message);
+  }
+
+  let filtered = [...sourceOpenings];
 
   // Search keyword (q)
   if (q && q.trim() !== '') {
@@ -85,7 +112,10 @@ router.get('/openings', (req, res) => {
       const matchCategory = job.category && job.category.toLowerCase().includes(search);
       const matchDesc = job.description && job.description.toLowerCase().includes(search);
       const matchSkills = job.skills && job.skills.some((s) => s.toLowerCase().includes(search));
-      return matchTitle || matchCompany || matchCategory || matchDesc || matchSkills;
+      const matchJobMode = job.jobMode && job.jobMode.toLowerCase().includes(search);
+      const matchWorkMode = job.workMode && job.workMode.toLowerCase().includes(search);
+      const matchNotice = job.noticePeriod && job.noticePeriod.toLowerCase().includes(search);
+      return matchTitle || matchCompany || matchCategory || matchDesc || matchSkills || matchJobMode || matchWorkMode || matchNotice;
     });
   }
 
@@ -94,7 +124,13 @@ router.get('/openings', (req, res) => {
     const loc = location.toLowerCase();
     filtered = filtered.filter((job) => {
       if (!job.location) return false;
-      if (loc === 'remote') return job.location.toLowerCase().includes('remote') || job.workMode === 'Remote';
+      if (loc === 'remote') {
+        return (
+          job.location.toLowerCase().includes('remote') ||
+          job.workMode === 'Work From Home' ||
+          job.workMode === 'Remote'
+        );
+      }
       return job.location.toLowerCase().includes(loc);
     });
   }
@@ -108,9 +144,41 @@ router.get('/openings', (req, res) => {
     });
   }
 
-  // Work Mode filter
-  if (workMode && workMode !== 'All Modes') {
-    filtered = filtered.filter((job) => job.workMode === workMode || (job.location && job.location.toLowerCase().includes(workMode.toLowerCase())));
+  // Work Mode filter (supports Work From Home, Work From Office, Hybrid, and legacy Remote / On-site)
+  if (workMode && workMode !== 'All Modes' && workMode !== 'All') {
+    const targetMode = workMode.toLowerCase();
+    filtered = filtered.filter((job) => {
+      const jw = (job.workMode || '').toLowerCase();
+      const jl = (job.location || '').toLowerCase();
+      if (targetMode === 'work from home' || targetMode === 'remote') {
+        return jw === 'work from home' || jw === 'remote' || jl.includes('remote');
+      }
+      if (targetMode === 'work from office' || targetMode === 'on-site') {
+        return jw === 'work from office' || jw === 'on-site' || jw.includes('office');
+      }
+      if (targetMode === 'hybrid') {
+        return jw === 'hybrid' || jl.includes('hybrid');
+      }
+      return jw === targetMode;
+    });
+  }
+
+  // Job Mode filter (Permanent, Contract, Contract to Hire)
+  if (jobMode && jobMode !== 'All Modes' && jobMode !== 'All Types' && jobMode !== 'All') {
+    const targetJobMode = jobMode.toLowerCase();
+    filtered = filtered.filter((job) => {
+      const jm = (job.jobMode || '').toLowerCase();
+      return jm === targetJobMode;
+    });
+  }
+
+  // Notice Period filter (Immediate, On Notice Period, < 30 Days, > 30 Days)
+  if (noticePeriod && noticePeriod !== 'All Notice' && noticePeriod !== 'All') {
+    const targetNotice = noticePeriod.toLowerCase();
+    filtered = filtered.filter((job) => {
+      const jn = (job.noticePeriod || '').toLowerCase();
+      return jn === targetNotice;
+    });
   }
 
   // Department / Category filter
@@ -867,6 +935,187 @@ const handleConsultationSubmission = (req, res) => {
 // POST /api/about/consultation and POST /api/consultations
 router.post('/about/consultation', handleConsultationSubmission);
 router.post('/consultations', handleConsultationSubmission);
+// --- Payroll Outsourcing Endpoints ---
+router.get('/payroll', (req, res) => {
+  res.json(currentPayrollData);
+});
+
+router.post('/payroll', (req, res) => {
+  if (req.body.payrollData) {
+    currentPayrollData = { ...currentPayrollData, ...req.body.payrollData };
+    res.json({ message: 'Payroll data updated successfully', payrollData: currentPayrollData });
+  } else {
+    res.status(400).json({ error: 'payrollData object is required in body' });
+  }
+});
+
+router.post('/payroll/consultation', (req, res) => {
+  const { companyName, fullName, employeeSize, serviceReq, phoneNumber, emailAddress } = req.body;
+  if (!companyName || !fullName || !emailAddress) {
+    return res.status(400).json({ error: 'Company name, full name, and email are required.' });
+  }
+  console.log('📋 New Payroll Outsourcing Consultation Request:', { companyName, fullName, employeeSize, serviceReq, phoneNumber, emailAddress });
+  res.json({
+    success: true,
+    message: 'Thank you! Your payroll consultation request has been queued. Our compliance lead will call within 120 minutes.'
+  });
+});
+
+// --- Employer of Record (EOR) Endpoints ---
+router.get('/eor', (req, res) => {
+  res.json(currentEorData);
+});
+
+router.post('/eor', (req, res) => {
+  if (req.body.eorData) {
+    currentEorData = { ...currentEorData, ...req.body.eorData };
+    res.json({ message: 'EOR data updated successfully', eorData: currentEorData });
+  } else {
+    res.status(400).json({ error: 'eorData object is required in body' });
+  }
+});
+
+router.post('/eor/consultation', (req, res) => {
+  const { fullName, workEmail, companyName, targetGeo, headcount, projectDetails } = req.body;
+  if (!fullName || !workEmail || !companyName) {
+    return res.status(400).json({ error: 'Full name, work email, and company name are required.' });
+  }
+  console.log('🌐 New EOR Consultation Request:', { fullName, workEmail, companyName, targetGeo, headcount, projectDetails });
+  res.json({
+    success: true,
+    message: 'Thank you! Your EOR workforce consultation request has been received. Our Global Compliance Specialist will reach out within 4 hours.'
+  });
+});
+
+// --- Staff Augmentation Endpoints ---
+router.get('/staff-augmentation', (req, res) => {
+  res.json(currentStaffAugmentationData);
+});
+
+router.post('/staff-augmentation', (req, res) => {
+  if (req.body.staffAugmentationData) {
+    currentStaffAugmentationData = { ...currentStaffAugmentationData, ...req.body.staffAugmentationData };
+    res.json({ message: 'Staff augmentation data updated successfully', staffAugmentationData: currentStaffAugmentationData });
+  } else {
+    res.status(400).json({ error: 'staffAugmentationData object is required in body' });
+  }
+});
+
+router.post('/staff-augmentation/consultation', (req, res) => {
+  const { name, email, phone, company, roleNeeded, preferredTime, details } = req.body;
+  if (!name || !email || !company) {
+    return res.status(400).json({ error: 'Name, email, and company name are required.' });
+  }
+  console.log('🚀 New Staff Augmentation Workforce Strategy Request:', { name, email, phone, company, roleNeeded, preferredTime, details });
+  res.json({
+    success: true,
+    message: 'Thank you! Your workforce consultation request has been received. A Senior Talent Architect will reach out within 5 hours.'
+  });
+});
+
+// --- Permanent Staffing & Executive Search Endpoints ---
+router.get('/permanent-staffing', (req, res) => {
+  res.json(currentPermanentStaffingData);
+});
+
+router.get('/executive-search', (req, res) => {
+  res.json(currentPermanentStaffingData);
+});
+
+router.post('/permanent-staffing', (req, res) => {
+  if (req.body.permanentStaffingData) {
+    currentPermanentStaffingData = { ...currentPermanentStaffingData, ...req.body.permanentStaffingData };
+    res.json({ message: 'Permanent staffing data updated successfully', permanentStaffingData: currentPermanentStaffingData });
+  } else {
+    res.status(400).json({ error: 'permanentStaffingData object is required in body' });
+  }
+});
+
+router.post('/permanent-staffing/consultation', (req, res) => {
+  const { fullName, workEmail, companyName, directPhone, mandateHierarchy, targetTimeline, mandateScope, isConfidential } = req.body;
+  if (!fullName || !workEmail || !companyName) {
+    return res.status(400).json({ error: 'Full name, work email, and company name are required.' });
+  }
+  console.log('🏛️ New Executive Search Mandate Request:', { fullName, workEmail, companyName, directPhone, mandateHierarchy, targetTimeline, mandateScope, isConfidential });
+  res.json({
+    success: true,
+    message: 'Thank you! Your confidential executive search mandate has been registered. A Managing Partner will connect within 2 hours.'
+  });
+});
+
+router.post('/executive-search/consultation', (req, res) => {
+  const { fullName, workEmail, companyName, directPhone, mandateHierarchy, targetTimeline, mandateScope, isConfidential } = req.body;
+  if (!fullName || !workEmail || !companyName) {
+    return res.status(400).json({ error: 'Full name, work email, and company name are required.' });
+  }
+  console.log('🏛️ New Executive Search Mandate Request:', { fullName, workEmail, companyName, directPhone, mandateHierarchy, targetTimeline, mandateScope, isConfidential });
+  res.json({
+    success: true,
+    message: 'Thank you! Your confidential executive search mandate has been registered. A Managing Partner will connect within 2 hours.'
+  });
+});
+
+// --- Find Talent & Enterprise Requisition Endpoints ---
+router.get('/find-talent', (req, res) => {
+  res.json(currentFindTalentData);
+});
+
+router.post('/find-talent/requisition', (req, res) => {
+  const {
+    engagementModel,
+    targetRole,
+    headcount,
+    seniority,
+    techStack,
+    deploymentUrgency,
+    workArrangement,
+    budgetEnvelope,
+    fullName,
+    corporateEmail,
+    company,
+    phone,
+    jobDescription
+  } = req.body;
+
+  if (!fullName || !corporateEmail || !company || !targetRole) {
+    return res.status(400).json({ error: 'Full name, corporate email, company, and target role are required.' });
+  }
+
+  console.log('⚡ New Enterprise Talent Requisition Logged:', {
+    engagementModel,
+    targetRole,
+    headcount,
+    seniority,
+    techStack,
+    deploymentUrgency,
+    workArrangement,
+    budgetEnvelope,
+    fullName,
+    corporateEmail,
+    company,
+    phone,
+    jobDescription
+  });
+
+  res.json({
+    success: true,
+    message: 'Requisition logged with Enterprise Queue. 3 candidate dossiers will be delivered within 5 hours.'
+  });
+});
+
+// --- Candidate Portal Endpoints ---
+router.get('/candidate-portal', (req, res) => {
+  res.json(currentCandidatePortalData);
+});
+
+router.post('/candidate-portal/timesheet', (req, res) => {
+  const { hours, weekEnding, comments } = req.body;
+  console.log('⏱️ Candidate Weekly Timesheet Submitted:', { hours, weekEnding, comments });
+  res.json({
+    success: true,
+    message: 'Weekly timesheet submitted successfully and forwarded to client approval desk.'
+  });
+});
 
 export default router;
 

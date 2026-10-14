@@ -1,88 +1,171 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useSelector, useDispatch } from 'react-redux';
+import { fetchOpenings } from '../../store/slices/homeSlice';
+import { motion, AnimatePresence, useMotionValue, useSpring, useMotionTemplate } from 'framer-motion';
 import ApplyModal from '../common/ApplyModal';
 
-const HERO_SLIDES = [
+const SLIDE_IMAGES = [
+  'https://lh3.googleusercontent.com/aida-public/AB6AXuA5nGnSn6TrjHRXk6Yrr1hngBL_Ptdje8dtE8juA2qY036lQqvHvN6avSAYmFKXi3Ws1s1GOGxDg1UJxSBPj1bormKO3GX6ikbORRKq0xiEnRjFfHJo92S4rMz1pkRIj6a5ttei2dUbSMuy8XDy119wvMZL2XWo1xcVcwOq7iaR0aXLZuhNnMM_WFqdq-qjIFA2YtN4dBM2z7SYgEFLd9VAlLdP7jvkhrd0JGOiVZuUwZkeI7SvLyKJQA',
+  'https://images.unsplash.com/photo-1551434678-e076c223a692?auto=format&fit=crop&w=1200&q=80',
+  'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1200&q=80',
+  'https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=1200&q=80',
+];
+
+const getCategoryIcon = (category = '', title = '') => {
+  const text = `${category} ${title}`.toLowerCase();
+  if (text.includes('ai') || text.includes('genai') || text.includes('data') || text.includes('vision') || text.includes('ml')) return 'smart_toy';
+  if (text.includes('cloud') || text.includes('devops') || text.includes('k8s') || text.includes('aws') || text.includes('azure')) return 'cloud_sync';
+  if (text.includes('sap') || text.includes('enterprise') || text.includes('ledger') || text.includes('crm') || text.includes('abap')) return 'terminal';
+  if (text.includes('plm') || text.includes('teamcenter') || text.includes('embedded') || text.includes('cad')) return 'precision_manufacturing';
+  if (text.includes('stack') || text.includes('web') || text.includes('aem') || text.includes('frontend') || text.includes('developer')) return 'code';
+  return 'work';
+};
+
+const getBadgeTheme = (badgeColor = '', idx = 0) => {
+  const c = (badgeColor || '').toLowerCase();
+  if (c.includes('green') || c.includes('emerald')) return 'emerald';
+  if (c.includes('blue') || c.includes('cobalt')) return 'cobalt';
+  if (c.includes('purple') || c.includes('cyan') || c.includes('teal')) return 'cyan';
+  return idx % 3 === 0 ? 'emerald' : idx % 3 === 1 ? 'cobalt' : 'cyan';
+};
+
+const BRAND_PLACEHOLDER_SLIDES = [
   {
-    id: 'sap-core',
-    image:
-      'https://lh3.googleusercontent.com/aida-public/AB6AXuA5nGnSn6TrjHRXk6Yrr1hngBL_Ptdje8dtE8juA2qY036lQqvHvN6avSAYmFKXi3Ws1s1GOGxDg1UJxSBPj1bormKO3GX6ikbORRKq0xiEnRjFfHJo92S4rMz1pkRIj6a5ttei2dUbSMuy8XDy119wvMZL2XWo1xcVcwOq7iaR0aXLZuhNnMM_WFqdq-qjIFA2YtN4dBM2z7SYgEFLd9VAlLdP7jvkhrd0JGOiVZuUwZkeI7SvLyKJQA',
-    alt: 'Dynamic corporate tech recruiter and female software engineer collaborating in modern illuminated office',
-    tag: 'Active Talent Dispatch',
-    liveBadgeText: '130+ Hot Roles Active',
+    id: 'hero-talent-stream',
+    image: SLIDE_IMAGES[0],
+    alt: 'ThinkWires Talent Cloud Dispatch',
+    tag: 'TALENT DISPATCH ENGINE',
+    liveBadgeText: 'Live Stream',
     badgeTheme: 'emerald',
     icon: 'terminal',
-    title: 'SAP ABAP, AEM & Ledger Architects',
-    subtitle: 'Ready for deployment • US & India Timezones',
-    metrics: ['98% Match Accuracy', '48h Deployment SLA'],
-    deployRole: 'SAP ABAP, AEM & Ledger Architects',
-  },
-  {
-    id: 'cloud-sre',
-    image:
-      'https://images.unsplash.com/photo-1551434678-e076c223a692?auto=format&fit=crop&w=1200&q=80',
-    alt: 'High-performance cloud engineering team and SRE architects managing cloud infrastructure clusters',
-    tag: 'Dedicated Engineering Pods',
-    liveBadgeText: '64+ Cloud Architects Ready',
-    badgeTheme: 'cobalt',
-    icon: 'cloud_sync',
-    title: 'Principal AWS / Azure & Kubernetes SREs',
-    subtitle: 'Multi-Region High Availability • FinTech Tier',
-    metrics: ['SOC2 Compliant', 'Top 2% Vetted Talent'],
-    deployRole: 'Principal AWS / Azure & Kubernetes SREs',
-  },
-  {
-    id: 'ai-ml',
-    image:
-      'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1200&q=80',
-    alt: 'AI software researchers and machine learning engineers collaborating on production neural architectures',
-    tag: 'Next-Gen AI Engineering',
-    liveBadgeText: '42+ AI Leads Active',
-    badgeTheme: 'emerald',
-    icon: 'smart_toy',
-    title: 'Generative AI, PyTorch & LLM Engineers',
-    subtitle: 'RAG Pipelines & Agentic AI • Rapid Onboarding',
-    metrics: ['Production-Proven', 'Silicon Valley & Bangalore Hubs'],
-    deployRole: 'Generative AI, PyTorch & LLM Engineers',
-  },
-  {
-    id: 'plm-embedded',
-    image:
-      'https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=1200&q=80',
-    alt: 'Enterprise engineering leaders and technical architects planning product lifecycle management roadmap',
-    tag: 'Specialized Domain Staffing',
-    liveBadgeText: '28+ PLM Leads Vetted',
-    badgeTheme: 'cyan',
-    icon: 'precision_manufacturing',
-    title: 'Siemens Teamcenter & PLM Specialists',
-    subtitle: 'Global Automotive & Aerospace CAD Infrastructure',
-    metrics: ['12+ Yrs Domain Mastery', 'Turnkey Cross-Border EOR'],
-    deployRole: 'Siemens Teamcenter & PLM Specialists',
+    title: 'High-Caliber Technical Specialists',
+    subtitle: 'India • USA • Canada • Enterprise Engineering Nodes',
+    metrics: ['Verified Openings', '48h Deployment SLA'],
+    deployRole: 'Hire Top Tech Talent',
   },
 ];
 
 const SLIDE_DURATION = 5000; // 5 seconds
 
+// Staggered ingress animations for hero content
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.1,
+      delayChildren: 0.05,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 18 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.55, ease: [0.16, 1, 0.3, 1] },
+  },
+};
+
 const NewHero = ({ onOpenModal }) => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { openings, status } = useSelector((state) => state.home);
+
+  const heroRef = useRef(null);
   const [roleInput, setRoleInput] = useState('');
   const [locationInput, setLocationInput] = useState('');
   const [experienceInput, setExperienceInput] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedRole, setSelectedRole] = useState('Hire Top Tech Talent');
 
+  // Fetch openings from single source if idle
+  useEffect(() => {
+    if (status.openings === 'idle') {
+      dispatch(fetchOpenings());
+    }
+  }, [dispatch, status.openings]);
+
+  // Dynamically map latest jobs from single source of truth (openings)
+  const heroSlides = useMemo(() => {
+    if (openings && openings.length > 0) {
+      // Sort by priority and newest posted date
+      const sorted = [...openings].sort((a, b) => {
+        if (a.priority !== b.priority) return (a.priority || 99) - (b.priority || 99);
+        return new Date(b.postedDate || 0) - new Date(a.postedDate || 0);
+      });
+
+      return sorted.slice(0, 4).map((job, idx) => ({
+        id: `hero-job-${job.id || idx}`,
+        image: SLIDE_IMAGES[idx % SLIDE_IMAGES.length],
+        alt: `${job.title} - ${job.company || 'Enterprise Client'}`,
+        tag: job.category || 'Direct Client Opening',
+        liveBadgeText: job.badge || 'Verified Opening',
+        badgeTheme: getBadgeTheme(job.badgeColor, idx),
+        icon: getCategoryIcon(job.category, job.title),
+        title: job.title,
+        subtitle: `${job.location || 'Remote'} • ${job.experience || 'Experienced'} • ${job.company || 'Enterprise'}`,
+        metrics: [
+          job.salary || 'Market Premium',
+          job.jobMode || 'Permanent',
+          job.workMode || 'Hybrid',
+          job.noticePeriod ? `Notice: ${job.noticePeriod}` : (job.joining ? `Joining: ${job.joining}` : 'Immediate'),
+        ],
+        deployRole: job.title,
+      }));
+    }
+    return BRAND_PLACEHOLDER_SLIDES;
+  }, [openings]);
+
   // Slideshow State
   const [currentSlideIndex, setCurrentSlideIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const timerRef = useRef(null);
 
+  // Motion Cursor Spotlight
+  const mouseX = useMotionValue(400);
+  const mouseY = useMotionValue(200);
+  const smoothX = useSpring(mouseX, { damping: 25, stiffness: 120 });
+  const smoothY = useSpring(mouseY, { damping: 25, stiffness: 120 });
+  const spotlightBg = useMotionTemplate`radial-gradient(750px circle at ${smoothX}px ${smoothY}px, rgba(37, 99, 235, 0.08), transparent 80%)`;
+
+  const handleHeroMouseMove = (e) => {
+    if (!heroRef.current) return;
+    const rect = heroRef.current.getBoundingClientRect();
+    mouseX.set(e.clientX - rect.left);
+    mouseY.set(e.clientY - rect.top);
+  };
+
+  // 3D Tilt for Showcase Card
+  const rotateXVal = useMotionValue(0);
+  const rotateYVal = useMotionValue(0);
+  const rotateX = useSpring(rotateXVal, { damping: 18, stiffness: 140 });
+  const rotateY = useSpring(rotateYVal, { damping: 18, stiffness: 140 });
+
+  const handleVisualMouseMove = (e) => {
+    setIsPaused(true);
+    const rect = e.currentTarget.getBoundingClientRect();
+    const x = e.clientX - rect.left - rect.width / 2;
+    const y = e.clientY - rect.top - rect.height / 2;
+    rotateXVal.set(-y * 0.025);
+    rotateYVal.set(x * 0.025);
+  };
+
+  const handleVisualMouseLeave = () => {
+    setIsPaused(false);
+    rotateXVal.set(0);
+    rotateYVal.set(0);
+  };
+
   const nextSlide = useCallback(() => {
-    setCurrentSlideIndex((prev) => (prev + 1) % HERO_SLIDES.length);
-  }, []);
+    setCurrentSlideIndex((prev) => (prev + 1) % heroSlides.length);
+  }, [heroSlides.length]);
 
   const prevSlide = useCallback(() => {
-    setCurrentSlideIndex((prev) => (prev - 1 + HERO_SLIDES.length) % HERO_SLIDES.length);
-  }, []);
+    setCurrentSlideIndex((prev) => (prev - 1 + heroSlides.length) % heroSlides.length);
+  }, [heroSlides.length]);
 
   const goToSlide = (index) => {
     setCurrentSlideIndex(index);
@@ -141,66 +224,94 @@ const NewHero = ({ onOpenModal }) => {
     }
   };
 
-  const currentSlide = HERO_SLIDES[currentSlideIndex];
+  const currentSlide = heroSlides[currentSlideIndex] || heroSlides[0];
 
   return (
     <>
-      <section className="NewHero-heroSection">
+      <section
+        ref={heroRef}
+        className="NewHero-heroSection"
+        onMouseMove={handleHeroMouseMove}
+      >
+        {/* OSS Dynamic Mouse-Tracking Spotlight */}
+        <motion.div
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            pointerEvents: 'none',
+            zIndex: 0,
+            background: spotlightBg,
+          }}
+          aria-hidden="true"
+        />
+
         {/* Ambient Glows */}
         <div className="NewHero-glowOrb NewHero-glowPrimary" aria-hidden="true" />
         <div className="NewHero-glowOrb NewHero-glowTeal" aria-hidden="true" />
 
         <div className="NewHero-container">
-          {/* Top Trust Micro-Badge */}
-          <div className="NewHero-trustBadge">
-            <span className="NewHero-pingWrapper">
-              <span className="NewHero-pingCircle" />
-              <span className="NewHero-pingDot" />
-            </span>
-            <span className="NewHero-badgeTitle">BORDERLESS TALENT ENGINE</span>
-            <span className="NewHero-badgeDivider">•</span>
-            <span className="NewHero-badgeSubtitle">India • USA • Canada Tech Corridors</span>
-          </div>
-
-          {/* Main 2-Column Hero Grid */}
+          {/* Main 2-Column Hero Grid with Staggered Motion */}
           <div className="NewHero-mainGrid">
             {/* Left Content Column */}
-            <div className="NewHero-contentCol">
-              <h1 className="NewHero-headline">
+            <motion.div
+              className="NewHero-contentCol"
+              variants={containerVariants}
+              initial="hidden"
+              animate="visible"
+            >
+              {/* Top Trust Micro-Badge with Glowing Pulse */}
+              <motion.div variants={itemVariants} className="NewHero-trustBadge group cursor-default">
+                <span className="NewHero-pingWrapper">
+                  <span className="NewHero-pingCircle" />
+                  <span className="NewHero-pingDot" />
+                </span>
+                <span className="NewHero-badgeTitle">BORDERLESS TALENT ENGINE</span>
+                <span className="NewHero-badgeDivider">•</span>
+                <span className="NewHero-badgeSubtitle">India • USA • Canada Tech Corridors</span>
+              </motion.div>
+
+              <motion.h1 variants={itemVariants} className="NewHero-headline">
                 Your Trusted Partner For{' '}
                 <span className="NewHero-gradientText">High-Quality IT Recruitment</span> &amp; Talent
                 Augmentation
-              </h1>
+              </motion.h1>
 
-              <p className="NewHero-description">
+              <motion.p variants={itemVariants} className="NewHero-description">
                 Connecting enterprise engineering leaders with high-caliber technical specialists, SAP
                 functional consultants, Cloud architects, and mission-critical tech leads within 48 to 72
                 hours.
-              </p>
+              </motion.p>
 
-              {/* Dual Action CTAs */}
-              <div className="NewHero-actionGroup">
-                <button
+              {/* Dual Action CTAs with Motion Physics */}
+              <motion.div variants={itemVariants} className="NewHero-actionGroup">
+                <motion.button
                   type="button"
                   className="NewHero-btnPrimary"
                   onClick={() => handleOpenModal('Hire Top Tech Talent - Enterprise Inquiry')}
+                  whileHover={{ scale: 1.025, y: -2 }}
+                  whileTap={{ scale: 0.975 }}
                 >
                   <span className="material-symbols-outlined NewHero-btnIcon">person_add</span>
                   <span>Hire Top Tech Talent</span>
-                </button>
+                </motion.button>
 
-                <a
+                <motion.a
                   href="#hot-jobs"
                   className="NewHero-btnSecondary"
                   onClick={handleExploreJobs}
+                  whileHover={{ scale: 1.02, y: -2 }}
+                  whileTap={{ scale: 0.98 }}
                 >
                   <span>Explore Hot Jobs</span>
                   <span className="material-symbols-outlined NewHero-btnIcon">arrow_downward</span>
-                </a>
-              </div>
+                </motion.a>
+              </motion.div>
 
               {/* Trust Metrics Bar */}
-              <div className="NewHero-trustBar">
+              <motion.div variants={itemVariants} className="NewHero-trustBar">
                 <div className="NewHero-trustItem">
                   <span className="material-symbols-outlined NewHero-trustIcon NewHero-trustIconEmerald">
                     verified
@@ -221,30 +332,44 @@ const NewHero = ({ onOpenModal }) => {
                   </span>
                   <span className="NewHero-trustText">93% Enterprise Retention</span>
                 </div>
-              </div>
-            </div>
+              </motion.div>
+            </motion.div>
 
-            {/* Right Graphic & Telemetry Column (Slideshow Showcase) */}
-            <div className="NewHero-visualCol">
-              <div
+            {/* Right Graphic & Telemetry Column (3D Motion Showcase) */}
+            <motion.div
+              className="NewHero-visualCol"
+              initial={{ opacity: 0, scale: 0.96 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.7, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+            >
+              <motion.div
                 className="NewHero-imageWrapper"
-                onMouseEnter={() => setIsPaused(true)}
-                onMouseLeave={() => setIsPaused(false)}
+                style={{
+                  perspective: 1000,
+                  rotateX,
+                  rotateY,
+                }}
+                onMouseMove={handleVisualMouseMove}
+                onMouseLeave={handleVisualMouseLeave}
               >
-                {/* Slideshow Background Image Layer */}
+                {/* Slideshow Background Image Layer with AnimatePresence Cross-fade */}
                 <div className="NewHero-slideshowContainer">
-                  {HERO_SLIDES.map((slide, idx) => (
-                    <div
-                      key={slide.id}
-                      className={`NewHero-slideItem ${idx === currentSlideIndex ? 'active' : ''}`}
+                  <AnimatePresence mode="wait">
+                    <motion.div
+                      key={currentSlide.id}
+                      className="NewHero-slideItem active"
+                      initial={{ opacity: 0, scale: 1.08 }}
+                      animate={{ opacity: 1, scale: 1.0 }}
+                      exit={{ opacity: 0, scale: 0.98 }}
+                      transition={{ duration: 0.75, ease: [0.16, 1, 0.3, 1] }}
                     >
                       <img
                         className="NewHero-heroImage"
-                        src={slide.image}
-                        alt={slide.alt}
+                        src={currentSlide.image}
+                        alt={currentSlide.alt}
                       />
-                    </div>
-                  ))}
+                    </motion.div>
+                  </AnimatePresence>
                 </div>
 
                 <div className="NewHero-imageGradientOverlay" />
@@ -254,68 +379,88 @@ const NewHero = ({ onOpenModal }) => {
                   <div className="NewHero-slideCounter">
                     <span className="NewHero-currentNum">{`0${currentSlideIndex + 1}`}</span>
                     <span className="NewHero-counterSep">/</span>
-                    <span className="NewHero-totalNum">{`0${HERO_SLIDES.length}`}</span>
+                    <span className="NewHero-totalNum">{`0${heroSlides.length}`}</span>
                   </div>
 
                   {/* Navigation Arrows */}
                   <div className="NewHero-arrowGroup">
-                    <button
+                    <motion.button
                       type="button"
                       className="NewHero-navArrowBtn"
                       onClick={prevSlide}
                       title="Previous Slide"
                       aria-label="Previous Slide"
+                      whileHover={{ scale: 1.08 }}
+                      whileTap={{ scale: 0.92 }}
                     >
                       <span className="material-symbols-outlined">chevron_left</span>
-                    </button>
-                    <button
+                    </motion.button>
+                    <motion.button
                       type="button"
                       className="NewHero-navArrowBtn"
                       onClick={nextSlide}
                       title="Next Slide"
                       aria-label="Next Slide"
+                      whileHover={{ scale: 1.08 }}
+                      whileTap={{ scale: 0.92 }}
                     >
                       <span className="material-symbols-outlined">chevron_right</span>
-                    </button>
+                    </motion.button>
                   </div>
                 </div>
 
-                {/* Floating Live Dispatch Card with Dynamic Slide Content */}
-                <div key={currentSlide.id} className="NewHero-floatingCard NewHero-cardAnimate">
-                  <div className="NewHero-floatingHeader">
-                    <span className="NewHero-floatingTag">{currentSlide.tag}</span>
-                    <span className={`NewHero-floatingLiveBadge NewHero-badge-${currentSlide.badgeTheme}`}>
-                      <span className="NewHero-floatingPulseDot" />
-                      {currentSlide.liveBadgeText}
-                    </span>
-                  </div>
-
-                  <div className="NewHero-floatingBody">
-                    <div className="NewHero-floatingIconSquircle">
-                      <span className="material-symbols-outlined">{currentSlide.icon}</span>
-                    </div>
-                    <div className="NewHero-floatingText">
-                      <p className="NewHero-floatingTitle">{currentSlide.title}</p>
-                      <p className="NewHero-floatingSubtitle">{currentSlide.subtitle}</p>
-                      <div className="NewHero-floatingPillRow">
-                        {currentSlide.metrics.map((m, mIdx) => (
-                          <span key={mIdx} className="NewHero-floatingPill">{m}</span>
-                        ))}
-                      </div>
-                    </div>
-                    <button
-                      type="button"
-                      className="NewHero-deployBtn"
-                      onClick={() => handleOpenModal(currentSlide.deployRole)}
+                {/* Floating Live Dispatch Card with Gentle Levitation & Content Cross-fade */}
+                <motion.div
+                  className="NewHero-floatingCard"
+                  animate={{ y: [0, -6, 0] }}
+                  transition={{ duration: 4.5, repeat: Infinity, ease: 'easeInOut' }}
+                >
+                  <AnimatePresence mode="wait">
+                    <motion.div
+                      key={currentSlide.id}
+                      initial={{ opacity: 0, y: 8 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -8 }}
+                      transition={{ duration: 0.4 }}
                     >
-                      Deploy
-                    </button>
-                  </div>
+                      <div className="NewHero-floatingHeader">
+                        <span className="NewHero-floatingTag">{currentSlide.tag}</span>
+                        <span className={`NewHero-floatingLiveBadge NewHero-badge-${currentSlide.badgeTheme}`}>
+                          <span className="NewHero-floatingPulseDot" />
+                          {currentSlide.liveBadgeText}
+                        </span>
+                      </div>
+
+                      <div className="NewHero-floatingBody">
+                        <div className="NewHero-floatingIconSquircle">
+                          <span className="material-symbols-outlined">{currentSlide.icon}</span>
+                        </div>
+                        <div className="NewHero-floatingText">
+                          <p className="NewHero-floatingTitle">{currentSlide.title}</p>
+                          <p className="NewHero-floatingSubtitle">{currentSlide.subtitle}</p>
+                          <div className="NewHero-floatingPillRow">
+                            {currentSlide.metrics.map((m, mIdx) => (
+                              <span key={mIdx} className="NewHero-floatingPill">{m}</span>
+                            ))}
+                          </div>
+                        </div>
+                        <motion.button
+                          type="button"
+                          className="NewHero-deployBtn"
+                          onClick={() => handleOpenModal(currentSlide.deployRole)}
+                          whileHover={{ scale: 1.05 }}
+                          whileTap={{ scale: 0.95 }}
+                        >
+                          Deploy
+                        </motion.button>
+                      </div>
+                    </motion.div>
+                  </AnimatePresence>
 
                   {/* Slide Indicators & Auto-Timer Progress Bar */}
                   <div className="NewHero-indicatorsContainer">
                     <div className="NewHero-indicatorDots">
-                      {HERO_SLIDES.map((_, dotIdx) => (
+                      {heroSlides.map((_, dotIdx) => (
                         <button
                           key={dotIdx}
                           type="button"
@@ -327,17 +472,28 @@ const NewHero = ({ onOpenModal }) => {
                     </div>
                     {!isPaused && (
                       <div className="NewHero-progressBarWrapper">
-                        <div key={currentSlideIndex} className="NewHero-progressBarFill" />
+                        <motion.div
+                          key={currentSlideIndex}
+                          className="NewHero-progressBarFill"
+                          initial={{ width: '0%' }}
+                          animate={{ width: '100%' }}
+                          transition={{ duration: SLIDE_DURATION / 1000, ease: 'linear' }}
+                        />
                       </div>
                     )}
                   </div>
-                </div>
-              </div>
-            </div>
+                </motion.div>
+              </motion.div>
+            </motion.div>
           </div>
 
-          {/* Integrated Floating Talent Search Bar */}
-          <div className="NewHero-searchContainer">
+          {/* Integrated Floating Talent Search Bar with Motion Reveal */}
+          <motion.div
+            className="NewHero-searchContainer"
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.65, delay: 0.35, ease: [0.16, 1, 0.3, 1] }}
+          >
             <form className="NewHero-searchForm" onSubmit={handleSearchSubmit}>
               {/* Keyword / Role Field */}
               <div className="NewHero-searchField NewHero-searchFieldRole">
@@ -403,13 +559,18 @@ const NewHero = ({ onOpenModal }) => {
 
               {/* Search Submit Button */}
               <div className="NewHero-searchAction">
-                <button type="submit" className="NewHero-searchBtn">
+                <motion.button
+                  type="submit"
+                  className="NewHero-searchBtn"
+                  whileHover={{ scale: 1.03 }}
+                  whileTap={{ scale: 0.97 }}
+                >
                   <span className="material-symbols-outlined">search</span>
                   <span>Find Matches</span>
-                </button>
+                </motion.button>
               </div>
             </form>
-          </div>
+          </motion.div>
         </div>
       </section>
 
