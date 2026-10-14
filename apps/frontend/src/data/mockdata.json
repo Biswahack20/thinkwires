@@ -1,0 +1,316 @@
+{
+  "company": {
+    "name": "ThinkWires",
+    "founded": 2022,
+    "headquarters": "Plot No. 20, Block H-1/A, Sector 63, Noida, Uttar Pradesh 201301",
+    "locations": ["India", "USA", "Canada"],
+    "eyebrow": "ABOUT THINKWIRES",
+    "headline": "Connecting Global Ambition with Exceptional Tech Talent.",
+    "subheading": "Founded in 2022 as a premier workforce advisor and staffing aggregator, ThinkWires connects high-growth enterprises with specialized engineering talent and compliant Employer of Record (EOR) infrastructure across India, the US, and Canada.",
+    "heroImage": "/images/about-hero.jpg",
+    "heroImageAlt": "ThinkWires Global Technology Talent Delivery Network",
+    "overview": {
+      "eyebrow": "COMPANY OVERVIEW",
+      "title": "Architecting High-Velocity Engineering Squads for Global Scale",
+      "summary": "ThinkWires was established in 2022 to dismantle the structural bottlenecks of traditional IT staffing. Operating across high-demand tech corridors in India, the United States, and Canada, we combine the domain depth of an executive search firm with the rapid scalability of an aggregator ecosystem.",
+      "mission": "To engineer frictionless, compliant, and hyper-targeted talent pipelines that enable technology leaders to build and scale world-class software teams without borders."
+    }
+  },
+  "hero": {
+    "badge": "About ThinkWires • Transforming Global IT Talent Delivery",
+    "breadcrumbs": [
+      { "label": "Home", "href": "/" },
+      { "label": "Who We Are", "href": "/about" }
+    ],
+    "heading": "Connecting Global Ambition with",
+    "headingHighlight": "Exceptional Tech Talent.",
+    "description": "Founded in 2022 as a premier workforce advisor and staffing aggregator, ThinkWires connects high-growth enterprises with specialized engineering talent and compliant Employer of Record (EOR) infrastructure across India, the US, and Canada.",
+    "heroImage": "/images/about-hero.jpg",
+    "heroImageAlt": "Global Talent Grid - India, USA, Canada",
+    "ctaButtons": [
+      { "label": "Meet Our Leadership", "href": "#leadership", "variant": "primary", "icon": "arrowDown" },
+      { "label": "Explore Our Approach", "href": "#aggregator", "variant": "outline", "icon": "settings" }
+    ]
+  },
+  "statsStrip": [
+    {
+      "id": "profile-delivery",
+      "value": "5h",
+      "numericValue": 5,
+      "unit": "h",
+      "label": "First Curated Profiles",
+      "subLabel": "Proprietary intake & matching SLA",
+      "indicator": "dot",
+      "accentColor": "blue"
+    },
+    {
+      "id": "time-to-hire",
+      "value": "7d",
+      "numericValue": 7,
+      "unit": "d",
+      "label": "Time-to-Hire Target",
+      "subLabel": "End-to-end interview to contract",
+      "indicator": "check",
+      "accentColor": "green"
+    },
+    {
+      "id": "executive-experience",
+      "value": "100+",
+      "numericValue": 100,
+      "unit": "Yrs",
+      "label": "Combined Executive Experience",
+      "subLabel": "Cross-border enterprise leadership depth",
+      "indicator": "none",
+      "accentColor": "blue"
+    },
+    {
+      "id": "statutory-compliance",
+      "value": "100%",
+      "numericValue": 100,
+      "unit": "%",
+      "label": "Statutory Compliance",
+      "subLabel": "EOR & cross-border governance assurance",
+      "indicator": "shield",
+      "accentColor": "green"
+    }
+  ],
+  "aggregatorModel": {
+    "eyebrow": "STRATEGIC ADVANTAGE",
+    "heading": "The ThinkWires Aggregator Model",
+    "description": "Traditional recruitment agencies bottleneck on internal databases. ThinkWires functions as an enterprise staffing aggregator orchestrating a high-velocity ecosystem of verified partner agencies, independent specialists, and automated compliance pipelines.",
+    "statusBadge": {
+      "icon": "settings",
+      "text": "Enterprise Staffing Aggregator Model"
+    },
+    "cards": [
+      {
+        "id": "agg-1",
+        "icon": "clock",
+        "iconBgColor": "blue",
+        "title": "Rapid Profile Delivery (5 Hours)",
+        "description": "Proprietary matching algorithms search verified repositories to deliver pre-screened, job-fit candidate dossiers within 5 working hours of intake.",
+        "detail": "Guaranteed sub-5-hour SLA response with benchmarked technical scorecards.",
+        "ctaLabel": "View SLA Protocol",
+        "ctaHref": "#methodology"
+      },
+      {
+        "id": "agg-2",
+        "icon": "grid",
+        "iconBgColor": "dark",
+        "title": "Full-Stack Tech & Enterprise ERP",
+        "description": "Specialized domain depth spanning SAP ABAP/HANA, Adobe Experience Manager (AEM), Teamcenter PLM, Kubernetes/DevOps, and Generative AI frameworks.",
+        "detail": "Pre-vetted engineering squads ready for immediate deployment into enterprise stacks.",
+        "ctaLabel": "Explore Tech Corridors",
+        "ctaHref": "/industries"
+      },
+      {
+        "id": "agg-3",
+        "icon": "shield",
+        "iconBgColor": "green",
+        "title": "Compliance & EOR Infrastructure",
+        "description": "Complete Employer of Record (EOR) indemnification. We manage local statutory payroll, benefits, strict IP NDA assignments, and multi-jurisdiction tax withholding.",
+        "detail": "Bulletproof legal governance covering Indian statutory mandates, US W2/1099, and Canadian labor regulations.",
+        "ctaLabel": "Governance Framework",
+        "ctaHref": "#methodology"
+      },
+      {
+        "id": "agg-4",
+        "icon": "share",
+        "iconBgColor": "indigo",
+        "title": "Agile Subcontractor Network",
+        "description": "A curated network of certified boutique recruitment partners providing instant surge capacity without inflating fixed operational overhead.",
+        "detail": "Elastic scaling framework enabling enterprises to mobilize specialized benches on demand.",
+        "ctaLabel": "Network Architecture",
+        "ctaHref": "#contact"
+      }
+    ]
+  },
+  "philosophy": {
+    "eyebrow": "OUR CORE THESIS",
+    "heading": "\"Recruitment is Not Transactional; It is Architectural.\"",
+    "description": "At ThinkWires, we reject the legacy headhunter pattern of resume-dumping. We treat every client intake as an engineering brief. From understanding the nuances of microservices architectures to navigating localized tax laws in Ontario or California, our teams engineer frictionless, compliant talent conduits.",
+    "image": "/images/about-philosophy.jpg",
+    "imageAlt": "ThinkWires executive strategic advisory session",
+    "metrics": [
+      {
+        "id": "metric-1",
+        "value": "98.4%",
+        "label": "Contract Retention Rate",
+        "color": "green"
+      },
+      {
+        "id": "metric-2",
+        "value": "< 48 hrs",
+        "label": "Candidate Interview Turnaround",
+        "color": "blue"
+      }
+    ]
+  },
+  "leadershipTeam": {
+    "eyebrow": "EXECUTIVE GOVERNANCE",
+    "heading": "Meet Our Leadership Team",
+    "subheading": "Driving cross-border vision, recruitment architecture, and operational integrity across global technology corridors.",
+    "members": [
+      {
+        "id": "leader-001",
+        "name": "Naziya Husain",
+        "designation": "Founder Member",
+        "initials": "NH",
+        "bio": "With over 14 years in recruitment, headhunting, talent mapping, and end-to-end manpower solutions, Naziya has successfully steered complex mandates across KPOs, top-tier management consulting firms, and fast-scaling digital startups.",
+        "avatar": { "type": "initials", "value": "NH", "bgColor": "#0037B0", "textColor": "#FFFFFF" },
+        "badge": { "text": "14+ Years Leadership", "dotColor": "#0037B0" },
+        "expertise": ["Talent Mapping", "Executive Headhunting", "Manpower Solutions", "KPO Mandates"],
+        "footerTag": "Founding Vision & Executive Search",
+        "linkedinUrl": null,
+        "image": null
+      },
+      {
+        "id": "leader-002",
+        "name": "Anju Balyan",
+        "designation": "Co-Founder & Associate Executive Director",
+        "initials": "AB",
+        "bio": "Enthusiastic enterprise HR leader with 17 years aligning HR initiatives with tier-one business priorities. Specialist in shared services environments, transitions, legal frameworks, ERP rollouts, and HR automation systems.",
+        "avatar": { "type": "initials", "value": "AB", "bgColor": "#0F172A", "textColor": "#FFFFFF" },
+        "badge": { "text": "17+ Years Leadership", "dotColor": "#0F172A" },
+        "expertise": ["Enterprise HR Architecture", "Shared Services", "ERP Transitions", "Labor Frameworks"],
+        "footerTag": "Enterprise HR & Operations",
+        "linkedinUrl": null,
+        "image": null
+      },
+      {
+        "id": "leader-003",
+        "name": "Ananya Mehta",
+        "designation": "Chief Executive Officer (CEO)",
+        "initials": "AM",
+        "bio": "Dedicated to building teams that drive real business velocity. Expert in strategic talent research, executive search, deep candidate evaluation beyond CVs, and structuring high-trust leadership placements for global scale.",
+        "avatar": { "type": "initials", "value": "AM", "bgColor": "#0284C7", "textColor": "#FFFFFF" },
+        "badge": { "text": "15+ Years Leadership", "dotColor": "#0284C7" },
+        "expertise": ["Executive Search", "Organizational Scaling", "Strategic Sourcing", "Talent Evaluation"],
+        "footerTag": "Strategic Growth & Enterprise Scaling",
+        "linkedinUrl": null,
+        "image": null
+      },
+      {
+        "id": "leader-004",
+        "name": "Arjun Verma",
+        "designation": "Chief People & Marketing Officer (CPO & CMO)",
+        "initials": "AV",
+        "bio": "A 20+-year veteran at the intersection of talent acquisition, organizational culture, and brand positioning. Focused on solving why high-growth enterprises struggle to hire and how elite culture transforms product velocity.",
+        "avatar": { "type": "initials", "value": "AV", "bgColor": "#4F46E5", "textColor": "#FFFFFF" },
+        "badge": { "text": "20+ Years Leadership", "dotColor": "#4F46E5" },
+        "expertise": ["People Strategy", "Employer Branding", "Talent Acquisition", "Culture Architecture"],
+        "footerTag": "People Strategy & Global Brand",
+        "linkedinUrl": null,
+        "image": null
+      },
+      {
+        "id": "leader-005",
+        "name": "Meera Iyer",
+        "designation": "Senior Director - Global Head of TA Operations & HR Services",
+        "initials": "MI",
+        "bio": "Strategic Talent Acquisition and HR Operations executive who has built scalable, technology-driven recruitment frameworks across enterprise leaders including BlackRock, Microsoft, IBM, Ameriprise, and Infosys. Ensures institutional governance, risk mitigation, compliance, and flawless multi-region operations.",
+        "avatar": { "type": "initials", "value": "MI", "bgColor": "#16A34A", "textColor": "#FFFFFF" },
+        "badge": { "text": "18+ Years Leadership", "dotColor": "#16A34A" },
+        "companies": ["BlackRock", "Microsoft", "IBM", "Infosys", "Ameriprise"],
+        "expertise": ["Global Delivery Operations", "Risk Mitigation", "EOR Compliance", "Operational Integrity"],
+        "footerTag": "Global Delivery Operations & Risk Governance",
+        "linkedinUrl": null,
+        "image": null
+      }
+    ]
+  },
+  "growthTimeline": {
+    "eyebrow": "CHRONICLE OF EXECUTION",
+    "heading": "Our Growth Evolution",
+    "description": "From an agile aggregator in Sector 63, Noida to a cross-continental staffing architecture powering Fortune 500 engineering initiatives.",
+    "milestones": [
+      {
+        "id": "milestone-1",
+        "year": "2022",
+        "tag": "Founding",
+        "title": "Foundation & Model Inception",
+        "description": "Founded in Noida with a core team dedicated to borderless recruitment, pioneering an agency aggregator network that delivers verified profiles in under 5 hours.",
+        "status": "completed",
+        "variant": "default"
+      },
+      {
+        "id": "milestone-2",
+        "year": "2023",
+        "tag": "Practice Alignment",
+        "title": "Growth & Practice Alignment",
+        "description": "Unit economics break-even achieved. Launched specialized talent practices across SAP ABAP/HANA, Cloud/DevOps, and Enterprise Salesforce consulting.",
+        "status": "completed",
+        "variant": "default"
+      },
+      {
+        "id": "milestone-3",
+        "year": "2024",
+        "tag": "Cross-Border",
+        "title": "Cross-Border Expansion",
+        "description": "Inaugurated dedicated talent corridors into the United States and Canada. Rolled out comprehensive Employer of Record (EOR) and global payroll management.",
+        "status": "completed",
+        "variant": "active"
+      }
+    ],
+    "roadmap": [
+      {
+        "id": "roadmap-1",
+        "year": "2026+",
+        "tag": "Planned Roadmap",
+        "title": "AI-Powered Delivery & Telemetry Vetting",
+        "description": "Automated code telemetry vetting, generative talent search matching, and sub-48-hour global deployment pipelines across AI and PLM systems.",
+        "status": "planned",
+        "variant": "future"
+      }
+    ]
+  },
+  "methodology": {
+    "eyebrow": "METHODOLOGY",
+    "heading": "How We Work: From Spec to Squad",
+    "description": "Our three-step framework eliminates recruitment friction and guarantees rapid technical alignment.",
+    "steps": [
+      {
+        "id": "step-1",
+        "number": "01",
+        "icon": "eye",
+        "title": "Discovery & Technical Scoping",
+        "description": "We initiate with an executive discovery session. We evaluate tech stack nuances, project deadlines, budgetary constraints, and candidate seniority to draft exact success metrics.",
+        "deliverable": "Technical Requirement Specification & Delivery Scope"
+      },
+      {
+        "id": "step-2",
+        "number": "02",
+        "icon": "bolt",
+        "title": "Precision Pre-Vetted Match (<5 Hours)",
+        "description": "Our aggregator engine coordinates across our specialized subcontractor network to deliver tested, pre-interviewed candidate dossiers within five working hours.",
+        "deliverable": "Pre-Screened Candidate Dossiers & Technical Rubrics"
+      },
+      {
+        "id": "step-3",
+        "number": "03",
+        "icon": "checkCircle",
+        "title": "Frictionless Onboarding & Governance",
+        "description": "Seamless offer negotiation, local statutory contract issuance via EOR, compliant equipment provisioning, and ongoing governance tracking ensure long-term retention.",
+        "deliverable": "Full EOR Indemnification & Ongoing Performance Governance"
+      }
+    ]
+  },
+  "ctaSection": {
+    "statusBadge": "IMMEDIATE ADVISORY AVAILABILITY",
+    "heading": "Ready to Build Your High-Velocity Engineering Squad?",
+    "description": "Book a 20-minute workforce strategy consultation with our staffing directors to audit your technical requirements and receive benchmark rates for India and North America.",
+    "address": {
+      "title": "ThinkWires Global Headquarters",
+      "line": "Plot No. 20, Block H-1/A, Sector 63, Noida, Uttar Pradesh 201301"
+    },
+    "phones": ["+91 (120) 450-8800", "+91 89205 55626"],
+    "email": "connect@thinkwires.com",
+    "hours": "Monday - Friday: 9:00 AM - 7:00 PM IST (EST/PST Overlap Supported)",
+    "form": {
+      "title": "Request a 20-Min Strategy Consultation",
+      "subtitle": "Receive matched engineering dossiers & rate benchmarks in under 5 hours.",
+      "submitLabel": "Schedule Talent Consultation",
+      "footerNote": "Zero commitments. Non-disclosure agreement guaranteed."
+    }
+  }
+}

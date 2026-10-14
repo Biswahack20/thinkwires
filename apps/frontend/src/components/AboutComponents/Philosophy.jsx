@@ -1,13 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import philosophyImg from '../../assets/images/about-philosophy.jpg';
 
 const Philosophy = ({ data }) => {
+  const [imgError, setImgError] = useState(false);
+
   const {
-    eyebrow = 'OUR PHILOSOPHY',
+    eyebrow = 'OUR CORE THESIS',
     heading = '"Recruitment is Not Transactional; It is Architectural."',
     description = 'At ThinkWires, we reject the legacy headhunter pattern of resume-dumping. We treat every client intake as an engineering brief. From understanding the nuances of microservices architectures to navigating localized tax laws in Ontario or California, our teams engineer frictionless, compliant talent conduits.',
-    image = philosophyImg,
-    imageAlt = 'ThinkWires team in boardroom meeting',
+    image = '/images/about-philosophy.jpg',
+    imageAlt = 'ThinkWires executive strategic advisory session',
     metrics = [
       {
         id: 'metric-1',
@@ -24,17 +26,17 @@ const Philosophy = ({ data }) => {
     ]
   } = data || {};
 
-  const resolvedImage = image || philosophyImg;
+  const resolvedImage = imgError ? philosophyImg : (image || philosophyImg);
 
   return (
-    <section className="Philosophy-section">
+    <section className="Philosophy-section" aria-label="Corporate Philosophy and Thesis">
       <div className="Philosophy-container">
         <div className="Philosophy-panel">
           {/* Left Column: Philosophical Thesis & Metrics */}
           <div className="Philosophy-content">
             <div className="Philosophy-badge">
-              <span className="Philosophy-badgeDot"></span>
-              {eyebrow}
+              <span className="Philosophy-badgeDot" aria-hidden="true"></span>
+              <span>{eyebrow}</span>
             </div>
 
             <h2 className="Philosophy-heading">{heading}</h2>
@@ -61,15 +63,16 @@ const Philosophy = ({ data }) => {
                 alt={imageAlt}
                 className="Philosophy-image"
                 loading="lazy"
+                onError={() => setImgError(true)}
               />
               <div className="Philosophy-imageOverlay"></div>
 
-              {/* Decorative Accent Tag */}
-              <div className="Philosophy-imageTag">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              {/* Clean Verifiable Indicator */}
+              <div className="Philosophy-imageTag" aria-label="Enterprise Quality Architecture">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
                   <polyline points="20 6 9 17 4 12"></polyline>
                 </svg>
-                <span>Enterprise Protocol Verified</span>
+                <span>Enterprise Workforce Architecture</span>
               </div>
             </div>
           </div>

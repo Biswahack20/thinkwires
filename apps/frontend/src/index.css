@@ -1990,7 +1990,7 @@ body {
 }
 
 .Footer-brandDesc {
-  color:  var(--color-outline-variant);
+  color: #475569;
   font-size: 0.8125rem;
   line-height: 1.5;
   margin-bottom: 1rem;
@@ -2003,7 +2003,7 @@ body {
 }
 
 .Footer-socialIcon {
-  color: #94a3b8;
+  color: #64748b;
   transition: color 0.2s;
   display: flex;
   align-items: center;
@@ -2011,14 +2011,14 @@ body {
 }
 
 .Footer-socialIcon:hover {
-  color:  var(--color-cobalt-bright);
+  color: var(--color-primary, #0037B0);
 }
 
 /* Links Columns */
 .Footer-colTitle {
   font-size: 0.8125rem;
   font-weight: 700;
-  color:  var(--color-navy-dark);
+  color: var(--color-navy-dark, #0F172A);
   margin: 0 0 1rem 0;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -2034,19 +2034,19 @@ body {
 }
 
 .Footer-linkItem {
-  color:  var(--color-outline-variant);
+  color: #475569;
   font-size: 0.8125rem;
   text-decoration: none;
   transition: color 0.2s;
 }
 
 .Footer-linkItem:hover {
-  color:  var(--color-cobalt-bright);
+  color: var(--color-primary, #0037B0);
 }
 
 /* Office Column */
 .Footer-address {
-  color:  var(--color-outline-variant);
+  color: #475569;
   font-size: 0.8125rem;
   line-height: 1.5;
   margin-bottom: 1rem;
@@ -2247,6 +2247,7 @@ body {
   height: 60px; /* fixed container height preserves navbar height strictly */
   width: 265px; /* reserve space for the enlarged logo */
   position: relative;
+  overflow: visible;
 }
 
 .Navbar-logo {
@@ -2275,6 +2276,8 @@ body {
   font-size: 0.875rem;
   font-weight: 500;
   transition: color 0.2s;
+  position: relative;
+  padding: 0.25rem 0;
 }
 
 .Navbar-navLink:hover,
@@ -2283,7 +2286,18 @@ body {
 }
 
 .Navbar-navLink.Navbar-active {
-  font-weight: 600;
+  font-weight: 700;
+}
+
+.Navbar-navLink.Navbar-active::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background-color: var(--color-primary);
+  border-radius: 1px;
 }
 
 .Navbar-actionButtons {
@@ -7728,7 +7742,7 @@ textarea {
 .AboutHero-content {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
 }
 
 .AboutHero-breadcrumbs {
@@ -7761,12 +7775,13 @@ textarea {
 }
 
 .AboutHero-title {
-  font-size: 3rem;
+  font-size: clamp(2.25rem, 4vw, 3.25rem);
   font-weight: 800;
   color: var(--color-navy-dark);
   line-height: 1.15;
   letter-spacing: -0.02em;
-  margin: 0.5rem 0 1.5rem 0;
+  margin: 0.5rem 0 1.25rem 0;
+  text-align: left;
 }
 
 .AboutHero-titleHighlight {
@@ -7775,11 +7790,12 @@ textarea {
 }
 
 .AboutHero-description {
-  font-size: 1.125rem;
+  font-size: 1.1rem;
   line-height: 1.75;
   color: var(--color-outline);
-  margin-bottom: 2.25rem;
+  margin-bottom: 2rem;
   max-width: 600px;
+  text-align: left;
 }
 
 .AboutHero-actions {
@@ -8013,6 +8029,126 @@ textarea {
   font-size: 0.8125rem;
   color: var(--color-outline);
   line-height: 1.4;
+}
+
+/* --- Company Overview --- */
+.CompanyOverview-section {
+  padding: 5rem 2rem;
+  background-color: var(--color-background);
+  border-bottom: 1px solid var(--color-card-stroke);
+}
+
+.CompanyOverview-container {
+  max-width: 1280px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 4rem;
+  align-items: start;
+}
+
+.CompanyOverview-left {
+  display: flex;
+  flex-direction: column;
+}
+
+.CompanyOverview-title {
+  font-size: 2.25rem;
+  font-weight: 800;
+  color: var(--color-navy-dark);
+  line-height: 1.2;
+  letter-spacing: -0.02em;
+  margin: 1.25rem 0 1rem 0;
+}
+
+.CompanyOverview-description {
+  font-size: 1.05rem;
+  line-height: 1.8;
+  color: var(--color-outline);
+}
+
+.CompanyOverview-right {
+  display: flex;
+  flex-direction: column;
+}
+
+.CompanyOverview-missionCard {
+  background: linear-gradient(135deg, #0F172A 0%, #1E3A5F 100%);
+  border-radius: var(--rounded-xl);
+  padding: 2.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  box-shadow: var(--elevation-3);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.CompanyOverview-missionHeader {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.CompanyOverview-missionIcon {
+  width: 46px;
+  height: 46px;
+  border-radius: var(--rounded-md);
+  background: rgba(255, 255, 255, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #38BDF8;
+  flex-shrink: 0;
+}
+
+.CompanyOverview-missionMeta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.CompanyOverview-foundedBadge {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--color-emerald-accent);
+}
+
+.CompanyOverview-missionTitle {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #FFFFFF;
+  margin: 0;
+}
+
+.CompanyOverview-missionQuote {
+  font-size: 1rem;
+  line-height: 1.8;
+  color: #CBD5E1;
+  font-style: italic;
+  border-left: 3px solid var(--color-cobalt-bright);
+  padding-left: 1rem;
+  margin: 0;
+}
+
+.CompanyOverview-missionFooter {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #94A3B8;
+  letter-spacing: 0.03em;
+}
+
+.CompanyOverview-statusDot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--color-emerald-accent);
+  box-shadow: 0 0 8px var(--color-emerald-accent);
+  flex-shrink: 0;
 }
 
 /* --- Aggregator Model --- */
@@ -8338,6 +8474,25 @@ textarea {
   color: var(--color-outline);
 }
 
+.LeadershipTeam-layoutWrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.LeadershipTeam-rowTop {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+}
+
+.LeadershipTeam-rowBottom {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 580px));
+  justify-content: center;
+  gap: 2rem;
+}
+
 .LeadershipTeam-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -8502,7 +8657,248 @@ textarea {
   opacity: 0.6;
 }
 
-/* --- Growth Timeline --- */
+.LeadershipTeam-bioWrapper {
+  flex: 1;
+  margin-bottom: 1rem;
+}
+
+.LeadershipTeam-experienceRow {
+  margin-bottom: 1rem;
+}
+
+.LeadershipTeam-metaLabel {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-outline);
+  margin-bottom: 0.5rem;
+}
+
+.LeadershipTeam-expertiseSection {
+  margin-bottom: 1.25rem;
+}
+
+.LeadershipTeam-expertiseRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.LeadershipTeam-expertiseTag {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.25rem 0.65rem;
+  background-color: #EFF6FF;
+  color: var(--color-cobalt-bright);
+  border: 1px solid #BFDBFE;
+  border-radius: var(--rounded-full);
+  white-space: nowrap;
+}
+
+.LeadershipTeam-actionRow {
+  margin-bottom: 1rem;
+}
+
+.LeadershipTeam-expandBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  color: var(--color-cobalt-bright);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: gap 0.2s ease;
+}
+
+.LeadershipTeam-expandBtn:hover {
+  gap: 0.65rem;
+}
+
+/* --- Leadership Modal --- */
+.LeadershipModal-overlay {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(15, 23, 42, 0.7);
+  backdrop-filter: blur(6px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}
+
+.LeadershipModal-content {
+  background-color: var(--color-background);
+  border-radius: var(--rounded-xl);
+  width: 100%;
+  max-width: 560px;
+  max-height: 85vh;
+  overflow-y: auto;
+  padding: 2.25rem;
+  position: relative;
+  box-shadow: 0 25px 60px -10px rgba(0, 0, 0, 0.5);
+  border: 1px solid var(--color-card-stroke);
+}
+
+.LeadershipModal-closeBtn {
+  position: absolute;
+  top: 1.25rem;
+  right: 1.25rem;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1px solid var(--color-card-stroke);
+  background-color: var(--color-surface-container-low);
+  color: var(--color-outline);
+  font-size: 0.875rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+  line-height: 1;
+}
+
+.LeadershipModal-closeBtn:hover {
+  background-color: var(--color-card-stroke);
+  color: var(--color-navy-dark);
+}
+
+.LeadershipModal-header {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  margin-bottom: 1.75rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--color-card-stroke);
+}
+
+.LeadershipModal-avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  flex-shrink: 0;
+}
+
+.LeadershipModal-name {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--color-navy-dark);
+  margin: 0 0 0.2rem 0;
+}
+
+.LeadershipModal-designation {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-cobalt-bright);
+  margin-bottom: 0.4rem;
+}
+
+.LeadershipModal-badge {
+  display: inline-flex;
+  font-size: 0.75rem;
+  font-weight: 600;
+  background-color: var(--color-surface-container-low);
+  color: var(--color-outline);
+  padding: 0.2rem 0.65rem;
+  border-radius: var(--rounded-full);
+}
+
+.LeadershipModal-body {
+  margin-bottom: 1.5rem;
+}
+
+.LeadershipModal-bioLabel {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-outline);
+  margin: 0 0 0.75rem 0;
+}
+
+.LeadershipModal-bioText {
+  font-size: 0.975rem;
+  line-height: 1.75;
+  color: var(--color-on-surface);
+  margin-bottom: 1.5rem;
+}
+
+.LeadershipModal-tagsGroup {
+  margin-bottom: 1.25rem;
+}
+
+.LeadershipModal-tagsLabel {
+  display: block;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-outline);
+  margin-bottom: 0.5rem;
+}
+
+.LeadershipModal-tagsList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.LeadershipModal-tagItem {
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 0.25rem 0.65rem;
+  background-color: #EFF6FF;
+  color: var(--color-cobalt-bright);
+  border: 1px solid #BFDBFE;
+  border-radius: var(--rounded-full);
+}
+
+.LeadershipModal-companyItem {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  padding: 0.3rem 0.75rem;
+  background-color: #FFFFFF;
+  border: 1px solid var(--color-card-stroke);
+  border-radius: var(--rounded-sm);
+  color: var(--color-navy-dark);
+}
+
+.LeadershipModal-footer {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--color-card-stroke);
+}
+
+.LeadershipModal-doneBtn {
+  padding: 0.65rem 1.5rem;
+  background-color: var(--color-cobalt-bright);
+  color: #FFFFFF;
+  border: none;
+  border-radius: var(--rounded);
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.LeadershipModal-doneBtn:hover {
+  background-color: #1D4ED8;
+}
+
+
 .GrowthTimeline-section {
   padding: 5rem 2rem;
   background-color: var(--color-background);
@@ -8537,112 +8933,206 @@ textarea {
   color: var(--color-outline);
 }
 
-.GrowthTimeline-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 1.5rem;
+/* Corporate Timeline Spine */
+.GrowthTimeline-timelineTrack {
+  position: relative;
+  padding-left: 2.5rem;
+  margin-bottom: 3.5rem;
+}
+
+.GrowthTimeline-spine {
+  position: absolute;
+  top: 0.5rem;
+  bottom: 0.5rem;
+  left: 14px;
+  width: 2px;
+  background: linear-gradient(180deg, #0037B0 0%, #16A34A 100%);
+}
+
+.GrowthTimeline-nodes {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.GrowthTimeline-item {
+  position: relative;
+}
+
+.GrowthTimeline-marker {
+  position: absolute;
+  left: -2.5rem;
+  top: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.GrowthTimeline-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background-color: #0037B0;
+  border: 3px solid #FFFFFF;
+  box-shadow: 0 0 0 2px #0037B0;
+}
+
+.GrowthTimeline-yearBadge {
+  display: none;
 }
 
 .GrowthTimeline-card {
   background-color: var(--color-surface-container-lowest);
   border: 1px solid var(--color-card-stroke);
   border-radius: var(--rounded-lg);
-  padding: 2rem 1.5rem;
-  display: flex;
-  flex-direction: column;
-  transition: all 0.25s ease;
+  padding: 1.75rem 2rem;
+  box-shadow: var(--elevation-1);
+  transition: all 0.2s ease;
 }
 
 .GrowthTimeline-card:hover {
-  transform: translateY(-3px);
-  box-shadow: var(--elevation-1);
-}
-
-.GrowthTimeline-card--active {
   border-color: var(--color-cobalt-bright);
-  box-shadow: 0 8px 24px -4px rgba(37, 99, 235, 0.15);
+  box-shadow: var(--elevation-2);
 }
 
-.GrowthTimeline-card--future {
-  border-style: dashed;
-  border-color: var(--color-outline-variant);
-  background-color: var(--color-slate-surface);
-}
-
-.GrowthTimeline-cardHeader {
+.GrowthTimeline-cardTop {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 1.25rem;
-}
-
-.GrowthTimeline-year {
-  font-size: 1.75rem;
-  font-weight: 800;
-  color: var(--color-navy-dark);
-  letter-spacing: -0.02em;
+  margin-bottom: 0.75rem;
 }
 
 .GrowthTimeline-tag {
   font-size: 0.75rem;
-  font-weight: 700;
+  font-weight: 800;
   text-transform: uppercase;
-  padding: 0.25rem 0.65rem;
+  color: #0037B0;
+  background-color: #EFF6FF;
+  padding: 0.25rem 0.75rem;
   border-radius: var(--rounded-full);
 }
 
-.GrowthTimeline-tag--default {
-  background-color: #F1F5F9;
-  color: var(--color-outline);
-}
-
-.GrowthTimeline-tag--active {
-  background-color: #EFF6FF;
-  color: var(--color-cobalt-bright);
-}
-
-.GrowthTimeline-tag--future {
-  background-color: #F0FDF4;
+.GrowthTimeline-statusBadge {
+  font-size: 0.75rem;
+  font-weight: 700;
   color: #16A34A;
+  background-color: #F0FDF4;
+  padding: 0.2rem 0.65rem;
+  border-radius: var(--rounded-full);
 }
 
 .GrowthTimeline-cardTitle {
-  font-size: 1.125rem;
-  font-weight: 700;
+  font-size: 1.25rem;
+  font-weight: 800;
   color: var(--color-navy-dark);
   margin-bottom: 0.5rem;
 }
 
-.GrowthTimeline-cardDescription {
-  font-size: 0.875rem;
-  line-height: 1.6;
+.GrowthTimeline-cardDesc {
+  font-size: 0.9375rem;
+  line-height: 1.65;
   color: var(--color-outline);
-  margin-bottom: 1.5rem;
-  flex: 1;
+  margin: 0;
 }
 
-.GrowthTimeline-cardFooter {
-  margin-top: auto;
-  padding-top: 1rem;
+/* Future Strategic Roadmap */
+.GrowthTimeline-roadmapBlock {
+  background: linear-gradient(135deg, rgba(248, 250, 252, 0.9) 0%, rgba(240, 253, 244, 0.3) 100%);
+  border: 1.5px dashed #CBD5E1;
+  border-radius: var(--rounded-xl);
+  padding: 2.5rem;
+  margin-top: 3rem;
 }
 
-.GrowthTimeline-stepIndicator {
-  display: flex;
+.GrowthTimeline-roadmapHeader {
+  margin-bottom: 1.75rem;
+}
+
+.GrowthTimeline-roadmapBadge {
+  display: inline-flex;
   align-items: center;
   gap: 0.5rem;
+  font-size: 0.75rem;
+  font-weight: 800;
+  color: #475569;
+  letter-spacing: 0.08em;
+  margin-bottom: 0.5rem;
 }
 
-.GrowthTimeline-stepDot {
+.GrowthTimeline-roadmapDot {
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  background-color: var(--color-cobalt-bright);
+  background-color: #10B981;
 }
 
-.GrowthTimeline-stepLine {
-  height: 2px;
-  flex: 1;
-  background-color: var(--color-card-stroke);
+.GrowthTimeline-roadmapTitle {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--color-navy-dark);
+  margin: 0 0 0.5rem 0;
+}
+
+.GrowthTimeline-roadmapDesc {
+  font-size: 0.875rem;
+  color: var(--color-outline);
+  line-height: 1.5;
+  margin: 0;
+}
+
+.GrowthTimeline-roadmapGrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.25rem;
+}
+
+.GrowthTimeline-roadmapCard {
+  background-color: #FFFFFF;
+  border: 1px solid #E2E8F0;
+  border-radius: var(--rounded-lg);
+  padding: 1.5rem;
+}
+
+.GrowthTimeline-roadmapCardHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.GrowthTimeline-roadmapYear {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #0037B0;
+}
+
+.GrowthTimeline-roadmapStatusChip {
+  font-size: 0.725rem;
+  font-weight: 700;
+  color: #16A34A;
+  background-color: #F0FDF4;
+  padding: 0.2rem 0.6rem;
+  border-radius: 4px;
+}
+
+.GrowthTimeline-roadmapCardTitle {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--color-navy-dark);
+  margin-bottom: 0.4rem;
+}
+
+.GrowthTimeline-roadmapCardDesc {
+  font-size: 0.875rem;
+  color: var(--color-outline);
+  line-height: 1.6;
+  margin: 0;
+}
+
+.GrowthTimeline-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 1.5rem;
 }
 
 /* --- Methodology --- */
@@ -8739,8 +9229,32 @@ textarea {
   font-size: 0.9rem;
   line-height: 1.65;
   color: var(--color-outline);
-  margin-bottom: 1.5rem;
+  margin-bottom: 1.25rem;
   flex: 1;
+}
+
+.Methodology-deliverable {
+  background-color: #F8FAFC;
+  border: 1px solid #E2E8F0;
+  border-radius: var(--rounded-sm);
+  padding: 0.65rem 0.85rem;
+  margin-bottom: 1.25rem;
+}
+
+.Methodology-deliverableLabel {
+  font-size: 0.7rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: #0037B0;
+  display: block;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.2rem;
+}
+
+.Methodology-deliverableText {
+  font-size: 0.8125rem;
+  color: var(--color-navy-dark);
+  font-weight: 600;
 }
 
 .Methodology-cardFooter {
@@ -8953,6 +9467,11 @@ textarea {
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
 }
 
+.AboutCTA-input--error {
+  border-color: #DC2626 !important;
+  background-color: #FEF2F2 !important;
+}
+
 .AboutCTA-submitBtn {
   width: 100%;
   padding: 0.875rem 1.5rem;
@@ -9013,7 +9532,20 @@ textarea {
     grid-template-columns: repeat(2, 1fr);
   }
 
+  .CompanyOverview-container {
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+  }
+
   .Philosophy-panel {
+    grid-template-columns: 1fr;
+  }
+
+  .LeadershipTeam-rowTop {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .LeadershipTeam-rowBottom {
     grid-template-columns: 1fr;
   }
 
@@ -9029,6 +9561,11 @@ textarea {
 @media (max-width: 768px) {
   .AboutHero-title {
     font-size: 2.25rem;
+  }
+
+  .CompanyOverview-missionCard {
+    flex-direction: column;
+    padding: 1.5rem;
   }
 
   .StatsStrip-card {
@@ -9063,8 +9600,24 @@ textarea {
     flex-direction: column;
   }
 
+  .LeadershipTeam-rowTop {
+    grid-template-columns: 1fr;
+  }
+
+  .LeadershipTeam-rowBottom {
+    grid-template-columns: 1fr;
+  }
+
   .LeadershipTeam-grid {
     grid-template-columns: 1fr;
+  }
+
+  .GrowthTimeline-timelineTrack {
+    padding-left: 2rem;
+  }
+
+  .GrowthTimeline-marker {
+    left: -2rem;
   }
 
   .GrowthTimeline-grid {
