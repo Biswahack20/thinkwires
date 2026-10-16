@@ -11,9 +11,11 @@ import staffAugmentationReducer from './slices/staffAugmentationSlice';
 import permanentStaffingReducer from './slices/permanentStaffingSlice';
 import findTalentReducer from './slices/findTalentSlice';
 import candidatePortalReducer from './slices/candidatePortalSlice';
+import authReducer from './slices/authSlice';
 
 export const store = configureStore({
   reducer: {
+    auth: authReducer,
     home: homeReducer,
     about: aboutReducer,
     blog: blogReducer,
