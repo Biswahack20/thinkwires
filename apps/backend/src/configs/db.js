@@ -5,6 +5,16 @@ import config from './dotenv.js';
 export const sequelize = new Sequelize(config.DATABASE_URL, {
   dialect: 'postgres',
   protocol: 'postgres',
+  logging: false,
+  dialectOptions: {
+    connectTimeout: 3000,
+  },
+  pool: {
+    max: 5,
+    min: 0,
+    acquire: 3000,
+    idle: 5000,
+  },
 });
 
 export const connectDB = async () => {

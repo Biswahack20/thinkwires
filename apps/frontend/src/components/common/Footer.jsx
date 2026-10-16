@@ -240,6 +240,9 @@ const Footer = () => {
             <Link to="/cookies" className={'Footer-bottomLink'}>
               Cookie Settings
             </Link>
+            <Link to="/admin" className={'Footer-bottomLink'} style={{ color: '#008F68', fontWeight: 600 }}>
+              Admin Portal Demo ↗
+            </Link>
           </div>
         </div>
       </div>
