@@ -21841,4 +21841,349 @@ textarea {
 
 
 
+/* ==========================================================================
+   GrowthTimeline — Balanced Centered 2x2 Responsive Milestone Grid
+   ========================================================================== */
+
+/* ── Section wrapper ───────────────────────────────────────────────────── */
+.GrowthTimeline-section {
+  padding: 6rem 1.5rem;
+  background-color: var(--color-background, #f8fafc);
+  position: relative;
+  overflow: hidden;
+}
+
+[data-theme="dark"] .GrowthTimeline-section {
+  background-color: var(--color-surface-container-low, #1a1b23);
+}
+
+.GrowthTimeline-container {
+  max-width: 1080px;
+  margin: 0 auto;
+}
+
+/* ── Section Header ────────────────────────────────────────────────────── */
+.GrowthTimeline-header {
+  text-align: center;
+  margin-bottom: 4rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.GrowthTimeline-title {
+  font-size: clamp(1.85rem, 3.5vw, 2.5rem);
+  font-weight: 800;
+  color: var(--color-navy-dark, #0f172a);
+  letter-spacing: -0.025em;
+  line-height: 1.2;
+  margin: 0.85rem 0 1rem;
+}
+
+[data-theme="dark"] .GrowthTimeline-title {
+  color: var(--color-inverse-on-surface, #f0f0fb);
+}
+
+.GrowthTimeline-subtitle {
+  font-size: 1.0625rem;
+  color: var(--color-on-surface-variant, #434655);
+  line-height: 1.65;
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+[data-theme="dark"] .GrowthTimeline-subtitle {
+  color: var(--color-on-surface-variant, #c4c5d7);
+}
+
+/* ── 2x2 Responsive Milestone Grid ─────────────────────────────────────── */
+.GrowthTimeline-milestoneGrid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 2rem;
+  align-items: stretch;
+}
+
+.GrowthTimeline-gridCell {
+  display: flex;
+  height: 100%;
+}
+
+/* ── Reusable MilestoneCard ────────────────────────────────────────────── */
+.MilestoneCard {
+  background: var(--color-surface-container-lowest, #ffffff);
+  border: 1px solid var(--color-card-stroke, #e2e8f0);
+  border-radius: 16px;
+  padding: 2.25rem 2rem;
+  box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04), 0 1px 2px -1px rgba(15, 23, 42, 0.03);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 100%;
+  position: relative;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.25s ease;
+}
+
+.MilestoneCard:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 28px -6px rgba(15, 23, 42, 0.08), 0 4px 10px -2px rgba(0, 55, 176, 0.06);
+  border-color: rgba(0, 55, 176, 0.25);
+}
+
+[data-theme="dark"] .MilestoneCard {
+  background: var(--color-surface-container-high, #242731);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+[data-theme="dark"] .MilestoneCard:hover {
+  border-color: rgba(59, 130, 246, 0.4);
+}
+
+/* Top accent line on hover */
+.MilestoneCard::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--color-primary, #0037b0), var(--color-cobalt-glow, #3b82f6));
+  border-radius: 16px 16px 0 0;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+
+.MilestoneCard:hover::before {
+  opacity: 1;
+}
+
+/* ── Distinct 2026+ Future Initiative Card ─────────────────────────────── */
+.MilestoneCard--future {
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.03) 0%, rgba(0, 55, 176, 0.02) 100%), #ffffff;
+  border-color: rgba(34, 197, 94, 0.4);
+  border-style: dashed;
+}
+
+.MilestoneCard--future::before {
+  background: linear-gradient(90deg, var(--color-emerald-accent, #22c55e), var(--color-cobalt-glow, #3b82f6));
+}
+
+.MilestoneCard--future:hover {
+  border-color: rgba(34, 197, 94, 0.7);
+  box-shadow: 0 12px 28px -6px rgba(34, 197, 94, 0.1), 0 4px 10px -2px rgba(0, 55, 176, 0.05);
+}
+
+[data-theme="dark"] .MilestoneCard--future {
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.05) 0%, rgba(0, 55, 176, 0.05) 100%), #242731;
+  border-color: rgba(34, 197, 94, 0.35);
+}
+
+/* ── Card Top: Year & Category Label ───────────────────────────────────── */
+.MilestoneCard-top {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.MilestoneCard-year {
+  font-size: clamp(2rem, 3.2vw, 2.75rem);
+  font-weight: 800;
+  color: var(--color-primary, #0037b0);
+  line-height: 1;
+  letter-spacing: -0.03em;
+  font-feature-settings: "tnum";
+}
+
+[data-theme="dark"] .MilestoneCard-year {
+  color: var(--color-cobalt-glow, #3b82f6);
+}
+
+.MilestoneCard--future .MilestoneCard-year {
+  color: var(--color-emerald-accent, #16a34a);
+}
+
+[data-theme="dark"] .MilestoneCard--future .MilestoneCard-year {
+  color: var(--color-emerald-accent, #22c55e);
+}
+
+.MilestoneCard-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  background: var(--color-primary-fixed, #e8edff);
+  color: var(--color-primary, #0037b0);
+  font-size: 0.725rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+[data-theme="dark"] .MilestoneCard-tag {
+  background: rgba(0, 55, 176, 0.25);
+  color: var(--color-inverse-primary, #b7c4ff);
+}
+
+.MilestoneCard--future .MilestoneCard-tag {
+  background: rgba(34, 197, 94, 0.12);
+  color: #15803d;
+}
+
+[data-theme="dark"] .MilestoneCard--future .MilestoneCard-tag {
+  background: rgba(34, 197, 94, 0.2);
+  color: #4ade80;
+}
+
+/* ── Milestone Heading ─────────────────────────────────────────────────── */
+.MilestoneCard-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--color-navy-dark, #0f172a);
+  line-height: 1.35;
+  letter-spacing: -0.015em;
+  margin: 0 0 0.75rem 0;
+}
+
+[data-theme="dark"] .MilestoneCard-title {
+  color: var(--color-inverse-on-surface, #f0f0fb);
+}
+
+/* ── Milestone Description ─────────────────────────────────────────────── */
+.MilestoneCard-desc {
+  font-size: 0.95rem;
+  color: var(--color-on-surface-variant, #434655);
+  line-height: 1.65;
+  margin: 0 0 1.75rem 0;
+  flex-grow: 1;
+}
+
+[data-theme="dark"] .MilestoneCard-desc {
+  color: var(--color-on-surface-variant, #c4c5d7);
+}
+
+/* ── Subtle Bottom Status Indicator ────────────────────────────────────── */
+.MilestoneCard-footer {
+  display: flex;
+  align-items: center;
+  padding-top: 1rem;
+  border-top: 1px solid rgba(226, 232, 240, 0.7);
+}
+
+[data-theme="dark"] .MilestoneCard-footer {
+  border-top-color: rgba(255, 255, 255, 0.06);
+}
+
+.MilestoneCard-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.MilestoneCard-statusDot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.MilestoneCard-status--achieved {
+  color: #16a34a;
+}
+
+.MilestoneCard-status--achieved .MilestoneCard-statusDot {
+  background-color: #16a34a;
+  box-shadow: 0 0 0 2px rgba(22, 163, 74, 0.2);
+}
+
+[data-theme="dark"] .MilestoneCard-status--achieved {
+  color: #4ade80;
+}
+
+[data-theme="dark"] .MilestoneCard-status--achieved .MilestoneCard-statusDot {
+  background-color: #4ade80;
+  box-shadow: 0 0 0 2px rgba(74, 222, 128, 0.25);
+}
+
+.MilestoneCard-status--planned {
+  color: #d97706;
+}
+
+.MilestoneCard-status--planned .MilestoneCard-statusDot {
+  background-color: #d97706;
+  box-shadow: 0 0 0 2px rgba(217, 119, 6, 0.25);
+}
+
+[data-theme="dark"] .MilestoneCard-status--planned {
+  color: #fbbf24;
+}
+
+[data-theme="dark"] .MilestoneCard-status--planned .MilestoneCard-statusDot {
+  background-color: #fbbf24;
+  box-shadow: 0 0 0 2px rgba(251, 191, 36, 0.25);
+}
+
+/* ── Subtle Staggered Entrance Animations ──────────────────────────────── */
+@media (prefers-reduced-motion: no-preference) {
+  .GrowthTimeline-gridCell {
+    opacity: 0;
+    transform: translateY(22px);
+    transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+                transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .GrowthTimeline-gridCell.MilestoneCard--visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .GrowthTimeline-gridCell {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}
+
+/* ── Mobile Responsive Grid (1 column on mobile) ───────────────────────── */
+@media (max-width: 768px) {
+  .GrowthTimeline-section {
+    padding: 4.5rem 1.25rem;
+  }
+
+  .GrowthTimeline-header {
+    margin-bottom: 2.75rem;
+  }
+
+  .GrowthTimeline-milestoneGrid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .MilestoneCard {
+    padding: 1.75rem 1.5rem;
+    border-radius: 16px;
+  }
+
+  .MilestoneCard-year {
+    font-size: 2rem;
+  }
+
+  .MilestoneCard-title {
+    font-size: 1.15rem;
+  }
+
+  .MilestoneCard-desc {
+    font-size: 0.9rem;
+    margin-bottom: 1.25rem;
+  }
+}
+
 

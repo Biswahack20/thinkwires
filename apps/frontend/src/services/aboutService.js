@@ -19,6 +19,29 @@ export const aboutService = {
     }
   },
 
+  async getMilestones() {
+    if (isMockModeEnabled()) {
+      await simulateLatency(120);
+      return {
+        milestones: mockAboutData.growthTimeline?.milestones || [],
+        roadmap: mockAboutData.growthTimeline?.roadmap || [],
+        _isMock: true
+      };
+    }
+
+    try {
+      const data = await apiClient.get('/about/milestones');
+      return { ...data, _isMock: false };
+    } catch (err) {
+      console.warn('API /about/milestones unavailable, falling back to mockdata:', err.message);
+      return {
+        milestones: mockAboutData.growthTimeline?.milestones || [],
+        roadmap: mockAboutData.growthTimeline?.roadmap || [],
+        _isMock: true
+      };
+    }
+  },
+
   async submitConsultation(formData) {
     if (!formData.fullName || !formData.fullName.trim()) {
       throw new Error('Full Name is required.');
