@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import apiRoutes from './routes/api.route.js';
+import adminRoutes from './routes/admin.route.js';
 
 const app = express();
 
@@ -18,6 +19,7 @@ app.get("/", (req, res) => {
 });
 
 // API Routes
+app.use('/api/admin', adminRoutes);
 app.use('/api', apiRoutes);
 
 export default app;
