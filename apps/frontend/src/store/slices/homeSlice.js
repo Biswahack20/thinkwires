@@ -10,22 +10,55 @@ export const fetchTechStack = createAsyncThunk(
   }
 );
 
+import { initialOpenings } from '../../data/openingsData';
+
 export const fetchOpenings = createAsyncThunk(
   'home/fetchOpenings',
   async (params = {}) => {
-    const queryParams = new URLSearchParams();
-    if (params.q) queryParams.append('q', params.q);
-    if (params.location && params.location !== 'All') queryParams.append('location', params.location);
-    if (params.experience && params.experience !== 'All') queryParams.append('experience', params.experience);
-    if (params.workMode && params.workMode !== 'All Modes' && params.workMode !== 'All') queryParams.append('workMode', params.workMode);
-    if (params.jobMode && params.jobMode !== 'All Modes' && params.jobMode !== 'All Types' && params.jobMode !== 'All') queryParams.append('jobMode', params.jobMode);
-    if (params.noticePeriod && params.noticePeriod !== 'All Notice' && params.noticePeriod !== 'All') queryParams.append('noticePeriod', params.noticePeriod);
-    if (params.department && params.department !== 'All Roles' && params.department !== 'All') queryParams.append('department', params.department);
-    if (params.sort) queryParams.append('sort', params.sort);
+    try {
+      const queryParams = new URLSearchParams();
+      if (params.q) queryParams.append('q', params.q);
+      if (params.location && params.location !== 'All') queryParams.append('location', params.location);
+      if (params.experience && params.experience !== 'All') queryParams.append('experience', params.experience);
+      if (params.workMode && params.workMode !== 'All Modes' && params.workMode !== 'All') queryParams.append('workMode', params.workMode);
+      if (params.jobMode && params.jobMode !== 'All Modes' && params.jobMode !== 'All Types' && params.jobMode !== 'All') queryParams.append('jobMode', params.jobMode);
+      if (params.noticePeriod && params.noticePeriod !== 'All Notice' && params.noticePeriod !== 'All') queryParams.append('noticePeriod', params.noticePeriod);
+      if (params.department && params.department !== 'All Roles' && params.department !== 'All') queryParams.append('department', params.department);
+      if (params.sort) queryParams.append('sort', params.sort);
 
-    const queryString = queryParams.toString();
-    const response = await fetch(`${API_BASE}/openings${queryString ? `?${queryString}` : ''}`);
-    return await response.json();
+      const queryString = queryParams.toString();
+      const response = await fetch(`${API_BASE}/openings${queryString ? `?${queryString}` : ''}`);
+      if (response.ok) {
+        const data = await response.json();
+        if (Array.isArray(data) && data.length > 0) return data;
+      }
+    } catch {
+      // Backend offline or unreachable - use rich local dataset
+    }
+
+    let filtered = [...initialOpenings];
+    if (params.q) {
+      const qLower = params.q.toLowerCase();
+      filtered = filtered.filter(
+        (j) =>
+          j.title.toLowerCase().includes(qLower) ||
+          j.category.toLowerCase().includes(qLower) ||
+          (j.skills && j.skills.some((s) => s.toLowerCase().includes(qLower)))
+      );
+    }
+    if (params.department && params.department !== 'All Roles' && params.department !== 'All') {
+      filtered = filtered.filter((j) => j.department === params.department);
+    }
+    if (params.location && params.location !== 'All') {
+      filtered = filtered.filter((j) => j.location.toLowerCase().includes(params.location.toLowerCase()));
+    }
+    if (params.workMode && params.workMode !== 'All Modes' && params.workMode !== 'All') {
+      filtered = filtered.filter((j) => j.workMode === params.workMode);
+    }
+    if (params.jobMode && params.jobMode !== 'All Types' && params.jobMode !== 'All Modes' && params.jobMode !== 'All') {
+      filtered = filtered.filter((j) => j.jobMode === params.jobMode);
+    }
+    return filtered;
   }
 );
 
@@ -71,7 +104,7 @@ const homeSlice = createSlice({
   name: 'home',
   initialState: {
     techStack: [],
-    openings: [],
+    openings: initialOpenings,
     stats: {
       vacancies: 125,
       companies: 740,
