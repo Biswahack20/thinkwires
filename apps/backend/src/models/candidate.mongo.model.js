@@ -14,14 +14,27 @@ const candidateSchema = new mongoose.Schema(
       lowercase: true,
       trim: true,
     },
+    password: {
+      type: String,
+      required: [true, 'Password is required'],
+      minlength: 6,
+    },
     phone: {
       type: String,
-      required: [true, 'Phone number is required'],
+      default: '',
       trim: true,
     },
     currentRole: {
       type: String,
       default: 'Software Engineer',
+    },
+    headline: {
+      type: String,
+      default: '',
+    },
+    location: {
+      type: String,
+      default: '',
     },
     technicalSkills: {
       type: [String],
@@ -29,34 +42,49 @@ const candidateSchema = new mongoose.Schema(
     },
     experience: {
       type: Number,
-      required: true,
+      default: 0,
       min: 0,
     },
     expectedSalary: {
       type: String,
       default: 'Market Standard',
     },
+    resumeUrl: {
+      type: String,
+      default: '',
+    },
+    portfolioUrl: {
+      type: String,
+      default: '',
+    },
+    githubUrl: {
+      type: String,
+      default: '',
+    },
+    linkedinUrl: {
+      type: String,
+      default: '',
+    },
+    bio: {
+      type: String,
+      default: '',
+    },
     status: {
       type: String,
       enum: ['Applied', 'Screening', 'Interview', 'Offered', 'Hired', 'Rejected'],
       default: 'Applied',
     },
-    appliedForJob: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'JobRequirement',
+    resetPasswordToken: {
+      type: String,
       default: null,
     },
-    jobTitle: {
-      type: String,
-      default: 'General Technical Talent',
+    resetPasswordExpire: {
+      type: Date,
+      default: null,
     },
-    resumeUrl: {
-      type: String,
-      default: '',
-    },
-    notes: {
-      type: String,
-      default: '',
+    isActive: {
+      type: Boolean,
+      default: true,
     },
   },
   {
@@ -64,6 +92,7 @@ const candidateSchema = new mongoose.Schema(
   }
 );
 
+// Prevent re-compilation in development
 const Candidate = mongoose.models.Candidate || mongoose.model('Candidate', candidateSchema);
 
 export default Candidate;

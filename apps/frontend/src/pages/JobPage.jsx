@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback, Suspense, lazy } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { fetchOpenings } from '../store/slices/homeSlice';
 
 import Navbar from '../components/common/Navbar';
@@ -69,6 +70,21 @@ const JobPage = () => {
   const isLoading = status.openings === 'loading';
   const isError = status.openings === 'failed';
 
+  const navigate = useNavigate();
+  const { isAuthenticated } = useSelector((state) => state.auth);
+
+  const handleApplyJob = (job) => {
+    const jobIdentifier = job.id || job._id || 'job-' + encodeURIComponent(job.title.toLowerCase().replace(/[^a-z0-9]+/g, '-'));
+    const targetApplyUrl = `/jobs/${jobIdentifier}/apply?title=${encodeURIComponent(job.title)}&department=${encodeURIComponent(job.department || 'Engineering')}&location=${encodeURIComponent(job.location || 'Remote')}`;
+
+    if (isAuthenticated) {
+      navigate(targetApplyUrl);
+    } else {
+      // Direct unauthenticated candidate to login with return redirect to the exact job application
+      navigate(`/login?redirect=${encodeURIComponent(targetApplyUrl)}`);
+    }
+  };
+
   return (
     <div className="JobPage-wrapper">
       <Navbar />
@@ -120,7 +136,7 @@ const JobPage = () => {
               jobsList={openings}
               activeCategory={departmentFilter}
               setActiveCategory={setDepartmentFilter}
-              onApplyClick={(job) => setSelectedJobForModal(job.title)}
+              onApplyClick={handleApplyJob}
             />
           )}
 

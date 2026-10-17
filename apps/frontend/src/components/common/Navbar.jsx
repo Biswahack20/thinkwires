@@ -1,5 +1,6 @@
 import React, { useState, useRef } from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useSelector } from 'react-redux';
 import logo from '../../assets/logo/logo.png';
 import ApplyModal from './ApplyModal';
 import { useTheme } from '../../useTheme';
@@ -11,10 +12,31 @@ const Navbar = () => {
   const { theme, toggleTheme } = useTheme();
   const logoRef = useRef(null);
   const location = useLocation();
+  const navigate = useNavigate();
+  const { isAuthenticated, user } = useSelector((state) => state.auth);
 
   const closeMobileMenu = () => {
     setIsMobileMenuOpen(false);
     setIsServicesOpen(false);
+  };
+
+  const handlePortalClick = (e) => {
+    e.preventDefault();
+    closeMobileMenu();
+    if (isAuthenticated) {
+      navigate('/candidate/dashboard');
+    } else {
+      navigate('/login?redirect=/candidate/dashboard');
+    }
+  };
+
+  const handleQuickApply = () => {
+    closeMobileMenu();
+    if (isAuthenticated) {
+      navigate('/jobs/general-pool/apply?title=General%20Engineering%20Candidate%20Pool');
+    } else {
+      navigate('/login?redirect=/jobs/general-pool/apply%3Ftitle%3DGeneral%2520Engineering%2520Candidate%2520Pool');
+    }
   };
 
   const isActive = (path) => location.pathname === path ? 'Navbar-active' : '';
@@ -298,21 +320,24 @@ const Navbar = () => {
 
               <button
                 type="button"
-                onClick={() => {
-                  closeMobileMenu();
-                  setIsApplyModalOpen(true);
-                }}
+                onClick={handleQuickApply}
                 className="Navbar-btnOutline"
               >
                 Quick Apply
               </button>
 
-              <Link
-                to="/candidate-portal"
+              <button
+                type="button"
+                onClick={handlePortalClick}
                 className="Navbar-userIconBtn"
-                aria-label="Candidate Portal"
-                onClick={closeMobileMenu}
-                title="Candidate Portal"
+                aria-label={isAuthenticated ? `Candidate Portal (${user?.name || 'Account'})` : 'Candidate Portal (Sign In)'}
+                title={isAuthenticated ? `Candidate Portal (${user?.name || 'Account'})` : 'Candidate Portal (Sign In)'}
+                style={{
+                  background: isAuthenticated ? '#0037B0' : undefined,
+                  color: isAuthenticated ? '#FFFFFF' : undefined,
+                  cursor: 'pointer',
+                  border: 'none',
+                }}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -324,7 +349,7 @@ const Navbar = () => {
                 >
                   <path d="M3 14s-1 0-1-1 1-4 6-4 6 1 6 4-1 1-1 1H3Zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z" />
                 </svg>
-              </Link>
+              </button>
             </div>
           </div>
         </nav>
