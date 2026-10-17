@@ -1,10 +1,12 @@
 import app from './app.js';
 import { connectDB, sequelize } from './configs/db.js';
+import { connectMongoDB } from './configs/mongodb.js';
 import config from './configs/dotenv.js';
 
 const PORT = config.PORT || 5000;
 
 const startServer = async () => {
+  // ── PostgreSQL (Sequelize) ──────────────────────────────────────────────────
   try {
     await connectDB();
 
@@ -15,12 +17,19 @@ const startServer = async () => {
 
     console.log(
       isDevelopment
-        ? "✅ Database models synced with schema auto-alter enabled (development)"
-        : "✅ Database models synced"
+        ? "✅ PostgreSQL models synced with schema auto-alter enabled (development)"
+        : "✅ PostgreSQL models synced"
     );
   } catch (error) {
-    console.warn("⚠️ Database connection optional/bypassed:", error.message || error);
+    console.warn("⚠️ PostgreSQL connection optional/bypassed:", error.message || error);
     console.log("ℹ️ Operating with in-memory seed dataset for API routes.");
+  }
+
+  // ── MongoDB (Mongoose) ──────────────────────────────────────────────────────
+  try {
+    await connectMongoDB();
+  } catch (error) {
+    console.warn("⚠️ MongoDB connection optional/bypassed:", error.message || error);
   }
 
   app.listen(PORT, () => {
@@ -29,3 +38,4 @@ const startServer = async () => {
 };
 
 startServer();
+
