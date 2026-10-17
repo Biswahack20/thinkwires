@@ -2181,7 +2181,7 @@ body {
 
 .Navbar-topBar {
   background-color: #1f2937;
-  color: #e5e7eb;
+  color: #ffffff;
   font-size: 0.75rem;
   padding: 0.5rem 2rem;
   display: flex;
@@ -2200,6 +2200,38 @@ body {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+  color: #ffffff;
+  text-decoration: none;
+  transition: opacity 0.2s ease, color 0.2s ease;
+}
+
+.Navbar-topBar a.Navbar-topBarItem,
+.Navbar-topBar a {
+  color: #ffffff;
+  text-decoration: none;
+}
+
+.Navbar-topBar a.Navbar-topBarItem:hover,
+.Navbar-topBar a:hover {
+  color: #ffffff;
+  opacity: 0.85;
+  text-decoration: none;
+}
+
+.Navbar-themeToggle {
+  background: transparent;
+  border: none;
+  color: #ffffff;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.2s ease;
+}
+
+.Navbar-themeToggle:hover {
+  opacity: 0.85;
 }
 
 .Navbar-mainNav {
@@ -10518,65 +10550,431 @@ textarea {
   padding-top: 1rem;
 }
 
-/* --- Responsive Contact Styles --- */
+/* ==========================================================================
+   CONTACT PAGE – RESPONSIVE BREAKPOINTS
+   ========================================================================== */
+
+/* --- Prevent horizontal overflow --- */
+.ContactPage-wrapper,
+.ContactPage-main {
+  overflow-x: hidden;
+}
+
+/* ========================  TABLET  (max-width: 1024px) ======================== */
 @media (max-width: 1024px) {
+  .ContactHero-section {
+    padding: 4rem 1.5rem 4.5rem;
+  }
+
+  .ContactHero-title {
+    font-size: 2.75rem;
+  }
+
   .ContactChannels-container {
     grid-template-columns: repeat(2, 1fr);
+    gap: 1.25rem;
+  }
+
+  .ContactFormSection-section {
+    padding: 4rem 1.5rem 3.5rem;
   }
 
   .ContactFormSection-grid {
     grid-template-columns: 1fr;
+    gap: 2rem;
   }
 
   .ContactOffices-grid {
     grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .ContactOffices-section {
+    padding: 3.5rem 1.5rem 4rem;
+  }
+
+  .ContactFAQ-section {
+    padding: 3.5rem 1.5rem 5rem;
   }
 }
 
+/* ========================  MOBILE  (max-width: 768px) ======================== */
 @media (max-width: 768px) {
+  /* --- Hero --- */
+  .ContactHero-section {
+    padding: 3rem 1rem 3.5rem;
+  }
+
   .ContactHero-title {
-    font-size: 2.5rem;
+    font-size: clamp(1.75rem, 7vw, 2.5rem);
+    margin: 1rem 0 1rem;
+  }
+
+  .ContactHero-description {
+    font-size: 1rem;
+    margin-bottom: 1.75rem;
   }
 
   .ContactHero-slaRow {
     flex-direction: column;
+    align-items: flex-start;
     gap: 0.75rem;
-    border-radius: var(--rounded-xl, 16px);
-    padding: 1.25rem;
+    border-radius: 14px;
+    padding: 1.15rem 1.25rem;
+    width: 100%;
+    box-sizing: border-box;
   }
 
   .ContactHero-slaDiv {
     display: none;
   }
 
+  .ContactHero-slaBadge {
+    font-size: 0.8125rem;
+  }
+
+  /* --- Channels --- */
   .ContactChannels-section {
-    margin-top: 2rem;
-    padding: 0 1.5rem;
+    margin-top: 1.5rem;
+    padding: 0 1rem;
   }
 
   .ContactChannels-container {
     grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .ContactChannels-card {
+    padding: 1.15rem;
+    gap: 1rem;
+  }
+
+  .ContactChannels-iconBox {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+  }
+
+  .ContactChannels-detail {
+    font-size: 0.875rem;
+  }
+
+  /* --- Form Section --- */
+  .ContactFormSection-section {
+    padding: 3rem 1rem 2.5rem;
+  }
+
+  .ContactFormSection-grid {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
   }
 
   .ContactForm-wrapper {
-    padding: 2rem 1.5rem;
+    padding: 1.75rem 1.25rem;
+    border-radius: 18px;
+  }
+
+  .ContactForm-title {
+    font-size: 1.5rem;
+  }
+
+  .ContactForm-subtitle {
+    font-size: 0.875rem;
   }
 
   .ContactForm-row {
     grid-template-columns: 1fr;
+    gap: 1rem;
   }
 
+  .ContactForm-input,
+  .ContactForm-select,
+  .ContactForm-textarea {
+    padding: 0.75rem 0.875rem;
+    font-size: 0.9375rem;
+  }
+
+  .ContactForm-submitBtn {
+    width: 100%;
+    padding: 1rem 1.5rem;
+    font-size: 0.9375rem;
+    min-height: 52px;
+  }
+
+  .ContactForm-submitBtn:hover:not(:disabled) {
+    transform: none;
+  }
+
+  /* Aside panel */
   .ContactFormSection-asideCard {
-    padding: 2rem 1.5rem;
+    padding: 1.75rem 1.25rem;
+    border-radius: 18px;
+  }
+
+  .ContactFormSection-asideTitle {
+    font-size: 1.25rem;
+    margin: 1rem 0 1.5rem;
+  }
+
+  .ContactFormSection-steps {
+    gap: 1.25rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .ContactFormSection-step {
+    gap: 1rem;
+  }
+
+  .ContactFormSection-stepNum {
+    width: 34px;
+    height: 34px;
+    font-size: 0.875rem;
+    flex-shrink: 0;
+  }
+
+  .ContactFormSection-stepContent h4 {
+    font-size: 0.9375rem;
+  }
+
+  .ContactFormSection-stepContent p {
+    font-size: 0.8125rem;
+  }
+
+  .ContactFormSection-guarantee {
+    padding: 1rem;
+    gap: 0.75rem;
+  }
+
+  .ContactFormSection-guarantee strong {
+    font-size: 0.875rem;
+  }
+
+  .ContactFormSection-guarantee p {
+    font-size: 0.75rem;
+  }
+
+  /* --- Offices --- */
+  .ContactOffices-section {
+    padding: 3rem 1rem 3.5rem;
+  }
+
+  .ContactOffices-header {
+    margin-bottom: 2rem;
+  }
+
+  .ContactOffices-title {
+    font-size: clamp(1.5rem, 6vw, 2.25rem);
+  }
+
+  .ContactOffices-subtitle {
+    font-size: 0.9375rem;
+  }
+
+  .ContactOffices-grid {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
   }
 
   .ContactOffices-card {
-    padding: 1.75rem;
+    padding: 1.5rem;
+    gap: 1rem;
+  }
+
+  .ContactOffices-card:hover {
+    transform: none;
+  }
+
+  .ContactOffices-city {
+    font-size: 1.375rem;
+  }
+
+  .ContactOffices-addressLine,
+  .ContactOffices-phone,
+  .ContactOffices-email,
+  .ContactOffices-hours {
+    font-size: 0.875rem;
+  }
+
+  .ContactOffices-detailIcon {
+    width: 28px;
+    height: 28px;
+  }
+
+  /* --- FAQ --- */
+  .ContactFAQ-section {
+    padding: 3rem 1rem 4rem;
+  }
+
+  .ContactFAQ-header {
+    margin-bottom: 2rem;
+  }
+
+  .ContactFAQ-title {
+    font-size: clamp(1.5rem, 6vw, 2.25rem);
+  }
+
+  .ContactFAQ-subtitle {
+    font-size: 0.9375rem;
   }
 
   .ContactFAQ-question {
-    padding: 1.25rem 1rem;
-    gap: 0.75rem;
+    padding: 1.15rem 1.15rem;
+    gap: 0.85rem;
+  }
+
+  .ContactFAQ-questionText {
+    font-size: 0.9375rem;
+  }
+
+  .ContactFAQ-answer {
+    padding: 0 1.15rem;
+  }
+
+  .ContactFAQ-answer--open {
+    padding: 0 1.15rem 1.25rem;
+  }
+
+  .ContactFAQ-answerText {
+    font-size: 0.875rem;
+  }
+}
+
+/* ==================  EXTRA-SMALL PHONES  (max-width: 480px) ================== */
+@media (max-width: 480px) {
+  .ContactHero-section {
+    padding: 2.5rem 0.75rem 3rem;
+  }
+
+  .ContactHero-title {
+    font-size: clamp(1.5rem, 8vw, 2rem);
+    margin: 0.75rem 0 0.75rem;
+  }
+
+  .ContactHero-description {
+    font-size: 0.9375rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .ContactHero-slaRow {
+    padding: 1rem;
+    border-radius: 12px;
+  }
+
+  .ContactHero-slaBadge {
+    font-size: 0.75rem;
+  }
+
+  .ContactChannels-section {
+    padding: 0 0.75rem;
+  }
+
+  .ContactChannels-card {
+    padding: 1rem;
+    gap: 0.85rem;
+    flex-wrap: wrap;
+  }
+
+  .ContactChannels-iconBox {
+    width: 40px;
+    height: 40px;
+  }
+
+  .ContactChannels-detail {
+    font-size: 0.8125rem;
+    word-break: break-all;
+  }
+
+  .ContactChannels-arrow {
+    display: none;
+  }
+
+  .ContactFormSection-section {
+    padding: 2.5rem 0.75rem 2rem;
+  }
+
+  .ContactForm-wrapper {
+    padding: 1.5rem 1rem;
+    border-radius: 14px;
+  }
+
+  .ContactForm-title {
+    font-size: 1.35rem;
+  }
+
+  .ContactForm-input,
+  .ContactForm-select,
+  .ContactForm-textarea {
+    padding: 0.7rem 0.75rem;
+    font-size: 0.875rem;
+    border-radius: 8px;
+  }
+
+  .ContactForm-label {
+    font-size: 0.75rem;
+  }
+
+  .ContactForm-submitBtn {
+    font-size: 0.875rem;
+    min-height: 48px;
+    border-radius: 8px;
+  }
+
+  .ContactFormSection-asideCard {
+    padding: 1.5rem 1rem;
+    border-radius: 14px;
+  }
+
+  .ContactFormSection-asideTitle {
+    font-size: 1.1rem;
+    margin: 0.75rem 0 1.25rem;
+  }
+
+  .ContactFormSection-stepNum {
+    width: 30px;
+    height: 30px;
+    font-size: 0.8125rem;
+  }
+
+  .ContactFormSection-guarantee {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 0.875rem;
+  }
+
+  .ContactOffices-section {
+    padding: 2.5rem 0.75rem 3rem;
+  }
+
+  .ContactOffices-card {
+    padding: 1.25rem;
+    border-radius: 16px;
+  }
+
+  .ContactOffices-city {
+    font-size: 1.25rem;
+  }
+
+  .ContactOffices-tagRow {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .ContactFAQ-section {
+    padding: 2.5rem 0.75rem 3.5rem;
+  }
+
+  .ContactFAQ-question {
+    padding: 1rem;
+    gap: 0.65rem;
+  }
+
+  .ContactFAQ-questionNum {
+    font-size: 0.75rem;
+    padding: 0.2rem 0.4rem;
+  }
+
+  .ContactFAQ-questionText {
+    font-size: 0.875rem;
   }
 
   .ContactFAQ-answer {
@@ -10584,9 +10982,60 @@ textarea {
   }
 
   .ContactFAQ-answer--open {
-    padding: 0 1rem 1.25rem;
+    padding: 0 1rem 1rem;
+  }
+
+  .ContactFAQ-answerText {
+    font-size: 0.8125rem;
+    padding-top: 0.85rem;
   }
 }
+
+/* ==================  VERY SMALL PHONES  (max-width: 380px) ================== */
+@media (max-width: 380px) {
+  .ContactHero-title {
+    font-size: 1.4rem;
+  }
+
+  .ContactHero-description {
+    font-size: 0.875rem;
+  }
+
+  .ContactChannels-card {
+    gap: 0.75rem;
+    padding: 0.875rem;
+  }
+
+  .ContactChannels-body .ContactChannels-detail {
+    font-size: 0.75rem;
+  }
+
+  .ContactForm-wrapper {
+    padding: 1.25rem 0.875rem;
+  }
+
+  .ContactForm-title {
+    font-size: 1.2rem;
+  }
+
+  .ContactFormSection-asideCard {
+    padding: 1.25rem 0.875rem;
+  }
+
+  .ContactOffices-card {
+    padding: 1rem;
+  }
+
+  .ContactOffices-city {
+    font-size: 1.1rem;
+  }
+
+  .ContactFAQ-questionText {
+    font-size: 0.8125rem;
+  }
+}
+
+
 
 
 .IndustriesPage-page {
@@ -10595,12 +11044,14 @@ textarea {
   display: flex;
   flex-direction: column;
   background-color: var(--color-surface);
+  overflow-x: hidden;
 }
 
 .IndustriesPage-main {
   width: 100%;
   display: flex;
   flex-direction: column;
+  overflow-x: hidden;
 }
 
 .IndustriesHero-section {
@@ -10888,7 +11339,7 @@ textarea {
 
 .SectorCatalog-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 360px), 1fr));
   gap: 1.75rem;
 }
 
@@ -11433,7 +11884,7 @@ textarea {
 
 .CaseStudies-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 360px), 1fr));
   gap: 2rem;
 }
 
@@ -11814,8 +12265,25 @@ textarea {
 }
 
 /* --------------------------------------------------------------------------
-   RESPONSIVE ADJUSTMENTS
+   RESPONSIVE ADJUSTMENTS - INDUSTRIES PAGE
    -------------------------------------------------------------------------- */
+@media (max-width: 1024px) {
+  .IndustriesHero-section {
+    padding: 5rem 1.5rem 4rem;
+  }
+
+  .SectorCatalog-section,
+  .FeatureComparison-section,
+  .CaseStudies-section,
+  .CapabilityBriefing-section {
+    padding: 4.5rem 1.5rem;
+  }
+
+  .FeatureComparison-card {
+    padding: 2rem;
+  }
+}
+
 @media (max-width: 992px) {
   .IndustriesHero-statsBar {
     display: grid;
@@ -11828,9 +12296,14 @@ textarea {
     display: none;
   }
 
+  .SectorCatalog-grid {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
+
   .FeatureComparison-grid {
     grid-template-columns: 1fr;
-    gap: 3rem;
+    gap: 2.5rem;
   }
 
   .FeatureComparison-vsBadge {
@@ -11841,24 +12314,416 @@ textarea {
     transform: none;
   }
 
+  .CaseStudies-grid {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
+
   .CapabilityBriefing-container {
     grid-template-columns: 1fr;
     gap: 2.5rem;
   }
 }
 
-@media (max-width: 640px) {
-  .SectorCatalog-grid,
+@media (max-width: 768px) {
+  .IndustriesHero-section {
+    padding: 3.5rem 1rem 2.5rem;
+  }
+
+  .IndustriesHero-badgesRow {
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .IndustriesHero-badge {
+    font-size: 0.75rem;
+    padding: 0.3rem 0.65rem;
+  }
+
+  .IndustriesHero-title {
+    font-size: clamp(1.85rem, 5.5vw, 2.5rem);
+    line-height: 1.2;
+    word-break: break-word;
+  }
+
+  .IndustriesHero-subtitle {
+    font-size: 0.95rem;
+    margin-top: 1rem;
+    line-height: 1.55;
+  }
+
+  .IndustriesHero-actions {
+    flex-direction: column;
+    width: 100%;
+    max-width: 380px;
+    gap: 0.75rem;
+    margin-top: 2rem;
+  }
+
+  .IndustriesHero-primaryBtn,
+  .IndustriesHero-secondaryBtn {
+    width: 100%;
+    justify-content: center;
+    padding: 0.8rem 1.25rem;
+    font-size: 0.9rem;
+    text-align: center;
+  }
+
+  .IndustriesHero-statsBar {
+    margin-top: 2.5rem;
+    padding: 1.25rem 1rem;
+    gap: 1.25rem 1rem;
+    border-radius: 1rem;
+  }
+
+  .IndustriesHero-statValue {
+    font-size: 1.75rem;
+  }
+
+  .IndustriesHero-statLabel {
+    font-size: 0.6875rem;
+    text-align: center;
+  }
+
+  /* Sector Catalog */
+  .SectorCatalog-section {
+    padding: 3rem 1rem;
+  }
+
+  .SectorCatalog-header {
+    margin-bottom: 1.5rem;
+  }
+
+  .SectorCatalog-title {
+    font-size: clamp(1.6rem, 5vw, 2.1rem);
+  }
+
+  .SectorCatalog-filterBar {
+    gap: 0.5rem;
+    margin-bottom: 1.75rem;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 0.5rem;
+  }
+
+  .SectorCatalog-tabBtn {
+    padding: 0.5rem 1rem;
+    font-size: 0.8125rem;
+  }
+
+  .SectorCatalog-grid {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  .SectorCatalog-card {
+    padding: 1.5rem 1.15rem;
+    border-radius: 1rem;
+  }
+
+  .SectorCatalog-cardHeader {
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+  }
+
+  .SectorCatalog-cardIconWrap {
+    width: 2.75rem;
+    height: 2.75rem;
+    border-radius: 0.65rem;
+  }
+
+  .SectorCatalog-cardIcon {
+    font-size: 1.5rem !important;
+  }
+
+  .SectorCatalog-cardBadge {
+    font-size: 0.7rem;
+    padding: 0.25rem 0.6rem;
+  }
+
+  .SectorCatalog-cardTitle {
+    font-size: 1.15rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .SectorCatalog-cardDesc {
+    font-size: 0.85rem;
+    margin-bottom: 1rem;
+  }
+
+  .SectorCatalog-complianceBox {
+    padding: 0.85rem;
+    margin-bottom: 1rem;
+  }
+
+  .SectorCatalog-complianceText {
+    font-size: 0.785rem;
+  }
+
+  .SectorCatalog-cardFooter {
+    margin-top: 1.25rem;
+    padding-top: 1rem;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  /* Feature Comparison */
+  .FeatureComparison-section {
+    padding: 3rem 1rem;
+  }
+
+  .FeatureComparison-header {
+    margin: 0 auto 2.25rem;
+  }
+
+  .FeatureComparison-title {
+    font-size: clamp(1.5rem, 5vw, 2rem);
+  }
+
+  .FeatureComparison-subtitle {
+    font-size: 0.925rem;
+    margin-top: 0.75rem;
+  }
+
+  .FeatureComparison-grid {
+    gap: 1.5rem;
+  }
+
+  .FeatureComparison-card {
+    padding: 1.5rem 1.15rem;
+    border-radius: 1.25rem;
+  }
+
+  .FeatureComparison-cardHeader {
+    margin-bottom: 1.25rem;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .FeatureComparison-tierPill {
+    margin-left: 0;
+    margin-top: 0.25rem;
+  }
+
+  .FeatureComparison-cardTitle {
+    font-size: 1.2rem;
+  }
+
+  .FeatureComparison-list {
+    gap: 0.85rem;
+  }
+
+  .FeatureComparison-listItem {
+    gap: 0.65rem;
+  }
+
+  .FeatureComparison-listItem p {
+    font-size: 0.825rem;
+  }
+
+  .FeatureComparison-bullet {
+    width: 1.25rem;
+    height: 1.25rem;
+    margin-top: 0.1rem;
+  }
+
+  .FeatureComparison-bullet span {
+    font-size: 0.85rem !important;
+  }
+
+  .FeatureComparison-cardFooter {
+    margin-top: 1.5rem;
+    padding-top: 1.25rem;
+  }
+
+  .FeatureComparison-metricValue {
+    font-size: 1.75rem;
+  }
+
+  /* Case Studies */
+  .CaseStudies-section {
+    padding: 3rem 1rem;
+  }
+
+  .CaseStudies-header {
+    margin-bottom: 2rem;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .CaseStudies-title {
+    font-size: clamp(1.5rem, 5vw, 2rem);
+  }
+
   .CaseStudies-grid {
     grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  .CaseStudies-card {
+    padding: 1.5rem 1.15rem;
+    border-radius: 1.25rem;
+  }
+
+  .CaseStudies-pillRow {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+  }
+
+  .CaseStudies-tagPill {
+    font-size: 0.725rem;
+    padding: 0.25rem 0.65rem;
+  }
+
+  .CaseStudies-cardTitle {
+    font-size: 1.15rem;
+    margin-bottom: 0.65rem;
+  }
+
+  .CaseStudies-cardDesc {
+    font-size: 0.85rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .CaseStudies-metricRow {
+    font-size: 0.8rem;
+    gap: 0.5rem;
+  }
+
+  .CaseStudies-metricRow strong {
+    text-align: right;
+  }
+
+  /* Capability Briefing */
+  .CapabilityBriefing-section {
+    padding: 3rem 1rem;
+  }
+
+  .CapabilityBriefing-container {
+    gap: 2rem;
+  }
+
+  .CapabilityBriefing-infoCol {
+    gap: 1rem;
+  }
+
+  .CapabilityBriefing-title {
+    font-size: clamp(1.6rem, 5vw, 2.1rem);
+  }
+
+  .CapabilityBriefing-description {
+    font-size: 0.925rem;
+  }
+
+  .CapabilityBriefing-featuresList {
+    gap: 0.75rem;
+    margin-top: 0.25rem;
+  }
+
+  .CapabilityBriefing-featureItem {
+    font-size: 0.875rem;
+    align-items: flex-start;
+    gap: 0.65rem;
+  }
+
+  .CapabilityBriefing-featureIcon {
+    font-size: 1.15rem !important;
+    margin-top: 0.1rem;
+  }
+
+  .CapabilityBriefing-formCard {
+    padding: 1.5rem 1rem;
+    border-radius: 1.25rem;
+  }
+
+  .CapabilityBriefing-formTitle {
+    font-size: 1.25rem;
+  }
+
+  .CapabilityBriefing-formSubtitle {
+    font-size: 0.825rem;
+    margin-bottom: 1.25rem;
   }
 
   .CapabilityBriefing-formRow {
     grid-template-columns: 1fr;
+    gap: 0.85rem;
+  }
+
+  .CapabilityBriefing-form {
+    gap: 0.85rem;
+  }
+
+  .CapabilityBriefing-input,
+  .CapabilityBriefing-select,
+  .CapabilityBriefing-textarea {
+    padding: 0.65rem 0.85rem;
+    font-size: 0.85rem;
+    border-radius: 0.5rem;
+  }
+
+  .CapabilityBriefing-submitBtn {
+    padding: 0.85rem;
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .IndustriesHero-section {
+    padding: 2.75rem 0.75rem 2rem;
+  }
+
+  .IndustriesHero-statsBar {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.85rem 0.5rem;
+    padding: 1rem 0.5rem;
+  }
+
+  .IndustriesHero-statValue {
+    font-size: 1.5rem;
+  }
+
+  .IndustriesHero-statLabel {
+    font-size: 0.625rem;
+    letter-spacing: 0.04em;
+  }
+
+  .SectorCatalog-section,
+  .FeatureComparison-section,
+  .CaseStudies-section,
+  .CapabilityBriefing-section {
+    padding: 2.5rem 0.75rem;
+  }
+
+  .SectorCatalog-card {
+    padding: 1.25rem 0.85rem;
+  }
+
+  .SectorCatalog-complianceBox {
+    padding: 0.75rem;
+  }
+
+  .FeatureComparison-card {
+    padding: 1.25rem 0.85rem;
+  }
+
+  .CaseStudies-card {
+    padding: 1.25rem 0.85rem;
+  }
+
+  .CaseStudies-metricRow {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.15rem;
+  }
+
+  .CaseStudies-metricRow strong {
+    text-align: left;
   }
 
   .CapabilityBriefing-formCard {
-    padding: 1.75rem 1.25rem;
+    padding: 1.25rem 0.85rem;
   }
 }
 
@@ -13440,30 +14305,186 @@ textarea {
   font-weight: 600;
 }
 
-@media (max-width: 900px) {
+/* ==========================================================================
+   TALENT CLOUD / BENCH PAGE – RESPONSIVE BREAKPOINTS
+   ========================================================================== */
+
+/* --- Prevent horizontal overflow on the entire page --- */
+.BenchPage-root,
+.BenchPage-main {
+  overflow-x: hidden;
+}
+
+/* ========================  TABLET  (max-width: 1024px) ======================== */
+@media (max-width: 1024px) {
+  .BenchHero-section {
+    padding: 4rem 0 3rem;
+  }
+
+  .BenchHero-badgesGrid {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 0.85rem;
+  }
+
+  .BenchGrid-grid {
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
+  }
+
+  .BenchDossierFeatures-grid {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+  }
+
+  .BenchGates-grid {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+  }
+
   .BenchCta-card {
     grid-template-columns: 1fr;
-    padding: 2.5rem 1.75rem;
+    padding: 2.5rem 2rem;
+    gap: 2rem;
+  }
+
+  .BenchCta-graphic {
+    flex-direction: row;
+    gap: 1rem;
+  }
+
+  .BenchCta-statBox {
+    flex: 1;
   }
 }
 
-@media (max-width: 640px) {
-  .BenchGrid-grid {
-    grid-template-columns: 1fr;
+/* ========================  MOBILE  (max-width: 768px) ======================== */
+@media (max-width: 768px) {
+  /* --- Page Root --- */
+  .BenchHero-container,
+  .BenchExplorer-container,
+  .BenchDossierFeatures-container,
+  .BenchGates-container,
+  .BenchCta-container {
+    padding: 0 1rem;
   }
 
-  .BenchCard-footer {
-    grid-template-columns: 1fr;
+  /* --- Hero Section --- */
+  .BenchHero-section {
+    padding: 3rem 0 2rem;
   }
 
-  .BenchDrawer-formRow {
+  .BenchHero-badgeWrapper {
     flex-direction: column;
+    align-items: flex-start;
+    gap: 0.65rem;
+  }
+
+  .BenchHero-livePill {
+    font-size: 0.65rem;
+    padding: 0.3rem 0.7rem;
+  }
+
+  .BenchHero-title {
+    font-size: clamp(1.65rem, 6vw, 2.5rem);
+    margin-bottom: 1rem;
+  }
+
+  .BenchHero-title br {
+    display: none;
+  }
+
+  .BenchHero-subtitle {
+    font-size: 0.95rem;
+  }
+
+  .BenchHero-slaCard {
+    padding: 1rem 1.25rem;
+    margin-bottom: 1.75rem;
+  }
+
+  .BenchHero-slaTitle {
+    font-size: 0.95rem;
+  }
+
+  .BenchHero-badgesGrid {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+  }
+
+  .BenchHero-badgeCard {
+    padding: 0.85rem;
+    gap: 0.65rem;
+  }
+
+  .BenchHero-badgeTitle {
+    font-size: 0.8rem;
+  }
+
+  .BenchHero-badgeDesc {
+    font-size: 0.7rem;
+  }
+
+  /* --- Explorer / Filter Bar --- */
+  .BenchExplorer-section {
+    padding: 2rem 0 3rem;
+  }
+
+  .BenchFilter-wrapper {
+    padding: 1.25rem;
+    border-radius: 12px;
+    margin-bottom: 1.75rem;
+  }
+
+  .BenchFilter-searchBar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.85rem;
+  }
+
+  .BenchFilter-searchInputWrapper {
+    min-width: 0;
+    width: 100%;
+  }
+
+  .BenchFilter-searchInput {
+    font-size: 0.875rem;
+    padding: 0.75rem 2.5rem 0.75rem 2.75rem;
+  }
+
+  .BenchFilter-activeCounter {
+    justify-content: center;
+  }
+
+  .BenchFilter-specialtyPills {
+    gap: 0.5rem;
+    margin: 1rem 0 1rem;
+    padding-bottom: 1rem;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+
+  .BenchFilter-specialtyPills::-webkit-scrollbar {
+    display: none;
+  }
+
+  .BenchFilter-pill {
+    white-space: nowrap;
+    flex-shrink: 0;
+    padding: 0.4rem 0.9rem;
+    font-size: 0.8125rem;
+  }
+
+  .BenchFilter-dropdownRow {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.85rem;
   }
 
   .BenchFilter-dropdownGroup {
     flex-direction: column;
-    align-items: flex-start;
+    align-items: stretch;
     width: 100%;
+    gap: 0.85rem;
   }
 
   .BenchFilter-selectField {
@@ -13471,8 +14492,487 @@ textarea {
     justify-content: space-between;
   }
 
+  .BenchFilter-selectLabel {
+    min-width: 90px;
+  }
+
   .BenchFilter-select {
     flex: 1;
+    min-width: 0;
+    font-size: 0.8125rem;
+  }
+
+  .BenchFilter-sortField {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  /* --- Candidate Grid --- */
+  .BenchGrid-grid {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  /* --- Candidate Card --- */
+  .BenchCard-card {
+    padding: 1.35rem;
+    gap: 1rem;
+    border-radius: 14px;
+  }
+
+  .BenchCard-card:hover {
+    transform: none;
+  }
+
+  .BenchCard-profileRow {
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .BenchCard-titleWrap {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .BenchCard-roleTitle {
+    font-size: 1rem;
+  }
+
+  .BenchCard-rateBox {
+    position: absolute;
+    top: 1.35rem;
+    right: 1.35rem;
+  }
+
+  .BenchCard-metaLine {
+    font-size: 0.75rem;
+  }
+
+  .BenchCard-quoteText {
+    font-size: 0.75rem;
+  }
+
+  .BenchCard-footer {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+
+  .BenchCard-btnSecondary,
+  .BenchCard-btnPrimary {
+    padding: 0.65rem 0.75rem;
+    font-size: 0.8125rem;
+    min-height: 44px;
+  }
+
+  /* --- Dossier Features --- */
+  .BenchDossierFeatures-section {
+    padding: 3rem 0;
+  }
+
+  .BenchDossierFeatures-header {
+    margin-bottom: 2rem;
+    padding: 0 0.25rem;
+  }
+
+  .BenchDossierFeatures-title {
+    font-size: clamp(1.4rem, 5vw, 2rem);
+  }
+
+  .BenchDossierFeatures-subtitle {
+    font-size: 0.9rem;
+  }
+
+  .BenchDossierFeatures-grid {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  .BenchDossierFeatures-card {
+    padding: 1.35rem;
+  }
+
+  .BenchDossierFeatures-cardTitle {
+    font-size: 1rem;
+  }
+
+  .BenchDossierFeatures-cardDesc {
+    font-size: 0.8125rem;
+  }
+
+  /* --- Vetting Gates --- */
+  .BenchGates-section {
+    padding: 3rem 0;
+  }
+
+  .BenchGates-header {
+    margin-bottom: 2rem;
+    padding: 0 0.25rem;
+  }
+
+  .BenchGates-title {
+    font-size: clamp(1.4rem, 5vw, 2rem);
+  }
+
+  .BenchGates-subtitle {
+    font-size: 0.9rem;
+  }
+
+  .BenchGates-grid {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  .BenchGates-card {
+    padding: 1.35rem;
+  }
+
+  .BenchGates-cardTitle {
+    font-size: 1rem;
+  }
+
+  .BenchGates-detailsList li {
+    font-size: 0.75rem;
+  }
+
+  /* --- CTA Section --- */
+  .BenchCta-section {
+    padding: 2.5rem 0 3.5rem;
+  }
+
+  .BenchCta-card {
+    grid-template-columns: 1fr;
+    padding: 2rem 1.5rem;
+    gap: 1.75rem;
+    border-radius: 16px;
+  }
+
+  .BenchCta-title {
+    font-size: clamp(1.35rem, 5vw, 1.85rem);
+  }
+
+  .BenchCta-desc {
+    font-size: 0.9rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .BenchCta-btnGroup {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+
+  .BenchCta-btnPrimary,
+  .BenchCta-btnSecondary {
+    justify-content: center;
+    padding: 0.85rem 1.25rem;
+    min-height: 48px;
+  }
+
+  .BenchCta-graphic {
+    flex-direction: row;
+    gap: 0.85rem;
+  }
+
+  .BenchCta-statBox {
+    flex: 1;
+    padding: 1rem;
+  }
+
+  .BenchCta-statNumber {
+    font-size: 1.65rem;
+  }
+
+  .BenchCta-statLabel {
+    font-size: 0.75rem;
+  }
+
+  /* --- Dossier Drawer (Full-width on mobile) --- */
+  .BenchDrawer-content {
+    max-width: 100%;
+    width: 100%;
+  }
+
+  .BenchDrawer-header {
+    padding: 1rem 1.25rem;
+  }
+
+  .BenchDrawer-headerCode {
+    font-size: 0.65rem;
+  }
+
+  .BenchDrawer-body {
+    padding: 1.25rem;
+    gap: 1.25rem;
+  }
+
+  .BenchDrawer-profileBanner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.85rem;
+    padding: 1.25rem;
+  }
+
+  .BenchDrawer-avatar {
+    width: 48px;
+    height: 48px;
+    font-size: 1.1rem;
+  }
+
+  .BenchDrawer-roleName {
+    font-size: 1.1rem;
+  }
+
+  .BenchDrawer-specRow {
+    font-size: 0.75rem;
+    gap: 0.4rem;
+  }
+
+  .BenchDrawer-cardSection {
+    padding: 1rem 1.15rem;
+  }
+
+  .BenchDrawer-sectionTitle {
+    font-size: 0.875rem;
+  }
+
+  .BenchDrawer-formRow {
+    flex-direction: column;
+  }
+
+  .BenchDrawer-bookingCard {
+    padding: 1.25rem;
+  }
+
+  .BenchDrawer-bookingTitle {
+    font-size: 0.95rem;
+  }
+
+  .BenchDrawer-submitBtn {
+    min-height: 48px;
+  }
+}
+
+/* ====================  EXTRA-SMALL PHONES  (max-width: 480px) ==================== */
+@media (max-width: 480px) {
+  .BenchHero-container,
+  .BenchExplorer-container,
+  .BenchDossierFeatures-container,
+  .BenchGates-container,
+  .BenchCta-container {
+    padding: 0 0.75rem;
+  }
+
+  .BenchHero-section {
+    padding: 2.5rem 0 1.5rem;
+  }
+
+  .BenchHero-title {
+    font-size: clamp(1.4rem, 7vw, 2rem);
+  }
+
+  .BenchHero-subtitle {
+    font-size: 0.875rem;
+  }
+
+  .BenchHero-badgesGrid {
+    grid-template-columns: 1fr;
+    gap: 0.65rem;
+  }
+
+  .BenchHero-badgeCard {
+    padding: 0.75rem;
+  }
+
+  .BenchHero-slaCard {
+    padding: 0.85rem 1rem;
+  }
+
+  .BenchHero-slaTag {
+    font-size: 0.65rem;
+  }
+
+  .BenchHero-slaTitle {
+    font-size: 0.875rem;
+  }
+
+  .BenchHero-slaDesc {
+    font-size: 0.8rem;
+  }
+
+  /* Filter */
+  .BenchFilter-wrapper {
+    padding: 1rem;
+    border-radius: 10px;
+  }
+
+  .BenchFilter-pill {
+    font-size: 0.75rem;
+    padding: 0.35rem 0.75rem;
+  }
+
+  .BenchFilter-searchInput {
+    font-size: 0.8125rem;
+  }
+
+  .BenchFilter-counterBadge {
+    font-size: 0.8rem;
+    padding: 0.25rem 0.6rem;
+  }
+
+  .BenchFilter-counterText {
+    font-size: 0.8rem;
+  }
+
+  /* Cards */
+  .BenchCard-card {
+    padding: 1.15rem;
+    gap: 0.85rem;
+  }
+
+  .BenchCard-codeBadge {
+    font-size: 0.75rem;
+  }
+
+  .BenchCard-roleTitle {
+    font-size: 0.9375rem;
+  }
+
+  .BenchCard-rateBox {
+    top: 1.15rem;
+    right: 1.15rem;
+  }
+
+  .BenchCard-rateNum {
+    font-size: 1rem;
+  }
+
+  .BenchCard-scoreSection {
+    padding: 0.65rem 0.85rem;
+  }
+
+  .BenchCard-skillPill {
+    font-size: 0.7rem;
+    padding: 0.2rem 0.5rem;
+  }
+
+  /* Dossier Features */
+  .BenchDossierFeatures-card {
+    padding: 1.15rem;
+  }
+
+  .BenchDossierFeatures-step {
+    font-size: 1.05rem;
+  }
+
+  .BenchDossierFeatures-iconWrap {
+    width: 38px;
+    height: 38px;
+  }
+
+  /* Gates */
+  .BenchGates-card {
+    padding: 1.15rem;
+  }
+
+  .BenchGates-cardHeader {
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  /* CTA */
+  .BenchCta-card {
+    padding: 1.5rem 1.15rem;
+  }
+
+  .BenchCta-graphic {
+    flex-direction: column;
+  }
+
+  .BenchCta-statNumber {
+    font-size: 1.5rem;
+  }
+
+  /* Drawer */
+  .BenchDrawer-header {
+    padding: 0.85rem 1rem;
+  }
+
+  .BenchDrawer-body {
+    padding: 1rem;
+    gap: 1rem;
+  }
+
+  .BenchDrawer-profileBanner {
+    padding: 1rem;
+  }
+
+  .BenchDrawer-cardSection {
+    padding: 0.85rem 1rem;
+  }
+
+  .BenchDrawer-bookingCard {
+    padding: 1rem;
+  }
+
+  .BenchDrawer-formGroup input,
+  .BenchDrawer-formGroup select {
+    font-size: 0.8125rem;
+    padding: 0.55rem 0.75rem;
+  }
+}
+
+/* =================  VERY SMALL PHONES  (max-width: 380px) ================= */
+@media (max-width: 380px) {
+  .BenchHero-livePill {
+    font-size: 0.6rem;
+    padding: 0.25rem 0.6rem;
+  }
+
+  .BenchHero-title {
+    font-size: 1.3rem;
+  }
+
+  .BenchHero-subtitle {
+    font-size: 0.8125rem;
+  }
+
+  .BenchFilter-wrapper {
+    padding: 0.85rem;
+  }
+
+  .BenchFilter-pill {
+    font-size: 0.7rem;
+    padding: 0.3rem 0.65rem;
+  }
+
+  .BenchCard-card {
+    padding: 1rem;
+  }
+
+  .BenchCard-btnSecondary,
+  .BenchCard-btnPrimary {
+    font-size: 0.75rem;
+    gap: 0.3rem;
+  }
+
+  .BenchCard-btnSecondary .material-symbols-outlined,
+  .BenchCard-btnPrimary .material-symbols-outlined {
+    font-size: 0.95rem;
+  }
+
+  .BenchDossierFeatures-title,
+  .BenchGates-title {
+    font-size: 1.25rem;
+  }
+
+  .BenchCta-title {
+    font-size: 1.2rem;
+  }
+
+  .BenchCta-btnPrimary,
+  .BenchCta-btnSecondary {
+    font-size: 0.8125rem;
+    padding: 0.75rem 1rem;
   }
 }
 
@@ -21834,6 +23334,873 @@ textarea {
     padding: 2rem 1.5rem;
   }
 }
+
+/* ==========================================================================
+   SERVICE PAGES – COMPREHENSIVE MOBILE RESPONSIVENESS
+   Covers: Payroll, EOR, StaffAugmentation, PermanentStaffing
+   ========================================================================== */
+
+/* ─── Overflow prevention ──────────────────────────────────────────────────── */
+.PayrollPage-wrapper,
+.PayrollPage-main,
+.EorPage-wrapper,
+.EorPage-main,
+.StaffAugPage-wrapper,
+.StaffAugPage-main,
+.PermStaffPage-wrapper,
+.PermStaffPage-main {
+  overflow-x: hidden;
+}
+
+/* ==========================================================================
+   TABLET  (max-width: 1024px)
+   ========================================================================== */
+@media (max-width: 1024px) {
+  /* --- Payroll --- */
+  .Payroll-heroSection {
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+  }
+
+  .Payroll-sectionShell {
+    padding: 3rem 1.5rem;
+  }
+
+  .Payroll-pillarsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .Payroll-featuresGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .Payroll-segmentsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .Payroll-consultationGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .Payroll-formRowGrid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  /* --- EOR --- */
+  .Eor-heroSection {
+    padding-top: 4rem;
+    padding-bottom: 4rem;
+  }
+
+  /* --- StaffAug --- */
+  .StaffAug-heroSection {
+    padding-top: 2.5rem;
+    padding-bottom: 3rem;
+  }
+
+  .StaffAug-heroGrid,
+  .StaffAug-solutionsGrid,
+  .StaffAug-benefitsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .StaffAug-benchGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .StaffAug-comparisonGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .StaffAug-consultationGrid {
+    grid-template-columns: 1fr;
+  }
+
+  /* --- PermStaff --- */
+  .PermStaff-heroSection {
+    padding-top: 2.5rem;
+    padding-bottom: 3rem;
+  }
+
+  .PermStaff-pillarsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .PermStaff-processGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .PermStaff-consultationGrid,
+  .PermStaff-consultationCard .consultation-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ==========================================================================
+   MOBILE  (max-width: 768px)
+   ========================================================================== */
+@media (max-width: 768px) {
+
+  /* ─── PAYROLL ──────────────────────────────────────────────────────────── */
+  .Payroll-heroSection {
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+  }
+
+  .Payroll-heroHeadline {
+    font-size: clamp(1.75rem, 7vw, 2.5rem);
+  }
+
+  .Payroll-heroDesc {
+    font-size: 0.9375rem;
+  }
+
+  .Payroll-heroActions {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+
+  .Payroll-btnPrimary,
+  .Payroll-btnSecondary {
+    justify-content: center;
+    width: 100%;
+    min-height: 48px;
+  }
+
+  .Payroll-btnPrimary:hover,
+  .Payroll-btnSecondary:hover {
+    transform: none;
+  }
+
+  .Payroll-trustBadgesRow {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.75rem;
+  }
+
+  .Payroll-sectionShell {
+    padding: 2.5rem 1rem;
+  }
+
+  .Payroll-sectionTitle {
+    font-size: clamp(1.5rem, 5vw, 2rem);
+  }
+
+  .Payroll-pillarsGrid {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  .Payroll-segmentsGrid {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  .Payroll-featuresGrid {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  .Payroll-consultationGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .Payroll-hqCard,
+  .Payroll-formCard {
+    padding: 1.75rem 1.25rem;
+  }
+
+  .Payroll-formRowGrid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .Payroll-formSubmitBtn {
+    width: 100%;
+    min-height: 48px;
+    justify-content: center;
+  }
+
+  .Payroll-formSubmitBtn:hover {
+    transform: none;
+  }
+
+  .Payroll-telemetryCard {
+    padding: 1.25rem;
+  }
+
+  /* ─── EOR ──────────────────────────────────────────────────────────────── */
+  .Eor-heroSection {
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+  }
+
+  .Eor-heroHeadline,
+  .Eor-headline {
+    font-size: clamp(1.75rem, 7vw, 2.5rem);
+  }
+
+  .Eor-heroGrid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .Eor-heroActions {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+
+  .Eor-btnPrimary,
+  .Eor-btnSecondary {
+    justify-content: center;
+    width: 100%;
+    min-height: 48px;
+  }
+
+  .Eor-btnPrimary:hover,
+  .Eor-btnSecondary:hover {
+    transform: none;
+  }
+
+  .Eor-kpiStrip {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.85rem;
+    padding: 1.5rem 1rem;
+  }
+
+  .Eor-kpiCard {
+    padding: 1rem;
+  }
+
+  .Eor-sectionShell {
+    padding: 2.5rem 1rem;
+  }
+
+  .Eor-sectionTitle {
+    font-size: clamp(1.5rem, 5vw, 2rem);
+  }
+
+  .Eor-capabilitiesGrid {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  .Eor-comparisonGrid {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  .Eor-explanationGrid {
+    grid-template-columns: 1fr;
+    gap: 1.75rem;
+  }
+
+  .Eor-consultationGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .Eor-faqList {
+    gap: 0.75rem;
+  }
+
+  .Eor-faqQuestion {
+    padding: 1.1rem 1.1rem;
+    gap: 0.75rem;
+    font-size: 0.9375rem;
+  }
+
+  .Eor-faqAnswer {
+    padding: 0 1.1rem;
+  }
+
+  .Eor-faqAnswer--open {
+    padding: 0 1.1rem 1.15rem;
+  }
+
+  /* ─── STAFF AUGMENTATION ───────────────────────────────────────────────── */
+  .StaffAug-heroSection {
+    padding: 2.5rem 0 3rem;
+  }
+
+  .StaffAug-heroHeadline {
+    font-size: clamp(1.75rem, 7vw, 2.5rem);
+  }
+
+  .StaffAug-heroDesc {
+    font-size: 0.9375rem;
+  }
+
+  .StaffAug-heroActions {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+
+  .StaffAug-heroPrimaryBtn,
+  .StaffAug-heroSecondaryBtn {
+    justify-content: center;
+    width: 100%;
+    min-height: 48px;
+  }
+
+  .StaffAug-heroPrimaryBtn:hover,
+  .StaffAug-heroSecondaryBtn:hover {
+    transform: none;
+  }
+
+  .StaffAug-heroGrid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .StaffAug-readinessCard {
+    padding: 1.25rem;
+  }
+
+  .StaffAug-valuePropRow,
+  .StaffAug-valuePropGrid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .StaffAug-sectionTitle,
+  .StaffAug-title {
+    font-size: clamp(1.5rem, 5vw, 2rem);
+  }
+
+  .StaffAug-solutionsGrid,
+  .StaffAug-pillarGrid {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  .StaffAug-benefitsGrid {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  .StaffAug-benchGrid,
+  .StaffAug-engineerGrid {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  .StaffAug-tableWrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .StaffAug-comparisonTable {
+    min-width: 560px;
+  }
+
+  .StaffAug-faqList {
+    gap: 0.75rem;
+  }
+
+  .StaffAug-faqBtn {
+    padding: 1.1rem 1rem;
+    font-size: 0.9375rem;
+    gap: 0.65rem;
+  }
+
+  .StaffAug-faqBody {
+    padding: 0 1rem;
+  }
+
+  .StaffAug-faqOpen .StaffAug-faqBody {
+    padding: 0 1rem 1.1rem;
+  }
+
+  .StaffAug-consultationGrid {
+    grid-template-columns: 1fr;
+    border-radius: 1rem;
+  }
+
+  .StaffAug-contactCol,
+  .StaffAug-formCol {
+    padding: 2rem 1.5rem;
+  }
+
+  .StaffAug-contactCol .contact-title {
+    font-size: 1.5rem;
+  }
+
+  .StaffAug-form .form-row-2 {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .StaffAug-form .submit-btn {
+    width: 100%;
+    justify-content: center;
+    min-height: 48px;
+  }
+
+  .StaffAug-form .submit-btn:hover {
+    transform: none;
+  }
+
+  /* ─── PERMANENT STAFFING ───────────────────────────────────────────────── */
+  .PermStaff-heroSection {
+    padding: 2.5rem 0 3rem;
+  }
+
+  .PermStaff-headline {
+    font-size: clamp(1.75rem, 7vw, 2.5rem);
+  }
+
+  .PermStaff-heroDesc {
+    font-size: 0.9375rem;
+  }
+
+  .PermStaff-heroActions {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+
+  .PermStaff-heroPrimaryBtn,
+  .PermStaff-heroSecondaryBtn {
+    justify-content: center;
+    width: 100%;
+    min-height: 48px;
+  }
+
+  .PermStaff-heroPrimaryBtn:hover,
+  .PermStaff-heroSecondaryBtn:hover {
+    transform: none;
+  }
+
+  .PermStaff-title {
+    font-size: clamp(1.5rem, 5vw, 2rem);
+  }
+
+  .PermStaff-pillarsGrid {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  .PermStaff-processGrid {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  .PermStaff-rolesGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+
+  .PermStaff-proofStatsGrid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+  }
+
+  .PermStaff-faqSection .faq-accordion-col {
+    width: 100%;
+  }
+
+  .PermStaff-faqCard .faq-toggle-btn {
+    padding: 1rem 1rem;
+    font-size: 0.9375rem;
+    gap: 0.65rem;
+  }
+
+  .PermStaff-consultationCard .consultation-grid,
+  .PermStaff-consultationGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .PermStaff-consultationCard {
+    padding: 1.75rem 1.25rem;
+    border-radius: 1rem;
+  }
+
+  .PermStaff-consultationCard .consultation-right {
+    padding: 1.75rem 1.25rem;
+  }
+
+  .PermStaff-form .form-row-2 {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .PermStaff-form .submit-mandate-btn {
+    width: 100%;
+    justify-content: center;
+    min-height: 48px;
+  }
+
+  .PermStaff-form .submit-mandate-btn:hover {
+    transform: none;
+  }
+}
+
+/* ==========================================================================
+   EXTRA-SMALL PHONES  (max-width: 480px)
+   ========================================================================== */
+@media (max-width: 480px) {
+
+  /* ─── PAYROLL ──────────────────────────────────────────────────────────── */
+  .Payroll-heroSection {
+    padding-top: 2.5rem;
+    padding-bottom: 2.5rem;
+  }
+
+  .Payroll-heroHeadline {
+    font-size: clamp(1.5rem, 8vw, 2rem);
+  }
+
+  .Payroll-heroContainer {
+    padding: 0 0.875rem;
+  }
+
+  .Payroll-sectionShell {
+    padding: 2rem 0.875rem;
+  }
+
+  .Payroll-trustBadgesRow {
+    grid-template-columns: 1fr;
+  }
+
+  .Payroll-trustBadgeCard {
+    padding: 0.85rem 1rem;
+  }
+
+  .Payroll-pillarCard {
+    padding: 1.25rem;
+  }
+
+  .Payroll-pillarTitle {
+    font-size: 1rem;
+  }
+
+  .Payroll-featureCard {
+    padding: 1.25rem;
+  }
+
+  .Payroll-segmentCard {
+    padding: 1.25rem;
+  }
+
+  .Payroll-hqCard,
+  .Payroll-formCard {
+    padding: 1.25rem 0.875rem;
+  }
+
+  .Payroll-sectionTitle {
+    font-size: 1.4rem;
+  }
+
+  /* ─── EOR ──────────────────────────────────────────────────────────────── */
+  .Eor-heroSection {
+    padding-top: 2.5rem;
+    padding-bottom: 2.5rem;
+  }
+
+  .Eor-heroHeadline,
+  .Eor-headline {
+    font-size: clamp(1.5rem, 8vw, 2rem);
+  }
+
+  .Eor-kpiStrip {
+    grid-template-columns: 1fr;
+    padding: 1.25rem 0.875rem;
+  }
+
+  .Eor-sectionShell {
+    padding: 2rem 0.875rem;
+  }
+
+  .Eor-sectionTitle {
+    font-size: 1.4rem;
+  }
+
+  .Eor-capabilityCard,
+  .Eor-comparisonCard,
+  .Eor-explanationCard {
+    padding: 1.25rem;
+  }
+
+  .Eor-faqQuestion {
+    padding: 1rem;
+    font-size: 0.875rem;
+  }
+
+  /* ─── STAFF AUGMENTATION ───────────────────────────────────────────────── */
+  .StaffAug-heroSection {
+    padding: 2rem 0 2.5rem;
+  }
+
+  .StaffAug-heroHeadline {
+    font-size: clamp(1.5rem, 8vw, 2rem);
+  }
+
+  .StaffAug-container {
+    padding: 0 0.875rem;
+  }
+
+  .StaffAug-heroContainer {
+    padding: 0 0.875rem;
+  }
+
+  .StaffAug-sectionTitle,
+  .StaffAug-title {
+    font-size: 1.4rem;
+  }
+
+  .StaffAug-pillarCard,
+  .StaffAug-benefitCard,
+  .StaffAug-valuePropCard,
+  .StaffAug-engineerCard {
+    padding: 1.25rem;
+  }
+
+  .StaffAug-contactCol,
+  .StaffAug-formCol {
+    padding: 1.5rem 1rem;
+  }
+
+  .StaffAug-contactCol .contact-title {
+    font-size: 1.35rem;
+  }
+
+  .StaffAug-faqBtn {
+    padding: 0.875rem 0.875rem;
+    font-size: 0.875rem;
+  }
+
+  /* ─── PERMANENT STAFFING ───────────────────────────────────────────────── */
+  .PermStaff-heroSection {
+    padding: 2rem 0 2.5rem;
+  }
+
+  .PermStaff-headline {
+    font-size: clamp(1.5rem, 8vw, 2rem);
+  }
+
+  .PermStaff-container {
+    padding: 0 0.875rem;
+  }
+
+  .PermStaff-title {
+    font-size: 1.4rem;
+  }
+
+  .PermStaff-pillarCard,
+  .PermStaff-processCard {
+    padding: 1.25rem;
+  }
+
+  .PermStaff-rolesGrid {
+    grid-template-columns: 1fr;
+    gap: 0.85rem;
+  }
+
+  .PermStaff-proofStatsGrid {
+    grid-template-columns: 1fr;
+    gap: 0.85rem;
+  }
+
+  .PermStaff-consultationCard {
+    padding: 1.25rem 0.875rem;
+    border-radius: 0.875rem;
+  }
+
+  .PermStaff-consultationCard .consultation-right {
+    padding: 1.25rem 0.875rem;
+  }
+
+  .PermStaff-faqCard .faq-toggle-btn {
+    padding: 0.875rem 0.875rem;
+    font-size: 0.875rem;
+  }
+}
+
+/* ==========================================================================
+   VERY SMALL PHONES  (max-width: 380px)
+   ========================================================================== */
+@media (max-width: 380px) {
+
+  /* Payroll */
+  .Payroll-heroHeadline {
+    font-size: 1.4rem;
+  }
+
+  .Payroll-sectionShell {
+    padding: 1.75rem 0.75rem;
+  }
+
+  .Payroll-pillarTitle,
+  .Payroll-featureTitle,
+  .Payroll-segmentTitle {
+    font-size: 0.9375rem;
+  }
+
+  .Payroll-btnPrimary,
+  .Payroll-btnSecondary {
+    font-size: 0.875rem;
+    padding: 0.75rem 1rem;
+  }
+
+  /* EOR */
+  .Eor-heroHeadline,
+  .Eor-headline {
+    font-size: 1.4rem;
+  }
+
+  .Eor-sectionShell {
+    padding: 1.75rem 0.75rem;
+  }
+
+  .Eor-btnPrimary,
+  .Eor-btnSecondary {
+    font-size: 0.875rem;
+    padding: 0.75rem 1rem;
+  }
+
+  /* StaffAug */
+  .StaffAug-heroHeadline {
+    font-size: 1.35rem;
+  }
+
+  .StaffAug-sectionTitle,
+  .StaffAug-title {
+    font-size: 1.25rem;
+  }
+
+  .StaffAug-heroPrimaryBtn,
+  .StaffAug-heroSecondaryBtn {
+    font-size: 0.875rem;
+    padding: 0.75rem 1rem;
+  }
+
+  .StaffAug-contactCol .contact-title {
+    font-size: 1.2rem;
+  }
+
+  /* PermStaff */
+  .PermStaff-headline {
+    font-size: 1.35rem;
+  }
+
+  .PermStaff-title {
+    font-size: 1.25rem;
+  }
+
+  .PermStaff-heroPrimaryBtn,
+  .PermStaff-heroSecondaryBtn {
+    font-size: 0.875rem;
+    padding: 0.75rem 1rem;
+  }
+}
+
+/* ==========================================================================
+   GLOBAL MOBILE VIEWPORT OVERFLOW PROTECTION
+   ========================================================================== */
+html,
+body {
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+
+/* ==========================================================================
+   LEGAL PAGE – MOBILE RESPONSIVENESS
+   ========================================================================== */
+.LegalPage-main {
+  flex: 1;
+  padding: 4rem 1.5rem;
+  max-width: 1000px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.LegalPage-heroTitle {
+  font-size: clamp(1.75rem, 4.5vw, 2.5rem);
+  font-weight: 800;
+  color: var(--color-navy-dark, #0f172a);
+  margin-bottom: 0.75rem;
+  letter-spacing: -0.02em;
+}
+
+.LegalPage-heroDesc {
+  color: #64748b;
+  font-size: clamp(0.9375rem, 2vw, 1.05rem);
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.LegalPage-tabsContainer {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 2.5rem;
+  border-bottom: 1px solid #e2e8f0;
+  padding-bottom: 1rem;
+}
+
+.LegalPage-contentCard {
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 2.5rem;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.04);
+  line-height: 1.7;
+  color: #334155;
+}
+
+@media (max-width: 768px) {
+  .LegalPage-main {
+    padding: 2.5rem 1rem;
+  }
+
+  .LegalPage-tabsContainer {
+    gap: 0.375rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .LegalPage-tabBtn {
+    padding: 0.5rem 0.875rem !important;
+    font-size: 0.8125rem !important;
+  }
+
+  .LegalPage-contentCard {
+    padding: 1.75rem 1.25rem;
+    border-radius: 10px;
+  }
+}
+
+@media (max-width: 480px) {
+  .LegalPage-main {
+    padding: 1.75rem 0.875rem;
+  }
+
+  .LegalPage-tabsContainer {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.375rem;
+  }
+
+  .LegalPage-tabBtn {
+    justify-content: center;
+    font-size: 0.8125rem !important;
+    padding: 0.5rem 0.625rem !important;
+  }
+
+  .LegalPage-contentCard {
+    padding: 1.25rem 0.875rem;
+  }
+
+  .LegalPage-footerRow {
+    flex-direction: column;
+    align-items: flex-start !important;
+    gap: 0.75rem !important;
+  }
+}
+
+
 
 
 

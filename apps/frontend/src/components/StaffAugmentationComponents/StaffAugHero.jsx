@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const StaffAugHero = ({ data, valueProps = [] }) => {
   if (!data) return null;
@@ -18,7 +19,7 @@ const StaffAugHero = ({ data, valueProps = [] }) => {
         {/* Breadcrumb & Top Badge */}
         <div className="StaffAug-badgeRow">
           <nav className="StaffAug-breadcrumbs" aria-label="Breadcrumb">
-            <a href="/services">Services</a>
+            <Link to="/services">Services</Link>
             <span className="material-symbols-outlined">chevron_right</span>
             <span className="current">Staff Augmentation</span>
           </nav>

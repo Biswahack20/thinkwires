@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const CandidateConcierge = ({ concierge = {} }) => {
   return (
@@ -29,10 +30,10 @@ const CandidateConcierge = ({ concierge = {} }) => {
       </div>
 
       <div className="concierge-actions">
-        <a href="#book-checkin" className="btn-book-checkin">
+        <Link to="/contact" className="btn-book-checkin">
           <span className="material-symbols-outlined">calendar_today</span>
           <span>Book 15-Min Check-In</span>
-        </a>
+        </Link>
         <a
           href={concierge.whatsapp || 'https://wa.me/918920555626'}
           target="_blank"

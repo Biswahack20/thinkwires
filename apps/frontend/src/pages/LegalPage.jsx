@@ -27,23 +27,23 @@ const LegalPage = () => {
     <div className="LegalPage-wrapper" style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', backgroundColor: 'var(--color-surface, #f8fafc)' }}>
       <Navbar />
 
-      <main style={{ flex: 1, padding: '4rem 1.5rem', maxWidth: '1000px', margin: '0 auto', width: '100%' }}>
+      <main className="LegalPage-main">
         {/* Header Breadcrumb & Title */}
         <div style={{ marginBottom: '2.5rem', textAlign: 'center' }}>
           <div style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '0.35rem 0.85rem', borderRadius: '9999px', background: 'rgba(37, 99, 235, 0.08)', color: 'var(--color-primary, #2563eb)', fontSize: '0.8125rem', fontWeight: 600, marginBottom: '1rem' }}>
             <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>verified_user</span>
             <span>LEGAL &amp; COMPLIANCE FRAMEWORK</span>
           </div>
-          <h1 style={{ fontSize: '2.5rem', fontWeight: 800, color: 'var(--color-navy-dark, #0f172a)', marginBottom: '0.75rem', letterSpacing: '-0.02em' }}>
+          <h1 className="LegalPage-heroTitle">
             Trust, Security &amp; Legal Governance
           </h1>
-          <p style={{ color: '#64748b', fontSize: '1.05rem', maxWidth: '640px', margin: '0 auto' }}>
+          <p className="LegalPage-heroDesc">
             ThinkWires complies with bilateral enterprise standards, GDPR candidate privacy, and cross-border employment regulations across North America and India.
           </p>
         </div>
 
         {/* Tab Navigation */}
-        <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'center', flexWrap: 'wrap', marginBottom: '2.5rem', borderBottom: '1px solid #e2e8f0', paddingBottom: '1rem' }}>
+        <div className="LegalPage-tabsContainer">
           {[
             { id: 'privacy', label: 'Privacy Policy', icon: 'shield' },
             { id: 'terms', label: 'Terms of Service', icon: 'gavel' },
@@ -53,6 +53,7 @@ const LegalPage = () => {
             <button
               key={tab.id}
               type="button"
+              className="LegalPage-tabBtn"
               onClick={() => setActiveTab(tab.id)}
               style={{
                 display: 'inline-flex',
@@ -77,7 +78,7 @@ const LegalPage = () => {
         </div>
 
         {/* Content Box */}
-        <div style={{ backgroundColor: '#ffffff', borderRadius: '12px', padding: '2.5rem', border: '1px solid #e2e8f0', boxShadow: '0 4px 20px rgba(0, 0, 0, 0.04)', lineHeight: 1.7, color: '#334155' }}>
+        <div className="LegalPage-contentCard">
           {activeTab === 'privacy' && (
             <div>
               <h2 style={{ fontSize: '1.5rem', fontWeight: 700, color: '#0f172a', marginBottom: '1rem' }}>1. Candidate &amp; Client Privacy Policy</h2>
@@ -141,7 +142,7 @@ const LegalPage = () => {
             </div>
           )}
 
-          <div style={{ marginTop: '2.5rem', paddingTop: '1.5rem', borderTop: '1px solid #e2e8f0', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem', fontSize: '0.875rem', color: '#64748b' }}>
+          <div className="LegalPage-footerRow" style={{ marginTop: '2.5rem', paddingTop: '1.5rem', borderTop: '1px solid #e2e8f0', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem', fontSize: '0.875rem', color: '#64748b' }}>
             <span>Last Updated: October 2026 • Effective Worldwide</span>
             <Link to="/contact" style={{ color: '#2563eb', fontWeight: 600, textDecoration: 'none' }}>
               Have questions? Contact Legal Advisory &rarr;
