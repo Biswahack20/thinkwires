@@ -1,5 +1,6 @@
 import { useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
+import useLenisScroll from '../../hooks/useLenisScroll';
 
 /**
  * ScrollAnimationManager
@@ -9,7 +10,7 @@ import { useLocation } from 'react-router-dom';
  */
 
 const TARGET_SELECTORS = [
-  // Section headers & intro text blocks
+  // --- Homepage ---
   '.TechStack-techStackSection',
   '.About-aboutContent',
   '.About-aboutVisual',
@@ -23,81 +24,164 @@ const TARGET_SELECTORS = [
   '.StatsJourney-header',
   '.StatsJourney-statCard',
   '.StatsJourney-timelineCard',
+  '.StatsJourney-spineSection',
   '.Industries-header',
   '.Industries-card',
   '.Reports-header',
   '.Reports-card',
   '.CTA-card',
-  // About Page
+
+  // --- About Page ---
   '.AboutHero-content',
   '.AboutHero-mediaWrapper',
   '.StatsStrip-card',
+  '.StatsStrip-item',
+  '.CompanyOverview-section',
+  '.CompanyOverview-container',
+  '.AggregatorModel-header',
   '.AggregatorModel-card',
   '.Philosophy-panel',
+  '.Philosophy-metricCard',
+  '.LeadershipTeam-header',
   '.LeadershipTeam-card',
+  '.GrowthTimeline-header',
   '.GrowthTimeline-card',
+  '.MilestoneCard-card',
+  '.Methodology-header',
   '.Methodology-card',
   '.AboutCTA-container',
-  // Jobs Page
+
+  // --- Jobs Page ---
+  '.JobsHero-container',
   '.JobSearch-floatingCard',
   '.FeaturedPositions-header',
   '.JobCard-card',
   '.TalentBench-card',
-  '.JobsStats-card',
+  '.JobsStats-figmaContainer',
+  '.JobsStats-metricBox',
   '.CareerBenefits-card',
   '.CareerInsights-card',
   '.CandidateFAQs-card',
-  // Bench / Talent Cloud Page
+
+  // --- Bench / Talent Cloud Page ---
+  '.BenchHero-container',
   '.BenchFilter-wrapper',
-  '.BenchCard-root',
+  '.BenchFilterBar-container',
+  '.BenchCard-card',
+  '.BenchGrid-grid > *',
   '.BenchDossierFeatures-card',
   '.BenchGates-gateRow',
+  '.BenchRequisitionCTA-card',
   '.BenchCta-card',
-  // Blog Page
+
+  // --- Blog Page ---
   '.BlogHero-container',
   '.BlogFilters-wrapper',
   '.FeaturedArticle-card',
   '.BlogGrid-card',
+  '.BlogGrid-articleCard',
   '.ResearchCollective-card',
   '.NewsletterCTA-card',
   '.ContactCTA-card',
-  // Contact Page
+
+  // --- Contact Page ---
   '.ContactHero-container',
   '.ContactChannels-card',
   '.ContactForm-wrapper',
   '.ContactFormSection-asideCard',
   '.ContactOffices-card',
   '.ContactFAQ-card',
-  // Service Pages (StaffAug, PermStaff, Payroll, Eor)
-  '.StaffAug-card',
+
+  // --- Industries Page ---
+  '.IndustriesHero-container',
+  '.SectorCatalog-header',
+  '.SectorCatalog-card',
+  '.SectorCatalog-grid > *',
+  '.FeatureComparison-tableCard',
+  '.FeatureComparison-container',
+  '.CaseStudies-card',
+  '.CaseStudies-grid > *',
+  '.CapabilityBriefing-card',
+
+  // --- Staff Augmentation Page ---
+  '.StaffAug-heroCard',
+  '.StaffAug-sectionHeader',
   '.StaffAug-pillarCard',
-  '.PermStaff-card',
+  '.StaffAug-benefitCard',
+  '.StaffAug-benefitsGrid > *',
+  '.StaffAug-tableWrapper',
+  '.StaffAug-spotlightBanner',
+  '.StaffAug-governanceCard',
+  '.StaffAug-faqItem',
+  '.StaffAug-consultationCard',
+
+  // --- Permanent Staffing Page ---
+  '.PermStaff-heroCard',
+  '.PermStaff-pillarsHeaderRow',
   '.PermStaff-pillarCard',
-  '.Payroll-card',
+  '.PermStaff-rolesHeaderRow',
+  '.PermStaff-roleCard',
+  '.PermStaff-processCard',
+  '.PermStaff-faqItem',
+  '.PermStaff-consultationCard',
+
+  // --- Payroll Page ---
+  '.Payroll-heroCard',
+  '.Payroll-sectionHeader',
   '.Payroll-pillarCard',
-  '.Eor-card',
+  '.Payroll-featureCard',
+  '.Payroll-featuresGrid > *',
+  '.Payroll-beneficiaryCard',
+  '.Payroll-consultationCard',
+
+  // --- EOR Page ---
+  '.Eor-heroCard',
   '.Eor-kpiCard',
   '.Eor-capabilitiesGrid > *',
-  '.Eor-separationCol',
-  // Find Talent & Candidate Portal
+  '.Eor-card',
+  '.Eor-comparisonTable',
+  '.Eor-explanationSection',
+  '.Eor-faqItem',
+  '.Eor-consultationCard',
+
+  // --- Find Talent Page ---
+  '.FindTalent-heroCard',
   '.FindTalent-intakeCard',
   '.FindTalent-benchCard',
+  '.FindTalent-proofCard',
   '.FindTalent-proofGrid > *',
+  '.FindTalent-comparisonCard',
+
+  // --- Candidate Portal Page ---
   '.CandidatePortal-heroCard',
   '.CandidatePortal-metricCard',
+  '.CandidateMetrics-grid > *',
   '.roadmap-card',
   '.pipeline-row-card',
   '.assessment-main-card',
   '.sponsored-upskill-card',
   '.governance-card',
-  // Fallbacks for any other cards or feature sections
-  'main > section:not(.NewHero-heroSection)',
+  '.CandidateConcierge-card',
+  '.CandidatePayout-card',
+
+  // --- Universal Fallbacks (ensures future & remaining pages are 100% covered) ---
+  'main > section:not(.NewHero-heroSection):not([data-no-scroll-reveal])',
   'main > div[class*="-section"]:not(.NewHero-heroSection)',
+  '[class*="-sectionHeader"]',
+  '[class*="-headerRow"]',
+  '[class*="-pillarsGrid"] > *',
+  '[class*="-benefitsGrid"] > *',
+  '[class*="-rolesGrid"] > *',
+  '[class*="-featuresGrid"] > *',
+  '[class*="-statsGrid"] > *',
+  '[class*="-stripGrid"] > *',
   '[class*="-cardsGrid"] > *',
   '[class*="-grid"]:not(.Navbar-grid):not(.Footer-grid) > [class*="-card"]',
+  '[class*="-grid"]:not(.Navbar-grid):not(.Footer-grid) > [class*="-item"]',
 ];
 
 const ScrollAnimationManager = () => {
+  useLenisScroll();
   const location = useLocation();
   const observerRef = useRef(null);
 
@@ -105,6 +189,12 @@ const ScrollAnimationManager = () => {
     // 1. Accessibility: Check user's motion preference
     const prefersReducedMotion =
       window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    // Reset scroll to top on route change
+    window.scrollTo(0, 0);
+    if (window.__lenis) {
+      window.__lenis.scrollTo(0, { immediate: true });
+    }
 
     if (prefersReducedMotion) {
       document.documentElement.classList.add('tw-reduced-motion');

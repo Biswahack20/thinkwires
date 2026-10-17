@@ -1,5 +1,6 @@
 import React from 'react';
 import SectionBadge from '../common/SectionBadge';
+import ScrollReveal from '../common/ScrollReveal';
 
 const CompanyOverview = ({ company }) => {
   if (!company) return null;
@@ -17,7 +18,7 @@ const CompanyOverview = ({ company }) => {
     <section className="CompanyOverview-section" aria-label="Company Overview and Strategic Mission">
       <div className="CompanyOverview-container">
         {/* Left Column: Corporate Positioning & Overview */}
-        <div className="CompanyOverview-left">
+        <ScrollReveal direction="left" distance={60} className="CompanyOverview-left">
           <SectionBadge
             text={eyebrow}
             icon={
@@ -30,10 +31,10 @@ const CompanyOverview = ({ company }) => {
           />
           <h2 className="CompanyOverview-title">{title}</h2>
           <p className="CompanyOverview-description">{summary}</p>
-        </div>
+        </ScrollReveal>
 
         {/* Right Column: Mission Card Panel */}
-        <div className="CompanyOverview-right">
+        <ScrollReveal direction="right" distance={60} className="CompanyOverview-right">
           <div className="CompanyOverview-missionCard">
             <div className="CompanyOverview-missionHeader">
               <div className="CompanyOverview-missionIcon" aria-hidden="true">
@@ -58,7 +59,7 @@ const CompanyOverview = ({ company }) => {
               <span>Borderless Talent Delivery • India, US, Canada</span>
             </div>
           </div>
-        </div>
+        </ScrollReveal>
       </div>
     </section>
   );

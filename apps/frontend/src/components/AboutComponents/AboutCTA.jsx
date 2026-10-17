@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { submitConsultation, resetConsultationStatus } from '../../store/slices/aboutSlice';
+import ScrollReveal from '../common/ScrollReveal';
 
 const AboutCTA = ({ data }) => {
   const dispatch = useDispatch();
@@ -96,7 +97,7 @@ const AboutCTA = ({ data }) => {
     <section id="contact" className="AboutCTA-section" aria-label="Strategy Consultation and Corporate Contact">
       <div className="AboutCTA-container">
         {/* Left Information Column */}
-        <div className="AboutCTA-info">
+        <ScrollReveal direction="left" distance={50} className="AboutCTA-info">
           <div className="AboutCTA-statusBadge">
             <span className="AboutCTA-statusDot" aria-hidden="true"></span>
             <span>{statusBadge}</span>
@@ -172,10 +173,10 @@ const AboutCTA = ({ data }) => {
               </div>
             )}
           </div>
-        </div>
+        </ScrollReveal>
 
         {/* Right Form Card */}
-        <div className="AboutCTA-formCard">
+        <ScrollReveal direction="right" distance={50} className="AboutCTA-formCard">
           <h3 className="AboutCTA-formTitle">{form.title || 'Request a 20-Min Strategy Consultation'}</h3>
           <p className="AboutCTA-formSubtitle">
             {form.subtitle || 'Receive matched engineering dossiers & rate benchmarks in under 5 hours.'}
@@ -347,7 +348,7 @@ const AboutCTA = ({ data }) => {
               </div>
             </form>
           )}
-        </div>
+        </ScrollReveal>
       </div>
     </section>
   );

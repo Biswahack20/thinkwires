@@ -1,5 +1,6 @@
 import React from 'react';
 import BenchCandidateCard from './BenchCandidateCard';
+import ScrollReveal from '../common/ScrollReveal';
 
 const BenchCandidateGrid = ({ talents, totalCount }) => {
   if (!talents || talents.length === 0) {
@@ -17,8 +18,10 @@ const BenchCandidateGrid = ({ talents, totalCount }) => {
   return (
     <div className="BenchGrid-wrapper">
       <div className="BenchGrid-grid">
-        {talents.map((talent) => (
-          <BenchCandidateCard key={talent.id || talent.code} talent={talent} />
+        {talents.map((talent, idx) => (
+          <ScrollReveal key={talent.id || talent.code || idx} direction="up" delay={(idx % 2) * 0.1}>
+            <BenchCandidateCard talent={talent} />
+          </ScrollReveal>
         ))}
       </div>
     </div>

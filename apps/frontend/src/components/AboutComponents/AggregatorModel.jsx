@@ -1,5 +1,6 @@
 import React from 'react';
 import SectionBadge from '../common/SectionBadge';
+import ScrollReveal from '../common/ScrollReveal';
 
 const AggregatorModel = ({ data }) => {
   const {
@@ -91,37 +92,45 @@ const AggregatorModel = ({ data }) => {
 
         {/* 4 Cards Grid */}
         <div className="AggregatorModel-grid">
-          {cards.map((card) => (
-            <div key={card.id} className="AggregatorModel-card">
-              <div className={`AggregatorModel-iconBox AggregatorModel-icon--${card.iconBgColor || 'blue'}`} aria-hidden="true">
-                {getCardIcon(card.icon)}
+          {cards.map((card, idx) => (
+            <ScrollReveal
+              key={card.id || idx}
+              direction={idx % 2 === 0 ? 'left' : 'right'}
+              delay={idx * 0.1}
+              distance={50}
+              style={{ display: 'flex' }}
+            >
+              <div className="AggregatorModel-card" style={{ width: '100%' }}>
+                <div className={`AggregatorModel-iconBox AggregatorModel-icon--${card.iconBgColor || 'blue'}`} aria-hidden="true">
+                  {getCardIcon(card.icon)}
+                </div>
+
+                <h3 className="AggregatorModel-cardTitle">{card.title}</h3>
+                <p className="AggregatorModel-cardDescription">{card.description}</p>
+
+                {card.detail && (
+                  <div className="AggregatorModel-cardDetail" style={{ fontSize: '0.8125rem', color: '#64748B', marginBottom: '1.25rem', lineHeight: '1.5' }}>
+                    {card.detail}
+                  </div>
+                )}
+
+                {card.ctaLabel && (
+                  <div className="AggregatorModel-cardFooter">
+                    <a
+                      href={card.ctaHref || '#'}
+                      onClick={(e) => handleSmoothScroll(e, card.ctaHref)}
+                      className="AggregatorModel-cardLink"
+                    >
+                      <span>{card.ctaLabel}</span>
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                        <polyline points="12 5 19 12 12 19"></polyline>
+                      </svg>
+                    </a>
+                  </div>
+                )}
               </div>
-
-              <h3 className="AggregatorModel-cardTitle">{card.title}</h3>
-              <p className="AggregatorModel-cardDescription">{card.description}</p>
-
-              {card.detail && (
-                <div className="AggregatorModel-cardDetail" style={{ fontSize: '0.8125rem', color: '#64748B', marginBottom: '1.25rem', lineHeight: '1.5' }}>
-                  {card.detail}
-                </div>
-              )}
-
-              {card.ctaLabel && (
-                <div className="AggregatorModel-cardFooter">
-                  <a
-                    href={card.ctaHref || '#'}
-                    onClick={(e) => handleSmoothScroll(e, card.ctaHref)}
-                    className="AggregatorModel-cardLink"
-                  >
-                    <span>{card.ctaLabel}</span>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                      <line x1="5" y1="12" x2="19" y2="12"></line>
-                      <polyline points="12 5 19 12 12 19"></polyline>
-                    </svg>
-                  </a>
-                </div>
-              )}
-            </div>
+            </ScrollReveal>
           ))}
         </div>
       </div>

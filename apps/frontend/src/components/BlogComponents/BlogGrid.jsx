@@ -1,5 +1,6 @@
 import React from 'react';
 import BlogCard from './BlogCard';
+import ScrollReveal from '../common/ScrollReveal';
 
 const BlogGrid = ({
   articles = [],
@@ -44,14 +45,15 @@ const BlogGrid = ({
 
   return (
     <div className="BlogGrid-container">
-      {articles.map((article) => (
-        <BlogCard
-          key={article.id}
-          article={article}
-          isBookmarked={bookmarkedArticles.includes(article.id)}
-          onBookmarkToggle={onBookmarkToggle}
-          onReadClick={onReadClick}
-        />
+      {articles.map((article, idx) => (
+        <ScrollReveal key={article.id} direction="up" delay={(idx % 3) * 0.1}>
+          <BlogCard
+            article={article}
+            isBookmarked={bookmarkedArticles.includes(article.id)}
+            onBookmarkToggle={onBookmarkToggle}
+            onReadClick={onReadClick}
+          />
+        </ScrollReveal>
       ))}
     </div>
   );

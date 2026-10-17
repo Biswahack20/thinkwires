@@ -1,5 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
+import ScrollReveal from '../common/ScrollReveal';
 
 const CaseStudies = () => {
   const caseStudiesData = useSelector((state) => state.industries.caseStudies);
@@ -59,51 +60,55 @@ const CaseStudies = () => {
 
   return (
     <section className="CaseStudies-section">
-      <div className="CaseStudies-header">
-        <div>
-          <span className="CaseStudies-badge">{badge}</span>
-          <h2 className="CaseStudies-title">{title}</h2>
+      <ScrollReveal direction="up">
+        <div className="CaseStudies-header">
+          <div>
+            <span className="CaseStudies-badge">{badge}</span>
+            <h2 className="CaseStudies-title">{title}</h2>
+          </div>
+          <a className="CaseStudies-ctaLink" href="#capability-briefing">
+            {ctaText}
+            <span className="material-symbols-outlined">arrow_forward</span>
+          </a>
         </div>
-        <a className="CaseStudies-ctaLink" href="#capability-briefing">
-          {ctaText}
-          <span className="material-symbols-outlined">arrow_forward</span>
-        </a>
-      </div>
+      </ScrollReveal>
 
       <div className="CaseStudies-grid">
         {items.map((item, index) => (
-          <div key={index} className="CaseStudies-card">
-            <div className="CaseStudies-cardBody">
-              <div className="CaseStudies-pillRow">
-                <span className={`CaseStudies-tagPill CaseStudies-tagPill--${item.tagVariant || 'green'}`}>
-                  {item.tag}
+          <ScrollReveal key={index} direction="up" delay={index * 0.12}>
+            <div className="CaseStudies-card">
+              <div className="CaseStudies-cardBody">
+                <div className="CaseStudies-pillRow">
+                  <span className={`CaseStudies-tagPill CaseStudies-tagPill--${item.tagVariant || 'green'}`}>
+                    {item.tag}
+                  </span>
+                  <span className="CaseStudies-location">{item.location}</span>
+                </div>
+                <h3 className="CaseStudies-cardTitle">{item.title}</h3>
+                <p className="CaseStudies-cardDesc">{item.desc}</p>
+
+                <div className="CaseStudies-metricsList">
+                  {item.metrics && item.metrics.map((m, mIdx) => (
+                    <div key={mIdx} className="CaseStudies-metricRow">
+                      <span>{m.label}:</span>
+                      <strong className={m.highlight === 'green' ? 'CaseStudies-greenAccent' : m.highlight === 'blue' ? 'CaseStudies-blueAccent' : ''}>
+                        {m.value}
+                      </strong>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div className="CaseStudies-cardFooter">
+                <div className="CaseStudies-progressBar">
+                  <div className={`CaseStudies-progressFill CaseStudies-progressFill--${item.progressVariant || 'green'}`}></div>
+                </div>
+                <span className={`CaseStudies-progressLabel CaseStudies-progressLabel--${item.progressVariant || 'green'}`}>
+                  {item.progressLabel}
                 </span>
-                <span className="CaseStudies-location">{item.location}</span>
-              </div>
-              <h3 className="CaseStudies-cardTitle">{item.title}</h3>
-              <p className="CaseStudies-cardDesc">{item.desc}</p>
-
-              <div className="CaseStudies-metricsList">
-                {item.metrics && item.metrics.map((m, mIdx) => (
-                  <div key={mIdx} className="CaseStudies-metricRow">
-                    <span>{m.label}:</span>
-                    <strong className={m.highlight === 'green' ? 'CaseStudies-greenAccent' : m.highlight === 'blue' ? 'CaseStudies-blueAccent' : ''}>
-                      {m.value}
-                    </strong>
-                  </div>
-                ))}
               </div>
             </div>
-
-            <div className="CaseStudies-cardFooter">
-              <div className="CaseStudies-progressBar">
-                <div className={`CaseStudies-progressFill CaseStudies-progressFill--${item.progressVariant || 'green'}`}></div>
-              </div>
-              <span className={`CaseStudies-progressLabel CaseStudies-progressLabel--${item.progressVariant || 'green'}`}>
-                {item.progressLabel}
-              </span>
-            </div>
-          </div>
+          </ScrollReveal>
         ))}
       </div>
     </section>

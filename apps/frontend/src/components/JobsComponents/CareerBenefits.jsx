@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchBenefits } from '../../store/slices/homeSlice';
+import ScrollReveal from '../common/ScrollReveal';
 
 const DEFAULT_BENEFITS = [
   {
@@ -98,27 +99,31 @@ const CareerBenefits = () => {
   return (
     <section className="CareerBenefits-figmaSection">
       <div className="CareerBenefits-figmaContainer">
-        <div className="CareerBenefits-figmaHeader">
-          <div className="CareerBenefits-badgeTag">
-            🛡️ COMPREHENSIVE ENGINEERING CARE
+        <ScrollReveal direction="up">
+          <div className="CareerBenefits-figmaHeader">
+            <div className="CareerBenefits-badgeTag">
+              🛡️ COMPREHENSIVE ENGINEERING CARE
+            </div>
+            <h2 className="CareerBenefits-headingTitle">
+              Why Build Your Career With ThinkWires?
+            </h2>
+            <p className="CareerBenefits-headingSub">
+              We prioritize individual engineer wellness, career velocity, and institutional trust, ensuring you stay in high demand throughout your technical journey.
+            </p>
           </div>
-          <h2 className="CareerBenefits-headingTitle">
-            Why Build Your Career With ThinkWires?
-          </h2>
-          <p className="CareerBenefits-headingSub">
-            We prioritize individual engineer wellness, career velocity, and institutional trust, ensuring you stay in high demand throughout your technical journey.
-          </p>
-        </div>
+        </ScrollReveal>
 
         <div className="CareerBenefits-cardGrid">
           {displayBenefits.map((item, idx) => (
-            <div key={idx} className="CareerBenefits-itemCard">
-              <div className="CareerBenefits-iconBox">
-                {renderIcon(item.icon)}
+            <ScrollReveal key={idx} direction="up" delay={(idx % 3) * 0.1}>
+              <div className="CareerBenefits-itemCard">
+                <div className="CareerBenefits-iconBox">
+                  {renderIcon(item.icon)}
+                </div>
+                <h3 className="CareerBenefits-cardItemTitle">{item.title}</h3>
+                <p className="CareerBenefits-cardItemDesc">{item.description}</p>
               </div>
-              <h3 className="CareerBenefits-cardItemTitle">{item.title}</h3>
-              <p className="CareerBenefits-cardItemDesc">{item.description}</p>
-            </div>
+            </ScrollReveal>
           ))}
         </div>
       </div>

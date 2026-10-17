@@ -1,4 +1,5 @@
 import React from 'react';
+import ScrollReveal from '../common/ScrollReveal';
 
 const channelIconMap = {
   mail: (
@@ -31,9 +32,9 @@ const ContactChannels = ({ channels = [] }) => {
   return (
     <section className="ContactChannels-section">
       <div className="ContactChannels-container">
-        {channels.map((ch) => {
+        {channels.map((ch, idx) => {
           const inner = (
-            <div className="ContactChannels-card" key={ch.id}>
+            <div className="ContactChannels-card">
               <div className="ContactChannels-iconBox">{channelIconMap[ch.icon] || channelIconMap.mail}</div>
               <div className="ContactChannels-body">
                 <span className="ContactChannels-title">{ch.title}</span>
@@ -51,14 +52,18 @@ const ContactChannels = ({ channels = [] }) => {
             </div>
           );
 
-          return ch.href ? (
-            <a key={ch.id} href={ch.href} className="ContactChannels-cardLink" target={ch.href.startsWith('http') ? '_blank' : undefined} rel="noopener noreferrer">
-              {inner}
-            </a>
-          ) : (
-            <div key={ch.id} className="ContactChannels-cardLink">
-              {inner}
-            </div>
+          return (
+            <ScrollReveal key={ch.id} direction="up" delay={idx * 0.1}>
+              {ch.href ? (
+                <a href={ch.href} className="ContactChannels-cardLink" target={ch.href.startsWith('http') ? '_blank' : undefined} rel="noopener noreferrer">
+                  {inner}
+                </a>
+              ) : (
+                <div className="ContactChannels-cardLink">
+                  {inner}
+                </div>
+              )}
+            </ScrollReveal>
           );
         })}
       </div>

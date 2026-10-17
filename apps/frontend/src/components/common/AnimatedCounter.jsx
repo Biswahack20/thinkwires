@@ -17,10 +17,13 @@ const AnimatedCounter = ({
   const elementRef = useRef(null);
   const hasAnimatedRef = useRef(false);
 
-  // Extract pure numeric target
+  // Extract pure numeric target and auto-resolve suffix if not explicitly given
+  const stringVal = String(value ?? 0);
   const numericTarget = typeof value === 'number'
     ? value
-    : parseFloat(String(value).replace(/[^0-9.-]+/g, '')) || 0;
+    : parseFloat(stringVal.replace(/[^0-9.-]+/g, '')) || 0;
+
+  const resolvedSuffix = suffix || stringVal.replace(/^[^\d]*[\d,.]+/, '').trim();
 
   useEffect(() => {
     const element = elementRef.current;
@@ -80,7 +83,7 @@ const AnimatedCounter = ({
     <span ref={elementRef} className={`tw-kinetic-counter ${className}`}>
       {prefix}
       {formattedNumber}
-      {suffix}
+      {resolvedSuffix}
     </span>
   );
 };
