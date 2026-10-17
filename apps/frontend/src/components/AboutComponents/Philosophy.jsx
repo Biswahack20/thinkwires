@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import AnimatedCounter from '../common/AnimatedCounter';
+import ScrollReveal from '../common/ScrollReveal';
 import philosophyImg from '../../assets/images/about-philosophy.jpg';
 
 const Philosophy = ({ data }) => {
@@ -33,7 +35,7 @@ const Philosophy = ({ data }) => {
       <div className="Philosophy-container">
         <div className="Philosophy-panel">
           {/* Left Column: Philosophical Thesis & Metrics */}
-          <div className="Philosophy-content">
+          <ScrollReveal direction="left" distance={60} className="Philosophy-content">
             <div className="Philosophy-badge">
               <span className="Philosophy-badgeDot" aria-hidden="true"></span>
               <span>{eyebrow}</span>
@@ -47,16 +49,16 @@ const Philosophy = ({ data }) => {
               {metrics.map((metric) => (
                 <div key={metric.id} className="Philosophy-metricCard">
                   <div className={`Philosophy-metricValue Philosophy-metric--${metric.color || 'blue'}`}>
-                    {metric.value}
+                    <AnimatedCounter value={metric.value} duration={1600} />
                   </div>
                   <div className="Philosophy-metricLabel">{metric.label}</div>
                 </div>
               ))}
             </div>
-          </div>
+          </ScrollReveal>
 
           {/* Right Column: Visual Frame */}
-          <div className="Philosophy-visual">
+          <ScrollReveal direction="right" distance={60} className="Philosophy-visual">
             <div className="Philosophy-imageWrapper">
               <img
                 src={resolvedImage}
@@ -75,7 +77,7 @@ const Philosophy = ({ data }) => {
                 <span>Enterprise Workforce Architecture</span>
               </div>
             </div>
-          </div>
+          </ScrollReveal>
         </div>
       </div>
     </section>

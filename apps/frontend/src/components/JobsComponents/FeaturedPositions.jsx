@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import JobCard from './JobCard';
+import ScrollReveal from '../common/ScrollReveal';
 
 const FeaturedPositions = ({ jobsList = [], onApplyClick, activeCategory, setActiveCategory }) => {
   const [visibleCount, setVisibleCount] = useState(6);
@@ -66,8 +67,16 @@ const FeaturedPositions = ({ jobsList = [], onApplyClick, activeCategory, setAct
         {/* Jobs Grid */}
         {displayedJobs.length > 0 ? (
           <div className="FeaturedPositions-grid">
-            {displayedJobs.map((job) => (
-              <JobCard key={job.id} job={job} onApplyClick={onApplyClick} />
+            {displayedJobs.map((job, idx) => (
+              <ScrollReveal
+                key={job.id || idx}
+                direction="up"
+                delay={(idx % 3) * 0.08}
+                distance={40}
+                style={{ display: 'flex' }}
+              >
+                <JobCard job={job} onApplyClick={onApplyClick} />
+              </ScrollReveal>
             ))}
           </div>
         ) : (

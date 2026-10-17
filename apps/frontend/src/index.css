@@ -2675,7 +2675,7 @@ body {
 }
 
 html {
-  scroll-behavior: smooth;
+  scroll-behavior: auto;
 }
 
 body {
@@ -22948,9 +22948,26 @@ textarea {
    SMOOTH SCROLL ANIMATIONS & RESPONSIVE REACTIVITY ENHANCEMENTS
    ========================================================================== */
 
-/* --- 1. Global Smooth Scroll Behavior --- */
-html {
-  scroll-behavior: smooth;
+/* --- 1. Global Smooth Scroll Behavior (Managed by Lenis) --- */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+html.lenis {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
 }
 
 /* --- 2. Smooth Scroll Reveal System (IntersectionObserver-Driven) --- */

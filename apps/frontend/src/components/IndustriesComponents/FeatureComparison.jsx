@@ -1,5 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
+import ScrollReveal from '../common/ScrollReveal';
 
 const FeatureComparison = () => {
   const comp = useSelector((state) => state.industries.featureComparison);
@@ -44,14 +45,16 @@ const FeatureComparison = () => {
 
       <div className="FeatureComparison-container">
         {/* Header */}
-        <div className="FeatureComparison-header">
-          <span className="FeatureComparison-badge">
-            <span className="FeatureComparison-badgeDot"></span>
-            {badge}
-          </span>
-          <h2 className="FeatureComparison-title">{title}</h2>
-          <p className="FeatureComparison-subtitle">{subtitle}</p>
-        </div>
+        <ScrollReveal direction="up">
+          <div className="FeatureComparison-header">
+            <span className="FeatureComparison-badge">
+              <span className="FeatureComparison-badgeDot"></span>
+              {badge}
+            </span>
+            <h2 className="FeatureComparison-title">{title}</h2>
+            <p className="FeatureComparison-subtitle">{subtitle}</p>
+          </div>
+        </ScrollReveal>
 
         {/* Comparison Grid */}
         <div className="FeatureComparison-grid">
@@ -62,81 +65,85 @@ const FeatureComparison = () => {
           </div>
 
           {/* Card: Generalist Staffing */}
-          <div className="FeatureComparison-card FeatureComparison-card--negative">
-            <div className="FeatureComparison-cardTop">
-              <div className="FeatureComparison-cardHeader">
-                <div className="FeatureComparison-iconBox FeatureComparison-iconBox--negative">
-                  <span className="material-symbols-outlined">group_off</span>
-                </div>
-                <div>
-                  <h3 className="FeatureComparison-cardTitle">{generalist.title}</h3>
-                  <span className="FeatureComparison-cardSublabel FeatureComparison-cardSublabel--negative">
-                    {generalist.subtitle}
-                  </span>
-                </div>
-              </div>
-
-              <ul className="FeatureComparison-list">
-                {generalist.points.map((p, idx) => (
-                  <li key={idx} className="FeatureComparison-listItem">
-                    <div className="FeatureComparison-bullet FeatureComparison-bullet--negative">
-                      <span className="material-symbols-outlined">close</span>
-                    </div>
-                    <p><strong>{p.title}:</strong> {p.desc}</p>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            <div className="FeatureComparison-cardFooter">
-              <span className="FeatureComparison-metricLabel">{generalist.metricLabel}</span>
-              <div className="FeatureComparison-metricValue FeatureComparison-metricValue--negative">
-                {generalist.metricValue} <span>{generalist.metricUnit}</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Card: ThinkWires Pods */}
-          <div className="FeatureComparison-card FeatureComparison-card--positive">
-            <div className="FeatureComparison-cardTop">
-              <div className="FeatureComparison-cardHeader">
-                <div className="FeatureComparison-cardHeaderLeft">
-                  <div className="FeatureComparison-iconBox FeatureComparison-iconBox--positive">
-                    <span className="material-symbols-outlined">verified</span>
+          <ScrollReveal direction="left">
+            <div className="FeatureComparison-card FeatureComparison-card--negative">
+              <div className="FeatureComparison-cardTop">
+                <div className="FeatureComparison-cardHeader">
+                  <div className="FeatureComparison-iconBox FeatureComparison-iconBox--negative">
+                    <span className="material-symbols-outlined">group_off</span>
                   </div>
                   <div>
-                    <h3 className="FeatureComparison-cardTitle FeatureComparison-cardTitle--white">{thinkWires.title}</h3>
-                    <span className="FeatureComparison-cardSublabel FeatureComparison-cardSublabel--positive">
-                      {thinkWires.subtitle}
+                    <h3 className="FeatureComparison-cardTitle">{generalist.title}</h3>
+                    <span className="FeatureComparison-cardSublabel FeatureComparison-cardSublabel--negative">
+                      {generalist.subtitle}
                     </span>
                   </div>
                 </div>
-                {thinkWires.tierBadge && (
-                  <span className="FeatureComparison-tierPill">{thinkWires.tierBadge}</span>
-                )}
+
+                <ul className="FeatureComparison-list">
+                  {generalist.points.map((p, idx) => (
+                    <li key={idx} className="FeatureComparison-listItem">
+                      <div className="FeatureComparison-bullet FeatureComparison-bullet--negative">
+                        <span className="material-symbols-outlined">close</span>
+                      </div>
+                      <p><strong>{p.title}:</strong> {p.desc}</p>
+                    </li>
+                  ))}
+                </ul>
               </div>
 
-              <ul className="FeatureComparison-list FeatureComparison-list--positive">
-                {thinkWires.points.map((p, idx) => (
-                  <li key={idx} className="FeatureComparison-listItem">
-                    <div className="FeatureComparison-bullet FeatureComparison-bullet--positive">
-                      <span className="material-symbols-outlined">check</span>
+              <div className="FeatureComparison-cardFooter">
+                <span className="FeatureComparison-metricLabel">{generalist.metricLabel}</span>
+                <div className="FeatureComparison-metricValue FeatureComparison-metricValue--negative">
+                  {generalist.metricValue} <span>{generalist.metricUnit}</span>
+                </div>
+              </div>
+            </div>
+          </ScrollReveal>
+
+          {/* Card: ThinkWires Pods */}
+          <ScrollReveal direction="right">
+            <div className="FeatureComparison-card FeatureComparison-card--positive">
+              <div className="FeatureComparison-cardTop">
+                <div className="FeatureComparison-cardHeader">
+                  <div className="FeatureComparison-cardHeaderLeft">
+                    <div className="FeatureComparison-iconBox FeatureComparison-iconBox--positive">
+                      <span className="material-symbols-outlined">verified</span>
                     </div>
-                    <p><strong>{p.title}:</strong> {p.desc}</p>
-                  </li>
-                ))}
-              </ul>
-            </div>
+                    <div>
+                      <h3 className="FeatureComparison-cardTitle FeatureComparison-cardTitle--white">{thinkWires.title}</h3>
+                      <span className="FeatureComparison-cardSublabel FeatureComparison-cardSublabel--positive">
+                        {thinkWires.subtitle}
+                      </span>
+                    </div>
+                  </div>
+                  {thinkWires.tierBadge && (
+                    <span className="FeatureComparison-tierPill">{thinkWires.tierBadge}</span>
+                  )}
+                </div>
 
-            <div className="FeatureComparison-cardFooter FeatureComparison-cardFooter--positive">
-              <span className="FeatureComparison-metricLabel FeatureComparison-metricLabel--light">
-                {thinkWires.metricLabel}
-              </span>
-              <div className="FeatureComparison-metricValue FeatureComparison-metricValue--positive">
-                {thinkWires.metricValue} <span>{thinkWires.metricUnit}</span>
+                <ul className="FeatureComparison-list FeatureComparison-list--positive">
+                  {thinkWires.points.map((p, idx) => (
+                    <li key={idx} className="FeatureComparison-listItem">
+                      <div className="FeatureComparison-bullet FeatureComparison-bullet--positive">
+                        <span className="material-symbols-outlined">check</span>
+                      </div>
+                      <p><strong>{p.title}:</strong> {p.desc}</p>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+
+              <div className="FeatureComparison-cardFooter FeatureComparison-cardFooter--positive">
+                <span className="FeatureComparison-metricLabel FeatureComparison-metricLabel--light">
+                  {thinkWires.metricLabel}
+                </span>
+                <div className="FeatureComparison-metricValue FeatureComparison-metricValue--positive">
+                  {thinkWires.metricValue} <span>{thinkWires.metricUnit}</span>
+                </div>
               </div>
             </div>
-          </div>
+          </ScrollReveal>
 
         </div>
       </div>

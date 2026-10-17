@@ -1,5 +1,6 @@
 import React from 'react';
 import SectionBadge from '../common/SectionBadge';
+import ScrollReveal from '../common/ScrollReveal';
 
 const Methodology = ({ data }) => {
   const {
@@ -59,29 +60,37 @@ const Methodology = ({ data }) => {
 
         {/* 3 Step Cards */}
         <div className="Methodology-grid">
-          {steps.map((step) => (
-            <div key={step.id || step.number} className="Methodology-card">
-              <div className="Methodology-cardHeader">
-                <span className="Methodology-stepNumber">{step.number}</span>
-                <div className="Methodology-iconBox" aria-hidden="true">
-                  {getStepIcon(step.icon)}
+          {steps.map((step, index) => (
+            <ScrollReveal
+              key={step.id || step.number || index}
+              direction={index % 2 === 0 ? 'left' : 'right'}
+              delay={index * 0.12}
+              distance={80}
+              style={{ display: 'flex' }}
+            >
+              <div className="Methodology-card" style={{ width: '100%' }}>
+                <div className="Methodology-cardHeader">
+                  <span className="Methodology-stepNumber">{step.number}</span>
+                  <div className="Methodology-iconBox" aria-hidden="true">
+                    {getStepIcon(step.icon)}
+                  </div>
+                </div>
+
+                <h3 className="Methodology-cardTitle">{step.title}</h3>
+                <p className="Methodology-cardDescription">{step.description}</p>
+
+                {step.deliverable && (
+                  <div className="Methodology-deliverable">
+                    <span className="Methodology-deliverableLabel">Deliverable:</span>
+                    <span className="Methodology-deliverableText">{step.deliverable}</span>
+                  </div>
+                )}
+
+                <div className="Methodology-cardFooter">
+                  <span className="Methodology-statusTag">Phase {step.number} Protocol</span>
                 </div>
               </div>
-
-              <h3 className="Methodology-cardTitle">{step.title}</h3>
-              <p className="Methodology-cardDescription">{step.description}</p>
-
-              {step.deliverable && (
-                <div className="Methodology-deliverable">
-                  <span className="Methodology-deliverableLabel">Deliverable:</span>
-                  <span className="Methodology-deliverableText">{step.deliverable}</span>
-                </div>
-              )}
-
-              <div className="Methodology-cardFooter">
-                <span className="Methodology-statusTag">Phase {step.number} Protocol</span>
-              </div>
-            </div>
+            </ScrollReveal>
           ))}
         </div>
       </div>

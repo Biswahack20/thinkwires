@@ -2,10 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { useLocation, Link } from 'react-router-dom';
 import Navbar from '../components/common/Navbar';
 import Footer from '../components/common/Footer';
-import useLenisScroll from '../hooks/useLenisScroll';
-
+ 
 const LegalPage = () => {
-  useLenisScroll();
   const location = useLocation();
 
   const getInitialTab = () => {

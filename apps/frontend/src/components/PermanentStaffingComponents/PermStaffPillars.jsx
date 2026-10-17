@@ -1,4 +1,5 @@
 import React from 'react';
+import ScrollReveal from '../common/ScrollReveal';
 
 const PermStaffPillars = ({ data }) => {
   if (!data) return null;
@@ -8,7 +9,7 @@ const PermStaffPillars = ({ data }) => {
     <section className="PermStaff-pillarsSection">
       <div className="PermStaff-container">
         {/* Section Header Row */}
-        <div className="PermStaff-pillarsHeaderRow">
+        <ScrollReveal direction="up" distance={40} className="PermStaff-pillarsHeaderRow">
           <div className="header-text">
             <span className="PermStaff-eyebrow primary">{eyebrow}</span>
             <h2 className="PermStaff-title">{heading}</h2>
@@ -20,32 +21,40 @@ const PermStaffPillars = ({ data }) => {
               <span>{slaBadge}</span>
             </div>
           )}
-        </div>
+        </ScrollReveal>
 
         {/* 4 Core Pillars Grid (4 in a row on desktop) */}
         <div className="PermStaff-pillarsGrid">
           {items.map((pillar, idx) => (
-            <div key={idx} className="PermStaff-pillarCard">
-              <div className="pillar-top">
-                <div className="pillar-header-row">
-                  <div className={`pillar-icon-box ${pillar.accent || 'primary'}`}>
-                    <span className="material-symbols-outlined">{pillar.icon}</span>
+            <ScrollReveal
+              key={idx}
+              direction="up"
+              delay={idx * 0.1}
+              distance={50}
+              style={{ display: 'flex' }}
+            >
+              <div className="PermStaff-pillarCard" style={{ width: '100%' }}>
+                <div className="pillar-top">
+                  <div className="pillar-header-row">
+                    <div className={`pillar-icon-box ${pillar.accent || 'primary'}`}>
+                      <span className="material-symbols-outlined">{pillar.icon}</span>
+                    </div>
+                    <span className="pillar-step-tag">{pillar.step}</span>
                   </div>
-                  <span className="pillar-step-tag">{pillar.step}</span>
+                  <h3 className="pillar-title">{pillar.title}</h3>
+                  <p className="pillar-desc">{pillar.description}</p>
                 </div>
-                <h3 className="pillar-title">{pillar.title}</h3>
-                <p className="pillar-desc">{pillar.description}</p>
-              </div>
 
-              <ul className="pillar-points">
-                {(pillar.points || []).map((pt, pIdx) => (
-                  <li key={pIdx}>
-                    <span className="material-symbols-outlined">check_circle</span>
-                    <span>{pt}</span>
-                  </li>
-                ))}
-              </ul>
-            </div>
+                <ul className="pillar-points">
+                  {(pillar.points || []).map((pt, pIdx) => (
+                    <li key={pIdx}>
+                      <span className="material-symbols-outlined">check_circle</span>
+                      <span>{pt}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </ScrollReveal>
           ))}
         </div>
       </div>

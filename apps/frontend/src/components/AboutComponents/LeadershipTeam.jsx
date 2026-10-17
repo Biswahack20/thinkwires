@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import SectionBadge from '../common/SectionBadge';
+import ScrollReveal from '../common/ScrollReveal';
 
 const LeadershipCard = ({ member, onOpenModal }) => {
   const [imgError, setImgError] = useState(false);
@@ -200,24 +201,26 @@ const LeadershipTeam = ({ data }) => {
         <div className="LeadershipTeam-layoutWrapper">
           {/* Top Row: 3 cards */}
           <div className="LeadershipTeam-rowTop">
-            {topRowMembers.map((member) => (
-              <LeadershipCard
-                key={member.id}
-                member={member}
-                onOpenModal={setModalMember}
-              />
+            {topRowMembers.map((member, idx) => (
+              <ScrollReveal key={member.id} direction="up" delay={idx * 0.1} distance={40} style={{ display: 'flex' }}>
+                <LeadershipCard
+                  member={member}
+                  onOpenModal={setModalMember}
+                />
+              </ScrollReveal>
             ))}
           </div>
 
           {/* Bottom Row: 2 cards centered */}
           {bottomRowMembers.length > 0 && (
             <div className="LeadershipTeam-rowBottom">
-              {bottomRowMembers.map((member) => (
-                <LeadershipCard
-                  key={member.id}
-                  member={member}
-                  onOpenModal={setModalMember}
-                />
+              {bottomRowMembers.map((member, idx) => (
+                <ScrollReveal key={member.id} direction="up" delay={(idx + 3) * 0.1} distance={40} style={{ display: 'flex' }}>
+                  <LeadershipCard
+                    member={member}
+                    onOpenModal={setModalMember}
+                  />
+                </ScrollReveal>
               ))}
             </div>
           )}

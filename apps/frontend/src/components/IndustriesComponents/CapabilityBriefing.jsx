@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
+import ScrollReveal from '../common/ScrollReveal';
 
 const CapabilityBriefing = () => {
   const [submitted, setSubmitted] = useState(false);
@@ -49,32 +50,35 @@ const CapabilityBriefing = () => {
 
       <div className="CapabilityBriefing-container">
         {/* Left Column: Information */}
-        <div className="CapabilityBriefing-infoCol">
-          <span className="CapabilityBriefing-badge">
-            <span className="CapabilityBriefing-badgeDot"></span>
-            {badge}
-          </span>
+        <ScrollReveal direction="left" className="CapabilityBriefing-infoColWrap">
+          <div className="CapabilityBriefing-infoCol">
+            <span className="CapabilityBriefing-badge">
+              <span className="CapabilityBriefing-badgeDot"></span>
+              {badge}
+            </span>
 
-          <h2 className="CapabilityBriefing-title">
-            {title}
-          </h2>
+            <h2 className="CapabilityBriefing-title">
+              {title}
+            </h2>
 
-          <p className="CapabilityBriefing-description">
-            {description}
-          </p>
+            <p className="CapabilityBriefing-description">
+              {description}
+            </p>
 
-          <div className="CapabilityBriefing-featuresList">
-            {features.map((feat, idx) => (
-              <div key={idx} className="CapabilityBriefing-featureItem">
-                <span className="material-symbols-outlined CapabilityBriefing-featureIcon">{feat.icon}</span>
-                <span>{feat.text}</span>
-              </div>
-            ))}
+            <div className="CapabilityBriefing-featuresList">
+              {features.map((feat, idx) => (
+                <div key={idx} className="CapabilityBriefing-featureItem">
+                  <span className="material-symbols-outlined CapabilityBriefing-featureIcon">{feat.icon}</span>
+                  <span>{feat.text}</span>
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
+        </ScrollReveal>
 
         {/* Right Column: Form */}
-        <div className="CapabilityBriefing-formCard">
+        <ScrollReveal direction="right" className="CapabilityBriefing-formCardWrap">
+          <div className="CapabilityBriefing-formCard">
           <h3 className="CapabilityBriefing-formTitle">{formCard.title}</h3>
           <p className="CapabilityBriefing-formSubtitle">
             {formCard.subtitle}
@@ -146,6 +150,7 @@ const CapabilityBriefing = () => {
             </p>
           </form>
         </div>
+      </ScrollReveal>
       </div>
     </section>
   );

@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchStats } from '../../store/slices/homeSlice';
+import AnimatedCounter from '../common/AnimatedCounter';
 
 const JobsStats = () => {
   const dispatch = useDispatch();
@@ -55,7 +56,7 @@ const JobsStats = () => {
           {statsList.map((stat, idx) => (
             <div key={idx} className="JobsStats-metricBox">
               <div className="JobsStats-numberVal">
-                {stat.value}
+                <AnimatedCounter value={stat.value} duration={1800} />
                 <span className={`JobsStats-symbol-${stat.symbolColor}`}>
                   {stat.symbol}
                 </span>
