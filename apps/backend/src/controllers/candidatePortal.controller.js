@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 import Candidate from '../models/candidate.mongo.model.js';
 import JobApplication from '../models/jobApplication.mongo.model.js';
 import JobRequirement from '../models/job.mongo.model.js';
+import { sendRecruitmentNotificationEmail } from '../utils/recruitmentEmail.util.js';
 
 // Fallback in-memory application store for local development if MongoDB is absent
 const localDevApplications = [];
@@ -154,17 +155,88 @@ export const getMyApplications = async (req, res) => {
  * Submit Job Application
  * POST /api/candidate/apply
  */
+/**
+ * Submit Job Application
+ * POST /api/candidate/apply
+ * Supports both application/json and multipart/form-data (with resume file upload)
+ */
 export const applyForJob = async (req, res) => {
   try {
     const candidate = req.candidate;
     const candidateId = candidate._id || candidate.id;
-    const { jobId, jobTitle, department, location, experience, skills, coverLetter, resumeUrl } = req.body;
+
+    // Extract all fields from req.body (works for JSON and multipart)
+    const {
+      jobId,
+      jobTitle,
+      department,
+      location,
+      employmentType,
+      postingDate,
+
+      // Basic Information
+      lastName,
+      firstName,
+      mobileNumber,
+      email,
+      applicationType,
+      noticePeriod,
+      city,
+      state,
+
+      // Professional Details
+      totalExperienceYears,
+      relevantExperienceYears,
+      currentEmployer,
+      currentCTC,
+      expectedCTC,
+      skillSet,
+      linkedInLink,
+      facebookLink,
+      candidateNote,
+
+      // Legacy fallbacks if submitted
+      experience,
+      skills,
+      coverLetter,
+      resumeUrl: clientResumeUrl,
+    } = req.body;
 
     if (!jobId || !jobTitle) {
       return res.status(400).json({
         success: false,
         error: 'Job ID and Job Title are required.',
       });
+    }
+
+    // Required fields check
+    const resolvedLastName = (lastName || '').trim();
+    const resolvedFirstName = (firstName || '').trim();
+    const resolvedMobile = (mobileNumber || candidate.phone || '').trim();
+    const resolvedEmail = (email || candidate.email || '').trim().toLowerCase();
+
+    if (!resolvedLastName || !resolvedFirstName || !resolvedEmail || !resolvedMobile) {
+      return res.status(400).json({
+        success: false,
+        error: 'First Name, Last Name, Email, and Mobile Number are required.',
+      });
+    }
+
+    // Handle uploaded file if present
+    const uploadedFile = req.file;
+    const resumeOriginalName = uploadedFile ? uploadedFile.originalname : (req.body.resumeOriginalName || '');
+    const resumeFileName = uploadedFile ? uploadedFile.filename : (req.body.resumeFileName || resumeOriginalName || '');
+    const resumePath = uploadedFile ? uploadedFile.path : '';
+    const finalResumeUrl = uploadedFile ? `/uploads/resumes/${uploadedFile.filename}` : (clientResumeUrl || candidate.resumeUrl || '');
+
+    // Parse skills array
+    let parsedSkills = [];
+    if (Array.isArray(skills)) {
+      parsedSkills = skills;
+    } else if (typeof skills === 'string' && skills.trim()) {
+      parsedSkills = skills.split(',').map((s) => s.trim()).filter(Boolean);
+    } else if (skillSet) {
+      parsedSkills = skillSet.split(',').map((s) => s.trim()).filter(Boolean);
     }
 
     // 1. Prevent duplicate applications for the same candidate and job
@@ -184,20 +256,95 @@ export const applyForJob = async (req, res) => {
 
       const application = await JobApplication.create({
         candidate: candidateId,
-        candidateName: candidate.name,
-        candidateEmail: candidate.email,
-        candidatePhone: candidate.phone || '',
         jobId: String(jobId),
         jobTitle,
         department: department || 'Engineering',
         location: location || 'Remote',
-        experience: experience || `${candidate.experience || 3} Years`,
-        skills: Array.isArray(skills) ? skills : candidate.technicalSkills || [],
-        coverLetter: coverLetter || '',
-        resumeUrl: resumeUrl || candidate.resumeUrl || '',
+        employmentType: employmentType || 'Permanent',
+        postingDate: postingDate || '',
+
+        // Resume info
+        resumeOriginalName,
+        resumeFileName,
+        resumePath,
+        resumeUrl: finalResumeUrl,
+
+        // Basic Info
+        lastName: resolvedLastName,
+        firstName: resolvedFirstName,
+        mobileNumber: resolvedMobile,
+        email: resolvedEmail,
+        applicationType: applicationType || 'Permanent',
+        noticePeriod: noticePeriod || 'Immediate',
+        city: (city || '').trim(),
+        state: (state || '').trim(),
+
+        // Professional Details
+        totalExperienceYears: totalExperienceYears || experience || '',
+        relevantExperienceYears: relevantExperienceYears || '',
+        currentEmployer: (currentEmployer || '').trim(),
+        currentCTC: (currentCTC || '').trim(),
+        expectedCTC: (expectedCTC || '').trim(),
+        skillSet: skillSet || parsedSkills.join(', '),
+        skills: parsedSkills,
+        linkedInLink: (linkedInLink || '').trim(),
+        facebookLink: (facebookLink || '').trim(),
+        candidateNote: (candidateNote || coverLetter || '').trim(),
+
+        // Legacy compatibility fields
+        candidateName: `${resolvedFirstName} ${resolvedLastName}`.trim(),
+        candidateEmail: resolvedEmail,
+        candidatePhone: resolvedMobile,
+        experience: totalExperienceYears ? `${totalExperienceYears} Years` : (experience || '3 - 5 Years'),
+        coverLetter: candidateNote || coverLetter || '',
+
         status: 'Applied',
         stage: 'Application Received',
+        emailNotificationStatus: 'Pending',
       });
+
+      // Dispatch automated recruitment email asynchronously
+      sendRecruitmentNotificationEmail(
+        {
+          jobTitle,
+          location,
+          employmentType,
+          postingDate,
+          resumeFileName: resumeOriginalName || resumeFileName || 'Resume Attached',
+          lastName: resolvedLastName,
+          firstName: resolvedFirstName,
+          mobileNumber: resolvedMobile,
+          email: resolvedEmail,
+          applicationType: applicationType || 'Permanent',
+          noticePeriod: noticePeriod || 'Immediate',
+          city,
+          state,
+          totalExperienceYears: totalExperienceYears || experience || '0',
+          relevantExperienceYears: relevantExperienceYears || '0',
+          currentEmployer: currentEmployer || 'Confidential / Self',
+          currentCTC: currentCTC || 'Confidential',
+          expectedCTC: expectedCTC || 'Negotiable',
+          skillSet: skillSet || parsedSkills.join(', '),
+          linkedInLink,
+          facebookLink,
+          candidateNote,
+        },
+        uploadedFile ? { filename: uploadedFile.originalname, path: uploadedFile.path } : null
+      )
+        .then(async (emailResult) => {
+          if (emailResult.success) {
+            await JobApplication.findByIdAndUpdate(application._id, {
+              emailNotificationStatus: emailResult.mode === 'smtp_delivered' ? 'Sent' : 'Disabled',
+            });
+          } else {
+            await JobApplication.findByIdAndUpdate(application._id, {
+              emailNotificationStatus: 'Failed',
+            });
+          }
+        })
+        .catch((err) => {
+          console.error('Async email error:', err.message);
+        });
 
       return res.status(201).json({
         success: true,
@@ -205,6 +352,7 @@ export const applyForJob = async (req, res) => {
         application,
       });
     } else {
+      // In-memory fallback for local dev without MongoDB connection
       const existing = localDevApplications.find(
         (a) => String(a.candidate) === String(candidateId) && String(a.jobId) === String(jobId)
       );
@@ -220,23 +368,52 @@ export const applyForJob = async (req, res) => {
       const application = {
         _id: 'app_' + Date.now(),
         candidate: candidateId,
-        candidateName: candidate.name,
-        candidateEmail: candidate.email,
-        candidatePhone: candidate.phone || '',
         jobId: String(jobId),
         jobTitle,
         department: department || 'Engineering',
         location: location || 'Remote',
-        experience: experience || `${candidate.experience || 3} Years`,
-        skills: Array.isArray(skills) ? skills : candidate.technicalSkills || [],
-        coverLetter: coverLetter || '',
-        resumeUrl: resumeUrl || candidate.resumeUrl || '',
+        employmentType: employmentType || 'Permanent',
+        postingDate: postingDate || '',
+        resumeOriginalName,
+        resumeFileName,
+        resumePath,
+        resumeUrl: finalResumeUrl,
+        lastName: resolvedLastName,
+        firstName: resolvedFirstName,
+        mobileNumber: resolvedMobile,
+        email: resolvedEmail,
+        applicationType: applicationType || 'Permanent',
+        noticePeriod: noticePeriod || 'Immediate',
+        city,
+        state,
+        totalExperienceYears: totalExperienceYears || experience || '',
+        relevantExperienceYears: relevantExperienceYears || '',
+        currentEmployer,
+        currentCTC,
+        expectedCTC,
+        skillSet: skillSet || parsedSkills.join(', '),
+        skills: parsedSkills,
+        linkedInLink,
+        facebookLink,
+        candidateNote: candidateNote || coverLetter || '',
+        candidateName: `${resolvedFirstName} ${resolvedLastName}`.trim(),
+        candidateEmail: resolvedEmail,
+        candidatePhone: resolvedMobile,
+        experience: totalExperienceYears ? `${totalExperienceYears} Years` : (experience || '3 - 5 Years'),
+        coverLetter: candidateNote || coverLetter || '',
         status: 'Applied',
         stage: 'Application Received',
+        emailNotificationStatus: 'Sent',
         createdAt: new Date(),
       };
 
       localDevApplications.unshift(application);
+
+      // Trigger notification email in dev mode
+      sendRecruitmentNotificationEmail(
+        application,
+        uploadedFile ? { filename: uploadedFile.originalname, path: uploadedFile.path } : null
+      ).catch((err) => console.error('Dev email error:', err.message));
 
       return res.status(201).json({
         success: true,
