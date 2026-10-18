@@ -1,6 +1,6 @@
 import React from 'react';
 
-const JobCard = ({ job, onApplyClick }) => {
+const JobCard = ({ job, onApplyClick, onViewSpecClick }) => {
   const getBadgeStyle = (badgeColor = 'green') => {
     if (badgeColor === 'green') {
       return { background: '#e6f4ea', color: '#137333', border: '1px solid #ceead6' };
@@ -117,7 +117,18 @@ const JobCard = ({ job, onApplyClick }) => {
 
       {/* Footer Row: View Job Spec & Apply Button */}
       <div className="JobCard-cardFooterRow">
-        <button className="JobCard-viewSpecBtn" onClick={() => onApplyClick(job)}>
+        <button
+          type="button"
+          className="JobCard-viewSpecBtn"
+          onClick={() => {
+            if (onViewSpecClick) {
+              onViewSpecClick(job);
+            } else {
+              onApplyClick(job);
+            }
+          }}
+          title="View Complete Job Specifications"
+        >
           <span>View Job Spec</span>
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
             <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
@@ -126,7 +137,12 @@ const JobCard = ({ job, onApplyClick }) => {
           </svg>
         </button>
 
-        <button className="JobCard-applyNowBlueBtn" onClick={() => onApplyClick(job)}>
+        <button
+          type="button"
+          className="JobCard-applyNowBlueBtn"
+          onClick={() => onApplyClick(job)}
+          title="Apply directly for this position"
+        >
           Apply Now
         </button>
       </div>

@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import { adminApi } from './adminService';
+import {
+  BellIcon,
+  TrashIcon,
+  CloseIcon,
+  AlertCircleIcon,
+} from './AdminIcons';
 
 const AnnouncementsManager = () => {
   const { showToast, activeRole } = useOutletContext();
@@ -112,7 +118,8 @@ const AnnouncementsManager = () => {
             setModalOpen(true);
           }}
         >
-          📢 New Broadcast
+          <BellIcon size={15} />
+          <span>New Broadcast</span>
         </button>
       </div>
 
@@ -165,12 +172,12 @@ const AnnouncementsManager = () => {
                       <span className="tw-badge available">{ann.audience}</span>
                     </td>
                     <td>
-                      <span className={`tw-badge ${ann.priority.toLowerCase()}`}>{ann.priority}</span>
+                      <span className={`tw-badge ${String(ann.priority || 'normal').toLowerCase()}`}>{ann.priority}</span>
                     </td>
                     <td>
                       <button
                         onClick={() => handleTogglePublish(ann.id || ann._id)}
-                        className={`tw-badge ${ann.status.toLowerCase()}`}
+                        className={`tw-badge ${String(ann.status || 'published').toLowerCase()}`}
                         style={{ border: 'none', cursor: 'pointer' }}
                         title="Click to toggle status"
                       >
@@ -185,7 +192,7 @@ const AnnouncementsManager = () => {
                         title="Delete Announcement"
                         style={{ marginLeft: 'auto' }}
                       >
-                        🗑️
+                        <TrashIcon size={14} />
                       </button>
                     </td>
                   </tr>
@@ -203,7 +210,7 @@ const AnnouncementsManager = () => {
             <div className="tw-modal-header">
               <h2 className="tw-modal-title">Broadcast Announcement</h2>
               <button className="tw-modal-close-btn" onClick={() => setModalOpen(false)}>
-                ✕
+                <CloseIcon size={16} />
               </button>
             </div>
 
@@ -218,9 +225,13 @@ const AnnouncementsManager = () => {
                       borderRadius: '8px',
                       marginBottom: '1rem',
                       fontSize: '0.82rem',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.5rem',
                     }}
                   >
-                    ⚠️ {formError}
+                    <AlertCircleIcon size={16} color="#DC2626" />
+                    <span>{formError}</span>
                   </div>
                 )}
 
@@ -313,7 +324,7 @@ const AnnouncementsManager = () => {
             <div className="tw-modal-header">
               <h2 className="tw-modal-title">Delete Announcement</h2>
               <button className="tw-modal-close-btn" onClick={() => setDeleteConfirmId(null)}>
-                ✕
+                <CloseIcon size={16} />
               </button>
             </div>
             <div className="tw-modal-body">

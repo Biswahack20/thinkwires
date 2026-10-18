@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import { adminApi } from './adminService';
+import {
+  PlusIcon,
+  TrashIcon,
+  CloseIcon,
+  AlertCircleIcon,
+} from './AdminIcons';
 
 const MediaLibrary = () => {
   const { showToast, activeRole } = useOutletContext();
@@ -41,7 +47,7 @@ const MediaLibrary = () => {
 
   const handleCopyUrl = (url) => {
     navigator.clipboard.writeText(url);
-    showToast('Asset URL copied to clipboard! 📋');
+    showToast('Asset URL copied to clipboard.');
   };
 
   const handleAddSubmit = (e) => {
@@ -105,7 +111,8 @@ const MediaLibrary = () => {
             setModalOpen(true);
           }}
         >
-          ➕ Register Asset (Demo)
+          <PlusIcon size={15} />
+          <span>Register Asset (Demo)</span>
         </button>
       </div>
 
@@ -191,7 +198,7 @@ const MediaLibrary = () => {
                     }}
                     title="Delete Asset"
                   >
-                    🗑️
+                    <TrashIcon size={14} color="#DC2626" />
                   </button>
                 </div>
               </div>
@@ -207,7 +214,7 @@ const MediaLibrary = () => {
             <div className="tw-modal-header">
               <h2 className="tw-modal-title">Register Media Asset</h2>
               <button className="tw-modal-close-btn" onClick={() => setModalOpen(false)}>
-                ✕
+                <CloseIcon size={16} />
               </button>
             </div>
 
@@ -222,9 +229,13 @@ const MediaLibrary = () => {
                       borderRadius: '8px',
                       marginBottom: '1rem',
                       fontSize: '0.82rem',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.5rem',
                     }}
                   >
-                    ⚠️ {formError}
+                    <AlertCircleIcon size={16} color="#DC2626" />
+                    <span>{formError}</span>
                   </div>
                 )}
 
@@ -330,7 +341,7 @@ const MediaLibrary = () => {
             <div className="tw-modal-header">
               <h2 className="tw-modal-title">Delete Media Asset</h2>
               <button className="tw-modal-close-btn" onClick={() => setDeleteConfirmId(null)}>
-                ✕
+                <CloseIcon size={16} />
               </button>
             </div>
             <div className="tw-modal-body">

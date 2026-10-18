@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { CloseIcon } from '../../admin/AdminIcons';
 
 const CandidatePipelines = ({ pipelines = [] }) => {
   const [activeModal, setActiveModal] = useState(null);
@@ -94,7 +95,7 @@ const CandidatePipelines = ({ pipelines = [] }) => {
                 {activeModal.type === 'dossier' && 'Client Mandate Specification'}
               </h3>
               <button type="button" onClick={() => setActiveModal(null)} className="modal-close-btn">
-                ✕
+                <CloseIcon size={16} />
               </button>
             </div>
 

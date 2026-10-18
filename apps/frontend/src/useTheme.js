@@ -31,7 +31,7 @@ import { ThemeContext } from './ThemeContext.js';
  *       onClick={toggleTheme}
  *       aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
  *     >
- *       {theme === 'light' ? '🌙 Dark Mode' : '☀️ Light Mode'}
+ *       {theme === 'light' ? 'Dark Mode' : 'Light Mode'}
  *     </button>
  *   );
  * }

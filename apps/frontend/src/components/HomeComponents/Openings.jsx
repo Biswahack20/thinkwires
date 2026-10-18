@@ -4,11 +4,13 @@ import { useSelector, useDispatch } from 'react-redux';
 import { fetchOpenings } from '../../store/slices/homeSlice';
 import ApplyModal from '../common/ApplyModal';
 import SectionBadge from '../common/SectionBadge';
+import JobSpecModal from '../JobsComponents/JobSpecModal';
 
 const Openings = () => {
   const dispatch = useDispatch();
   const { openings, status } = useSelector((state) => state.home);
   const [selectedJob, setSelectedJob] = useState(null);
+  const [selectedJobForSpec, setSelectedJobForSpec] = useState(null);
 
   useEffect(() => {
     if (status.openings === 'idle') {
@@ -115,7 +117,7 @@ const Openings = () => {
                       <div className={'Openings-companyLogo'}>TW</div>
                       <div className={'Openings-companyText'}>
                         <span className={'Openings-companyName'}>
-                          {job.company}
+                          Enterprise Client (Confidential)
                         </span>
                         <span className={'Openings-jobTitle'}>{job.title}</span>
                       </div>
@@ -168,12 +170,30 @@ const Openings = () => {
                         year: 'numeric',
                       }) : 'Recently'}
                     </span>
-                    <button
-                      onClick={() => setSelectedJob(job.title)}
-                      className={'Openings-applyBtn'}
-                    >
-                      Apply Now
-                    </button>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+                      <button
+                        type="button"
+                        onClick={() => setSelectedJobForSpec(job)}
+                        style={{
+                          background: 'none',
+                          border: 'none',
+                          color: '#2563eb',
+                          fontWeight: 700,
+                          fontSize: '0.8125rem',
+                          cursor: 'pointer',
+                          padding: '0.35rem 0.5rem',
+                          textDecoration: 'underline',
+                        }}
+                      >
+                        View Job Spec
+                      </button>
+                      <button
+                        onClick={() => setSelectedJob(job.title)}
+                        className={'Openings-applyBtn'}
+                      >
+                        Apply Now
+                      </button>
+                    </div>
                   </div>
                 </div>
               ))}
@@ -225,6 +245,18 @@ const Openings = () => {
           </button>
         </div>
       </div>
+      {/* Complete Job Specifications Modal */}
+      {selectedJobForSpec && (
+        <JobSpecModal
+          job={selectedJobForSpec}
+          onClose={() => setSelectedJobForSpec(null)}
+          onApply={(j) => {
+            setSelectedJobForSpec(null);
+            setSelectedJob(j.title);
+          }}
+        />
+      )}
+
       <ApplyModal
         isOpen={!!selectedJob}
         onClose={() => setSelectedJob(null)}

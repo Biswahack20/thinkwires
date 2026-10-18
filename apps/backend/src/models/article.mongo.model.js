@@ -14,23 +14,61 @@ const articleSchema = new mongoose.Schema(
       trim: true,
       lowercase: true,
     },
+    articleId: {
+      type: String,
+      default: '',
+    },
     summary: {
       type: String,
-      required: [true, 'Article summary is required'],
+      default: '',
+      trim: true,
+    },
+    excerpt: {
+      type: String,
+      default: '',
       trim: true,
     },
     body: {
       type: String,
-      required: [true, 'Article body is required'],
+      default: '',
+    },
+    featured: {
+      type: Boolean,
+      default: false,
+    },
+    badge: {
+      type: String,
+      default: '',
+    },
+    badgeBg: {
+      type: String,
+      default: '',
+    },
+    badgeColor: {
+      type: String,
+      default: '',
+    },
+    subCategory: {
+      type: String,
+      default: '',
+    },
+    telemetry: {
+      type: mongoose.Schema.Types.Mixed,
+      default: null,
+    },
+    categories: {
+      type: mongoose.Schema.Types.Mixed,
+      default: [],
+    },
+    primaryFinding: {
+      type: String,
+      default: '',
     },
     author: {
-      name: {
-        type: String,
-        default: 'ThinkWires Research Team',
-      },
-      role: {
-        type: String,
-        default: 'Editorial Director',
+      type: mongoose.Schema.Types.Mixed,
+      default: {
+        name: 'ThinkWires Research Team',
+        role: 'Editorial Director',
       },
     },
     category: {
@@ -55,16 +93,16 @@ const articleSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ['published', 'draft'],
       default: 'published',
     },
     publishedAt: {
-      type: Date,
-      default: Date.now,
+      type: mongoose.Schema.Types.Mixed,
+      default: () => new Date().toISOString(),
     },
   },
   {
     timestamps: true,
+    strict: false,
   }
 );
 

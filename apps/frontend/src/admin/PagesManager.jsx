@@ -1,23 +1,38 @@
 import React, { useState, useEffect } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import { adminApi } from './adminService';
+import VisualSectionEditor from './VisualSectionEditor';
+import {
+  PlusIcon,
+  EyeIcon,
+  EditIcon,
+  TrashIcon,
+  CloseIcon,
+  AlertCircleIcon,
+  PaletteIcon,
+  FileTextIcon,
+  CodeIcon,
+  InfoIcon,
+} from './AdminIcons';
 
 const PagesManager = () => {
   const { showToast, activeRole } = useOutletContext();
   const [pages, setPages] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Modals
   const [editorOpen, setEditorOpen] = useState(false);
   const [previewPage, setPreviewPage] = useState(null);
   const [editingPage, setEditingPage] = useState(null);
   const [deleteConfirmId, setDeleteConfirmId] = useState(null);
+  const [activeModalTab, setActiveModalTab] = useState('visual'); // 'visual', 'general', 'json'
 
   const [formData, setFormData] = useState({
     title: '',
     slug: '',
     category: 'Core Website',
     content: '',
+    data: {},
+    dataJson: '{}',
     metaTitle: '',
     metaDescription: '',
     status: 'published',
@@ -54,11 +69,14 @@ const PagesManager = () => {
       slug: '',
       category: 'Solutions Page',
       content: 'Enter markdown or HTML content here...',
+      data: {},
+      dataJson: '{}',
       metaTitle: '',
       metaDescription: '',
       status: 'draft',
     });
     setFormError('');
+    setActiveModalTab('general');
     setEditorOpen(true);
   };
 
@@ -68,16 +86,20 @@ const PagesManager = () => {
       return;
     }
     setEditingPage(pg);
+    const initialData = pg.data || {};
     setFormData({
       title: pg.title || '',
       slug: pg.slug || '',
       category: pg.category || 'Core Website',
       content: pg.content || '',
+      data: initialData,
+      dataJson: JSON.stringify(initialData, null, 2),
       metaTitle: pg.metaTitle || '',
       metaDescription: pg.metaDescription || '',
       status: pg.status || 'published',
     });
     setFormError('');
+    setActiveModalTab(Object.keys(initialData).length > 0 ? 'visual' : 'general');
     setEditorOpen(true);
   };
 
@@ -95,16 +117,57 @@ const PagesManager = () => {
       .catch((err) => showToast(`Status toggle failed: ${err.message}`));
   };
 
+  const handleVisualDataChange = (newData) => {
+    setFormData((prev) => ({
+      ...prev,
+      data: newData,
+      dataJson: JSON.stringify(newData, null, 2),
+    }));
+  };
+
+  const handleJsonDataChange = (newJson) => {
+    let parsed = null;
+    try {
+      parsed = JSON.parse(newJson);
+    } catch {}
+    setFormData((prev) => ({
+      ...prev,
+      dataJson: newJson,
+      data: parsed !== null ? parsed : prev.data,
+    }));
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!formData.title.trim() || !formData.slug.trim() || !formData.content.trim()) {
-      setFormError('Title, URL Slug, and Content body are required.');
+    if (!formData.title.trim() || !formData.slug.trim()) {
+      setFormError('Title and URL Slug are required.');
       return;
     }
 
+    let finalData = formData.data;
+    if (activeModalTab === 'json' && formData.dataJson && formData.dataJson.trim()) {
+      try {
+        finalData = JSON.parse(formData.dataJson);
+      } catch (err) {
+        setFormError(`Invalid JSON in Developer JSON tab: ${err.message}`);
+        return;
+      }
+    }
+
+    const payload = {
+      title: formData.title,
+      slug: formData.slug,
+      category: formData.category,
+      content: formData.content || 'Content configured via Visual Section Editor.',
+      data: finalData || {},
+      metaTitle: formData.metaTitle,
+      metaDescription: formData.metaDescription,
+      status: formData.status,
+    };
+
     if (editingPage) {
       adminApi
-        .updateCmsPage(editingPage.id || editingPage._id, formData)
+        .updateCmsPage(editingPage.id || editingPage._id, payload)
         .then(() => {
           showToast(`Page '${formData.title}' updated successfully.`);
           setEditorOpen(false);
@@ -113,7 +176,7 @@ const PagesManager = () => {
         .catch((err) => setFormError(err.message));
     } else {
       adminApi
-        .createCmsPage(formData)
+        .createCmsPage(payload)
         .then(() => {
           showToast(`Page '${formData.title}' created successfully.`);
           setEditorOpen(false);
@@ -149,7 +212,8 @@ const PagesManager = () => {
         </div>
 
         <button className="tw-btn-primary" onClick={openAddModal}>
-          ➕ Create New Page
+          <PlusIcon size={15} />
+          <span>Create New Page</span>
         </button>
       </div>
 
@@ -215,21 +279,21 @@ const PagesManager = () => {
                           onClick={() => setPreviewPage(pg)}
                           title="Preview Page"
                         >
-                          👁️
+                          <EyeIcon size={14} />
                         </button>
                         <button
                           className="tw-action-icon-btn"
                           onClick={() => openEditModal(pg)}
                           title="Edit Page"
                         >
-                          ✏️
+                          <EditIcon size={14} />
                         </button>
                         <button
                           className="tw-action-icon-btn delete"
                           onClick={() => setDeleteConfirmId(pg.id || pg._id)}
                           title="Delete Page"
                         >
-                          🗑️
+                          <TrashIcon size={14} />
                         </button>
                       </div>
                     </td>
@@ -253,7 +317,7 @@ const PagesManager = () => {
                 <h2 className="tw-modal-title">{previewPage.title}</h2>
               </div>
               <button className="tw-modal-close-btn" onClick={() => setPreviewPage(null)}>
-                ✕
+                <CloseIcon size={16} />
               </button>
             </div>
 
@@ -311,16 +375,97 @@ const PagesManager = () => {
       {/* Create / Edit Page Modal */}
       {editorOpen && (
         <div className="tw-modal-overlay">
-          <div className="tw-modal" style={{ maxWidth: '640px' }}>
+          <div className="tw-modal" style={{ maxWidth: '840px', width: '95%' }}>
             <div className="tw-modal-header">
-              <h2 className="tw-modal-title">{editingPage ? `Edit Page: ${editingPage.title}` : 'Create Website Page'}</h2>
+              <div>
+                <h2 className="tw-modal-title" style={{ margin: 0 }}>
+                  {editingPage ? `Edit: ${editingPage.title}` : 'Create Website Page'}
+                </h2>
+                <span style={{ fontSize: '0.74rem', color: '#64748B' }}>
+                  /{formData.slug || 'url-slug'} • {formData.category}
+                </span>
+              </div>
               <button className="tw-modal-close-btn" onClick={() => setEditorOpen(false)}>
-                ✕
+                <CloseIcon size={16} />
+              </button>
+            </div>
+
+            {/* Modal Tabs Bar */}
+            <div
+              style={{
+                display: 'flex',
+                gap: '0.5rem',
+                padding: '0.75rem 1.5rem',
+                backgroundColor: '#F8FAFC',
+                borderBottom: '1px solid #E2E8F0',
+              }}
+            >
+              <button
+                type="button"
+                onClick={() => setActiveModalTab('visual')}
+                style={{
+                  padding: '0.4rem 0.85rem',
+                  borderRadius: '6px',
+                  border: 'none',
+                  backgroundColor: activeModalTab === 'visual' ? '#008F68' : 'transparent',
+                  color: activeModalTab === 'visual' ? '#FFFFFF' : '#475569',
+                  fontWeight: 600,
+                  fontSize: '0.8rem',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.35rem',
+                }}
+              >
+                <PaletteIcon size={15} />
+                <span>Visual Sections (No-Code)</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setActiveModalTab('general')}
+                style={{
+                  padding: '0.4rem 0.85rem',
+                  borderRadius: '6px',
+                  border: 'none',
+                  backgroundColor: activeModalTab === 'general' ? '#008F68' : 'transparent',
+                  color: activeModalTab === 'general' ? '#FFFFFF' : '#475569',
+                  fontWeight: 600,
+                  fontSize: '0.8rem',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.35rem',
+                }}
+              >
+                <FileTextIcon size={15} />
+                <span>Page Info & SEO</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setActiveModalTab('json')}
+                style={{
+                  padding: '0.4rem 0.85rem',
+                  borderRadius: '6px',
+                  border: 'none',
+                  backgroundColor: activeModalTab === 'json' ? '#008F68' : 'transparent',
+                  color: activeModalTab === 'json' ? '#FFFFFF' : '#475569',
+                  fontWeight: 600,
+                  fontSize: '0.8rem',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.35rem',
+                }}
+              >
+                <CodeIcon size={15} />
+                <span>Advanced JSON (Dev)</span>
               </button>
             </div>
 
             <form onSubmit={handleSubmit}>
-              <div className="tw-modal-body">
+              <div className="tw-modal-body" style={{ maxHeight: '65vh', overflowY: 'auto', padding: '1.25rem 1.5rem' }}>
                 {formError && (
                   <div
                     style={{
@@ -330,94 +475,160 @@ const PagesManager = () => {
                       borderRadius: '8px',
                       marginBottom: '1rem',
                       fontSize: '0.82rem',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.5rem',
                     }}
                   >
-                    ⚠️ {formError}
+                    <AlertCircleIcon size={16} color="#DC2626" />
+                    <span>{formError}</span>
                   </div>
                 )}
 
-                <div className="tw-form-row">
-                  <div className="tw-form-group">
-                    <label className="tw-form-label">Page Title *</label>
-                    <input
-                      type="text"
-                      className="tw-form-input"
-                      value={formData.title}
-                      onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                      placeholder="e.g. Talent Cloud Bench"
-                      required
+                {/* TAB 1: VISUAL SECTION EDITOR (NO-CODE FOR NON-TECHIES) */}
+                {activeModalTab === 'visual' && (
+                  <div>
+                    <div style={{ marginBottom: '1rem', padding: '0.65rem 0.85rem', backgroundColor: '#E6F4F0', borderRadius: '6px', color: '#006548', fontSize: '0.78rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                      <InfoIcon size={16} color="#006548" />
+                      <span><strong>Visual Form Editor</strong>: Edit headers, comparison points, badges, and metrics below. Changes automatically update the database without writing JSON syntax!</span>
+                    </div>
+
+                    <VisualSectionEditor
+                      data={formData.data}
+                      onChange={handleVisualDataChange}
                     />
                   </div>
-                  <div className="tw-form-group">
-                    <label className="tw-form-label">URL Slug (e.g. talent-cloud) *</label>
-                    <input
-                      type="text"
-                      className="tw-form-input"
-                      value={formData.slug}
-                      onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
-                      placeholder="talent-cloud"
-                      required
-                    />
+                )}
+
+                {/* TAB 2: GENERAL PAGE INFO & SEO */}
+                {activeModalTab === 'general' && (
+                  <div>
+                    <div className="tw-form-row">
+                      <div className="tw-form-group">
+                        <label className="tw-form-label">Page Title *</label>
+                        <input
+                          type="text"
+                          className="tw-form-input"
+                          value={formData.title}
+                          onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                          placeholder="e.g. Industries We Serve"
+                          required
+                        />
+                      </div>
+                      <div className="tw-form-group">
+                        <label className="tw-form-label">URL Slug *</label>
+                        <input
+                          type="text"
+                          className="tw-form-input"
+                          value={formData.slug}
+                          onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
+                          placeholder="industries"
+                          required
+                        />
+                      </div>
+                    </div>
+
+                    <div className="tw-form-row">
+                      <div className="tw-form-group">
+                        <label className="tw-form-label">Page Category</label>
+                        <input
+                          type="text"
+                          className="tw-form-input"
+                          value={formData.category}
+                          onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                          placeholder="Core Website / Solutions"
+                        />
+                      </div>
+                      <div className="tw-form-group">
+                        <label className="tw-form-label">Publication Status</label>
+                        <select
+                          className="tw-form-select"
+                          value={formData.status}
+                          onChange={(e) => setFormData({ ...formData, status: e.target.value })}
+                        >
+                          <option value="published">Published</option>
+                          <option value="draft">Draft</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div className="tw-form-group">
+                      <label className="tw-form-label">Markdown / Summary Copy</label>
+                      <textarea
+                        className="tw-form-textarea"
+                        rows="4"
+                        value={formData.content}
+                        onChange={(e) => setFormData({ ...formData, content: e.target.value })}
+                        placeholder="Overview copy or markdown notes for this page..."
+                      ></textarea>
+                    </div>
+
+                    <div className="tw-form-group">
+                      <label className="tw-form-label">SEO Meta Title</label>
+                      <input
+                        type="text"
+                        className="tw-form-input"
+                        value={formData.metaTitle}
+                        onChange={(e) => setFormData({ ...formData, metaTitle: e.target.value })}
+                        placeholder="ThinkWires — Transforming Global Tech Talent"
+                      />
+                    </div>
+
+                    <div className="tw-form-group">
+                      <label className="tw-form-label">SEO Meta Description</label>
+                      <textarea
+                        className="tw-form-textarea"
+                        rows="2"
+                        value={formData.metaDescription}
+                        onChange={(e) => setFormData({ ...formData, metaDescription: e.target.value })}
+                        placeholder="Search engine summary text..."
+                      ></textarea>
+                    </div>
                   </div>
-                </div>
+                )}
 
-                <div className="tw-form-row">
-                  <div className="tw-form-group">
-                    <label className="tw-form-label">Page Category</label>
-                    <input
-                      type="text"
-                      className="tw-form-input"
-                      value={formData.category}
-                      onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                      placeholder="Core Website / Solutions"
-                    />
+                {/* TAB 3: ADVANCED DEVELOPER JSON */}
+                {activeModalTab === 'json' && (
+                  <div>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem' }}>
+                      <label className="tw-form-label" style={{ margin: 0 }}>
+                        Developer Raw JSON Editor
+                      </label>
+                      <button
+                        type="button"
+                        style={{
+                          background: 'none',
+                          border: 'none',
+                          color: '#008F68',
+                          fontSize: '0.75rem',
+                          fontWeight: 600,
+                          cursor: 'pointer',
+                        }}
+                        onClick={() => {
+                          try {
+                            const formatted = JSON.stringify(JSON.parse(formData.dataJson || '{}'), null, 2);
+                            setFormData({ ...formData, dataJson: formatted });
+                            showToast('Formatted JSON payload.');
+                          } catch (e) {
+                            setFormError(`Cannot format: ${e.message}`);
+                          }
+                        }}
+                      >
+                        Format JSON
+                      </button>
+                    </div>
+                    <textarea
+                      className="tw-form-textarea"
+                      rows="14"
+                      style={{ fontFamily: 'monospace', fontSize: '0.78rem', backgroundColor: '#F8FAFC' }}
+                      value={formData.dataJson}
+                      onChange={(e) => handleJsonDataChange(e.target.value)}
+                    ></textarea>
+                    <span style={{ fontSize: '0.72rem', color: '#64748B' }}>
+                      Raw representation of page sections. Edits here synchronize with the Visual Editor.
+                    </span>
                   </div>
-                  <div className="tw-form-group">
-                    <label className="tw-form-label">Initial Status</label>
-                    <select
-                      className="tw-form-select"
-                      value={formData.status}
-                      onChange={(e) => setFormData({ ...formData, status: e.target.value })}
-                    >
-                      <option value="published">Published</option>
-                      <option value="draft">Draft</option>
-                    </select>
-                  </div>
-                </div>
-
-                <div className="tw-form-group">
-                  <label className="tw-form-label">Page Content (Body) *</label>
-                  <textarea
-                    className="tw-form-textarea"
-                    rows="6"
-                    value={formData.content}
-                    onChange={(e) => setFormData({ ...formData, content: e.target.value })}
-                    placeholder="Enter full page content, feature descriptions, and company copy..."
-                    required
-                  ></textarea>
-                </div>
-
-                <div className="tw-form-group">
-                  <label className="tw-form-label">SEO Meta Title</label>
-                  <input
-                    type="text"
-                    className="tw-form-input"
-                    value={formData.metaTitle}
-                    onChange={(e) => setFormData({ ...formData, metaTitle: e.target.value })}
-                    placeholder="ThinkWires — Transforming Global Tech Talent"
-                  />
-                </div>
-
-                <div className="tw-form-group">
-                  <label className="tw-form-label">SEO Meta Description</label>
-                  <textarea
-                    className="tw-form-textarea"
-                    rows="2"
-                    value={formData.metaDescription}
-                    onChange={(e) => setFormData({ ...formData, metaDescription: e.target.value })}
-                    placeholder="Search engine summary text..."
-                  ></textarea>
-                </div>
+                )}
               </div>
 
               <div className="tw-modal-footer">
@@ -444,7 +655,7 @@ const PagesManager = () => {
             <div className="tw-modal-header">
               <h2 className="tw-modal-title">Delete Page</h2>
               <button className="tw-modal-close-btn" onClick={() => setDeleteConfirmId(null)}>
-                ✕
+                <CloseIcon size={16} />
               </button>
             </div>
             <div className="tw-modal-body">

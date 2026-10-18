@@ -36,7 +36,7 @@ const CareerInsights = () => {
         <div className="CareerInsights-headerRow">
           <div className="CareerInsights-headerLeftCol">
             <div className="CareerInsights-knowledgeBadge">
-              💡 KNOWLEDGE BASE & TECH CULTURE
+              KNOWLEDGE BASE & TECH CULTURE
             </div>
             <h2 className="CareerInsights-headingTitle">
               Career Insights & Tech Culture
@@ -64,7 +64,7 @@ const CareerInsights = () => {
 
               <div className="CareerInsights-cardBody">
                 <div className="CareerInsights-metaRow">
-                  <span>📅 {item.date}</span>
+                  <span>{item.date}</span>
                   <span className="CareerInsights-dotSep">•</span>
                   <span className="CareerInsights-tagText">{item.tag}</span>
                 </div>

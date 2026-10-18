@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux';
 import logo from '../../assets/logo/logo.png';
 import ApplyModal from './ApplyModal';
 import { useTheme } from '../../useTheme';
+import { GlobeIcon, MailIcon, PhoneIcon } from '../../admin/AdminIcons';
 
 const Navbar = () => {
   const [isApplyModalOpen, setIsApplyModalOpen] = useState(false);
@@ -48,8 +49,8 @@ const Navbar = () => {
         <div className="Navbar-topBar">
           <div className="Navbar-topBarLeft">
             <div className="Navbar-topBarItem">
-              <span aria-hidden="true">🌐</span>
-              India &amp; USA / Canada
+              <GlobeIcon size={13} color="currentColor" />
+              <span>India &amp; USA / Canada</span>
             </div>
 
             <div className="Navbar-topBarItem">
@@ -62,16 +63,16 @@ const Navbar = () => {
               href="mailto:info@thinkwires.com"
               className="Navbar-topBarItem"
             >
-              <span aria-hidden="true">✉️</span>
-              info@thinkwires.com
+              <MailIcon size={13} color="currentColor" />
+              <span>info@thinkwires.com</span>
             </a>
 
             <a
               href="tel:+918722555828"
               className="Navbar-topBarItem"
             >
-              <span aria-hidden="true">📞</span>
-              +91 87225 55828
+              <PhoneIcon size={13} color="currentColor" />
+              <span>+91 87225 55828</span>
             </a>
 
             <button

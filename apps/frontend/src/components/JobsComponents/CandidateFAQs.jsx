@@ -43,7 +43,7 @@ const CandidateFAQs = () => {
       <div className="CandidateFAQs-figmaContainer">
         <div className="CandidateFAQs-figmaHeader">
           <div className="CandidateFAQs-badgeTag">
-            💬 FREQUENTLY ASKED QUESTIONS
+            FREQUENTLY ASKED QUESTIONS
           </div>
           <h2 className="CandidateFAQs-headingTitle">Candidate FAQs</h2>
         </div>

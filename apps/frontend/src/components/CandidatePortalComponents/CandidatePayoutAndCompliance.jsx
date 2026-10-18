@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { submitCandidateTimesheet, resetTimesheetState } from '../../store/slices/candidatePortalSlice';
+import { CloseIcon } from '../../admin/AdminIcons';
 
 const CandidatePayoutAndCompliance = ({ data = {} }) => {
   const dispatch = useDispatch();
@@ -129,7 +130,7 @@ const CandidatePayoutAndCompliance = ({ data = {} }) => {
             <div className="modal-header">
               <h3 className="modal-title">Log Timesheet Hours</h3>
               <button type="button" onClick={() => setIsModalOpen(false)} className="modal-close-btn">
-                ✕
+                <CloseIcon size={16} />
               </button>
             </div>
             <form onSubmit={handleTimesheetSubmit} className="modal-form">

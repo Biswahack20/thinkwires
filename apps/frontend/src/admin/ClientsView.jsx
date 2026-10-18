@@ -1,6 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import { adminApi } from './adminService';
+import {
+  PlusIcon,
+  EditIcon,
+  TrashIcon,
+  CloseIcon,
+  AlertCircleIcon,
+} from './AdminIcons';
 
 const ClientsView = () => {
   const { showToast, activeRole } = useOutletContext();
@@ -140,7 +147,8 @@ const ClientsView = () => {
         </div>
 
         <button className="tw-btn-primary" onClick={openAddModal}>
-          ➕ Register Client
+          <PlusIcon size={15} />
+          <span>Register Client</span>
         </button>
       </div>
 
@@ -242,14 +250,14 @@ const ClientsView = () => {
                           onClick={() => openEditModal(cli)}
                           title="Edit Client"
                         >
-                          ✏️
+                          <EditIcon size={14} />
                         </button>
                         <button
                           className="tw-action-icon-btn delete"
                           onClick={() => setDeleteConfirmId(cli.id || cli._id)}
                           title="Delete Client"
                         >
-                          🗑️
+                          <TrashIcon size={14} />
                         </button>
                       </div>
                     </td>
@@ -270,7 +278,7 @@ const ClientsView = () => {
                 {editingClient ? `Edit ${editingClient.companyName}` : 'Register New Corporate Client'}
               </h2>
               <button className="tw-modal-close-btn" onClick={() => setModalOpen(false)}>
-                ✕
+                <CloseIcon size={16} />
               </button>
             </div>
 
@@ -285,9 +293,13 @@ const ClientsView = () => {
                       borderRadius: '8px',
                       marginBottom: '1rem',
                       fontSize: '0.82rem',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.5rem',
                     }}
                   >
-                    ⚠️ {formError}
+                    <AlertCircleIcon size={16} color="#DC2626" />
+                    <span>{formError}</span>
                   </div>
                 )}
 
@@ -419,7 +431,7 @@ const ClientsView = () => {
             <div className="tw-modal-header">
               <h2 className="tw-modal-title">Archive Client Account</h2>
               <button className="tw-modal-close-btn" onClick={() => setDeleteConfirmId(null)}>
-                ✕
+                <CloseIcon size={16} />
               </button>
             </div>
             <div className="tw-modal-body">

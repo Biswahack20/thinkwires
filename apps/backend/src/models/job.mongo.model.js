@@ -21,14 +21,90 @@ const jobRequirementSchema = new mongoose.Schema(
       type: [String],
       default: [],
     },
+    jobId: {
+      type: mongoose.Schema.Types.Mixed,
+      default: null,
+    },
+    category: {
+      type: String,
+      default: 'Engineering',
+    },
+    badge: {
+      type: String,
+      default: '',
+    },
+    badgeColor: {
+      type: String,
+      default: 'blue',
+    },
+    logo: {
+      type: String,
+      default: 'TW',
+    },
+    experience: {
+      type: String,
+      default: '',
+    },
+    experienceTier: {
+      type: String,
+      default: '',
+    },
     experienceRequired: {
       type: Number,
-      required: true,
+      default: 3,
       min: 0,
+    },
+    salary: {
+      type: String,
+      default: '',
+    },
+    joining: {
+      type: String,
+      default: 'Immediate',
+    },
+    industry: {
+      type: String,
+      default: 'Information Technology & Cloud',
+    },
+    jobMode: {
+      type: String,
+      enum: ['Permanent', 'Contract', 'Contract to Hire'],
+      default: 'Permanent',
+    },
+    noticePeriod: {
+      type: String,
+      default: 'Immediate',
+    },
+    noticePeriodOther: {
+      type: String,
+      default: '',
+    },
+    officeLocation: {
+      type: String,
+      default: '',
+    },
+    description: {
+      type: String,
+      default: '',
+    },
+    requirements: {
+      type: String,
+      default: '',
+    },
+    skills: {
+      type: [String],
+      default: [],
+    },
+    department: {
+      type: String,
+      default: 'Technology',
+    },
+    postedDate: {
+      type: String,
+      default: () => new Date().toISOString().split('T')[0],
     },
     openingsCount: {
       type: Number,
-      required: true,
       default: 1,
       min: 1,
     },
@@ -42,17 +118,14 @@ const jobRequirementSchema = new mongoose.Schema(
     },
     workMode: {
       type: String,
-      enum: ['Remote', 'Hybrid', 'Onsite'],
       default: 'Remote',
     },
     priority: {
-      type: String,
-      enum: ['Urgent', 'High', 'Medium', 'Low'],
+      type: mongoose.Schema.Types.Mixed,
       default: 'Medium',
     },
     status: {
       type: String,
-      enum: ['Open', 'In Progress', 'Fulfilled', 'Closed'],
       default: 'Open',
     },
     budget: {
@@ -66,6 +139,8 @@ const jobRequirementSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
+    strict: false,
+    id: false,
   }
 );
 

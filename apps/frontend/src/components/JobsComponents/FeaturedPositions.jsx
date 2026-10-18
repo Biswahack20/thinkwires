@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import JobCard from './JobCard';
 import ScrollReveal from '../common/ScrollReveal';
 
-const FeaturedPositions = ({ jobsList = [], onApplyClick, activeCategory, setActiveCategory }) => {
+const FeaturedPositions = ({ jobsList = [], onApplyClick, onViewSpecClick, activeCategory, setActiveCategory }) => {
   const [visibleCount, setVisibleCount] = useState(6);
 
   const jobsToDisplay = Array.isArray(jobsList) ? jobsList : [];
@@ -75,7 +75,7 @@ const FeaturedPositions = ({ jobsList = [], onApplyClick, activeCategory, setAct
                 distance={40}
                 style={{ display: 'flex' }}
               >
-                <JobCard job={job} onApplyClick={onApplyClick} />
+                <JobCard job={job} onApplyClick={onApplyClick} onViewSpecClick={onViewSpecClick} />
               </ScrollReveal>
             ))}
           </div>

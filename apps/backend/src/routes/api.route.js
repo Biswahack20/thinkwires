@@ -2,9 +2,17 @@ import express from 'express';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import mongoose from 'mongoose';
+
+import JobRequirement from '../models/job.mongo.model.js';
+import Article from '../models/article.mongo.model.js';
+import Page from '../models/page.mongo.model.js';
+import TechStack from '../models/techStack.mongo.model.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+
+const isMongoActive = () => mongoose.connection.readyState === 1;
 
 // Adjust path since this is now in src/routes
 const mockData = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'seeds', 'mockData.json'), 'utf8'));
@@ -29,6 +37,8 @@ const {
   permanentStaffingData = null,
   findTalentData = null,
   candidatePortalData = null,
+  aboutData = null,
+  contactData = null,
 } = mockData;
 
 let currentPayrollData = payrollData ? { ...payrollData } : null;
@@ -40,7 +50,7 @@ let currentCandidatePortalData = candidatePortalData ? { ...candidatePortalData 
 
 const router = express.Router();
 
-// Mutable in-memory state for mock admin updates
+// Mutable in-memory state for fallback & instant local responses
 let techStack = [...initialTechStack];
 let openings = [...initialOpenings];
 let stats = { ...statsData };
@@ -61,23 +71,117 @@ let bench = benchData ? { ...benchData } : {
   vettingGates: []
 };
 
+// --- Helper to get home page section from Mongo or fallback ---
+const getHomeSection = async (sectionKey, fallbackValue) => {
+  if (isMongoActive()) {
+    try {
+      const homePage = await Page.findOne({ slug: 'home' }).lean();
+      if (homePage?.data && homePage.data[sectionKey] !== undefined) {
+        return homePage.data[sectionKey];
+      }
+    } catch (err) {
+      console.warn(`Error reading home section '${sectionKey}' from MongoDB:`, err.message);
+    }
+  }
+  return fallbackValue;
+};
+
+// --- Public CMS Pages API ---
+router.get('/pages', async (req, res) => {
+  if (isMongoActive()) {
+    try {
+      const dbPages = await Page.find({ status: 'published' }).select('-__v').sort({ title: 1 }).lean();
+      if (dbPages.length > 0) return res.json(dbPages);
+    } catch (err) {
+      console.warn('Error reading pages from MongoDB:', err.message);
+    }
+  }
+  res.json([]);
+});
+
+router.get('/pages/:slug', async (req, res) => {
+  const { slug } = req.params;
+  const cleanSlug = slug.toLowerCase().trim();
+  if (isMongoActive()) {
+    try {
+      const page = await Page.findOne({ slug: cleanSlug, status: 'published' }).lean();
+      if (page) return res.json(page);
+    } catch (err) {
+      console.warn(`Error reading page '${cleanSlug}' from MongoDB:`, err.message);
+    }
+  }
+
+  if (cleanSlug === 'industries' && industriesPageData) {
+    return res.json({ slug: 'industries', title: 'Industries We Serve', data: industriesPageData });
+  }
+  if (cleanSlug === 'bench' && benchData) {
+    return res.json({ slug: 'bench', title: 'Bench Talent', data: benchData });
+  }
+  if (cleanSlug === 'about' && aboutData) {
+    return res.json({ slug: 'about', title: 'About Us', data: aboutData });
+  }
+  if (cleanSlug === 'contact' && contactData) {
+    return res.json({ slug: 'contact', title: 'Contact Us', data: contactData });
+  }
+
+  res.status(404).json({ error: `Page '${cleanSlug}' not found` });
+});
+
 // --- Benefits ---
-router.get('/benefits', (req, res) => {
-  res.json(benefits);
+router.get('/benefits', async (req, res) => {
+  const result = await getHomeSection('benefits', benefits);
+  res.json(result);
 });
 
 // --- FAQs ---
-router.get('/faqs', (req, res) => {
-  res.json(faqs);
+router.get('/faqs', async (req, res) => {
+  const result = await getHomeSection('faqs', faqs);
+  res.json(result);
 });
 
 // --- Tech Stack ---
-router.get('/tech-stack', (req, res) => {
-  res.json(techStack);
+router.get('/tech-stack', async (req, res) => {
+  if (isMongoActive()) {
+    try {
+      const dbStacks = await TechStack.find({ isActive: true }).sort({ order: 1, name: 1 }).lean();
+      if (dbStacks.length > 0) {
+        if (req.query.details === 'true') {
+          return res.json(dbStacks);
+        }
+        return res.json(dbStacks.map((s) => s.name));
+      }
+    } catch (err) {
+      console.warn('Error reading from TechStack collection:', err.message);
+    }
+  }
+  const result = await getHomeSection('techStack', techStack);
+  res.json(result);
 });
-router.post('/tech-stack', (req, res) => {
+
+router.post('/tech-stack', async (req, res) => {
   if (Array.isArray(req.body.newStacks)) {
     techStack = req.body.newStacks;
+    if (isMongoActive()) {
+      try {
+        await Page.findOneAndUpdate(
+          { slug: 'home' },
+          { $set: { 'data.techStack': techStack } },
+          { upsert: true }
+        );
+
+        for (let i = 0; i < techStack.length; i++) {
+          const name = techStack[i];
+          const slug = name.toLowerCase().replace(/[^\w\s-]/g, '').trim().replace(/\s+/g, '-');
+          await TechStack.findOneAndUpdate(
+            { slug },
+            { $set: { name, slug, order: i + 1, isActive: true } },
+            { upsert: true }
+          );
+        }
+      } catch (err) {
+        console.warn('Could not persist techStack to MongoDB:', err.message);
+      }
+    }
     res.json({ message: 'Tech stack updated successfully', techStack });
   } else {
     res.status(400).json({ error: 'newStacks must be an array of strings' });
@@ -85,37 +189,86 @@ router.post('/tech-stack', (req, res) => {
 });
 
 // --- Openings ---
-router.get('/openings', (req, res) => {
+router.get('/openings', async (req, res) => {
   const { q, location, experience, workMode, jobMode, noticePeriod, department, sort } = req.query;
   
-  // Always read freshest dataset from mockData.json as single source of truth
   let sourceOpenings = openings;
-  try {
-    const rawData = fs.readFileSync(path.join(__dirname, '..', 'seeds', 'mockData.json'), 'utf8');
-    const parsed = JSON.parse(rawData);
-    if (Array.isArray(parsed.initialOpenings) && parsed.initialOpenings.length > 0) {
-      sourceOpenings = parsed.initialOpenings;
-      openings = [...sourceOpenings];
+
+  // 1. Fetch freshest openings from MongoDB if connected
+  if (isMongoActive()) {
+    try {
+      const dbJobs = await JobRequirement.find({ status: { $ne: 'Closed' } }).sort({ createdAt: -1 }).lean();
+      if (dbJobs && dbJobs.length > 0) {
+        sourceOpenings = dbJobs.map((j) => ({
+          id: j.jobId || j._id,
+          _id: j._id,
+          title: j.title,
+          // STRICT CLIENT CONFIDENTIALITY ON PUBLIC WEBSITE
+          company: 'Enterprise Client (Confidential)',
+          client: 'Enterprise Client (Confidential)',
+          category: j.category || 'Technology',
+          badge: j.badge || '',
+          badgeColor: j.badgeColor || 'blue',
+          logo: j.logo || 'TW',
+          location: j.location || 'Remote',
+          officeLocation: j.officeLocation || '',
+          experience: j.experience || `${j.experienceRequired || 3}+ Years`,
+          experienceTier: j.experienceTier || 'Mid-Senior',
+          experienceRequired: j.experienceRequired || 3,
+          salary: j.salary || j.budget || 'Competitive CTC',
+          budget: j.budget || j.salary || 'Competitive CTC',
+          joining: j.joining || 'Immediate',
+          jobMode: j.jobMode || 'Permanent',
+          workMode: j.workMode || 'Remote',
+          noticePeriod: j.noticePeriod || 'Immediate',
+          description: j.description || '',
+          requirements: j.requirements || '',
+          industry: j.industry || 'Information Technology & Cloud',
+          skills: (j.skills && j.skills.length > 0) ? j.skills : (j.requiredSkills || []),
+          department: j.department || 'Technology',
+          postedDate: j.postedDate || (j.createdAt ? new Date(j.createdAt).toISOString().split('T')[0] : '2026-10-15'),
+          priority: j.priority || 1,
+        }));
+      }
+    } catch (dbErr) {
+      console.warn('Fallback to memory openings due to MongoDB error:', dbErr.message);
     }
-  } catch (readErr) {
-    console.warn('Fallback to memory openings:', readErr.message);
+  } else {
+    // Fallback to fresh mockData.json read if Mongo not active
+    try {
+      const rawData = fs.readFileSync(path.join(__dirname, '..', 'seeds', 'mockData.json'), 'utf8');
+      const parsed = JSON.parse(rawData);
+      if (Array.isArray(parsed.initialOpenings) && parsed.initialOpenings.length > 0) {
+        sourceOpenings = parsed.initialOpenings;
+        openings = [...sourceOpenings];
+      }
+    } catch (readErr) {
+      console.warn('Fallback to memory openings:', readErr.message);
+    }
   }
 
-  let filtered = [...sourceOpenings];
+  // Ensure ALL public openings mask client details
+  let filtered = sourceOpenings.map((job) => ({
+    ...job,
+    company: 'Enterprise Client (Confidential)',
+    client: 'Enterprise Client (Confidential)',
+    requirements: job.requirements || '',
+    industry: job.industry || 'Information Technology & Cloud',
+  }));
 
-  // Search keyword (q)
+  // Search keyword (q) - search title, skills, description, requirements without exposing client names
   if (q && q.trim() !== '') {
     const search = q.trim().toLowerCase();
     filtered = filtered.filter((job) => {
       const matchTitle = job.title && job.title.toLowerCase().includes(search);
-      const matchCompany = job.company && job.company.toLowerCase().includes(search);
       const matchCategory = job.category && job.category.toLowerCase().includes(search);
       const matchDesc = job.description && job.description.toLowerCase().includes(search);
+      const matchReq = job.requirements && job.requirements.toLowerCase().includes(search);
       const matchSkills = job.skills && job.skills.some((s) => s.toLowerCase().includes(search));
       const matchJobMode = job.jobMode && job.jobMode.toLowerCase().includes(search);
       const matchWorkMode = job.workMode && job.workMode.toLowerCase().includes(search);
       const matchNotice = job.noticePeriod && job.noticePeriod.toLowerCase().includes(search);
-      return matchTitle || matchCompany || matchCategory || matchDesc || matchSkills || matchJobMode || matchWorkMode || matchNotice;
+      return matchTitle || matchCategory || matchDesc || matchReq || matchSkills || matchJobMode || matchWorkMode || matchNotice;
     });
   }
 
@@ -190,22 +343,36 @@ router.get('/openings', (req, res) => {
   if (sort === 'Title A-Z') {
     filtered.sort((a, b) => a.title.localeCompare(b.title));
   } else if (sort === 'Highest Salary') {
-    filtered.sort((a, b) => b.salary.localeCompare(a.salary));
+    filtered.sort((a, b) => (b.salary || '').localeCompare(a.salary || ''));
   } else {
     // Default priority/newest sort
     filtered.sort((a, b) => {
       if (a.priority !== b.priority) {
         return a.priority - b.priority;
       }
-      return new Date(b.postedDate) - new Date(a.postedDate);
+      return new Date(b.postedDate || 0) - new Date(a.postedDate || 0);
     });
   }
 
   res.json(filtered);
 });
-router.post('/openings', (req, res) => {
+
+router.post('/openings', async (req, res) => {
   if (Array.isArray(req.body.openings)) {
     openings = req.body.openings;
+    if (isMongoActive()) {
+      try {
+        for (const j of req.body.openings) {
+          await JobRequirement.findOneAndUpdate(
+            { title: j.title, client: j.company || 'ThinkWires Client' },
+            { ...j, client: j.company || 'ThinkWires Client' },
+            { upsert: true }
+          );
+        }
+      } catch (err) {
+        console.warn('Could not sync openings to MongoDB:', err.message);
+      }
+    }
     res.json({ message: 'Openings updated successfully', openings });
   } else {
     res.status(400).json({ error: 'openings must be an array of objects' });
@@ -213,12 +380,24 @@ router.post('/openings', (req, res) => {
 });
 
 // --- Stats ---
-router.get('/stats', (req, res) => {
-  res.json(stats);
+router.get('/stats', async (req, res) => {
+  const result = await getHomeSection('stats', stats);
+  res.json(result);
 });
-router.post('/stats', (req, res) => {
+router.post('/stats', async (req, res) => {
   if (req.body.stats) {
     stats = { ...stats, ...req.body.stats };
+    if (isMongoActive()) {
+      try {
+        await Page.findOneAndUpdate(
+          { slug: 'home' },
+          { $set: { 'data.stats': stats } },
+          { upsert: true }
+        );
+      } catch (err) {
+        console.warn('Could not persist stats to MongoDB:', err.message);
+      }
+    }
     res.json({ message: 'Stats updated successfully', stats });
   } else {
     res.status(400).json({ error: 'stats object is required in body' });
@@ -226,12 +405,24 @@ router.post('/stats', (req, res) => {
 });
 
 // --- Industries (Home summary) ---
-router.get('/industries', (req, res) => {
-  res.json(industries);
+router.get('/industries', async (req, res) => {
+  const result = await getHomeSection('industries', industries);
+  res.json(result);
 });
-router.post('/industries', (req, res) => {
+router.post('/industries', async (req, res) => {
   if (Array.isArray(req.body.industries)) {
     industries = req.body.industries;
+    if (isMongoActive()) {
+      try {
+        await Page.findOneAndUpdate(
+          { slug: 'home' },
+          { $set: { 'data.industries': industries } },
+          { upsert: true }
+        );
+      } catch (err) {
+        console.warn('Could not persist industries to MongoDB:', err.message);
+      }
+    }
     res.json({ message: 'Industries updated successfully', industries });
   } else {
     res.status(400).json({ error: 'industries must be an array of objects' });
@@ -241,17 +432,47 @@ router.post('/industries', (req, res) => {
 // --- Industries Page Full Dynamic Data (Hero, Sector Tabs, Sectors, Comparison, Case Studies, Briefing) ---
 let currentIndustriesPageData = industriesPageData ? { ...industriesPageData } : {};
 
-router.get('/industries-page', (req, res) => {
+router.get('/industries-page', async (req, res) => {
+  if (isMongoActive()) {
+    try {
+      const page = await Page.findOne({ slug: 'industries' }).lean();
+      if (page?.data && Object.keys(page.data).length > 0) {
+        return res.json(page.data);
+      }
+    } catch (err) {
+      console.warn('Error fetching industries page from MongoDB:', err.message);
+    }
+  }
   res.json(currentIndustriesPageData);
 });
 
-router.get('/sector-catalog', (req, res) => {
-  res.json(currentIndustriesPageData.sectors || []);
+router.get('/sector-catalog', async (req, res) => {
+  let data = currentIndustriesPageData;
+  if (isMongoActive()) {
+    try {
+      const page = await Page.findOne({ slug: 'industries' }).lean();
+      if (page?.data?.sectors) data = page.data;
+    } catch (err) {
+      console.warn('Error querying sector-catalog from MongoDB:', err.message);
+    }
+  }
+  res.json(data.sectors || []);
 });
 
-router.post('/industries-page', (req, res) => {
+router.post('/industries-page', async (req, res) => {
   if (req.body.industriesPageData) {
     currentIndustriesPageData = { ...currentIndustriesPageData, ...req.body.industriesPageData };
+    if (isMongoActive()) {
+      try {
+        await Page.findOneAndUpdate(
+          { slug: 'industries' },
+          { $set: { data: currentIndustriesPageData } },
+          { upsert: true }
+        );
+      } catch (err) {
+        console.warn('Could not persist industries page to MongoDB:', err.message);
+      }
+    }
     res.json({ message: 'Industries page data updated successfully', industriesPageData: currentIndustriesPageData });
   } else {
     res.status(400).json({ error: 'industriesPageData object is required in body' });
@@ -259,12 +480,24 @@ router.post('/industries-page', (req, res) => {
 });
 
 // --- Process ---
-router.get('/process', (req, res) => {
-  res.json(processSteps);
+router.get('/process', async (req, res) => {
+  const result = await getHomeSection('process', processSteps);
+  res.json(result);
 });
-router.post('/process', (req, res) => {
+router.post('/process', async (req, res) => {
   if (Array.isArray(req.body.processSteps)) {
     processSteps = req.body.processSteps;
+    if (isMongoActive()) {
+      try {
+        await Page.findOneAndUpdate(
+          { slug: 'home' },
+          { $set: { 'data.process': processSteps } },
+          { upsert: true }
+        );
+      } catch (err) {
+        console.warn('Could not persist process steps to MongoDB:', err.message);
+      }
+    }
     res.json({ message: 'Process steps updated successfully', processSteps });
   } else {
     res.status(400).json({ error: 'processSteps must be an array of objects' });
@@ -272,12 +505,24 @@ router.post('/process', (req, res) => {
 });
 
 // --- Capabilities ---
-router.get('/capabilities', (req, res) => {
-  res.json(capabilities);
+router.get('/capabilities', async (req, res) => {
+  const result = await getHomeSection('capabilities', capabilities);
+  res.json(result);
 });
-router.post('/capabilities', (req, res) => {
+router.post('/capabilities', async (req, res) => {
   if (Array.isArray(req.body.capabilities)) {
     capabilities = req.body.capabilities;
+    if (isMongoActive()) {
+      try {
+        await Page.findOneAndUpdate(
+          { slug: 'home' },
+          { $set: { 'data.capabilities': capabilities } },
+          { upsert: true }
+        );
+      } catch (err) {
+        console.warn('Could not persist capabilities to MongoDB:', err.message);
+      }
+    }
     res.json({ message: 'Capabilities updated successfully', capabilities });
   } else {
     res.status(400).json({ error: 'capabilities must be an array of objects' });
@@ -285,12 +530,24 @@ router.post('/capabilities', (req, res) => {
 });
 
 // --- Reports ---
-router.get('/reports', (req, res) => {
-  res.json(reports);
+router.get('/reports', async (req, res) => {
+  const result = await getHomeSection('reports', reports);
+  res.json(result);
 });
-router.post('/reports', (req, res) => {
+router.post('/reports', async (req, res) => {
   if (Array.isArray(req.body.reports)) {
     reports = req.body.reports;
+    if (isMongoActive()) {
+      try {
+        await Page.findOneAndUpdate(
+          { slug: 'home' },
+          { $set: { 'data.reports': reports } },
+          { upsert: true }
+        );
+      } catch (err) {
+        console.warn('Could not persist reports to MongoDB:', err.message);
+      }
+    }
     res.json({ message: 'Reports updated successfully', reports });
   } else {
     res.status(400).json({ error: 'reports must be an array of objects' });
@@ -309,10 +566,20 @@ router.post('/contact', (req, res) => {
 });
 
 // --- About Page Data ---
-const aboutData = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'seeds', 'aboutData.json'), 'utf8'));
+let currentAboutData = aboutData ? { ...aboutData } : {};
 
-router.get('/about', (req, res) => {
-  res.json(aboutData);
+router.get('/about', async (req, res) => {
+  if (isMongoActive()) {
+    try {
+      const page = await Page.findOne({ slug: 'about' }).lean();
+      if (page?.data && Object.keys(page.data).length > 0) {
+        return res.json(page.data);
+      }
+    } catch (dbErr) {
+      console.warn('Error loading about page from MongoDB:', dbErr.message);
+    }
+  }
+  res.json(currentAboutData);
 });
 
 router.post('/about/consultation', (req, res) => {
@@ -328,17 +595,33 @@ router.post('/about/consultation', (req, res) => {
 });
 
 // --- Blog & Articles ---
-router.get('/articles', (req, res) => {
+router.get('/articles', async (req, res) => {
   const { q, category } = req.query;
-  let filtered = [...articles];
+  let sourceArticles = articles;
+  if (isMongoActive()) {
+    try {
+      const dbArticles = await Article.find({ status: 'published' }).sort({ publishedAt: -1 }).lean();
+      if (dbArticles && dbArticles.length > 0) {
+        sourceArticles = dbArticles.map((a) => ({
+          ...a,
+          id: a.articleId || a.slug || a._id,
+        }));
+      }
+    } catch (dbErr) {
+      console.warn('Error reading articles from MongoDB:', dbErr.message);
+    }
+  }
+
+  let filtered = [...sourceArticles];
 
   if (q && q.trim() !== '') {
     const query = q.trim().toLowerCase();
     filtered = filtered.filter(
       (art) =>
-        art.title.toLowerCase().includes(query) ||
-        art.excerpt.toLowerCase().includes(query) ||
-        (art.author && art.author.name.toLowerCase().includes(query)) ||
+        (art.title && art.title.toLowerCase().includes(query)) ||
+        (art.excerpt && art.excerpt.toLowerCase().includes(query)) ||
+        (art.summary && art.summary.toLowerCase().includes(query)) ||
+        (art.author && (typeof art.author === 'string' ? art.author : art.author.name || '').toLowerCase().includes(query)) ||
         (art.badge && art.badge.toLowerCase().includes(query)) ||
         (art.subCategory && art.subCategory.toLowerCase().includes(query))
     );
@@ -356,19 +639,45 @@ router.get('/articles', (req, res) => {
   res.json(filtered);
 });
 
-router.get('/articles/featured', (req, res) => {
+router.get('/articles/featured', async (req, res) => {
+  if (isMongoActive()) {
+    try {
+      const feat = await Article.findOne({ featured: true, status: 'published' }).lean();
+      if (feat) {
+        return res.json({ ...feat, id: feat.articleId || feat.slug || feat._id });
+      }
+    } catch (dbErr) {
+      console.warn('Error reading featured article from MongoDB:', dbErr.message);
+    }
+  }
   res.json(featuredArticle);
 });
 
-router.get('/articles/researchers', (req, res) => {
-  res.json(researchers);
+router.get('/articles/researchers', async (req, res) => {
+  const result = await getHomeSection('researchers', researchers);
+  res.json(result);
 });
 
-router.get('/articles/:id', (req, res) => {
-  const article = articles.find((art) => art.id === req.params.id);
+router.get('/articles/:id', async (req, res) => {
+  const targetId = req.params.id;
+  if (isMongoActive()) {
+    try {
+      const query = mongoose.isValidObjectId(targetId)
+        ? { $or: [{ _id: targetId }, { slug: targetId }, { articleId: targetId }] }
+        : { $or: [{ slug: targetId }, { articleId: targetId }] };
+      const art = await Article.findOne(query).lean();
+      if (art) {
+        return res.json({ ...art, id: art.articleId || art.slug || art._id });
+      }
+    } catch (dbErr) {
+      console.warn('Error loading article from MongoDB:', dbErr.message);
+    }
+  }
+
+  const article = articles.find((art) => art.id === targetId || art.slug === targetId);
   if (article) {
     res.json(article);
-  } else if (featuredArticle && featuredArticle.id === req.params.id) {
+  } else if (featuredArticle && (featuredArticle.id === targetId || featuredArticle.slug === targetId)) {
     res.json(featuredArticle);
   } else {
     res.status(404).json({ error: 'Article not found' });
@@ -386,19 +695,37 @@ router.post('/articles/newsletter', (req, res) => {
 });
 
 // --- Contact Page Data ---
-const contactData = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'seeds', 'contactData.json'), 'utf8'));
+let contactPageData = contactData ? { ...contactData } : {};
 
-// In-memory mutable contact page config (allows admin to update office/channel info)
-let contactPageData = { ...contactData };
-
-router.get('/contact', (req, res) => {
+router.get('/contact', async (req, res) => {
+  if (isMongoActive()) {
+    try {
+      const page = await Page.findOne({ slug: 'contact' }).lean();
+      if (page?.data && Object.keys(page.data).length > 0) {
+        return res.json(page.data);
+      }
+    } catch (dbErr) {
+      console.warn('Error reading contact page from MongoDB:', dbErr.message);
+    }
+  }
   res.json(contactPageData);
 });
 
 // Update office locations dynamically
-router.post('/contact/offices', (req, res) => {
+router.post('/contact/offices', async (req, res) => {
   if (Array.isArray(req.body.officeLocations)) {
     contactPageData.officeLocations = req.body.officeLocations;
+    if (isMongoActive()) {
+      try {
+        await Page.findOneAndUpdate(
+          { slug: 'contact' },
+          { $set: { 'data.officeLocations': contactPageData.officeLocations } },
+          { upsert: true }
+        );
+      } catch (err) {
+        console.warn('Could not persist officeLocations to MongoDB:', err.message);
+      }
+    }
     res.json({ message: 'Office locations updated successfully', officeLocations: contactPageData.officeLocations });
   } else {
     res.status(400).json({ error: 'officeLocations must be an array of objects' });
@@ -406,9 +733,20 @@ router.post('/contact/offices', (req, res) => {
 });
 
 // Update contact channels dynamically
-router.post('/contact/channels', (req, res) => {
+router.post('/contact/channels', async (req, res) => {
   if (Array.isArray(req.body.channels)) {
     contactPageData.channels = req.body.channels;
+    if (isMongoActive()) {
+      try {
+        await Page.findOneAndUpdate(
+          { slug: 'contact' },
+          { $set: { 'data.channels': contactPageData.channels } },
+          { upsert: true }
+        );
+      } catch (err) {
+        console.warn('Could not persist channels to MongoDB:', err.message);
+      }
+    }
     res.json({ message: 'Contact channels updated successfully', channels: contactPageData.channels });
   } else {
     res.status(400).json({ error: 'channels must be an array of objects' });
@@ -416,9 +754,20 @@ router.post('/contact/channels', (req, res) => {
 });
 
 // Update FAQ dynamically
-router.post('/contact/faq', (req, res) => {
+router.post('/contact/faq', async (req, res) => {
   if (Array.isArray(req.body.faq)) {
     contactPageData.faq = req.body.faq;
+    if (isMongoActive()) {
+      try {
+        await Page.findOneAndUpdate(
+          { slug: 'contact' },
+          { $set: { 'data.faq': contactPageData.faq } },
+          { upsert: true }
+        );
+      } catch (err) {
+        console.warn('Could not persist FAQ to MongoDB:', err.message);
+      }
+    }
     res.json({ message: 'FAQ updated successfully', faq: contactPageData.faq });
   } else {
     res.status(400).json({ error: 'faq must be an array of objects' });
@@ -438,9 +787,25 @@ router.post('/contact/message', (req, res) => {
   });
 });
 
+// --- Helper to get Page data by slug ---
+const getPageDataBySlug = async (slug, fallback) => {
+  if (isMongoActive()) {
+    try {
+      const page = await Page.findOne({ slug }).lean();
+      if (page?.data && Object.keys(page.data).length > 0) {
+        return page.data;
+      }
+    } catch (err) {
+      console.warn(`Error reading page '${slug}' from MongoDB:`, err.message);
+    }
+  }
+  return fallback;
+};
+
 // --- Bench / Talent Cloud Endpoints ---
-router.get('/bench', (req, res) => {
-  const rawCandidates = bench.candidates || bench.talents || [];
+router.get('/bench', async (req, res) => {
+  const benchSource = await getPageDataBySlug('bench', bench);
+  const rawCandidates = benchSource.candidates || benchSource.talents || [];
   const normalizedTalents = rawCandidates.map((c) => ({
     id: c.id,
     code: c.id || c.code,
@@ -488,7 +853,7 @@ router.get('/bench', (req, res) => {
   };
 
   const responsePayload = {
-    ...bench,
+    ...benchSource,
     hero: bench.hero || {
       liveBadge: "142 PRE-VETTED TALENTS ON ACTIVE BENCH",
       title: "Engineers on the Bench. Available to Deploy in 48 Hours.",
@@ -534,9 +899,30 @@ router.get('/bench', (req, res) => {
   res.json(responsePayload);
 });
 
-router.get('/bench/talents', (req, res) => {
+router.get('/bench/talents', async (req, res) => {
   const { q, specialty, urgency, experience, location, sort } = req.query;
-  let filtered = [...(bench.talents || [])];
+  const benchSource = await getPageDataBySlug('bench', bench);
+  const rawCandidates = benchSource.candidates || benchSource.talents || [];
+  let filtered = rawCandidates.map((c) => ({
+    id: c.id,
+    code: c.id || c.code,
+    role: c.title || c.role,
+    title: c.title || c.role,
+    specialty: c.specialty === 'genai' ? 'GenAI & LLMs' :
+               c.specialty === 'cloud' ? 'Cloud & DevOps' :
+               c.specialty === 'sap' ? 'SAP & Enterprise' :
+               c.specialty === 'systems' ? 'Systems & Distributed' :
+               c.specialty === 'data' ? 'Data & Analytics' : (c.specialty || 'Engineering'),
+    experienceLevel: c.seniorityTier === 'staff' ? 'Staff/Principal (10+y)' :
+                     c.seniorityTier === 'senior' ? 'Senior (6-9y)' : 'Lead (8+y)',
+    yearsExp: c.experience || `${c.years || 8}+ Yrs Exp`,
+    location: c.location || 'Remote Global',
+    score: c.technicalRating || c.score || 96,
+    urgency: c.availability || c.urgency || 'Immediate (24-48h)',
+    hourlyRate: c.hourlyRate || '$55 - $75',
+    proofQuote: c.engineeringProof || c.proofQuote || 'Architected and scaled production enterprise systems.',
+    skills: c.skills || [],
+  }));
 
   if (q && q.trim()) {
     const query = q.trim().toLowerCase();
@@ -545,7 +931,7 @@ router.get('/bench/talents', (req, res) => {
         t.role.toLowerCase().includes(query) ||
         t.code.toLowerCase().includes(query) ||
         t.skills.some((s) => s.toLowerCase().includes(query)) ||
-        t.proofQuote.toLowerCase().includes(query)
+        (t.proofQuote && t.proofQuote.toLowerCase().includes(query))
     );
   }
 
@@ -572,8 +958,8 @@ router.get('/bench/talents', (req, res) => {
     filtered.sort((a, b) => (urgencyOrder[a.urgency] || 99) - (urgencyOrder[b.urgency] || 99));
   } else if (sort === 'Lowest Rate') {
     filtered.sort((a, b) => {
-      const rateA = parseInt(a.hourlyRate.replace(/[^0-9]/g, '')) || 0;
-      const rateB = parseInt(b.hourlyRate.replace(/[^0-9]/g, '')) || 0;
+      const rateA = parseInt((a.hourlyRate || '').replace(/[^0-9]/g, ''), 10) || 0;
+      const rateB = parseInt((b.hourlyRate || '').replace(/[^0-9]/g, ''), 10) || 0;
       return rateA - rateB;
     });
   }
@@ -581,8 +967,10 @@ router.get('/bench/talents', (req, res) => {
   res.json(filtered);
 });
 
-router.get('/bench/talents/:id', (req, res) => {
-  const talent = (bench.talents || []).find((t) => t.id === req.params.id || t.code === req.params.id);
+router.get('/bench/talents/:id', async (req, res) => {
+  const benchSource = await getPageDataBySlug('bench', bench);
+  const rawCandidates = benchSource.candidates || benchSource.talents || [];
+  const talent = rawCandidates.find((t) => t.id === req.params.id || t.code === req.params.id);
   if (talent) {
     res.json(talent);
   } else {
@@ -862,32 +1250,31 @@ const aboutDataset = {
   }
 };
 
-// GET /api/about
-router.get('/about', (req, res) => {
-  res.json(aboutDataset);
-});
-
 // GET /api/about/stats
-router.get('/about/stats', (req, res) => {
-  res.json(aboutDataset.stats);
+router.get('/about/stats', async (req, res) => {
+  const data = await getPageDataBySlug('about', aboutDataset);
+  res.json(data.statsStrip || data.stats || aboutDataset.stats);
 });
 
 // GET /api/leadership
-router.get('/leadership', (req, res) => {
-  res.json(aboutDataset.leadership);
+router.get('/leadership', async (req, res) => {
+  const data = await getPageDataBySlug('about', aboutDataset);
+  res.json(data.leadershipTeam || data.leadership || aboutDataset.leadership);
 });
 
 // GET /api/milestones
-router.get('/milestones', (req, res) => {
+router.get('/milestones', async (req, res) => {
+  const data = await getPageDataBySlug('about', aboutDataset);
   res.json({
-    milestones: aboutDataset.milestones,
-    roadmap: aboutDataset.roadmap
+    milestones: data.growthTimeline?.milestones || aboutDataset.milestones,
+    roadmap: data.growthTimeline?.roadmap || aboutDataset.roadmap
   });
 });
 
 // GET /api/company/contact
-router.get('/company/contact', (req, res) => {
-  res.json(aboutDataset.contact);
+router.get('/company/contact', async (req, res) => {
+  const data = await getPageDataBySlug('about', aboutDataset);
+  res.json(data.contact || aboutDataset.contact);
 });
 
 // In-memory consultations log
@@ -936,13 +1323,25 @@ const handleConsultationSubmission = (req, res) => {
 router.post('/about/consultation', handleConsultationSubmission);
 router.post('/consultations', handleConsultationSubmission);
 // --- Payroll Outsourcing Endpoints ---
-router.get('/payroll', (req, res) => {
-  res.json(currentPayrollData);
+router.get('/payroll', async (req, res) => {
+  const result = await getPageDataBySlug('services-payroll', currentPayrollData);
+  res.json(result);
 });
 
-router.post('/payroll', (req, res) => {
+router.post('/payroll', async (req, res) => {
   if (req.body.payrollData) {
     currentPayrollData = { ...currentPayrollData, ...req.body.payrollData };
+    if (isMongoActive()) {
+      try {
+        await Page.findOneAndUpdate(
+          { slug: 'services-payroll' },
+          { $set: { data: currentPayrollData } },
+          { upsert: true }
+        );
+      } catch (err) {
+        console.warn('Could not persist payrollData to MongoDB:', err.message);
+      }
+    }
     res.json({ message: 'Payroll data updated successfully', payrollData: currentPayrollData });
   } else {
     res.status(400).json({ error: 'payrollData object is required in body' });
@@ -962,13 +1361,25 @@ router.post('/payroll/consultation', (req, res) => {
 });
 
 // --- Employer of Record (EOR) Endpoints ---
-router.get('/eor', (req, res) => {
-  res.json(currentEorData);
+router.get('/eor', async (req, res) => {
+  const result = await getPageDataBySlug('services-eor', currentEorData);
+  res.json(result);
 });
 
-router.post('/eor', (req, res) => {
+router.post('/eor', async (req, res) => {
   if (req.body.eorData) {
     currentEorData = { ...currentEorData, ...req.body.eorData };
+    if (isMongoActive()) {
+      try {
+        await Page.findOneAndUpdate(
+          { slug: 'services-eor' },
+          { $set: { data: currentEorData } },
+          { upsert: true }
+        );
+      } catch (err) {
+        console.warn('Could not persist eorData to MongoDB:', err.message);
+      }
+    }
     res.json({ message: 'EOR data updated successfully', eorData: currentEorData });
   } else {
     res.status(400).json({ error: 'eorData object is required in body' });
@@ -988,13 +1399,25 @@ router.post('/eor/consultation', (req, res) => {
 });
 
 // --- Staff Augmentation Endpoints ---
-router.get('/staff-augmentation', (req, res) => {
-  res.json(currentStaffAugmentationData);
+router.get('/staff-augmentation', async (req, res) => {
+  const result = await getPageDataBySlug('services-staff-augmentation', currentStaffAugmentationData);
+  res.json(result);
 });
 
-router.post('/staff-augmentation', (req, res) => {
+router.post('/staff-augmentation', async (req, res) => {
   if (req.body.staffAugmentationData) {
     currentStaffAugmentationData = { ...currentStaffAugmentationData, ...req.body.staffAugmentationData };
+    if (isMongoActive()) {
+      try {
+        await Page.findOneAndUpdate(
+          { slug: 'services-staff-augmentation' },
+          { $set: { data: currentStaffAugmentationData } },
+          { upsert: true }
+        );
+      } catch (err) {
+        console.warn('Could not persist staffAugmentationData to MongoDB:', err.message);
+      }
+    }
     res.json({ message: 'Staff augmentation data updated successfully', staffAugmentationData: currentStaffAugmentationData });
   } else {
     res.status(400).json({ error: 'staffAugmentationData object is required in body' });
@@ -1014,17 +1437,30 @@ router.post('/staff-augmentation/consultation', (req, res) => {
 });
 
 // --- Permanent Staffing & Executive Search Endpoints ---
-router.get('/permanent-staffing', (req, res) => {
-  res.json(currentPermanentStaffingData);
+router.get('/permanent-staffing', async (req, res) => {
+  const result = await getPageDataBySlug('services-permanent-staffing', currentPermanentStaffingData);
+  res.json(result);
 });
 
-router.get('/executive-search', (req, res) => {
-  res.json(currentPermanentStaffingData);
+router.get('/executive-search', async (req, res) => {
+  const result = await getPageDataBySlug('services-permanent-staffing', currentPermanentStaffingData);
+  res.json(result);
 });
 
-router.post('/permanent-staffing', (req, res) => {
+router.post('/permanent-staffing', async (req, res) => {
   if (req.body.permanentStaffingData) {
     currentPermanentStaffingData = { ...currentPermanentStaffingData, ...req.body.permanentStaffingData };
+    if (isMongoActive()) {
+      try {
+        await Page.findOneAndUpdate(
+          { slug: 'services-permanent-staffing' },
+          { $set: { data: currentPermanentStaffingData } },
+          { upsert: true }
+        );
+      } catch (err) {
+        console.warn('Could not persist permanentStaffingData to MongoDB:', err.message);
+      }
+    }
     res.json({ message: 'Permanent staffing data updated successfully', permanentStaffingData: currentPermanentStaffingData });
   } else {
     res.status(400).json({ error: 'permanentStaffingData object is required in body' });
@@ -1056,8 +1492,9 @@ router.post('/executive-search/consultation', (req, res) => {
 });
 
 // --- Find Talent & Enterprise Requisition Endpoints ---
-router.get('/find-talent', (req, res) => {
-  res.json(currentFindTalentData);
+router.get('/find-talent', async (req, res) => {
+  const result = await getPageDataBySlug('find-talent', currentFindTalentData);
+  res.json(result);
 });
 
 router.post('/find-talent/requisition', (req, res) => {
@@ -1104,8 +1541,9 @@ router.post('/find-talent/requisition', (req, res) => {
 });
 
 // --- Candidate Portal Endpoints ---
-router.get('/candidate-portal', (req, res) => {
-  res.json(currentCandidatePortalData);
+router.get('/candidate-portal', async (req, res) => {
+  const result = await getPageDataBySlug('candidate-portal', currentCandidatePortalData);
+  res.json(result);
 });
 
 router.post('/candidate-portal/timesheet', (req, res) => {

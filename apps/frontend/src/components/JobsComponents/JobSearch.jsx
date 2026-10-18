@@ -1,4 +1,5 @@
 import React from 'react';
+import { CloseIcon } from '../../admin/AdminIcons';
 
 const JobSearch = ({
   searchQuery,
@@ -51,7 +52,7 @@ const JobSearch = ({
                 className="JobSearch-clearBtn" 
                 onClick={() => setSearchQuery('')}
               >
-                ✕
+                <CloseIcon size={13} />
               </button>
             )}
           </div>

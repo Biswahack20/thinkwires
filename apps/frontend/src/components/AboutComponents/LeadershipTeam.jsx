@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import SectionBadge from '../common/SectionBadge';
 import ScrollReveal from '../common/ScrollReveal';
+import { CloseIcon } from '../../admin/AdminIcons';
 
 const LeadershipCard = ({ member, onOpenModal }) => {
   const [imgError, setImgError] = useState(false);
@@ -243,7 +244,7 @@ const LeadershipTeam = ({ data }) => {
               className="LeadershipModal-closeBtn"
               aria-label="Close Biography Modal"
             >
-              ✕
+              <CloseIcon size={18} />
             </button>
 
             <div className="LeadershipModal-header">

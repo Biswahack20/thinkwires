@@ -11,7 +11,10 @@
     "lint": "turbo lint",
     "test": "turbo test",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "migrate": "npm --prefix apps/backend run migrate",
+    "migrate:status": "npm --prefix apps/backend run migrate:status",
+    "migrate:down": "npm --prefix apps/backend run migrate:down"
   },
   "devDependencies": {
     "prettier": "^3.9.9",

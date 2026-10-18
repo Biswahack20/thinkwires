@@ -1,6 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import { adminApi } from './adminService';
+import {
+  EditIcon,
+  EyeIcon,
+  TrashIcon,
+  CloseIcon,
+  AlertCircleIcon,
+} from './AdminIcons';
 
 const BlogManager = () => {
   const { showToast, activeRole } = useOutletContext();
@@ -172,7 +179,8 @@ const BlogManager = () => {
         </div>
 
         <button className="tw-btn-primary" onClick={openAddModal}>
-          ✍️ Author Article
+          <EditIcon size={15} />
+          <span>Author Article</span>
         </button>
       </div>
 
@@ -278,21 +286,21 @@ const BlogManager = () => {
                           onClick={() => setPreviewArticle(art)}
                           title="Preview Article"
                         >
-                          👁️
+                          <EyeIcon size={14} />
                         </button>
                         <button
                           className="tw-action-icon-btn"
                           onClick={() => openEditModal(art)}
                           title="Edit Article"
                         >
-                          ✏️
+                          <EditIcon size={14} />
                         </button>
                         <button
                           className="tw-action-icon-btn delete"
                           onClick={() => setDeleteConfirmId(art.id || art._id)}
                           title="Delete Article"
                         >
-                          🗑️
+                          <TrashIcon size={14} />
                         </button>
                       </div>
                     </td>
@@ -316,7 +324,7 @@ const BlogManager = () => {
                 <h2 className="tw-modal-title">{previewArticle.title}</h2>
               </div>
               <button className="tw-modal-close-btn" onClick={() => setPreviewArticle(null)}>
-                ✕
+                <CloseIcon size={16} />
               </button>
             </div>
 
@@ -361,7 +369,7 @@ const BlogManager = () => {
             <div className="tw-modal-header">
               <h2 className="tw-modal-title">{editingArticle ? `Edit Article` : 'Author New Article'}</h2>
               <button className="tw-modal-close-btn" onClick={() => setEditorOpen(false)}>
-                ✕
+                <CloseIcon size={16} />
               </button>
             </div>
 
@@ -376,9 +384,13 @@ const BlogManager = () => {
                       borderRadius: '8px',
                       marginBottom: '1rem',
                       fontSize: '0.82rem',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.5rem',
                     }}
                   >
-                    ⚠️ {formError}
+                    <AlertCircleIcon size={16} color="#DC2626" />
+                    <span>{formError}</span>
                   </div>
                 )}
 
@@ -512,7 +524,7 @@ const BlogManager = () => {
             <div className="tw-modal-header">
               <h2 className="tw-modal-title">Delete Article</h2>
               <button className="tw-modal-close-btn" onClick={() => setDeleteConfirmId(null)}>
-                ✕
+                <CloseIcon size={16} />
               </button>
             </div>
             <div className="tw-modal-body">

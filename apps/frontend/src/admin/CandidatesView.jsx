@@ -1,6 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import { adminApi } from './adminService';
+import {
+  PlusIcon,
+  EyeIcon,
+  TrashIcon,
+  CloseIcon,
+  AlertCircleIcon,
+} from './AdminIcons';
 
 const PIPELINE_STAGES = ['Applied', 'Screening', 'Interview', 'Offered', 'Hired', 'Rejected'];
 
@@ -155,8 +162,10 @@ const CandidatesView = () => {
               setFormError('');
               setModalOpen(true);
             }}
+            style={{ display: 'inline-flex', alignItems: 'center', gap: '0.45rem' }}
           >
-            ➕ Add Candidate
+            <PlusIcon size={15} />
+            <span>Add Candidate</span>
           </button>
         </div>
       </div>
@@ -396,14 +405,14 @@ const CandidatesView = () => {
                           onClick={() => setSelectedCandidate(cand)}
                           title="View Details"
                         >
-                          👁️
+                          <EyeIcon size={14} />
                         </button>
                         <button
                           className="tw-action-icon-btn delete"
                           onClick={() => setDeleteConfirmId(cand.id || cand._id)}
                           title="Delete Candidate"
                         >
-                          🗑️
+                          <TrashIcon size={14} />
                         </button>
                       </div>
                     </td>
@@ -421,8 +430,8 @@ const CandidatesView = () => {
           <div className="tw-modal" style={{ maxWidth: '540px' }}>
             <div className="tw-modal-header">
               <h2 className="tw-modal-title">{selectedCandidate.name}</h2>
-              <button className="tw-modal-close-btn" onClick={() => setSelectedCandidate(null)}>
-                ✕
+              <button className="tw-modal-close-btn" onClick={() => setSelectedCandidate(null)} title="Close">
+                <CloseIcon size={16} />
               </button>
             </div>
             <div className="tw-modal-body">
@@ -525,8 +534,8 @@ const CandidatesView = () => {
           <div className="tw-modal">
             <div className="tw-modal-header">
               <h2 className="tw-modal-title">Intake New Candidate</h2>
-              <button className="tw-modal-close-btn" onClick={() => setModalOpen(false)}>
-                ✕
+              <button className="tw-modal-close-btn" onClick={() => setModalOpen(false)} title="Close">
+                <CloseIcon size={16} />
               </button>
             </div>
 
@@ -541,9 +550,13 @@ const CandidatesView = () => {
                       borderRadius: '8px',
                       marginBottom: '1rem',
                       fontSize: '0.82rem',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.45rem',
                     }}
                   >
-                    ⚠️ {formError}
+                    <AlertCircleIcon size={16} />
+                    <span>{formError}</span>
                   </div>
                 )}
 
@@ -692,8 +705,8 @@ const CandidatesView = () => {
           <div className="tw-modal" style={{ maxWidth: '440px' }}>
             <div className="tw-modal-header">
               <h2 className="tw-modal-title">Delete Candidate</h2>
-              <button className="tw-modal-close-btn" onClick={() => setDeleteConfirmId(null)}>
-                ✕
+              <button className="tw-modal-close-btn" onClick={() => setDeleteConfirmId(null)} title="Close">
+                <CloseIcon size={16} />
               </button>
             </div>
             <div className="tw-modal-body">

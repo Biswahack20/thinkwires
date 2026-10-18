@@ -1,6 +1,264 @@
 import React, { useState, useEffect } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import { adminApi } from './adminService';
+import {
+  PlusIcon,
+  EditIcon,
+  TrashIcon,
+  CloseIcon,
+  AlertCircleIcon,
+  LocationIcon,
+  BuildingIcon,
+} from './AdminIcons';
+
+export const INDUSTRY_SECTORS = [
+  'Information Technology & Cloud',
+  'Financial Services & FinTech',
+  'Healthcare & MedTech',
+  'Automotive & Embedded Systems',
+  'E-Commerce & Digital Retail',
+  'Telecommunications & 5G',
+  'Manufacturing & Industrial IoT',
+  'Energy, Oil & CleanTech',
+  'Cybersecurity & Defense',
+  'Media, Gaming & Entertainment',
+  'EdTech & Education',
+  'Supply Chain & Logistics',
+  'Consulting & Professional Services',
+  'Aerospace & Defense',
+  'Others',
+];
+
+export const JOB_MODES = ['Permanent', 'Contract', 'Contract to Hire'];
+
+export const WORK_MODES = [
+  { value: 'Work From Office', label: 'Work From Office (Specify Location)' },
+  { value: 'Work From Home', label: 'Work From Home' },
+  { value: 'Hybrid', label: 'Hybrid' },
+];
+
+export const NOTICE_PERIODS = [
+  { value: 'Immediate', label: 'Immediate' },
+  { value: 'On Notice Period', label: 'On Notice Period' },
+  { value: '< 30 Days', label: '< 30 Days' },
+  { value: 'Others', label: 'Others (Specify)' },
+];
+
+const formatPriority = (p) => {
+  if (typeof p === 'number') {
+    if (p <= 5) return 'Urgent';
+    if (p <= 10) return 'High';
+    if (p <= 20) return 'Medium';
+    return 'Low';
+  }
+  return String(p || 'Medium');
+};
+
+const renderJobModeBadge = (mode) => {
+  const m = mode || 'Permanent';
+  if (m === 'Permanent') {
+    return (
+      <span
+        style={{
+          fontSize: '0.68rem',
+          padding: '0.15rem 0.45rem',
+          borderRadius: '4px',
+          background: '#ECFDF5',
+          color: '#047857',
+          border: '1px solid #A7F3D0',
+          fontWeight: 600,
+        }}
+      >
+        Permanent
+      </span>
+    );
+  }
+  if (m === 'Contract') {
+    return (
+      <span
+        style={{
+          fontSize: '0.68rem',
+          padding: '0.15rem 0.45rem',
+          borderRadius: '4px',
+          background: '#FEF3C7',
+          color: '#B45309',
+          border: '1px solid #FDE68A',
+          fontWeight: 600,
+        }}
+      >
+        Contract
+      </span>
+    );
+  }
+  return (
+    <span
+      style={{
+        fontSize: '0.68rem',
+        padding: '0.15rem 0.45rem',
+        borderRadius: '4px',
+        background: '#EEF2FF',
+        color: '#4F46E5',
+        border: '1px solid #C7D2FE',
+        fontWeight: 600,
+      }}
+    >
+      Contract to Hire
+    </span>
+  );
+};
+
+const renderNoticeBadge = (np, other) => {
+  const val = np || 'Immediate';
+  if (val === 'Immediate') {
+    return (
+      <span
+        style={{
+          fontSize: '0.72rem',
+          padding: '0.2rem 0.5rem',
+          borderRadius: '4px',
+          background: '#D1FAE5',
+          color: '#065F46',
+          fontWeight: 600,
+          display: 'inline-flex',
+          alignItems: 'center',
+          whiteSpace: 'nowrap',
+        }}
+      >
+        Immediate
+      </span>
+    );
+  }
+  if (val === 'On Notice Period') {
+    return (
+      <span
+        style={{
+          fontSize: '0.72rem',
+          padding: '0.2rem 0.5rem',
+          borderRadius: '4px',
+          background: '#FEF3C7',
+          color: '#92400E',
+          fontWeight: 600,
+          display: 'inline-flex',
+          alignItems: 'center',
+          whiteSpace: 'nowrap',
+        }}
+      >
+        On Notice
+      </span>
+    );
+  }
+  if (val === '< 30 Days') {
+    return (
+      <span
+        style={{
+          fontSize: '0.72rem',
+          padding: '0.2rem 0.5rem',
+          borderRadius: '4px',
+          background: '#DBEAFE',
+          color: '#1E40AF',
+          fontWeight: 600,
+          display: 'inline-flex',
+          alignItems: 'center',
+          whiteSpace: 'nowrap',
+        }}
+      >
+        &lt; 30 Days
+      </span>
+    );
+  }
+  return (
+    <span
+      style={{
+        fontSize: '0.72rem',
+        padding: '0.2rem 0.5rem',
+        borderRadius: '4px',
+        background: '#F3E8FF',
+        color: '#6B21A8',
+        fontWeight: 600,
+        display: 'inline-flex',
+        alignItems: 'center',
+        whiteSpace: 'nowrap',
+      }}
+    >
+      {other || val || 'Other'}
+    </span>
+  );
+};
+
+const renderWorkModeBadge = (wm, officeLoc, loc) => {
+  const mode = wm || 'Work From Home';
+  const displayLoc = officeLoc || loc || '';
+  if (mode === 'Work From Office') {
+    return (
+      <div>
+        <span
+          style={{
+            fontSize: '0.72rem',
+            padding: '0.15rem 0.45rem',
+            borderRadius: '4px',
+            background: '#F1F5F9',
+            color: '#0F172A',
+            fontWeight: 600,
+            display: 'inline-flex',
+            alignItems: 'center',
+          }}
+        >
+          Work From Office
+        </span>
+        {displayLoc && (
+          <div style={{ fontSize: '0.72rem', color: '#475569', marginTop: '0.2rem', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+            <LocationIcon size={12} color="#64748B" />
+            <span>{displayLoc}</span>
+          </div>
+        )}
+      </div>
+    );
+  }
+  if (mode === 'Hybrid') {
+    return (
+      <div>
+        <span
+          style={{
+            fontSize: '0.72rem',
+            padding: '0.15rem 0.45rem',
+            borderRadius: '4px',
+            background: '#E0F2FE',
+            color: '#0369A1',
+            fontWeight: 600,
+            display: 'inline-flex',
+            alignItems: 'center',
+          }}
+        >
+          Hybrid
+        </span>
+        {displayLoc && (
+          <div style={{ fontSize: '0.72rem', color: '#475569', marginTop: '0.2rem', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+            <LocationIcon size={12} color="#64748B" />
+            <span>{displayLoc}</span>
+          </div>
+        )}
+      </div>
+    );
+  }
+  return (
+    <div>
+      <span
+        style={{
+          fontSize: '0.72rem',
+          padding: '0.15rem 0.45rem',
+          borderRadius: '4px',
+          background: '#ECFDF5',
+          color: '#047857',
+          fontWeight: 600,
+          display: 'inline-flex',
+          alignItems: 'center',
+        }}
+      >
+        Work From Home
+      </span>
+    </div>
+  );
+};
 
 const JobsView = () => {
   const { showToast, activeRole } = useOutletContext();
@@ -10,6 +268,8 @@ const JobsView = () => {
   const [search, setSearch] = useState('');
   const [priorityFilter, setPriorityFilter] = useState('All');
   const [statusFilter, setStatusFilter] = useState('All');
+  const [industryFilter, setIndustryFilter] = useState('All');
+  const [jobModeFilter, setJobModeFilter] = useState('All');
 
   const [modalOpen, setModalOpen] = useState(false);
   const [editingJob, setEditingJob] = useState(null);
@@ -18,22 +278,36 @@ const JobsView = () => {
   const [formData, setFormData] = useState({
     title: '',
     client: '',
+    industry: 'Information Technology & Cloud',
+    jobMode: 'Permanent',
+    workMode: 'Work From Office',
+    officeLocation: '',
+    noticePeriod: 'Immediate',
+    noticePeriodOther: '',
     requiredSkills: '',
     experienceRequired: 5,
     openingsCount: 1,
-    location: 'Remote (India/US)',
-    workMode: 'Remote',
     priority: 'Medium',
     status: 'Open',
     budget: '₹28-35 LPA ($45-55k)',
+    location: '',
+    description: '',
+    requirements: '',
   });
 
   const [formError, setFormError] = useState('');
+  const [isCustomClient, setIsCustomClient] = useState(false);
 
   const fetchJobs = () => {
     setLoading(true);
     adminApi
-      .getJobs({ search, priority: priorityFilter, status: statusFilter })
+      .getJobs({
+        search,
+        priority: priorityFilter,
+        status: statusFilter,
+        industry: industryFilter,
+        jobMode: jobModeFilter,
+      })
       .then((res) => {
         setJobs(res.jobs || []);
         setLoading(false);
@@ -47,7 +321,7 @@ const JobsView = () => {
   useEffect(() => {
     fetchJobs();
     adminApi.getClients().then((res) => setClients(res.clients || []));
-  }, [search, priorityFilter, statusFilter]);
+  }, [search, priorityFilter, statusFilter, industryFilter, jobModeFilter]);
 
   const openAddModal = () => {
     if (activeRole === 'viewer') {
@@ -55,17 +329,25 @@ const JobsView = () => {
       return;
     }
     setEditingJob(null);
+    setIsCustomClient(false);
     setFormData({
       title: '',
-      client: clients[0]?.companyName || 'FinTech Nexus Corp',
+      client: clients[0]?.companyName || '',
+      industry: 'Information Technology & Cloud',
+      jobMode: 'Permanent',
+      workMode: 'Work From Office',
+      officeLocation: '',
+      noticePeriod: 'Immediate',
+      noticePeriodOther: '',
       requiredSkills: '',
       experienceRequired: 5,
       openingsCount: 1,
-      location: 'Remote (India/US)',
-      workMode: 'Remote',
       priority: 'High',
       status: 'Open',
       budget: '₹28-35 LPA ($45-55k)',
+      location: '',
+      description: '',
+      requirements: '',
     });
     setFormError('');
     setModalOpen(true);
@@ -77,17 +359,45 @@ const JobsView = () => {
       return;
     }
     setEditingJob(job);
+
+    const matchesClient = clients.some((c) => c.companyName === job.client);
+    setIsCustomClient(!matchesClient && Boolean(job.client));
+
+    let wm = job.workMode || 'Work From Office';
+    if (wm === 'Remote') wm = 'Work From Home';
+    if (wm === 'On-site' || wm === 'Office') wm = 'Work From Office';
+
+    let np = job.noticePeriod || job.joining || 'Immediate';
+    let npOther = job.noticePeriodOther || '';
+    if (!['Immediate', 'On Notice Period', '< 30 Days', 'Others'].includes(np)) {
+      npOther = np;
+      np = 'Others';
+    }
+
     setFormData({
       title: job.title || '',
       client: job.client || '',
-      requiredSkills: Array.isArray(job.requiredSkills) ? job.requiredSkills.join(', ') : job.requiredSkills || '',
+      industry: job.industry || 'Information Technology & Cloud',
+      jobMode: job.jobMode || 'Permanent',
+      workMode: wm,
+      officeLocation: job.officeLocation || (wm === 'Work From Office' || wm === 'Hybrid' ? job.location : ''),
+      noticePeriod: np,
+      noticePeriodOther: npOther,
+      requiredSkills: Array.isArray(job.requiredSkills)
+        ? job.requiredSkills.join(', ')
+        : Array.isArray(job.skills)
+        ? job.skills.join(', ')
+        : job.requiredSkills || '',
       experienceRequired: job.experienceRequired || 3,
-      openingsCount: job.openingsCount || 1,
-      location: job.location || 'Remote',
-      workMode: job.workMode || 'Remote',
-      priority: job.priority || 'Medium',
-      status: job.status || 'Open',
-      budget: job.budget || '',
+      openingsCount: job.openingsCount || job.openings || 1,
+      priority: formatPriority(job.priority),
+      status: String(job.status || 'Open'),
+      budget: job.budget || job.salary || '',
+      location: job.location || '',
+      description: job.description || '',
+      requirements: Array.isArray(job.requirements)
+        ? job.requirements.join('\n')
+        : job.requirements || '',
     });
     setFormError('');
     setModalOpen(true);
@@ -100,8 +410,29 @@ const JobsView = () => {
       return;
     }
 
+    if (
+      (formData.workMode === 'Work From Office' || formData.workMode === 'Hybrid') &&
+      !formData.officeLocation.trim()
+    ) {
+      setFormError(`Please specify the office location for ${formData.workMode}.`);
+      return;
+    }
+
+    if (formData.noticePeriod === 'Others' && !formData.noticePeriodOther.trim()) {
+      setFormError('Please specify the notice period requirement (e.g. 60 Days, 90 Days).');
+      return;
+    }
+
     const payload = {
       ...formData,
+      description: formData.description.trim(),
+      requirements: formData.requirements.trim(),
+      location:
+        formData.workMode === 'Work From Office'
+          ? formData.officeLocation
+          : formData.workMode === 'Hybrid'
+          ? `Hybrid (${formData.officeLocation})`
+          : 'Work From Home (Remote)',
       requiredSkills: formData.requiredSkills
         .split(',')
         .map((s) => s.trim())
@@ -150,26 +481,54 @@ const JobsView = () => {
         <div className="tw-view-title-group">
           <h1>Staffing Requisitions & Job Requirements</h1>
           <p className="tw-view-subtitle">
-            Manage client job orders, priority allocations, required technical skill sets, and headcount fulfillment.
+            Manage client orders with industry classification, employment modes (Permanent, Contract, C2H), work locations, and notice period constraints.
           </p>
         </div>
 
-        <button className="tw-btn-primary" onClick={openAddModal}>
-          ➕ Post Requisition
+        <button className="tw-btn-primary" onClick={openAddModal} style={{ display: 'inline-flex', alignItems: 'center', gap: '0.45rem' }}>
+          <PlusIcon size={15} />
+          <span>Post Requisition</span>
         </button>
       </div>
 
       <div className="tw-table-container">
-        <div className="tw-table-toolbar">
-          <div className="tw-table-filters">
+        <div className="tw-table-toolbar" style={{ flexWrap: 'wrap', gap: '0.65rem' }}>
+          <div className="tw-table-filters" style={{ flexWrap: 'wrap', gap: '0.5rem' }}>
             <input
               type="text"
               className="tw-filter-input"
-              placeholder="Filter by title, client, skill..."
+              placeholder="Search title, client, skill, industry..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              style={{ width: '240px' }}
+              style={{ width: '230px' }}
             />
+
+            <select
+              className="tw-filter-select"
+              value={industryFilter}
+              onChange={(e) => setIndustryFilter(e.target.value)}
+              style={{ maxWidth: '180px' }}
+            >
+              <option value="All">All Industries</option>
+              {INDUSTRY_SECTORS.map((ind) => (
+                <option key={ind} value={ind}>
+                  {ind}
+                </option>
+              ))}
+            </select>
+
+            <select
+              className="tw-filter-select"
+              value={jobModeFilter}
+              onChange={(e) => setJobModeFilter(e.target.value)}
+            >
+              <option value="All">All Job Modes</option>
+              {JOB_MODES.map((mode) => (
+                <option key={mode} value={mode}>
+                  {mode}
+                </option>
+              ))}
+            </select>
 
             <select
               className="tw-filter-select"
@@ -196,7 +555,7 @@ const JobsView = () => {
             </select>
           </div>
 
-          <div style={{ fontSize: '0.8rem', color: '#64748B' }}>
+          <div style={{ fontSize: '0.8rem', color: '#64748B', marginLeft: 'auto' }}>
             Active orders: <strong>{jobs.length}</strong>
           </div>
         </div>
@@ -205,95 +564,175 @@ const JobsView = () => {
           <table className="tw-table">
             <thead>
               <tr>
-                <th>Job Requisition</th>
-                <th>Client Partner</th>
-                <th>Target Skills</th>
-                <th>Openings</th>
-                <th>Priority</th>
-                <th>Status</th>
-                <th>Budget / CTC</th>
-                <th style={{ textAlign: 'right' }}>Actions</th>
+                <th style={{ minWidth: '220px' }}>Job Requisition & Sector</th>
+                <th style={{ minWidth: '150px' }}>Client Partner</th>
+                <th style={{ minWidth: '180px' }}>Work Mode & Location</th>
+                <th style={{ minWidth: '130px' }}>Notice Period</th>
+                <th style={{ minWidth: '160px' }}>Target Skills</th>
+                <th style={{ minWidth: '80px' }}>Openings</th>
+                <th style={{ minWidth: '110px' }}>Priority</th>
+                <th style={{ minWidth: '100px' }}>Status</th>
+                <th style={{ minWidth: '130px' }}>Budget / CTC</th>
+                <th style={{ textAlign: 'right', minWidth: '80px' }}>Actions</th>
               </tr>
             </thead>
             <tbody>
               {loading ? (
                 <tr>
-                  <td colSpan="8" style={{ textAlign: 'center', padding: '2rem', color: '#64748B' }}>
+                  <td colSpan="10" style={{ textAlign: 'center', padding: '2rem', color: '#64748B' }}>
                     Loading requisitions...
                   </td>
                 </tr>
               ) : jobs.length === 0 ? (
                 <tr>
-                  <td colSpan="8" style={{ textAlign: 'center', padding: '2rem', color: '#64748B' }}>
+                  <td colSpan="10" style={{ textAlign: 'center', padding: '2rem', color: '#64748B' }}>
                     No job requirements found matching your criteria.
                   </td>
                 </tr>
               ) : (
-                jobs.map((job) => (
-                  <tr key={job.id || job._id}>
-                    <td>
-                      <div style={{ fontWeight: 600 }}>{job.title}</div>
-                      <div style={{ fontSize: '0.73rem', color: '#64748B' }}>
-                        {job.workMode} • {job.location} • {job.experienceRequired}+ yrs
-                      </div>
-                    </td>
-                    <td>
-                      <div style={{ fontWeight: 500 }}>{job.client}</div>
-                    </td>
-                    <td>
-                      <div style={{ display: 'flex', gap: '0.2rem', flexWrap: 'wrap', maxWidth: '200px' }}>
-                        {(job.requiredSkills || []).map((sk, idx) => (
+                jobs.map((job) => {
+                  const priorityStr = formatPriority(job.priority);
+                  const statusStr = String(job.status || 'Open');
+                  const skillsList =
+                    Array.isArray(job.requiredSkills) && job.requiredSkills.length > 0
+                      ? job.requiredSkills
+                      : Array.isArray(job.skills)
+                      ? job.skills
+                      : [];
+                  const openings = job.openingsCount || job.openings || 1;
+                  const fulfilled = job.fulfilledCount || 0;
+                  const budgetText = job.budget || job.salary || 'Competitive';
+
+                  return (
+                    <tr key={job.id || job._id}>
+                      <td>
+                        <div style={{ fontWeight: 600, color: '#0F172A', marginBottom: '0.25rem' }}>
+                          {job.title}
+                        </div>
+                        <div style={{ display: 'flex', gap: '0.35rem', flexWrap: 'wrap', alignItems: 'center' }}>
                           <span
-                            key={idx}
                             style={{
-                              fontSize: '0.65rem',
-                              padding: '0.1rem 0.35rem',
+                              fontSize: '0.67rem',
+                              padding: '0.1rem 0.4rem',
                               borderRadius: '4px',
-                              backgroundColor: '#EBF2FC',
-                              color: '#3478D4',
+                              backgroundColor: '#F1F5F9',
+                              color: '#475569',
+                              border: '1px solid #E2E8F0',
+                              fontWeight: 500,
+                              display: 'inline-flex',
+                              alignItems: 'center',
+                              gap: '0.25rem',
                             }}
                           >
-                            {sk}
+                            <BuildingIcon size={11} color="#64748B" />
+                            <span>{job.industry || 'IT & Cloud'}</span>
                           </span>
-                        ))}
-                      </div>
-                    </td>
-                    <td>
-                      <strong>
-                        {job.fulfilledCount || 0} / {job.openingsCount}
-                      </strong>
-                    </td>
-                    <td>
-                      <span className={`tw-badge ${job.priority.toLowerCase()}`}>{job.priority}</span>
-                    </td>
-                    <td>
-                      <span className={`tw-badge ${job.status.toLowerCase().replace(' ', '-')}`}>
-                        {job.status}
-                      </span>
-                    </td>
-                    <td>
-                      <span style={{ fontSize: '0.78rem', fontWeight: 600 }}>{job.budget}</span>
-                    </td>
-                    <td style={{ textAlign: 'right' }}>
-                      <div className="tw-action-btn-group" style={{ justifyContent: 'flex-end' }}>
-                        <button
-                          className="tw-action-icon-btn"
-                          onClick={() => openEditModal(job)}
-                          title="Edit Requisition"
-                        >
-                          ✏️
-                        </button>
-                        <button
-                          className="tw-action-icon-btn delete"
-                          onClick={() => setDeleteConfirmId(job.id || job._id)}
-                          title="Close Requisition"
-                        >
-                          🗑️
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))
+                          {renderJobModeBadge(job.jobMode)}
+                          <span style={{ fontSize: '0.7rem', color: '#94A3B8' }}>
+                            {job.experienceRequired || 3}+ yrs
+                          </span>
+                        </div>
+                        {job.description && (
+                          <div
+                            style={{
+                              fontSize: '0.72rem',
+                              color: '#64748B',
+                              marginTop: '0.35rem',
+                              lineHeight: '1.4',
+                              overflow: 'hidden',
+                              textOverflow: 'ellipsis',
+                              display: '-webkit-box',
+                              WebkitLineClamp: 2,
+                              WebkitBoxOrient: 'vertical',
+                              maxWidth: '300px',
+                            }}
+                            title={job.description}
+                          >
+                            {job.description}
+                          </div>
+                        )}
+                      </td>
+
+                      <td>
+                        <div style={{ fontWeight: 600, color: '#1E293B' }}>{job.client || 'Enterprise Client'}</div>
+                        <div style={{ fontSize: '0.72rem', color: '#64748B', marginTop: '0.15rem' }}>
+                          Verified Client
+                        </div>
+                      </td>
+
+                      <td>
+                        {renderWorkModeBadge(job.workMode, job.officeLocation, job.location)}
+                      </td>
+
+                      <td>
+                        {renderNoticeBadge(job.noticePeriod, job.noticePeriodOther)}
+                      </td>
+
+                      <td>
+                        <div style={{ display: 'flex', gap: '0.2rem', flexWrap: 'wrap', maxWidth: '200px' }}>
+                          {skillsList.slice(0, 4).map((sk, idx) => (
+                            <span
+                              key={idx}
+                              style={{
+                                fontSize: '0.65rem',
+                                padding: '0.1rem 0.35rem',
+                                borderRadius: '4px',
+                                backgroundColor: '#EBF2FC',
+                                color: '#3478D4',
+                              }}
+                            >
+                              {sk}
+                            </span>
+                          ))}
+                          {skillsList.length > 4 && (
+                            <span style={{ fontSize: '0.65rem', color: '#64748B', padding: '0.1rem 0.2rem' }}>
+                              +{skillsList.length - 4}
+                            </span>
+                          )}
+                        </div>
+                      </td>
+
+                      <td>
+                        <strong>
+                          {fulfilled} / {openings}
+                        </strong>
+                      </td>
+
+                      <td>
+                        <span className={`tw-badge ${priorityStr.toLowerCase()}`}>{priorityStr}</span>
+                      </td>
+
+                      <td>
+                        <span className={`tw-badge ${statusStr.toLowerCase().replace(/\s+/g, '-')}`}>
+                          {statusStr}
+                        </span>
+                      </td>
+
+                      <td>
+                        <span style={{ fontSize: '0.78rem', fontWeight: 600 }}>{budgetText}</span>
+                      </td>
+
+                      <td style={{ textAlign: 'right' }}>
+                        <div className="tw-action-btn-group" style={{ justifyContent: 'flex-end' }}>
+                          <button
+                            className="tw-action-icon-btn"
+                            onClick={() => openEditModal(job)}
+                            title="Edit Requisition"
+                          >
+                            <EditIcon size={14} />
+                          </button>
+                          <button
+                            className="tw-action-icon-btn delete"
+                            onClick={() => setDeleteConfirmId(job.id || job._id)}
+                            title="Close Requisition"
+                          >
+                            <TrashIcon size={14} />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  );
+                })
               )}
             </tbody>
           </table>
@@ -303,13 +742,13 @@ const JobsView = () => {
       {/* Add / Edit Job Modal */}
       {modalOpen && (
         <div className="tw-modal-overlay">
-          <div className="tw-modal">
+          <div className="tw-modal" style={{ maxWidth: '720px' }}>
             <div className="tw-modal-header">
               <h2 className="tw-modal-title">
-                {editingJob ? `Edit ${editingJob.title}` : 'Post New Staffing Requirement'}
+                {editingJob ? `Edit Requisition: ${editingJob.title}` : 'Post New Staffing Requirement'}
               </h2>
-              <button className="tw-modal-close-btn" onClick={() => setModalOpen(false)}>
-                ✕
+              <button className="tw-modal-close-btn" onClick={() => setModalOpen(false)} title="Close">
+                <CloseIcon size={16} />
               </button>
             </div>
 
@@ -324,12 +763,17 @@ const JobsView = () => {
                       borderRadius: '8px',
                       marginBottom: '1rem',
                       fontSize: '0.82rem',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.45rem',
                     }}
                   >
-                    ⚠️ {formError}
+                    <AlertCircleIcon size={16} />
+                    <span>{formError}</span>
                   </div>
                 )}
 
+                {/* Row 1: Title and Client */}
                 <div className="tw-form-row">
                   <div className="tw-form-group">
                     <label className="tw-form-label">Job Title *</label>
@@ -338,26 +782,218 @@ const JobsView = () => {
                       className="tw-form-input"
                       value={formData.title}
                       onChange={(e) => setFormData({ ...formData, title: e.target.value })}
-                      placeholder="e.g. Lead Full Stack & Frontend Engineer"
+                      placeholder="e.g. Lead Full Stack & Cloud Architect"
                       required
                     />
                   </div>
                   <div className="tw-form-group">
-                    <label className="tw-form-label">Corporate Client *</label>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.35rem' }}>
+                      <label className="tw-form-label" style={{ marginBottom: 0 }}>Corporate Client *</label>
+                      {clients.length > 0 && (
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setIsCustomClient((prev) => {
+                              const next = !prev;
+                              if (next) {
+                                setFormData((fd) => ({ ...fd, client: '' }));
+                              } else {
+                                setFormData((fd) => ({ ...fd, client: clients[0]?.companyName || '' }));
+                              }
+                              return next;
+                            });
+                          }}
+                          style={{
+                            background: 'none',
+                            border: 'none',
+                            color: '#2563EB',
+                            fontSize: '0.75rem',
+                            fontWeight: 600,
+                            cursor: 'pointer',
+                            padding: 0,
+                            textDecoration: 'underline',
+                          }}
+                        >
+                          {isCustomClient ? 'Select from registered clients' : '+ Enter client manually'}
+                        </button>
+                      )}
+                    </div>
+
+                    {isCustomClient || clients.length === 0 ? (
+                      <div>
+                        <input
+                          type="text"
+                          className="tw-form-input"
+                          value={formData.client}
+                          onChange={(e) => setFormData({ ...formData, client: e.target.value })}
+                          placeholder="Type client partner name manually (e.g. Acme Tech Global)"
+                          required
+                          autoFocus={isCustomClient}
+                        />
+                        <div style={{ fontSize: '0.72rem', color: '#64748B', marginTop: '0.25rem' }}>
+                          Client details are strictly internal and will never be exposed on the public website.
+                        </div>
+                      </div>
+                    ) : (
+                      <select
+                        className="tw-form-select"
+                        value={formData.client}
+                        onChange={(e) => {
+                          if (e.target.value === '__custom__') {
+                            setIsCustomClient(true);
+                            setFormData({ ...formData, client: '' });
+                          } else {
+                            setFormData({ ...formData, client: e.target.value });
+                          }
+                        }}
+                        required
+                      >
+                        <option value="">Select Client Partner...</option>
+                        {clients.map((c) => (
+                          <option key={c.id || c._id} value={c.companyName}>
+                            {c.companyName}
+                          </option>
+                        ))}
+                        <option value="__custom__">+ Enter Unlisted Client Name Manually...</option>
+                      </select>
+                    )}
+                  </div>
+                </div>
+
+                {/* Row 2: Industry Sector and Job Mode */}
+                <div className="tw-form-row">
+                  <div className="tw-form-group">
+                    <label className="tw-form-label">Industry / Sector *</label>
                     <select
                       className="tw-form-select"
-                      value={formData.client}
-                      onChange={(e) => setFormData({ ...formData, client: e.target.value })}
+                      value={formData.industry}
+                      onChange={(e) => setFormData({ ...formData, industry: e.target.value })}
+                      required
                     >
-                      {clients.map((c) => (
-                        <option key={c.id || c._id} value={c.companyName}>
-                          {c.companyName}
+                      {INDUSTRY_SECTORS.map((ind) => (
+                        <option key={ind} value={ind}>
+                          {ind}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div className="tw-form-group">
+                    <label className="tw-form-label">Job Mode *</label>
+                    <select
+                      className="tw-form-select"
+                      value={formData.jobMode}
+                      onChange={(e) => setFormData({ ...formData, jobMode: e.target.value })}
+                      required
+                    >
+                      {JOB_MODES.map((mode) => (
+                        <option key={mode} value={mode}>
+                          {mode}
                         </option>
                       ))}
                     </select>
                   </div>
                 </div>
 
+                {/* Row 3: Work Mode and Conditional Office Location */}
+                <div className="tw-form-row">
+                  <div className="tw-form-group">
+                    <label className="tw-form-label">Work Mode *</label>
+                    <select
+                      className="tw-form-select"
+                      value={formData.workMode}
+                      onChange={(e) => setFormData({ ...formData, workMode: e.target.value })}
+                      required
+                    >
+                      {WORK_MODES.map((wm) => (
+                        <option key={wm.value} value={wm.value}>
+                          {wm.label}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  {(formData.workMode === 'Work From Office' || formData.workMode === 'Hybrid') ? (
+                    <div className="tw-form-group">
+                      <label className="tw-form-label">
+                        {formData.workMode === 'Work From Office'
+                          ? 'Office Location (City / Campus) *'
+                          : 'Office Base Location (Hybrid) *'}
+                      </label>
+                      <input
+                        type="text"
+                        className="tw-form-input"
+                        value={formData.officeLocation}
+                        onChange={(e) => setFormData({ ...formData, officeLocation: e.target.value })}
+                        placeholder="e.g. Bangalore - Whitefield Tech Hub"
+                        required
+                      />
+                    </div>
+                  ) : (
+                    <div className="tw-form-group">
+                      <label className="tw-form-label">Work Location Coverage</label>
+                      <input
+                        type="text"
+                        className="tw-form-input"
+                        value="Remote / Pan-India / Global"
+                        disabled
+                        style={{ backgroundColor: '#F8FAFC', color: '#64748B' }}
+                      />
+                    </div>
+                  )}
+                </div>
+
+                {/* Row 4: Notice Period and Conditional Other Specify */}
+                <div className="tw-form-row">
+                  <div className="tw-form-group">
+                    <label className="tw-form-label">Notice Period Requirement *</label>
+                    <select
+                      className="tw-form-select"
+                      value={formData.noticePeriod}
+                      onChange={(e) => setFormData({ ...formData, noticePeriod: e.target.value })}
+                      required
+                    >
+                      {NOTICE_PERIODS.map((np) => (
+                        <option key={np.value} value={np.value}>
+                          {np.label}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  {formData.noticePeriod === 'Others' ? (
+                    <div className="tw-form-group">
+                      <label className="tw-form-label">Specify Notice Period *</label>
+                      <input
+                        type="text"
+                        className="tw-form-input"
+                        value={formData.noticePeriodOther}
+                        onChange={(e) => setFormData({ ...formData, noticePeriodOther: e.target.value })}
+                        placeholder="e.g. 60 Days, 90 Days, or Buyout Negotiable"
+                        required
+                      />
+                    </div>
+                  ) : (
+                    <div className="tw-form-group">
+                      <label className="tw-form-label">Expected Joining Timeline</label>
+                      <input
+                        type="text"
+                        className="tw-form-input"
+                        value={
+                          formData.noticePeriod === 'Immediate'
+                            ? 'Immediate joining (0 - 7 calendar days)'
+                            : formData.noticePeriod === 'On Notice Period'
+                            ? 'Actively serving official notice'
+                            : 'Within 30 calendar days'
+                        }
+                        disabled
+                        style={{ backgroundColor: '#F8FAFC', color: '#64748B' }}
+                      />
+                    </div>
+                  )}
+                </div>
+
+                {/* Row 5: Skills */}
                 <div className="tw-form-group">
                   <label className="tw-form-label">Required Technical Skills (comma separated) *</label>
                   <input
@@ -365,10 +1001,11 @@ const JobsView = () => {
                     className="tw-form-input"
                     value={formData.requiredSkills}
                     onChange={(e) => setFormData({ ...formData, requiredSkills: e.target.value })}
-                    placeholder="React, TypeScript, Next.js, Redux"
+                    placeholder="React, TypeScript, Node.js, AWS, Docker"
                   />
                 </div>
 
+                {/* Row 6: Experience & Openings */}
                 <div className="tw-form-row">
                   <div className="tw-form-group">
                     <label className="tw-form-label">Experience Required (Years)</label>
@@ -392,6 +1029,7 @@ const JobsView = () => {
                   </div>
                 </div>
 
+                {/* Row 7: Priority & Status */}
                 <div className="tw-form-row">
                   <div className="tw-form-group">
                     <label className="tw-form-label">Priority</label>
@@ -421,27 +1059,47 @@ const JobsView = () => {
                   </div>
                 </div>
 
-                <div className="tw-form-row">
-                  <div className="tw-form-group">
-                    <label className="tw-form-label">Location / Work Mode</label>
-                    <input
-                      type="text"
-                      className="tw-form-input"
-                      value={formData.location}
-                      onChange={(e) => setFormData({ ...formData, location: e.target.value })}
-                      placeholder="Remote (India/US) / Hybrid"
-                    />
-                  </div>
-                  <div className="tw-form-group">
-                    <label className="tw-form-label">Budget / Compensation Band</label>
-                    <input
-                      type="text"
-                      className="tw-form-input"
-                      value={formData.budget}
-                      onChange={(e) => setFormData({ ...formData, budget: e.target.value })}
-                      placeholder="₹28-35 LPA ($45-55k)"
-                    />
-                  </div>
+                {/* Row 8: Budget */}
+                <div className="tw-form-group">
+                  <label className="tw-form-label">Budget / Compensation Band</label>
+                  <input
+                    type="text"
+                    className="tw-form-input"
+                    value={formData.budget}
+                    onChange={(e) => setFormData({ ...formData, budget: e.target.value })}
+                    placeholder="₹28-35 LPA ($45-55k)"
+                  />
+                </div>
+
+                {/* Row 9: Job Description */}
+                <div className="tw-form-group">
+                  <label className="tw-form-label">Job Description *</label>
+                  <textarea
+                    className="tw-form-textarea"
+                    rows="4"
+                    value={formData.description}
+                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                    placeholder="Provide a comprehensive overview of the role, day-to-day engineering responsibilities, architectural scope, and project expectations..."
+                    required
+                  ></textarea>
+                  <span style={{ fontSize: '0.72rem', color: '#64748B', marginTop: '0.25rem', display: 'block' }}>
+                    Full job description displayed across public job boards, applicant intake, and client requisition cards.
+                  </span>
+                </div>
+
+                {/* Row 10: Requirements & Qualifications */}
+                <div className="tw-form-group">
+                  <label className="tw-form-label">Requirements &amp; Qualifications</label>
+                  <textarea
+                    className="tw-form-textarea"
+                    rows="4"
+                    value={formData.requirements}
+                    onChange={(e) => setFormData({ ...formData, requirements: e.target.value })}
+                    placeholder="Enter candidate qualifications, prerequisites, and education (e.g.&#10;• Bachelor's/Master's degree in Computer Science or related technical discipline&#10;• 5+ years building and deploying scalable distributed systems&#10;• Proven experience with system architecture, CI/CD, and agile engineering&#10;• Strong problem-solving, communication, and client collaboration skills)"
+                  ></textarea>
+                  <span style={{ fontSize: '0.72rem', color: '#64748B', marginTop: '0.25rem', display: 'block' }}>
+                    Key candidate qualifications, experience benchmarks, and domain prerequisites.
+                  </span>
                 </div>
               </div>
 
@@ -468,8 +1126,8 @@ const JobsView = () => {
           <div className="tw-modal" style={{ maxWidth: '440px' }}>
             <div className="tw-modal-header">
               <h2 className="tw-modal-title">Close Requisition</h2>
-              <button className="tw-modal-close-btn" onClick={() => setDeleteConfirmId(null)}>
-                ✕
+              <button className="tw-modal-close-btn" onClick={() => setDeleteConfirmId(null)} title="Close">
+                <CloseIcon size={16} />
               </button>
             </div>
             <div className="tw-modal-body">

@@ -2,37 +2,95 @@ import { verifyCandidateToken } from '../utils/auth.util.js';
 import Candidate from '../models/candidate.mongo.model.js';
 import mongoose from 'mongoose';
 
-// ================= ADMIN ROLE-BASED AUTHENTICATION =================
-// Remains completely separate so candidates cannot access admin CMS endpoints
-export const requireAuth = (allowedRoles = ['admin', 'editor', 'viewer']) => {
+// ================= ADMIN ROLE-BASED AUTHENTICATION & RBAC =================
+// Supports RBAC roles: superadmin (full control), cms_admin (CMS only), admin (manpower & recruitment)
+export const requireAuth = (allowedRoles = ['superadmin', 'admin', 'cms_admin']) => {
   return (req, res, next) => {
     let role = (
       req.headers['x-demo-role'] ||
       req.query.role ||
-      'admin'
+      'superadmin'
     ).toString().toLowerCase();
 
-    if (role === 'superuser' || role === 'owner') role = 'admin';
+    // Map common aliases
+    if (role === 'superuser' || role === 'owner') role = 'superadmin';
+    if (role === 'cms-admin' || role === 'cmsadmin') role = 'cms_admin';
 
-    req.user = {
-      id: role === 'admin' ? 'usr_001' : role === 'editor' ? 'usr_002' : 'usr_003',
-      name: role === 'admin' ? 'Biswarupa Swain' : role === 'editor' ? 'Sarah Jenkins' : 'David Thorne',
-      email: `${role}@thinkwires.com`,
-      role: role,
+    let userObj = {
+      id: 'usr_001',
+      name: 'Alexander Vance',
+      email: 'superadmin@thinkwires.com',
+      role: 'superadmin',
+      designation: 'Chief Technology Officer / Superadmin',
     };
 
-    if (role === 'viewer' && req.method !== 'GET') {
+    if (role === 'cms_admin') {
+      userObj = {
+        id: 'usr_002',
+        name: 'Elena Rostova',
+        email: 'cmsadmin@thinkwires.com',
+        role: 'cms_admin',
+        designation: 'Chief Content Officer / CMS Admin',
+      };
+    } else if (role === 'admin') {
+      userObj = {
+        id: 'usr_003',
+        name: 'Biswarupa Swain',
+        email: 'admin@thinkwires.com',
+        role: 'admin',
+        designation: 'Principal System Admin',
+      };
+    }
+
+    req.user = userObj;
+
+    // Role check (superadmin always passes)
+    if (role !== 'superadmin' && allowedRoles.length > 0 && !allowedRoles.includes(role)) {
       return res.status(403).json({
         success: false,
-        error: 'Permission Denied: Viewer accounts have read-only access. Switch role to Admin or Editor to perform modifications.',
+        error: `Permission Denied: ${role.toUpperCase()} role is not authorized for this operation. Requires ${allowedRoles.join(' or ')}.`,
         currentRole: role,
       });
     }
 
-    if (allowedRoles.length > 0 && !allowedRoles.includes(role)) {
+    next();
+  };
+};
+
+/**
+ * RBAC Helper Middleware: enforces specific roles on route groups.
+ * Superadmin automatically bypasses all restrictions (full control).
+ */
+export const requireRole = (...allowedRoles) => {
+  const rolesList = allowedRoles.flat();
+  return (req, res, next) => {
+    const role = (req.user?.role || 'superadmin').toLowerCase();
+
+    // Superadmin has full uninhibited access across all portal modules
+    if (role === 'superadmin') {
+      return next();
+    }
+
+    if (rolesList.length > 0 && !rolesList.includes(role)) {
+      const isManpowerRestricted = role === 'cms_admin' && !rolesList.includes('cms_admin');
+      const isCmsRestricted = role === 'admin' && !rolesList.includes('admin');
+
+      let errorMsg = `Access Denied: ${role.toUpperCase()} role is not authorized for this module. Requires ${rolesList.join(' or ')}.`;
+      let code = 'RBAC_ACCESS_DENIED';
+
+      if (isManpowerRestricted) {
+        errorMsg = 'Access Denied: Your account role is CMS Admin. CMS Admins have access restricted exclusively to the Content Management System (CMS). Manpower, Candidate, and Placement records are inaccessible.';
+        code = 'RBAC_CMS_ADMIN_RESTRICTED';
+      } else if (isCmsRestricted) {
+        errorMsg = 'Access Denied: Your account role is Admin. Admins have access restricted exclusively to Manpower, Workforce, and Recruitment operations. Content Management System (CMS) is inaccessible.';
+        code = 'RBAC_ADMIN_CMS_RESTRICTED';
+      }
+
       return res.status(403).json({
         success: false,
-        error: `Permission Denied: ${role.toUpperCase()} role is not authorized for this operation. Requires ${allowedRoles.join(' or ')}.`,
+        error: errorMsg,
+        code,
+        requiredRoles: rolesList,
         currentRole: role,
       });
     }

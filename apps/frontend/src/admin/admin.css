@@ -1030,9 +1030,18 @@
   width: 100%;
   max-width: 620px;
   max-height: 90vh;
-  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
   box-shadow: var(--tw-shadow-lg);
   border: 1px solid var(--tw-border);
+}
+
+.tw-modal form {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow: hidden;
 }
 
 .tw-modal-header {
@@ -1041,6 +1050,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  flex-shrink: 0;
 }
 
 .tw-modal-title {
@@ -1066,6 +1076,8 @@
 
 .tw-modal-body {
   padding: 1.5rem;
+  overflow-y: auto;
+  flex: 1;
 }
 
 .tw-modal-footer {
@@ -1076,6 +1088,7 @@
   justify-content: flex-end;
   gap: 0.75rem;
   background-color: #F8FAFC;
+  flex-shrink: 0;
 }
 
 /* Forms */
@@ -1099,10 +1112,17 @@
   border: 1px solid var(--tw-border);
   border-radius: var(--tw-radius-md);
   font-size: 0.85rem;
+  font-family: inherit;
   color: var(--tw-text-primary);
   outline: none;
   background-color: #FFFFFF;
   box-sizing: border-box;
+}
+
+.tw-form-textarea {
+  resize: vertical;
+  min-height: 90px;
+  line-height: 1.5;
 }
 
 .tw-form-input:focus,

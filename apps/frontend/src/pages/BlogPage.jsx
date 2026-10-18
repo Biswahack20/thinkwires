@@ -5,6 +5,7 @@ import Navbar from '../components/common/Navbar';
 import Footer from '../components/common/Footer';
 import BlogHero from '../components/BlogComponents/BlogHero';
 import BlogFilters from '../components/BlogComponents/BlogFilters';
+import { CloseIcon, StarIcon } from '../admin/AdminIcons';
 
 import {
   setSearchQuery,
@@ -150,7 +151,7 @@ const BlogPage = () => {
               className="BlogPage-modalCloseBtn"
               aria-label="Close reader"
             >
-              ✕
+              <CloseIcon size={16} />
             </button>
             <div className="BlogPage-modalHeader">
               <span className="BlogPage-modalCategory">{activeArticleModal.badge || activeArticleModal.category}</span>
@@ -181,8 +182,10 @@ const BlogPage = () => {
               <button
                 onClick={() => dispatch(toggleBookmark(activeArticleModal.id))}
                 className="BlogPage-modalBookmarkBtn"
+                style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}
               >
-                {bookmarkedArticles.includes(activeArticleModal.id) ? '★ Bookmarked' : '☆ Bookmark Article'}
+                <StarIcon size={14} filled={bookmarkedArticles.includes(activeArticleModal.id)} color="currentColor" />
+                <span>{bookmarkedArticles.includes(activeArticleModal.id) ? 'Bookmarked' : 'Bookmark Article'}</span>
               </button>
               <button
                 onClick={() => setActiveArticleModal(null)}

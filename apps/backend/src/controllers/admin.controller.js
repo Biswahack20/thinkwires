@@ -14,6 +14,7 @@ import Media from '../models/media.mongo.model.js';
 import Announcement from '../models/announcement.mongo.model.js';
 import Activity from '../models/activity.mongo.model.js';
 import UserMongo from '../models/user.mongo.model.js';
+import TechStack from '../models/techStack.mongo.model.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -32,6 +33,7 @@ let inMemoryData = {
   media: [],
   announcements: [],
   activities: [],
+  techstacks: [],
 };
 
 try {
@@ -244,18 +246,16 @@ export const getEmployees = async (req, res) => {
       if (status && status !== 'All') query.deploymentStatus = status;
 
       items = await Employee.find(query).sort({ createdAt: -1 }).lean();
-      if (items.length === 0 && !search && (!availability || availability === 'All') && (!status || status === 'All')) {
-        items = inMemoryData.employees;
-      }
     } else {
-      items = inMemoryData.employees.filter((emp) => {
+      items = (inMemoryData.employees || []).filter((emp) => {
         let match = true;
         if (search) {
           const s = search.toLowerCase();
           match =
-            emp.name.toLowerCase().includes(s) ||
-            emp.email.toLowerCase().includes(s) ||
-            emp.designation.toLowerCase().includes(s) ||
+            emp.name?.toLowerCase().includes(s) ||
+            emp.email?.toLowerCase().includes(s) ||
+            emp.designation?.toLowerCase().includes(s) ||
+            emp.role?.toLowerCase().includes(s) ||
             (emp.technicalSkills && emp.technicalSkills.some((sk) => sk.toLowerCase().includes(s)));
         }
         if (match && availability && availability !== 'All') {
@@ -289,10 +289,32 @@ export const getEmployees = async (req, res) => {
 
 export const createEmployee = async (req, res) => {
   try {
-    const { name, email, phone, designation, technicalSkills, experience, availability, deploymentStatus, billingRate, location, notes } = req.body;
+    const {
+      name,
+      email,
+      phone,
+      designation,
+      role = 'employee',
+      portalAccess = false,
+      technicalSkills,
+      experience,
+      availability,
+      deploymentStatus,
+      billingRate,
+      location,
+      notes,
+    } = req.body;
 
-    if (!name || !email || !phone || !designation) {
-      return res.status(400).json({ success: false, error: 'Name, email, phone, and designation are required.' });
+    if (!name || !email || !designation) {
+      return res.status(400).json({ success: false, error: 'Name, email, and designation are required.' });
+    }
+
+    const isPortalRole = role && role !== 'employee';
+    if (isPortalRole && req.user?.role !== 'superadmin') {
+      return res.status(403).json({
+        success: false,
+        error: 'Access denied: Only a Superadmin can add or assign roles to System Members.',
+      });
     }
 
     const skillsArray = Array.isArray(technicalSkills)
@@ -301,12 +323,16 @@ export const createEmployee = async (req, res) => {
       ? technicalSkills.split(',').map((s) => s.trim()).filter(Boolean)
       : [];
 
+    const hasPortalAccess = Boolean(portalAccess || (role && role !== 'employee'));
+
     const newEmp = {
       id: `emp_${Date.now()}`,
       name,
-      email,
-      phone,
+      email: email.toLowerCase().trim(),
+      phone: phone || '',
       designation,
+      role: role || 'employee',
+      portalAccess: hasPortalAccess,
       technicalSkills: skillsArray,
       experience: Number(experience) || 0,
       availability: availability || 'Immediate',
@@ -317,13 +343,38 @@ export const createEmployee = async (req, res) => {
       createdAt: new Date().toISOString(),
     };
 
+    inMemoryData.employees = inMemoryData.employees || [];
     inMemoryData.employees.unshift(newEmp);
 
     if (isMongoActive()) {
       await Employee.create(newEmp);
+
+      // If assigned an administrative portal role, provision a User account in MongoDB
+      if (hasPortalAccess && ['superadmin', 'admin', 'cms_admin'].includes(role)) {
+        await UserMongo.findOneAndUpdate(
+          { email: newEmp.email },
+          {
+            name: newEmp.name,
+            email: newEmp.email,
+            role: newEmp.role,
+            designation: newEmp.designation,
+            phone: newEmp.phone,
+            password: req.body.password && req.body.password.length >= 6 ? req.body.password : 'demo_password_secure',
+            isActive: true,
+          },
+          { upsert: true, new: true }
+        );
+      }
     }
 
-    await logActivity('Created Employee', 'Employee', newEmp.id, `Added employee ${name} (${designation}) to workforce.`, req.user);
+    await logActivity(
+      'Created Employee / Team Member',
+      'Employee',
+      newEmp.id,
+      `Superadmin onboarded ${name} (${designation}) with role ${role.toUpperCase()}.`,
+      req.user,
+      '#10B981'
+    );
 
     res.status(201).json({ success: true, message: 'Employee added successfully', employee: newEmp });
   } catch (err) {
@@ -336,11 +387,25 @@ export const updateEmployee = async (req, res) => {
     const { id } = req.params;
     const updates = req.body;
 
+    if (updates.role && updates.role !== 'employee' && req.user?.role !== 'superadmin') {
+      return res.status(403).json({
+        success: false,
+        error: 'Access denied: Only a Superadmin can edit System Member roles or credentials.',
+      });
+    }
+
     if (updates.technicalSkills && typeof updates.technicalSkills === 'string') {
       updates.technicalSkills = updates.technicalSkills.split(',').map((s) => s.trim()).filter(Boolean);
     }
+    if (updates.email) {
+      updates.email = updates.email.toLowerCase().trim();
+    }
+    if (updates.role && updates.role !== 'employee') {
+      updates.portalAccess = true;
+    }
 
     let found = false;
+    inMemoryData.employees = inMemoryData.employees || [];
     const idx = inMemoryData.employees.findIndex((e) => e.id === id || String(e._id) === id);
     if (idx !== -1) {
       inMemoryData.employees[idx] = { ...inMemoryData.employees[idx], ...updates, updatedAt: new Date().toISOString() };
@@ -349,7 +414,28 @@ export const updateEmployee = async (req, res) => {
 
     if (isMongoActive()) {
       const query = mongoose.Types.ObjectId.isValid(id) ? { _id: id } : { id };
-      await Employee.findOneAndUpdate(query, updates, { new: true });
+      const updated = await Employee.findOneAndUpdate(query, updates, { new: true });
+
+      if (updated && updated.email && (updates.role || updates.portalAccess !== undefined || updates.password)) {
+        if (['superadmin', 'admin', 'cms_admin'].includes(updated.role)) {
+          const userPayload = {
+            name: updated.name,
+            email: updated.email,
+            role: updated.role,
+            designation: updated.designation,
+            phone: updated.phone || '',
+            isActive: true,
+          };
+          if (updates.password && updates.password.trim().length >= 6) {
+            userPayload.password = updates.password.trim();
+          }
+          await UserMongo.findOneAndUpdate(
+            { email: updated.email },
+            userPayload,
+            { upsert: true }
+          );
+        }
+      }
     }
 
     await logActivity('Updated Employee', 'Employee', id, `Updated record for ${updates.name || 'employee'}.`, req.user);
@@ -364,10 +450,14 @@ export const deleteEmployee = async (req, res) => {
   try {
     const { id } = req.params;
 
-    inMemoryData.employees = inMemoryData.employees.filter((e) => e.id !== id && String(e._id) !== id);
+    inMemoryData.employees = (inMemoryData.employees || []).filter((e) => e.id !== id && String(e._id) !== id);
 
     if (isMongoActive()) {
       const query = mongoose.Types.ObjectId.isValid(id) ? { _id: id } : { id };
+      const emp = await Employee.findOne(query);
+      if (emp && emp.email) {
+        await UserMongo.deleteOne({ email: emp.email.toLowerCase() });
+      }
       await Employee.findOneAndDelete(query);
     }
 
@@ -675,7 +765,7 @@ export const deleteClient = async (req, res) => {
 // ============================================================================
 export const getJobs = async (req, res) => {
   try {
-    const { search, priority, status } = req.query;
+    const { search, priority, status, industry, jobMode } = req.query;
 
     let items = [];
     if (isMongoActive()) {
@@ -684,14 +774,23 @@ export const getJobs = async (req, res) => {
         query.$or = [
           { title: { $regex: search, $options: 'i' } },
           { client: { $regex: search, $options: 'i' } },
+          { description: { $regex: search, $options: 'i' } },
+          { requirements: { $regex: search, $options: 'i' } },
           { requiredSkills: { $in: [new RegExp(search, 'i')] } },
+          { industry: { $regex: search, $options: 'i' } },
+          { jobMode: { $regex: search, $options: 'i' } },
+          { workMode: { $regex: search, $options: 'i' } },
+          { officeLocation: { $regex: search, $options: 'i' } },
+          { location: { $regex: search, $options: 'i' } },
         ];
       }
       if (priority && priority !== 'All') query.priority = priority;
       if (status && status !== 'All') query.status = status;
+      if (industry && industry !== 'All') query.industry = industry;
+      if (jobMode && jobMode !== 'All') query.jobMode = jobMode;
 
       items = await JobRequirement.find(query).sort({ createdAt: -1 }).lean();
-      if (items.length === 0 && !search && (!priority || priority === 'All') && (!status || status === 'All')) {
+      if (items.length === 0 && !search && (!priority || priority === 'All') && (!status || status === 'All') && (!industry || industry === 'All') && (!jobMode || jobMode === 'All')) {
         items = inMemoryData.jobs;
       }
     } else {
@@ -700,12 +799,20 @@ export const getJobs = async (req, res) => {
         if (search) {
           const s = search.toLowerCase();
           match =
-            j.title.toLowerCase().includes(s) ||
-            j.client.toLowerCase().includes(s) ||
+            j.title?.toLowerCase().includes(s) ||
+            j.client?.toLowerCase().includes(s) ||
+            (j.description && j.description.toLowerCase().includes(s)) ||
+            (j.requirements && j.requirements.toLowerCase().includes(s)) ||
+            (j.industry && j.industry.toLowerCase().includes(s)) ||
+            (j.jobMode && j.jobMode.toLowerCase().includes(s)) ||
+            (j.workMode && j.workMode.toLowerCase().includes(s)) ||
+            (j.location && j.location.toLowerCase().includes(s)) ||
             (j.requiredSkills && j.requiredSkills.some((sk) => sk.toLowerCase().includes(s)));
         }
         if (match && priority && priority !== 'All') match = j.priority === priority;
         if (match && status && status !== 'All') match = j.status === status;
+        if (match && industry && industry !== 'All') match = j.industry === industry;
+        if (match && jobMode && jobMode !== 'All') match = j.jobMode === jobMode;
         return match;
       });
     }
@@ -718,7 +825,25 @@ export const getJobs = async (req, res) => {
 
 export const createJob = async (req, res) => {
   try {
-    const { title, client, requiredSkills, experienceRequired, openingsCount, location, workMode, priority, status, budget } = req.body;
+    const {
+      title,
+      client,
+      industry,
+      jobMode,
+      workMode,
+      officeLocation,
+      location,
+      noticePeriod,
+      noticePeriodOther,
+      requiredSkills,
+      experienceRequired,
+      openingsCount,
+      priority,
+      status,
+      budget,
+      description,
+      requirements,
+    } = req.body;
 
     if (!title || !client) {
       return res.status(400).json({ success: false, error: 'Job title and client name are required.' });
@@ -730,29 +855,63 @@ export const createJob = async (req, res) => {
       ? requiredSkills.split(',').map((s) => s.trim()).filter(Boolean)
       : [];
 
+    const finalLocation =
+      workMode === 'Work From Office' && officeLocation
+        ? officeLocation
+        : location || (workMode === 'Work From Home' ? 'Remote (India/US)' : 'Hybrid');
+
     const newJob = {
       id: `job_${Date.now()}`,
       title,
       client,
+      industry: industry || 'Information Technology & Cloud',
+      jobMode: jobMode || 'Permanent',
+      workMode: workMode || 'Work From Home',
+      officeLocation: officeLocation || '',
+      location: finalLocation,
+      noticePeriod: noticePeriod || 'Immediate',
+      noticePeriodOther: noticePeriodOther || '',
       requiredSkills: skillsArray,
       experienceRequired: Number(experienceRequired) || 3,
       openingsCount: Number(openingsCount) || 1,
       fulfilledCount: 0,
-      location: location || 'Remote',
-      workMode: workMode || 'Remote',
       priority: priority || 'Medium',
       status: status || 'Open',
       budget: budget || 'Competitive Market Rate',
+      description: description || '',
+      requirements: requirements || '',
       createdAt: new Date().toISOString(),
     };
 
     inMemoryData.jobs.unshift(newJob);
 
     if (isMongoActive()) {
-      await JobRequirement.create(newJob);
+      const doc = await JobRequirement.create({
+        title: newJob.title,
+        client: newJob.client,
+        industry: newJob.industry,
+        jobMode: newJob.jobMode,
+        workMode: newJob.workMode,
+        officeLocation: newJob.officeLocation,
+        location: newJob.location,
+        noticePeriod: newJob.noticePeriod,
+        noticePeriodOther: newJob.noticePeriodOther,
+        requiredSkills: newJob.requiredSkills,
+        experienceRequired: newJob.experienceRequired,
+        openingsCount: newJob.openingsCount,
+        fulfilledCount: 0,
+        priority: newJob.priority,
+        status: newJob.status,
+        budget: newJob.budget,
+        description: newJob.description,
+        requirements: newJob.requirements,
+        jobId: newJob.id,
+      });
+      newJob._id = doc._id;
+      newJob.id = String(doc._id);
     }
 
-    await logActivity('Staffing Requisition Posted', 'Job', newJob.id, `Requisition created: ${title} for ${client}.`, req.user, '#D97706');
+    await logActivity('Staffing Requisition Posted', 'Job', newJob.id, `Requisition created: ${title} for ${client} (${newJob.industry}).`, req.user, '#D97706');
 
     res.status(201).json({ success: true, message: 'Job requirement posted successfully', job: newJob });
   } catch (err) {
@@ -769,14 +928,19 @@ export const updateJob = async (req, res) => {
       updates.requiredSkills = updates.requiredSkills.split(',').map((s) => s.trim()).filter(Boolean);
     }
 
+    if (updates.workMode === 'Work From Office' && updates.officeLocation) {
+      updates.location = updates.officeLocation;
+    }
+
     const idx = inMemoryData.jobs.findIndex((j) => j.id === id || String(j._id) === id);
     if (idx !== -1) {
       inMemoryData.jobs[idx] = { ...inMemoryData.jobs[idx], ...updates, updatedAt: new Date().toISOString() };
     }
 
     if (isMongoActive()) {
-      const query = mongoose.Types.ObjectId.isValid(id) ? { _id: id } : { id };
-      await JobRequirement.findOneAndUpdate(query, updates, { new: true });
+      const query = mongoose.Types.ObjectId.isValid(id) ? { _id: id } : { jobId: id };
+      const { id: _ignoreId, _id: _ignoreUnderscoreId, ...cleanUpdates } = updates;
+      await JobRequirement.findOneAndUpdate(query, cleanUpdates, { new: true });
     }
 
     res.json({ success: true, message: 'Job requirement updated successfully', job: inMemoryData.jobs[idx] });
@@ -792,7 +956,7 @@ export const deleteJob = async (req, res) => {
     inMemoryData.jobs = inMemoryData.jobs.filter((j) => j.id !== id && String(j._id) !== id);
 
     if (isMongoActive()) {
-      const query = mongoose.Types.ObjectId.isValid(id) ? { _id: id } : { id };
+      const query = mongoose.Types.ObjectId.isValid(id) ? { _id: id } : { jobId: id };
       await JobRequirement.findOneAndDelete(query);
     }
 
@@ -975,6 +1139,7 @@ export const createCmsPage = async (req, res) => {
       metaTitle: metaTitle || `${title} — ThinkWires`,
       metaDescription: metaDescription || '',
       ogImage: ogImage || '/images/about-hero.jpg',
+      data: req.body.data || {},
       isIndexed: isIndexed !== undefined ? Boolean(isIndexed) : true,
       status: status || 'draft',
       lastUpdatedBy: req.user?.name || 'Admin',
@@ -1496,11 +1661,13 @@ export const getCmsStats = async (req, res) => {
     let articles = isMongoActive() ? await Article.find().lean() : inMemoryData.articles;
     let media = isMongoActive() ? await Media.find().lean() : inMemoryData.media;
     let announcements = isMongoActive() ? await Announcement.find().lean() : inMemoryData.announcements;
+    let techstacks = isMongoActive() ? await TechStack.find().lean() : inMemoryData.techstacks;
 
     if (!pages.length) pages = inMemoryData.pages;
     if (!articles.length) articles = inMemoryData.articles;
     if (!media.length) media = inMemoryData.media;
     if (!announcements.length) announcements = inMemoryData.announcements;
+    if (!techstacks.length) techstacks = inMemoryData.techstacks || [];
 
     const totalPages = pages.length;
     const publishedPages = pages.filter((p) => p.status === 'published').length;
@@ -1525,6 +1692,9 @@ export const getCmsStats = async (req, res) => {
 
     res.json({
       success: true,
+      databaseMode: isMongoActive() ? 'MongoDB Connected' : 'In-Memory Resilient Demo Mode',
+      isMongoActive: isMongoActive(),
+      announcements: announcements.filter((a) => a.status === 'published').slice(0, 5),
       stats: {
         totalPages,
         publishedPages,
@@ -1534,6 +1704,7 @@ export const getCmsStats = async (req, res) => {
         draftArticles,
         totalMedia: media.length,
         totalAnnouncements: announcements.length,
+        totalTechStacks: techstacks.length,
       },
       recentUpdates,
       publishingActivity: inMemoryData.activities.filter((a) => a.entityType === 'CMS').slice(0, 5),
@@ -1566,10 +1737,428 @@ export const getCurrentUser = async (req, res) => {
     success: true,
     user: req.user,
     availableRoles: [
-      { role: 'admin', label: 'Admin (Full Management & System Access)' },
-      { role: 'editor', label: 'Editor (Content Management & Requisitions)' },
-      { role: 'viewer', label: 'Viewer (Read-Only Auditor Access)' },
+      { role: 'superadmin', label: 'Superadmin (Full Control Across All Modules & Portals)' },
+      { role: 'cms_admin', label: 'CMS Admin (Content Management System Only)' },
+      { role: 'admin', label: 'Admin (System & Manpower Management)' },
     ],
     databaseStatus: isMongoActive() ? 'Connected (MongoDB Atlas / Local)' : 'In-Memory Resilient Storage (Fallback)',
   });
+};
+
+// ============================================================================
+// 14. CMS - TECH STACK CATALOG MANAGEMENT
+// ============================================================================
+export const getCmsTechStacks = async (req, res) => {
+  try {
+    const { search, category } = req.query;
+    let query = {};
+    if (category && category !== 'All') query.category = category;
+    if (search) {
+      query.$or = [
+        { name: { $regex: search, $options: 'i' } },
+        { slug: { $regex: search, $options: 'i' } },
+      ];
+    }
+
+    let items = [];
+    if (isMongoActive()) {
+      items = await TechStack.find(query).sort({ order: 1, name: 1 }).lean();
+    }
+    if (!items.length && !search && (!category || category === 'All')) {
+      items = inMemoryData.techstacks || [];
+    }
+    res.json({ success: true, techstacks: items });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+};
+
+export const createCmsTechStack = async (req, res) => {
+  try {
+    const { name, category, icon, order, isFeatured, isActive } = req.body;
+    if (!name) return res.status(400).json({ success: false, error: 'Technology name is required' });
+
+    const slug = name.toLowerCase().replace(/[^\w\s-]/g, '').trim().replace(/\s+/g, '-');
+    const newStack = {
+      name,
+      slug,
+      category: category || 'Cloud & Infrastructure',
+      icon: icon || 'hub',
+      order: Number(order) || 0,
+      isFeatured: isFeatured !== undefined ? Boolean(isFeatured) : true,
+      isActive: isActive !== undefined ? Boolean(isActive) : true,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+    };
+
+    if (isMongoActive()) {
+      const created = await TechStack.findOneAndUpdate({ slug }, { $set: newStack }, { upsert: true, new: true });
+      newStack._id = created._id;
+    }
+    if (!inMemoryData.techstacks) inMemoryData.techstacks = [];
+    inMemoryData.techstacks.push(newStack);
+
+    await logActivity('Created Tech Stack', 'CMS', slug, `Added technology badge '${name}'.`, req.user, '#008F68');
+    res.status(201).json({ success: true, techstack: newStack });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+};
+
+export const updateCmsTechStack = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updates = req.body;
+    updates.updatedAt = new Date().toISOString();
+
+    let updated = null;
+    if (isMongoActive()) {
+      const query = mongoose.Types.ObjectId.isValid(id) ? { _id: id } : { slug: id };
+      updated = await TechStack.findOneAndUpdate(query, updates, { new: true });
+    }
+
+    if (inMemoryData.techstacks) {
+      const idx = inMemoryData.techstacks.findIndex((t) => t.slug === id || String(t._id) === id);
+      if (idx !== -1) {
+        inMemoryData.techstacks[idx] = { ...inMemoryData.techstacks[idx], ...updates };
+        if (!updated) updated = inMemoryData.techstacks[idx];
+      }
+    }
+
+    await logActivity('Updated Tech Stack', 'CMS', id, `Updated technology '${updates.name || id}'.`, req.user, '#008F68');
+    res.json({ success: true, techstack: updated });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+};
+
+export const toggleCmsTechStackFeatured = async (req, res) => {
+  try {
+    const { id } = req.params;
+    let isFeatured = true;
+    if (isMongoActive()) {
+      const query = mongoose.Types.ObjectId.isValid(id) ? { _id: id } : { slug: id };
+      const found = await TechStack.findOne(query);
+      if (found) {
+        found.isFeatured = !found.isFeatured;
+        await found.save();
+        isFeatured = found.isFeatured;
+      }
+    }
+    res.json({ success: true, isFeatured });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+};
+
+export const deleteCmsTechStack = async (req, res) => {
+  try {
+    const { id } = req.params;
+    if (isMongoActive()) {
+      const query = mongoose.Types.ObjectId.isValid(id) ? { _id: id } : { slug: id };
+      await TechStack.findOneAndDelete(query);
+    }
+    if (inMemoryData.techstacks) {
+      inMemoryData.techstacks = inMemoryData.techstacks.filter((t) => t.slug !== id && String(t._id) !== id);
+    }
+    await logActivity('Deleted Tech Stack', 'CMS', id, `Removed technology '${id}'.`, req.user, '#DC2626');
+    res.json({ success: true, message: 'Technology removed successfully' });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+};
+
+// ============================================================================
+// 12. SYSTEM MEMBERS MANAGEMENT (SUPERADMIN EXCLUSIVE)
+// ============================================================================
+export const getSystemMembers = async (req, res) => {
+  try {
+    if (req.user?.role !== 'superadmin') {
+      return res.status(403).json({ success: false, error: 'Access denied: Only a Superadmin can view or manage System Members.' });
+    }
+
+    let members = [];
+    if (isMongoActive()) {
+      members = await UserMongo.find().select('-__v').sort({ createdAt: -1 }).lean();
+    }
+
+    if (!members || members.length === 0) {
+      members = inMemoryData.users || [];
+    }
+
+    res.json({ success: true, members });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+};
+
+export const createSystemMember = async (req, res) => {
+  try {
+    if (req.user?.role !== 'superadmin') {
+      return res.status(403).json({
+        success: false,
+        error: 'Access denied: Only a Superadmin can provision System Members, assign roles, and set credentials.',
+      });
+    }
+
+    const { name, email, role, password, designation, phone } = req.body;
+
+    if (!name || !email || !password || !role) {
+      return res.status(400).json({
+        success: false,
+        error: 'Full Name, Official Email, Role, and Initial Password are required.',
+      });
+    }
+
+    if (password.length < 6) {
+      return res.status(400).json({
+        success: false,
+        error: 'Initial Password must be at least 6 characters long.',
+      });
+    }
+
+    const cleanEmail = email.toLowerCase().trim();
+
+    // Prevent duplicate emails
+    if (isMongoActive()) {
+      const existing = await UserMongo.findOne({ email: cleanEmail });
+      if (existing) {
+        return res.status(400).json({
+          success: false,
+          error: `A user account with email '${cleanEmail}' already exists in the system directory.`,
+        });
+      }
+    }
+
+    const newMember = {
+      name: name.trim(),
+      email: cleanEmail,
+      role: role.trim(),
+      password: password.trim(),
+      designation: designation?.trim() || 'System Member',
+      phone: phone?.trim() || '',
+      isActive: true,
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+
+    let createdRecord = null;
+    if (isMongoActive()) {
+      createdRecord = await UserMongo.create(newMember);
+
+      // Also ensure corresponding Employee profile exists for seamless directory tracking
+      const existingEmp = await Employee.findOne({ email: cleanEmail });
+      if (!existingEmp) {
+        await Employee.create({
+          id: `emp_${Date.now()}`,
+          name: newMember.name,
+          email: newMember.email,
+          phone: newMember.phone,
+          designation: newMember.designation,
+          role: newMember.role,
+          portalAccess: true,
+          technicalSkills: ['System Administration', 'Security Operations'],
+          experience: 5,
+          availability: 'Immediate',
+          deploymentStatus: 'Available',
+          billingRate: 0,
+          location: 'Headquarters / Remote',
+          notes: 'Provisioned as corporate system member by Superadmin.',
+        });
+      } else {
+        existingEmp.role = newMember.role;
+        existingEmp.portalAccess = true;
+        await existingEmp.save();
+      }
+    }
+
+    inMemoryData.users = inMemoryData.users || [];
+    inMemoryData.users.unshift({
+      id: createdRecord?._id ? String(createdRecord._id) : `usr_${Date.now()}`,
+      ...newMember,
+    });
+
+    // Also sync inMemoryData.employees for seamless dual-mode directory tracking
+    inMemoryData.employees = inMemoryData.employees || [];
+    const empIdx = inMemoryData.employees.findIndex((e) => e.email === cleanEmail);
+    if (empIdx === -1) {
+      inMemoryData.employees.unshift({
+        id: `emp_${Date.now()}`,
+        name: newMember.name,
+        email: newMember.email,
+        phone: newMember.phone,
+        designation: newMember.designation,
+        role: newMember.role,
+        portalAccess: true,
+        technicalSkills: ['System Administration', 'Security Operations'],
+        experience: 5,
+        availability: 'Immediate',
+        deploymentStatus: 'Available',
+        billingRate: 0,
+        location: 'Headquarters / Remote',
+        notes: 'Provisioned as corporate system member by Superadmin.',
+        createdAt: new Date().toISOString(),
+      });
+    } else {
+      inMemoryData.employees[empIdx].role = newMember.role;
+      inMemoryData.employees[empIdx].portalAccess = true;
+      inMemoryData.employees[empIdx].designation = newMember.designation;
+      inMemoryData.employees[empIdx].phone = newMember.phone;
+    }
+
+    await logActivity(
+      'Provisioned System Member',
+      'Security RBAC',
+      cleanEmail,
+      `Superadmin created new account for ${name} (${cleanEmail}) with role ${role.toUpperCase()}.`,
+      req.user,
+      '#008F68'
+    );
+
+    res.status(201).json({
+      success: true,
+      message: `System Member '${name}' created successfully with role '${role}'.`,
+      member: createdRecord || newMember,
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+};
+
+export const updateSystemMember = async (req, res) => {
+  try {
+    if (req.user?.role !== 'superadmin') {
+      return res.status(403).json({
+        success: false,
+        error: 'Access denied: Only a Superadmin can edit System Members or update access credentials.',
+      });
+    }
+
+    const { id } = req.params;
+    const { name, email, role, password, designation, phone, isActive } = req.body;
+
+    const updates = {};
+    if (name) updates.name = name.trim();
+    if (email) updates.email = email.toLowerCase().trim();
+    if (role) updates.role = role.trim();
+    if (designation !== undefined) updates.designation = designation.trim();
+    if (phone !== undefined) updates.phone = phone.trim();
+    if (isActive !== undefined) updates.isActive = Boolean(isActive);
+    if (password && password.trim().length >= 6) {
+      updates.password = password.trim();
+    } else if (password && password.trim().length > 0 && password.trim().length < 6) {
+      return res.status(400).json({ success: false, error: 'Password must be at least 6 characters long.' });
+    }
+    updates.updatedAt = new Date();
+
+    let updatedRecord = null;
+    if (isMongoActive()) {
+      const query = mongoose.Types.ObjectId.isValid(id) ? { _id: id } : { email: id };
+      updatedRecord = await UserMongo.findOneAndUpdate(query, updates, { new: true }).lean();
+
+      // Keep employee profile synced
+      if (updatedRecord && updatedRecord.email) {
+        await Employee.findOneAndUpdate(
+          { email: updatedRecord.email },
+          {
+            name: updatedRecord.name,
+            role: updatedRecord.role,
+            designation: updatedRecord.designation,
+            phone: updatedRecord.phone || '',
+            portalAccess: true,
+          }
+        );
+      }
+    }
+
+    inMemoryData.users = inMemoryData.users || [];
+    const idx = inMemoryData.users.findIndex((u) => u.id === id || String(u._id) === id || u.email === id);
+    if (idx !== -1) {
+      inMemoryData.users[idx] = { ...inMemoryData.users[idx], ...updates };
+      if (!updatedRecord) updatedRecord = inMemoryData.users[idx];
+    }
+
+    // Also sync inMemoryData.employees
+    inMemoryData.employees = inMemoryData.employees || [];
+    const empTargetEmail = updates.email || id;
+    const empIdx = inMemoryData.employees.findIndex((e) => e.email === empTargetEmail || e.id === id);
+    if (empIdx !== -1) {
+      inMemoryData.employees[empIdx] = {
+        ...inMemoryData.employees[empIdx],
+        ...(updates.name && { name: updates.name }),
+        ...(updates.role && { role: updates.role }),
+        ...(updates.designation && { designation: updates.designation }),
+        ...(updates.phone && { phone: updates.phone }),
+        portalAccess: true,
+      };
+    }
+
+    await logActivity(
+      'Updated System Member',
+      'Security RBAC',
+      id,
+      `Superadmin updated profile/credentials for ${updates.name || id}.`,
+      req.user,
+      '#2563EB'
+    );
+
+    res.json({
+      success: true,
+      message: 'System Member updated successfully.',
+      member: updatedRecord,
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+};
+
+export const deleteSystemMember = async (req, res) => {
+  try {
+    if (req.user?.role !== 'superadmin') {
+      return res.status(403).json({
+        success: false,
+        error: 'Access denied: Only a Superadmin can delete or revoke System Members.',
+      });
+    }
+
+    const { id } = req.params;
+
+    if (isMongoActive()) {
+      const query = mongoose.Types.ObjectId.isValid(id) ? { _id: id } : { email: id };
+      const member = await UserMongo.findOne(query);
+      if (member && member.email === 'superadmin@thinkwires.com') {
+        return res.status(400).json({
+          success: false,
+          error: 'Protection violation: Cannot delete the primary root Superadmin account.',
+        });
+      }
+      if (member) {
+        await Employee.findOneAndUpdate({ email: member.email }, { role: 'employee', portalAccess: false });
+        await UserMongo.findOneAndDelete(query);
+      }
+    }
+
+    inMemoryData.users = (inMemoryData.users || []).filter((u) => u.id !== id && String(u._id) !== id && u.email !== id);
+
+    // Also update inMemoryData.employees to revoke portal role
+    inMemoryData.employees = inMemoryData.employees || [];
+    const delEmpIdx = inMemoryData.employees.findIndex((e) => e.email === id || e.id === id);
+    if (delEmpIdx !== -1) {
+      inMemoryData.employees[delEmpIdx].role = 'employee';
+      inMemoryData.employees[delEmpIdx].portalAccess = false;
+    }
+
+    await logActivity(
+      'Revoked System Member',
+      'Security RBAC',
+      id,
+      `Superadmin revoked account credentials for ${id}.`,
+      req.user,
+      '#DC2626'
+    );
+
+    res.json({ success: true, message: 'System Member access revoked successfully.' });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
 };

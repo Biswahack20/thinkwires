@@ -1,6 +1,7 @@
 import React from 'react';
 import BlogCard from './BlogCard';
 import ScrollReveal from '../common/ScrollReveal';
+import { SearchIcon } from '../../admin/AdminIcons';
 
 const BlogGrid = ({
   articles = [],
@@ -29,7 +30,9 @@ const BlogGrid = ({
   if (articles.length === 0) {
     return (
       <div className="BlogGrid-emptyState">
-        <div className="BlogGrid-emptyIcon">🔍</div>
+        <div className="BlogGrid-emptyIcon">
+          <SearchIcon size={32} color="#94A3B8" />
+        </div>
         <h3 className="BlogGrid-emptyTitle">No Research Articles Found</h3>
         <p className="BlogGrid-emptyText">
           We couldn't find any articles matching your search query or selected category filter.

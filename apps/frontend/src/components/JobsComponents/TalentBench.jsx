@@ -25,7 +25,7 @@ const TalentBench = () => {
           {/* Left Column */}
           <div className="TalentBench-leftCol">
             <div className="TalentBench-fastTrackBadge">
-              📍 Fast-Track Placement Engine
+              Fast-Track Placement Engine
             </div>
 
             <h2 className="TalentBench-bannerHeading">
@@ -117,7 +117,7 @@ const TalentBench = () => {
                         <polyline points="9 11 12 8 15 11"></polyline>
                       </svg>
                       {file ? (
-                        <span className="TalentBench-selectedFileName">📄 {file.name}</span>
+                        <span className="TalentBench-selectedFileName">{file.name}</span>
                       ) : (
                         <>
                           <span className="TalentBench-uploadMainText">Click to browse or drop file</span>
@@ -128,7 +128,7 @@ const TalentBench = () => {
                   </div>
 
                   <button type="submit" className="TalentBench-benchSubmitBtn">
-                    <span>⚡ Submit to Talent Bench</span>
+                    <span>Submit to Talent Bench</span>
                   </button>
                 </form>
               )}

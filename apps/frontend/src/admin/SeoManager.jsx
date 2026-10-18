@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import { adminApi } from './adminService';
+import { CloseIcon } from './AdminIcons';
 
 const SeoManager = () => {
   const { showToast, activeRole } = useOutletContext();
@@ -181,7 +182,7 @@ const SeoManager = () => {
             <div className="tw-modal-header">
               <h2 className="tw-modal-title">Edit SEO for /{editingItem.slug}</h2>
               <button className="tw-modal-close-btn" onClick={() => setEditingItem(null)}>
-                ✕
+                <CloseIcon size={16} />
               </button>
             </div>
 

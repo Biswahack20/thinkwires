@@ -1,7 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import SectionBadge from '../common/SectionBadge';
 import MilestoneCard from './MilestoneCard';
-import { aboutService } from '../../services/aboutService';
 
 /**
  * GrowthTimeline component
@@ -10,43 +9,20 @@ import { aboutService } from '../../services/aboutService';
  * for ThinkWires Growth & Evolution.
  *
  * Features:
- * - Dynamic data loading from props or fallback aboutService / mockdata.json
+ * - Dynamic data loading from props or Redux state
  * - Reusable MilestoneCard component
  * - Responsive 2x2 desktop CSS Grid, 1 column on mobile
  * - Staggered entrance animation with prefers-reduced-motion support
- * - Service layer ready for frequent backend updates
  */
 const GrowthTimeline = ({ data }) => {
   const [timelineData, setTimelineData] = useState(data || null);
   const gridRef = useRef(null);
   const cardRefs = useRef([]);
 
-  // If data wasn't provided or needs dynamic refresh, fetch via service layer
   useEffect(() => {
-    if (data && (data.milestones?.length || data.roadmap?.length)) {
+    if (data) {
       setTimelineData(data);
-      return;
     }
-
-    let isMounted = true;
-    aboutService
-      .getMilestones()
-      .then((res) => {
-        if (isMounted && res) {
-          setTimelineData((prev) => ({
-            ...prev,
-            milestones: res.milestones || [],
-            roadmap: res.roadmap || [],
-          }));
-        }
-      })
-      .catch((err) => {
-        console.warn('Failed to load milestones dynamically:', err);
-      });
-
-    return () => {
-      isMounted = false;
-    };
   }, [data]);
 
   const {

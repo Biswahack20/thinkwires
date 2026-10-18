@@ -1,0 +1,311 @@
+{
+  "techStack": [
+    "SAP",
+    "Amazon Web Services (AWS)",
+    "Microsoft Azure",
+    "Google Cloud",
+    "Salesforce",
+    "Oracle",
+    "Siemens",
+    "Adobe",
+    "IBM",
+    "Snowflake",
+    "Cisco",
+    "ServiceNow",
+    "NVIDIA",
+    "Intel",
+    "Red Hat"
+  ],
+  "process": [
+    {
+      "number": "01",
+      "numberColor": "#bfdbfe",
+      "title": "Discovery & Scoping Call",
+      "description": "Share technical job descriptions and business constraints. Together we define tech stack nuances, seniorities, sprint cadences, and budget boundaries.",
+      "delivery": "Delivery: Tailored Talent Blueprint",
+      "iconBg": "#eff6ff",
+      "iconColor": "#3b82f6",
+      "icon": "search"
+    },
+    {
+      "number": "02",
+      "numberColor": "#cbd5e1",
+      "title": "Precision Pre-Vetted Match",
+      "description": "In just 48 to 72 hours, we source from our active bench and verified candidate pipelines. You receive curated dossiers with coding evaluations and notice verification.",
+      "delivery": "Delivery: Shortlist of Top 3 Contenders",
+      "iconBg": "#eff6ff",
+      "iconColor": "#3b82f6",
+      "icon": "users"
+    },
+    {
+      "number": "03",
+      "numberColor": "#bbf7d0",
+      "title": "Seamless Onboarding & Scale",
+      "description": "Our talent integrates immediately into your Slack, Jira, and Git repositories. ThinkWires oversees performance continuity, payroll, and scaling adjustments.",
+      "delivery": "Delivery: Instant Sprint Participation",
+      "iconBg": "#22c55e",
+      "iconColor": "#ffffff",
+      "icon": "check"
+    }
+  ],
+  "capabilities": [
+    {
+      "id": 1,
+      "eyebrow": "48-72 HR TURNAROUND",
+      "eyebrowColor": "#4f46e5",
+      "title": "Staff Augmentation",
+      "description": "Scale your engineering and enterprise squads on-demand with senior pre-screened individual contributors or cohesive development pods.",
+      "features": [
+        "Flexible month-to-month contracts",
+        "Zero internal sourcing overhead",
+        "Instant replacement guarantee"
+      ],
+      "iconBg": "#eef2ff",
+      "iconColor": "#4f46e5",
+      "icon": "users",
+      "linkColor": "#4f46e5",
+      "linkText": "Explore Staffing"
+    },
+    {
+      "id": 2,
+      "eyebrow": "GLOBAL COMPLIANCE",
+      "eyebrowColor": "#64748b",
+      "title": "Employer of Record (EOR)",
+      "description": "Hire anywhere in India, the US, and Canada without establishing foreign legal entities. We manage compliance, taxes, and local benefits seamlessly.",
+      "features": [
+        "Full statutory Indian & US compliance",
+        "Cross-currency automated payroll",
+        "IP & NDA contract protection"
+      ],
+      "iconBg": "#e0f2fe",
+      "iconColor": "#0ea5e9",
+      "icon": "globe",
+      "linkColor": "#64748b",
+      "linkText": "Explore EOR Solutions"
+    },
+    {
+      "id": 3,
+      "eyebrow": "EXECUTIVE PLACEMENT",
+      "eyebrowColor": "#10b981",
+      "title": "Permanent & Search",
+      "description": "Precision headhunting for pivotal VP Engineering, Lead Architects, Product Directors, and niche domain specialists who drive longevity.",
+      "features": [
+        "Confidential executive sourcing",
+        "90-day retention warranty",
+        "Behavioral & leadership appraisal"
+      ],
+      "iconBg": "#dcfce7",
+      "iconColor": "#10b981",
+      "icon": "star",
+      "linkColor": "#10b981",
+      "linkText": "Explore Executive Search"
+    },
+    {
+      "id": 4,
+      "eyebrow": "AUTOMATED OPERATIONS",
+      "eyebrowColor": "#3b82f6",
+      "title": "Payroll Outsourcing",
+      "description": "End-to-end automated payroll execution, provident fund (PF) administration, ESIC compliance, tax withholdings, and employee self-service.",
+      "features": [
+        "100% statutory error-free record",
+        "Digital payslip dispatch portal",
+        "Direct tax authority remittances"
+      ],
+      "iconBg": "#eef2ff",
+      "iconColor": "#4f46e5",
+      "icon": "document",
+      "linkColor": "#3b82f6",
+      "linkText": "Explore Payroll Systems"
+    }
+  ],
+  "benefits": [
+    {
+      "id": 1,
+      "title": "Comprehensive Health & Wellness",
+      "description": "Premium family healthcare coverage, periodic wellness retreats, and regular mental health support workshops that value sustainable success over burnout.",
+      "icon": "shield"
+    },
+    {
+      "id": 2,
+      "title": "Global Client Footprint",
+      "description": "Collaborate directly with engineering counterparts in Silicon Valley, Toronto, New York, and European tech corridors without relocation friction.",
+      "icon": "globe"
+    },
+    {
+      "id": 3,
+      "title": "Continuous Tech Upskilling",
+      "description": "Sponsorship for Tier-1 cloud certifications (AWS, Azure, GCP), GenAI hackathons, and enterprise solution architecture workshops.",
+      "icon": "graduation"
+    },
+    {
+      "id": 4,
+      "title": "Work-Life Agility",
+      "description": "Choose from completely remote, hybrid, or on-site modes. Flexible overlap schedules tailored to your individual family needs.",
+      "icon": "laptop"
+    },
+    {
+      "id": 5,
+      "title": "Transparent Career Pathing",
+      "description": "Bi-annual performance evaluations, direct promotions to Staff/Principal engineering cohorts, and clear payroll progression charts.",
+      "icon": "trending"
+    },
+    {
+      "id": 6,
+      "title": "Impact & Social Purpose",
+      "description": "Join our CSR initiatives: village children educational support, healthcare drives, and tree planting programs that empower local communities.",
+      "icon": "heart"
+    }
+  ],
+  "faqs": [
+    {
+      "id": 1,
+      "question": "What is the average turnaround time between applying and client interviews?",
+      "answer": "Our talent acquisition directors review incoming candidate profiles within 24 to 48 hours. Pre-screened candidates typically receive direct interview routing with client VPs of Engineering within 3 to 5 business days."
+    },
+    {
+      "id": 2,
+      "question": "Does ThinkWires deduct any commission or placement fees from my salary?",
+      "answer": "No, 100% free for candidates. All recruitment, technical vetting, and placement advisory costs are funded entirely by enterprise client partners."
+    },
+    {
+      "id": 3,
+      "question": "Can I transition from a contract or C2H role to a full-time position?",
+      "answer": "Yes! Over 80% of our contract and Contract-to-Hire (C2H) placements convert to permanent full-time employment within 6 to 12 months based on mutual performance evaluations."
+    },
+    {
+      "id": 4,
+      "question": "How does ThinkWires handle cross-border payments for Remote US/Canada roles?",
+      "answer": "We manage end-to-end Employer of Record (EOR) operations, handling multi-currency salary disbursements, local tax compliance, health insurance, and statutory benefits with zero hassle."
+    }
+  ],
+  "industries": [
+    {
+      "id": 1,
+      "name": "Information Tech",
+      "desc": "Cloud, DevOps & Full Stack",
+      "icon": "monitor",
+      "color": "blue"
+    },
+    {
+      "id": 2,
+      "name": "Banking & Fintech",
+      "desc": "Ledger & ACH Systems",
+      "icon": "building",
+      "color": "blue"
+    },
+    {
+      "id": 3,
+      "name": "Life Sciences",
+      "desc": "HIPAA & Digital Health",
+      "icon": "medical",
+      "color": "green"
+    },
+    {
+      "id": 4,
+      "name": "Automation",
+      "desc": "Robotics & Industrial IoT",
+      "icon": "robot",
+      "color": "purple"
+    },
+    {
+      "id": 5,
+      "name": "Aerospace",
+      "desc": "PLM & Embedded Tech",
+      "icon": "plane",
+      "color": "blue"
+    },
+    {
+      "id": 6,
+      "name": "Telecom & Infra",
+      "desc": "5G, Networks & Optical",
+      "icon": "antenna",
+      "color": "blue"
+    }
+  ],
+  "reports": [
+    {
+      "id": 1,
+      "tag": "AI & Data Science",
+      "date": "September 16, 2026",
+      "title": "Beyond the Code: How Data Science and AI Are Driving the New India",
+      "desc": "India's AI ecosystem is rapidly evolving. We explore how leading organizations are structuring their data teams and the back-end architectures driving them.",
+      "image": "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+    },
+    {
+      "id": 2,
+      "tag": "Hiring Trends",
+      "date": "August 24, 2026",
+      "title": "India's IT Job Market in 2026: Specialized Skills in Demand",
+      "desc": "Despite global headwinds, specialized engineering roles remain in high demand. See our comprehensive analysis on salary trends and retention strategies.",
+      "image": "https://images.unsplash.com/photo-1460925895917-afdab827c52f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+    },
+    {
+      "id": 3,
+      "tag": "HR Technology",
+      "date": "August 01, 2026",
+      "title": "AI Recruitment in 2026: Smarter Matches, Calibrated Vetting",
+      "desc": "While automated screening and technical code evaluations have increased efficiency, average time-to-hire has shifted due to calibrated multi-stage vetting.",
+      "image": "https://images.unsplash.com/photo-1573164713988-8665fc963095?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+    }
+  ],
+  "offices": [
+    {
+      "id": "office-noida",
+      "tag": "HEADQUARTERS",
+      "city": "Noida, India",
+      "address": "Plot No. 20, Block H-1/A, Sector 63",
+      "cityLine": "Noida, Uttar Pradesh 201301",
+      "phones": ["+91 (120) 450-8800", "+91 89205 55626"],
+      "email": "connect@thinkwires.com",
+      "hours": "Mon – Fri, 9:00 AM – 7:00 PM IST",
+      "coverageTag": "India Talent Operations",
+      "mapEmbedUrl": ""
+    },
+    {
+      "id": "office-usa",
+      "tag": "NORTH AMERICA",
+      "city": "United States",
+      "address": "Remote-First Operations",
+      "cityLine": "EST / PST Coverage",
+      "phones": ["+1 (800) 555-0120"],
+      "email": "us@thinkwires.com",
+      "hours": "Mon – Fri, 8:00 AM – 6:00 PM EST",
+      "coverageTag": "US & Canada EOR Corridor",
+      "mapEmbedUrl": ""
+    }
+  ],
+  "channels": [
+    {
+      "id": "ch-1",
+      "icon": "mail",
+      "title": "Email Us",
+      "detail": "connect@thinkwires.com",
+      "sublabel": "General inquiries & partnerships",
+      "href": "mailto:connect@thinkwires.com"
+    },
+    {
+      "id": "ch-2",
+      "icon": "phone",
+      "title": "Call Direct",
+      "detail": "+91 (120) 450-8800",
+      "sublabel": "Mon-Fri 9AM–7PM IST",
+      "href": "tel:+911204508800"
+    },
+    {
+      "id": "ch-3",
+      "icon": "linkedin",
+      "title": "LinkedIn",
+      "detail": "ThinkWires",
+      "sublabel": "Follow for talent insights",
+      "href": "https://linkedin.com"
+    },
+    {
+      "id": "ch-4",
+      "icon": "clock",
+      "title": "Response Time",
+      "detail": "< 5 Hours",
+      "sublabel": "Enterprise SLA standard",
+      "href": null
+    }
+  ]
+}

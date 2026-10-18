@@ -21,12 +21,26 @@ const userMongoSchema = new mongoose.Schema(
     },
     role: {
       type: String,
-      enum: ['admin', 'editor', 'viewer', 'user'],
-      default: 'admin',
+      enum: ['superadmin', 'admin', 'cms_admin', 'user'],
+      default: 'superadmin',
+    },
+    designation: {
+      type: String,
+      default: 'System Member',
+      trim: true,
+    },
+    phone: {
+      type: String,
+      default: '',
+      trim: true,
     },
     isActive: {
       type: Boolean,
       default: true,
+    },
+    lastLogin: {
+      type: Date,
+      default: null,
     },
   },
   {

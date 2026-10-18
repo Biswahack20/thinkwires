@@ -15,6 +15,20 @@ import {
   ResponsiveContainer,
 } from 'recharts';
 import { adminApi } from './adminService';
+import {
+  UsersIcon,
+  HandshakeIcon,
+  BuildingIcon,
+  BriefcaseIcon,
+  DollarIcon,
+  TargetIcon,
+  DashboardIcon,
+  TrophyIcon,
+  PlusIcon,
+  EditIcon,
+  BellIcon,
+  RefreshIcon,
+} from './AdminIcons';
 
 const AdminDashboard = () => {
   const { showToast } = useOutletContext();
@@ -49,8 +63,7 @@ const AdminDashboard = () => {
   if (loading && !data) {
     return (
       <div style={{ padding: '3rem', textAlign: 'center', color: '#64748B' }}>
-        <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>⏳</div>
-        <strong>Loading ThinkWires operational dashboard...</strong>
+        <strong>Loading operational dashboard...</strong>
       </div>
     );
   }
@@ -110,8 +123,10 @@ const AdminDashboard = () => {
             className="tw-btn-secondary"
             onClick={() => fetchStats(period)}
             title="Refresh metrics"
+            style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}
           >
-            🔄 Sync
+            <RefreshIcon size={14} />
+            <span>Sync</span>
           </button>
         </div>
       </div>
@@ -122,11 +137,11 @@ const AdminDashboard = () => {
         <div className="tw-kpi-card">
           <div className="tw-kpi-header">
             <span className="tw-kpi-title">Total Talent Pool</span>
-            <div className="tw-kpi-icon-box emerald">👥</div>
+            <div className="tw-kpi-icon-box emerald"><UsersIcon size={18} color="#008F68" /></div>
           </div>
           <div className="tw-kpi-value">{kpis.totalEmployees || 10}</div>
           <div className="tw-kpi-footer">
-            <span className="tw-trend-badge positive">↑ +14%</span>
+            <span className="tw-trend-badge positive">+14%</span>
             <span>Pre-vetted engineers</span>
           </div>
         </div>
@@ -135,7 +150,7 @@ const AdminDashboard = () => {
         <div className="tw-kpi-card">
           <div className="tw-kpi-header">
             <span className="tw-kpi-title">Active Deployments</span>
-            <div className="tw-kpi-icon-box emerald">🤝</div>
+            <div className="tw-kpi-icon-box emerald"><HandshakeIcon size={18} color="#008F68" /></div>
           </div>
           <div className="tw-kpi-value">{kpis.activePlacements || 4}</div>
           <div className="tw-kpi-footer">
@@ -148,11 +163,11 @@ const AdminDashboard = () => {
         <div className="tw-kpi-card">
           <div className="tw-kpi-header">
             <span className="tw-kpi-title">Corporate Clients</span>
-            <div className="tw-kpi-icon-box blue">🏢</div>
+            <div className="tw-kpi-icon-box blue"><BuildingIcon size={18} color="#2563EB" /></div>
           </div>
           <div className="tw-kpi-value">{kpis.totalClients || 5}</div>
           <div className="tw-kpi-footer">
-            <span className="tw-trend-badge positive">↑ +2</span>
+            <span className="tw-trend-badge positive">+2</span>
             <span>FinTech & HealthTech hubs</span>
           </div>
         </div>
@@ -161,7 +176,7 @@ const AdminDashboard = () => {
         <div className="tw-kpi-card">
           <div className="tw-kpi-header">
             <span className="tw-kpi-title">Open Requisitions</span>
-            <div className="tw-kpi-icon-box amber">📋</div>
+            <div className="tw-kpi-icon-box amber"><BriefcaseIcon size={18} color="#D97706" /></div>
           </div>
           <div className="tw-kpi-value">{kpis.openRequirements || 6}</div>
           <div className="tw-kpi-footer">
@@ -174,13 +189,13 @@ const AdminDashboard = () => {
         <div className="tw-kpi-card">
           <div className="tw-kpi-header">
             <span className="tw-kpi-title">Billing Revenue ({period.toUpperCase()})</span>
-            <div className="tw-kpi-icon-box emerald">💵</div>
+            <div className="tw-kpi-icon-box emerald"><DollarIcon size={18} color="#008F68" /></div>
           </div>
           <div className="tw-kpi-value">
             ${(kpis.totalRevenue || 36200).toLocaleString()}
           </div>
           <div className="tw-kpi-footer">
-            <span className="tw-trend-badge positive">↑ +18.5%</span>
+            <span className="tw-trend-badge positive">+18.5%</span>
             <span>Margin: ${(kpis.grossMargin || 11584).toLocaleString()}</span>
           </div>
         </div>
@@ -189,7 +204,7 @@ const AdminDashboard = () => {
         <div className="tw-kpi-card">
           <div className="tw-kpi-header">
             <span className="tw-kpi-title">Candidate Pipeline</span>
-            <div className="tw-kpi-icon-box violet">🎯</div>
+            <div className="tw-kpi-icon-box violet"><TargetIcon size={18} color="#7C3AED" /></div>
           </div>
           <div className="tw-kpi-value">{kpis.candidatePipelineCount || 8}</div>
           <div className="tw-kpi-footer">
@@ -202,7 +217,7 @@ const AdminDashboard = () => {
         <div className="tw-kpi-card">
           <div className="tw-kpi-header">
             <span className="tw-kpi-title">Recruitment SLA</span>
-            <div className="tw-kpi-icon-box blue">⚡</div>
+            <div className="tw-kpi-icon-box blue"><DashboardIcon size={18} color="#2563EB" /></div>
           </div>
           <div className="tw-kpi-value">{kpis.recruitmentPerformance || 94.6}%</div>
           <div className="tw-kpi-footer">
@@ -215,7 +230,7 @@ const AdminDashboard = () => {
         <div className="tw-kpi-card">
           <div className="tw-kpi-header">
             <span className="tw-kpi-title">Fulfillment Ratio</span>
-            <div className="tw-kpi-icon-box emerald">🏆</div>
+            <div className="tw-kpi-icon-box emerald"><TrophyIcon size={18} color="#008F68" /></div>
           </div>
           <div className="tw-kpi-value">{kpis.fulfillmentRate || 88.2}%</div>
           <div className="tw-kpi-footer">
@@ -317,20 +332,25 @@ const AdminDashboard = () => {
           </div>
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-            <Link to="/admin/employees" className="tw-btn-primary" style={{ justifyContent: 'center' }}>
-              ➕ Onboard New Employee
+            <Link to="/admin/employees" className="tw-btn-primary" style={{ justifyContent: 'center', display: 'inline-flex', alignItems: 'center', gap: '0.45rem' }}>
+              <PlusIcon size={15} />
+              <span>Onboard New Employee</span>
             </Link>
-            <Link to="/admin/jobs" className="tw-btn-secondary" style={{ justifyContent: 'center' }}>
-              📋 Post Staffing Requirement
+            <Link to="/admin/jobs" className="tw-btn-secondary" style={{ justifyContent: 'center', display: 'inline-flex', alignItems: 'center', gap: '0.45rem' }}>
+              <BriefcaseIcon size={15} />
+              <span>Post Staffing Requirement</span>
             </Link>
-            <Link to="/admin/candidates" className="tw-btn-secondary" style={{ justifyContent: 'center' }}>
-              🎯 Review Candidate Pipeline
+            <Link to="/admin/candidates" className="tw-btn-secondary" style={{ justifyContent: 'center', display: 'inline-flex', alignItems: 'center', gap: '0.45rem' }}>
+              <TargetIcon size={15} />
+              <span>Review Candidate Pipeline</span>
             </Link>
-            <Link to="/admin/cms/blog" className="tw-btn-secondary" style={{ justifyContent: 'center' }}>
-              ✍️ Draft New CMS Article
+            <Link to="/admin/cms/blog" className="tw-btn-secondary" style={{ justifyContent: 'center', display: 'inline-flex', alignItems: 'center', gap: '0.45rem' }}>
+              <EditIcon size={15} />
+              <span>Draft New CMS Article</span>
             </Link>
-            <Link to="/admin/cms/announcements" className="tw-btn-secondary" style={{ justifyContent: 'center' }}>
-              📢 Broadcast Announcement
+            <Link to="/admin/cms/announcements" className="tw-btn-secondary" style={{ justifyContent: 'center', display: 'inline-flex', alignItems: 'center', gap: '0.45rem' }}>
+              <BellIcon size={15} />
+              <span>Broadcast Announcement</span>
             </Link>
           </div>
 

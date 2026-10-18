@@ -18,7 +18,7 @@ app.use(cookieParser());
 
 // ================= HEALTH CHECK =================
 app.get("/", (req, res) => {
-  res.send("✅ API is running...");
+  res.send("API is running...");
 });
 
 // Authentication & Candidate Portal Routes

@@ -45,6 +45,8 @@ const BlogManager = lazy(() => import('./admin/BlogManager'));
 const MediaLibrary = lazy(() => import('./admin/MediaLibrary'));
 const SeoManager = lazy(() => import('./admin/SeoManager'));
 const AnnouncementsManager = lazy(() => import('./admin/AnnouncementsManager'));
+const TechStackManager = lazy(() => import('./admin/TechStackManager'));
+const SystemMembersView = lazy(() => import('./admin/SystemMembersView'));
 
 function App() {
   const dispatch = useDispatch();
@@ -193,12 +195,14 @@ function App() {
             <Route path="clients" element={<ClientsView />} />
             <Route path="jobs" element={<JobsView />} />
             <Route path="placements" element={<PlacementsView />} />
+            <Route path="system-members" element={<SystemMembersView />} />
             <Route path="cms" element={<CmsDashboard />} />
             <Route path="cms/pages" element={<PagesManager />} />
             <Route path="cms/blog" element={<BlogManager />} />
             <Route path="cms/media" element={<MediaLibrary />} />
             <Route path="cms/seo" element={<SeoManager />} />
             <Route path="cms/announcements" element={<AnnouncementsManager />} />
+            <Route path="cms/tech-stack" element={<TechStackManager />} />
           </Route>
 
           <Route path="*" element={<HomePage />} />

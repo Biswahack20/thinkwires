@@ -1,4 +1,5 @@
 import React from 'react';
+import { CloseIcon } from '../../admin/AdminIcons';
 
 const categories = [
   'All Insights (15)',
@@ -63,7 +64,7 @@ const BlogFilters = ({
             className="BlogFilters-figmaClearBtn"
             aria-label="Clear search"
           >
-            ✕
+            <CloseIcon size={13} />
           </button>
         )}
       </div>

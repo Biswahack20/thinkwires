@@ -8,7 +8,12 @@
     "test": "echo \"No tests yet\" && exit 0",
     "start": "node src/server.js",
     "dev": "nodemon src/server.js",
-    "seed": "node src/seeds/seedDemoData.js"
+    "seed": "node src/seeds/seedDemoData.js",
+    "migrate": "node src/migrations/runner.js up",
+    "migrate:up": "node src/migrations/runner.js up",
+    "migrate:down": "node src/migrations/runner.js down",
+    "migrate:status": "node src/migrations/runner.js status",
+    "migrate:create": "node src/migrations/runner.js create"
   },
   "keywords": [],
   "author": "",

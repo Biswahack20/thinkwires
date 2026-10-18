@@ -102,7 +102,7 @@ const CareerBenefits = () => {
         <ScrollReveal direction="up">
           <div className="CareerBenefits-figmaHeader">
             <div className="CareerBenefits-badgeTag">
-              🛡️ COMPREHENSIVE ENGINEERING CARE
+              COMPREHENSIVE ENGINEERING CARE
             </div>
             <h2 className="CareerBenefits-headingTitle">
               Why Build Your Career With ThinkWires?

@@ -19,7 +19,7 @@ const NewsletterCTA = ({ isSubmitted = false, onSubmit }) => {
           {/* Left Column: Title, Subtitle, Checkmarks */}
           <div className="NewsletterCTA-figmaLeft">
             <span className="NewsletterCTA-figmaBadge">
-              📊 Quarterly Tech Hiring &amp; Salary Benchmark Reports
+              Quarterly Tech Hiring &amp; Salary Benchmark Reports
             </span>
 
             <h2 className="NewsletterCTA-figmaTitle">
@@ -51,7 +51,7 @@ const NewsletterCTA = ({ isSubmitted = false, onSubmit }) => {
             <div className="NewsletterCTA-figmaFormBox">
               {submitted ? (
                 <div className="NewsletterCTA-figmaSuccess">
-                  <h3>🎉 Subscription Confirmed</h3>
+                  <h3>Subscription Confirmed</h3>
                   <p>You have been added to the quarterly benchmark dispatch. Your first report is in your inbox.</p>
                 </div>
               ) : (

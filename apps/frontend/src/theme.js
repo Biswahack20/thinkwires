@@ -27,16 +27,16 @@
  *
  * ─── Usage Examples ────────────────────────────────────────────────────────────
  *
- * ✅ Correct — use CSS class names in JSX:
+ * [Correct] — use CSS class names in JSX:
  *   <button className="btn btn-primary">Click Me</button>
  *   <div className="card">...</div>
  *
- * ✅ Correct — use theme.js for programmatic logic:
+ * [Correct] — use theme.js for programmatic logic:
  *   import theme from './theme.js';
  *   const chartColor = theme.colors.primary; // "#0037B0"
  *   ctx.fillStyle = chartColor;
  *
- * ❌ Avoid — hardcoding raw color hex values in JSX:
+ * [Avoid] — hardcoding raw color hex values in JSX:
  *   <div style={{ color: '#0037B0' }}>...</div>
  *   // Instead: <div style={{ color: 'var(--color-primary)' }}>...</div>
  *

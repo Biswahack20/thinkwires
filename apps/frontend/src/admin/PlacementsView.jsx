@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import { adminApi } from './adminService';
+import { PlusIcon, TrashIcon, CloseIcon, AlertCircleIcon } from './AdminIcons';
 
 const PlacementsView = () => {
   const { showToast, activeRole } = useOutletContext();
@@ -125,7 +126,8 @@ const PlacementsView = () => {
         </div>
 
         <button className="tw-btn-primary" onClick={openAddModal}>
-          ➕ Deploy Talent to Client
+          <PlusIcon size={15} />
+          <span>Deploy Talent to Client</span>
         </button>
       </div>
 
@@ -201,7 +203,7 @@ const PlacementsView = () => {
                         title="End Deployment"
                         style={{ marginLeft: 'auto' }}
                       >
-                        🗑️
+                        <TrashIcon size={14} />
                       </button>
                     </td>
                   </tr>
@@ -219,7 +221,7 @@ const PlacementsView = () => {
             <div className="tw-modal-header">
               <h2 className="tw-modal-title">Deploy Talent to Client Requisition</h2>
               <button className="tw-modal-close-btn" onClick={() => setModalOpen(false)}>
-                ✕
+                <CloseIcon size={16} />
               </button>
             </div>
 
@@ -234,9 +236,13 @@ const PlacementsView = () => {
                       borderRadius: '8px',
                       marginBottom: '1rem',
                       fontSize: '0.82rem',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.5rem',
                     }}
                   >
-                    ⚠️ {formError}
+                    <AlertCircleIcon size={16} color="#DC2626" />
+                    <span>{formError}</span>
                   </div>
                 )}
 
@@ -355,7 +361,7 @@ const PlacementsView = () => {
             <div className="tw-modal-header">
               <h2 className="tw-modal-title">Terminate Placement</h2>
               <button className="tw-modal-close-btn" onClick={() => setDeleteConfirmId(null)}>
-                ✕
+                <CloseIcon size={16} />
               </button>
             </div>
             <div className="tw-modal-body">

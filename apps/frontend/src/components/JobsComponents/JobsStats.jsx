@@ -23,28 +23,28 @@ const JobsStats = () => {
       value: vacanciesVal,
       symbol: '+',
       symbolColor: 'green',
-      label: '💼 NEW JOB VACANCIES',
+      label: 'NEW JOB VACANCIES',
       subtext: 'Active weekly enterprise mandates'
     },
     {
       value: companiesVal,
       symbol: '+',
       symbolColor: 'blue',
-      label: '🏢 COMPANIES WORLDWIDE',
+      label: 'COMPANIES WORLDWIDE',
       subtext: 'US, Canada, UK, and APAC partners'
     },
     {
       value: hiredVal,
       symbol: '+',
       symbolColor: 'green',
-      label: '🚀 PEOPLE HIRED',
+      label: 'PEOPLE HIRED',
       subtext: 'Successful senior technical placements'
     },
     {
       value: satisfactionVal,
       symbol: '%',
       symbolColor: 'blue',
-      label: '⭐ CANDIDATE SATISFACTION',
+      label: 'CANDIDATE SATISFACTION',
       subtext: 'Transparent offer & onboarding ratings'
     }
   ];

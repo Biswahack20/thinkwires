@@ -100,13 +100,13 @@ const NewHero = ({ onOpenModal }) => {
       return sorted.slice(0, 4).map((job, idx) => ({
         id: `hero-job-${job.id || idx}`,
         image: SLIDE_IMAGES[idx % SLIDE_IMAGES.length],
-        alt: `${job.title} - ${job.company || 'Enterprise Client'}`,
+        alt: `${job.title} - Enterprise Client (Confidential)`,
         tag: job.category || 'Direct Client Opening',
         liveBadgeText: job.badge || 'Verified Opening',
         badgeTheme: getBadgeTheme(job.badgeColor, idx),
         icon: getCategoryIcon(job.category, job.title),
         title: job.title,
-        subtitle: `${job.location || 'Remote'} • ${job.experience || 'Experienced'} • ${job.company || 'Enterprise'}`,
+        subtitle: `${job.location || 'Remote'} • ${job.experience || 'Experienced'} • Enterprise Client (Confidential)`,
         metrics: [
           job.salary || 'Market Premium',
           job.jobMode || 'Permanent',

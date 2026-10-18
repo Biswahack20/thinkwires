@@ -20,7 +20,11 @@ const pageSchema = new mongoose.Schema(
     },
     content: {
       type: String,
-      required: true,
+      default: '',
+    },
+    data: {
+      type: mongoose.Schema.Types.Mixed,
+      default: {},
     },
     metaTitle: {
       type: String,

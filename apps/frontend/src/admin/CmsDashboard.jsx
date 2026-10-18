@@ -1,6 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useOutletContext } from 'react-router-dom';
 import { adminApi } from './adminService';
+import {
+  FileTextIcon,
+  EditIcon,
+  ImageIcon,
+  LayersIcon,
+  BellIcon,
+  SearchIcon,
+} from './AdminIcons';
 
 const CmsDashboard = () => {
   const { showToast } = useOutletContext();
@@ -45,8 +53,9 @@ const CmsDashboard = () => {
           <Link to="/admin/cms/pages" className="tw-btn-secondary">
             Manage Pages
           </Link>
-          <Link to="/admin/cms/blog" className="tw-btn-primary">
-            ✍️ New Blog Post
+          <Link to="/admin/cms/blog" className="tw-btn-primary" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.45rem' }}>
+            <EditIcon size={15} />
+            <span>New Blog Post</span>
           </Link>
         </div>
       </div>
@@ -56,7 +65,7 @@ const CmsDashboard = () => {
         <div className="tw-kpi-card">
           <div className="tw-kpi-header">
             <span className="tw-kpi-title">Website Pages</span>
-            <div className="tw-kpi-icon-box emerald">📄</div>
+            <div className="tw-kpi-icon-box emerald"><FileTextIcon size={18} color="#008F68" /></div>
           </div>
           <div className="tw-kpi-value">{s.totalPages || 6}</div>
           <div className="tw-kpi-footer">
@@ -68,7 +77,7 @@ const CmsDashboard = () => {
         <div className="tw-kpi-card">
           <div className="tw-kpi-header">
             <span className="tw-kpi-title">Blog & Articles</span>
-            <div className="tw-kpi-icon-box violet">✍️</div>
+            <div className="tw-kpi-icon-box violet"><EditIcon size={18} color="#7C3AED" /></div>
           </div>
           <div className="tw-kpi-value">{s.totalArticles || 4}</div>
           <div className="tw-kpi-footer">
@@ -80,7 +89,7 @@ const CmsDashboard = () => {
         <div className="tw-kpi-card">
           <div className="tw-kpi-header">
             <span className="tw-kpi-title">Media Library Assets</span>
-            <div className="tw-kpi-icon-box blue">🖼️</div>
+            <div className="tw-kpi-icon-box blue"><ImageIcon size={18} color="#2563EB" /></div>
           </div>
           <div className="tw-kpi-value">{s.totalMedia || 4}</div>
           <div className="tw-kpi-footer">
@@ -91,8 +100,20 @@ const CmsDashboard = () => {
 
         <div className="tw-kpi-card">
           <div className="tw-kpi-header">
+            <span className="tw-kpi-title">Tech Stack Catalog</span>
+            <div className="tw-kpi-icon-box emerald"><LayersIcon size={18} color="#008F68" /></div>
+          </div>
+          <div className="tw-kpi-value">{s.totalTechStacks || 25}</div>
+          <div className="tw-kpi-footer">
+            <span className="tw-trend-badge positive">Marquee Badges</span>
+            <span>Skills catalog</span>
+          </div>
+        </div>
+
+        <div className="tw-kpi-card">
+          <div className="tw-kpi-header">
             <span className="tw-kpi-title">Live Announcements</span>
-            <div className="tw-kpi-icon-box amber">📢</div>
+            <div className="tw-kpi-icon-box amber"><BellIcon size={18} color="#D97706" /></div>
           </div>
           <div className="tw-kpi-value">{s.totalAnnouncements || 3}</div>
           <div className="tw-kpi-footer">
@@ -103,13 +124,13 @@ const CmsDashboard = () => {
       </div>
 
       {/* CMS Module Quick Launch Tiles */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1rem', marginBottom: '1.5rem' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1rem', marginBottom: '1.5rem' }}>
         <Link
           to="/admin/cms/pages"
           className="tw-chart-card"
           style={{ textDecoration: 'none', transition: 'all 0.15s ease' }}
         >
-          <div style={{ fontSize: '1.5rem', marginBottom: '0.4rem' }}>📄</div>
+          <div style={{ marginBottom: '0.6rem', color: '#008F68' }}><FileTextIcon size={24} /></div>
           <strong style={{ color: '#172033', fontSize: '0.95rem' }}>Website Pages</strong>
           <p style={{ color: '#64748B', fontSize: '0.78rem', margin: '0.3rem 0 0 0' }}>
             Edit Home, About Us, Services, Careers, Contact, and Privacy Policy.
@@ -121,7 +142,7 @@ const CmsDashboard = () => {
           className="tw-chart-card"
           style={{ textDecoration: 'none', transition: 'all 0.15s ease' }}
         >
-          <div style={{ fontSize: '1.5rem', marginBottom: '0.4rem' }}>✍️</div>
+          <div style={{ marginBottom: '0.6rem', color: '#7C3AED' }}><EditIcon size={24} /></div>
           <strong style={{ color: '#172033', fontSize: '0.95rem' }}>Blog & News</strong>
           <p style={{ color: '#64748B', fontSize: '0.78rem', margin: '0.3rem 0 0 0' }}>
             Author articles, manage slugs, categories, tags, and publication schedules.
@@ -133,10 +154,22 @@ const CmsDashboard = () => {
           className="tw-chart-card"
           style={{ textDecoration: 'none', transition: 'all 0.15s ease' }}
         >
-          <div style={{ fontSize: '1.5rem', marginBottom: '0.4rem' }}>🖼️</div>
+          <div style={{ marginBottom: '0.6rem', color: '#2563EB' }}><ImageIcon size={24} /></div>
           <strong style={{ color: '#172033', fontSize: '0.95rem' }}>Media Library</strong>
           <p style={{ color: '#64748B', fontSize: '0.78rem', margin: '0.3rem 0 0 0' }}>
             Organize branding assets, thumbnails, hero banners, and vector graphics.
+          </p>
+        </Link>
+
+        <Link
+          to="/admin/cms/tech-stack"
+          className="tw-chart-card"
+          style={{ textDecoration: 'none', transition: 'all 0.15s ease' }}
+        >
+          <div style={{ marginBottom: '0.6rem', color: '#008F68' }}><LayersIcon size={24} /></div>
+          <strong style={{ color: '#172033', fontSize: '0.95rem' }}>Tech Stack Catalog</strong>
+          <p style={{ color: '#64748B', fontSize: '0.78rem', margin: '0.3rem 0 0 0' }}>
+            Curate enterprise technology badges for the marquee carousel and skills taxonomy.
           </p>
         </Link>
 
@@ -145,7 +178,7 @@ const CmsDashboard = () => {
           className="tw-chart-card"
           style={{ textDecoration: 'none', transition: 'all 0.15s ease' }}
         >
-          <div style={{ fontSize: '1.5rem', marginBottom: '0.4rem' }}>🔍</div>
+          <div style={{ marginBottom: '0.6rem', color: '#0284C7' }}><SearchIcon size={24} /></div>
           <strong style={{ color: '#172033', fontSize: '0.95rem' }}>SEO & Meta Settings</strong>
           <p style={{ color: '#64748B', fontSize: '0.78rem', margin: '0.3rem 0 0 0' }}>
             Manage page titles, open graph images, canonical URLs, and meta descriptions.

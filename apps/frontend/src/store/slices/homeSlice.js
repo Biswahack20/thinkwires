@@ -1,16 +1,23 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import mockData from '../../data/mockdata.json';
+import staticData from '../../data/staticData.json';
+
+const initialOpenings = (mockData.openings || []).map((j) => ({
+  ...j,
+  company: 'Enterprise Client (Confidential)',
+  client: 'Enterprise Client (Confidential)',
+}));
+const {
+  techStack: staticTechStack = [],
+  process: staticProcess = [],
+  capabilities: staticCapabilities = [],
+  benefits: staticBenefits = [],
+  faqs: staticFaqs = [],
+  industries: staticIndustries = [],
+  reports: staticReports = []
+} = staticData;
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL || '/api';
-
-export const fetchTechStack = createAsyncThunk(
-  'home/fetchTechStack',
-  async () => {
-    const response = await fetch(`${API_BASE}/tech-stack`);
-    return await response.json();
-  }
-);
-
-import { initialOpenings } from '../../data/openingsData';
 
 export const fetchOpenings = createAsyncThunk(
   'home/fetchOpenings',
@@ -62,6 +69,22 @@ export const fetchOpenings = createAsyncThunk(
   }
 );
 
+export const fetchTechStack = createAsyncThunk(
+  'home/fetchTechStack',
+  async () => {
+    try {
+      const response = await fetch(`${API_BASE}/tech-stack`);
+      if (response.ok) {
+        const data = await response.json();
+        if (Array.isArray(data) && data.length > 0) return data;
+      }
+    } catch {
+      // Backend offline or unreachable - use static brand list
+    }
+    return staticTechStack;
+  }
+);
+
 export const fetchStats = createAsyncThunk('home/fetchStats', async () => {
   const response = await fetch(`${API_BASE}/stats`);
   return await response.json();
@@ -103,7 +126,7 @@ export const fetchFaqs = createAsyncThunk('home/fetchFaqs', async () => {
 const homeSlice = createSlice({
   name: 'home',
   initialState: {
-    techStack: [],
+    techStack: staticTechStack,
     openings: initialOpenings,
     stats: {
       vacancies: 125,
@@ -115,12 +138,12 @@ const homeSlice = createSlice({
       contingentHired: 125,
       clientRetention: 95,
     },
-    industries: [],
-    process: [],
-    capabilities: [],
-    reports: [],
-    benefits: [],
-    faqs: [],
+    industries: staticIndustries,
+    process: staticProcess,
+    capabilities: staticCapabilities,
+    reports: staticReports,
+    benefits: staticBenefits,
+    faqs: staticFaqs,
     status: {
       techStack: 'idle',
       openings: 'idle',

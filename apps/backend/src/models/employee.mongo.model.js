@@ -2,6 +2,10 @@ import mongoose from 'mongoose';
 
 const employeeSchema = new mongoose.Schema(
   {
+    id: {
+      type: String,
+      default: () => `emp_${Date.now()}`,
+    },
     name: {
       type: String,
       required: [true, 'Employee name is required'],
@@ -23,6 +27,15 @@ const employeeSchema = new mongoose.Schema(
       type: String,
       required: [true, 'Designation is required'],
       trim: true,
+    },
+    role: {
+      type: String,
+      enum: ['superadmin', 'admin', 'cms_admin', 'employee'],
+      default: 'employee',
+    },
+    portalAccess: {
+      type: Boolean,
+      default: false,
     },
     technicalSkills: {
       type: [String],

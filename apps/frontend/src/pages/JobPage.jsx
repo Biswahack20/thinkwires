@@ -6,6 +6,7 @@ import { fetchOpenings } from '../store/slices/homeSlice';
 import Navbar from '../components/common/Navbar';
 import Footer from '../components/common/Footer';
 import ApplyModal from '../components/common/ApplyModal';
+import JobSpecModal from '../components/JobsComponents/JobSpecModal';
 
 // Above-the-fold components loaded synchronously for instant LCP
 import JobsHero from '../components/JobsComponents/JobsHero';
@@ -30,6 +31,7 @@ const JobPage = () => {
   const { openings, status, errors } = useSelector((state) => state.home);
 
   const [selectedJobForModal, setSelectedJobForModal] = useState(null);
+  const [selectedJobForSpec, setSelectedJobForSpec] = useState(null);
 
   // Search & Filter state
   const [searchQuery, setSearchQuery] = useState('');
@@ -137,6 +139,7 @@ const JobPage = () => {
               activeCategory={departmentFilter}
               setActiveCategory={setDepartmentFilter}
               onApplyClick={handleApplyJob}
+              onViewSpecClick={setSelectedJobForSpec}
             />
           )}
 
@@ -168,6 +171,18 @@ const JobPage = () => {
       </main>
 
       <Footer />
+
+      {/* Complete Job Specifications Modal */}
+      {selectedJobForSpec && (
+        <JobSpecModal
+          job={selectedJobForSpec}
+          onClose={() => setSelectedJobForSpec(null)}
+          onApply={(job) => {
+            setSelectedJobForSpec(null);
+            handleApplyJob(job);
+          }}
+        />
+      )}
 
       {/* Apply Modal */}
       <ApplyModal
