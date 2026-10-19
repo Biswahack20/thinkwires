@@ -1,172 +1,227 @@
-# ThinkWires Staffing and Solutions 🚀
+# 🚀 ThinkWires Staffing & Workforce Solutions
 
-ThinkWires is a complete platform that connects three core groups:
+ThinkWires is an enterprise tech manpower supply, global staffing, and talent management platform connecting three core ecosystems:
 
-1. **Clients (Companies)**: Looking to hire temporary workers, full-time staff, or freelancers.
-2. **Candidates (Job Seekers / Bench Staff)**: Professionals looking for work or currently on the internal company "bench."
-3. **Internal Admins & Recruiters**: The management team matching candidates to jobs and overseeing the platform.
-
-### ✨ Key Features
-
-- **🤖 AI Screening Gatekeeper**: Auto-generates custom tests based on job descriptions.
-- **📄 Resume Match Scorer**: Automatically reads resumes and generates a "Fit Score" (0-100%).
-- **💼 Bench Management**: Tracks internal candidates between client projects to monitor costs and enable quick reassignment.
-- **🎛️ Admin Control Panel (CMS)**: Allows non-developers to toggle platform features ON/OFF instantly and update website content without code changes.
+1. **Clients (Enterprises & Startups)**: Sourcing pre-vetted engineers, managing staff augmentation, payroll outsourcing, and Employer of Record (EOR) contracts.
+2. **Candidates (Job Seekers & Bench Talent)**: Browsing technical mandates, applying with resumes, tracking application pipeline statuses, and maintaining professional profiles.
+3. **Internal Admins & Recruiters**: Operating an ATS (Applicant Tracking System), managing bench staff utilization and daily cost overhead, and administering the public website via an integrated Content Management System (CMS).
 
 ---
 
-## 🏗️ System Architecture (Monorepo)
+## 📚 Project Documentation Hub
 
-This project uses a **Monorepo** structure powered by [Turborepo](https://turbo.build/). This means all our different applications live inside this single folder.
-
-- 🌐 **Frontend** (`apps/frontend`): React 19 built with Vite and customized with a Vanilla CSS design token system.
-- ⚙️ **Backend Core** (`apps/backend`): Node.js & Express API Gateway (Currently serving static JSON data for rapid UI prototyping).
-- 🧠 **AI Microservice** (`apps/ai_services`): Python FastAPI for AI generation and resume vector searches.
+| Document                                                                                               | Primary Audience            | Scope & Contents                                                                                                                                 |
+| ------------------------------------------------------------------------------------------------------ | --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 🌐 [**FrontendDocs.md**](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/FrontendDocs.md) | Frontend Engineers & Agents | React 19 architecture, Vite proxy, Redux Toolkit (13 slices), routing inventory, design tokens, Three.js canvas, and auth state.                 |
+| ⚙️ [**BackendDocs.md**](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/BackendDocs.md)   | Backend Engineers & Agents  | Express 5 API Gateway, dual-persistence (PostgreSQL + MongoDB), non-blocking in-memory fallback, rate limiting, and complete REST API reference. |
+| 🎛️ [**adminPanel.md**](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/adminPanel.md)     | Admins, Ops & Agents        | 15 Admin & CMS views, Recharts financial analytics, 6-stage ATS Kanban, RBAC persona switcher (`X-Demo-Role`), and live preview editors.         |
+| 📄 [**docs/PRD.md**](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/docs/PRD.md)         | Product Managers & Leads    | Product Requirements Document, business KPIs, screening test specifications, and platform roadmap.                                               |
 
 ---
 
-## 🚀 Beginner-Friendly Setup Guide
+## 🏗️ System Architecture (Turborepo Monorepo)
 
-Follow these steps to get the entire project running on your local computer.
+The repository is managed via **Turborepo** (`apps/*` workspaces) to provide fast, isolated development across web, API, and machine learning services:
 
-### 1️⃣ Prerequisites (What you need installed)
+```
+thinkwires/
+├── apps/
+│   ├── frontend/         # React 19 + Vite + Redux Toolkit (Port 5173)
+│   ├── backend/          # Node.js + Express 5 Core API Gateway (Port 5000)
+│   └── ai_services/      # Python 3.12 + FastAPI Microservice (Port 8000)
+├── docs/                 # Product specifications & architectural guides
+├── FrontendDocs.md       # Complete frontend documentation
+├── BackendDocs.md        # Complete backend documentation
+├── adminPanel.md         # Complete Admin Panel & CMS documentation
+├── package.json          # Root orchestration & unified scripts
+└── turbo.json            # Turborepo task pipeline configuration
+```
 
-Before starting, ensure you have downloaded and installed the following on your computer:
+```
+                               ┌────────────────────────────────────────────────┐
+                               │           Browser / Client Applications         │
+                               └───────────────────────┬────────────────────────┘
+                                                       │
+                      ┌────────────────────────────────┴────────────────────────────────┐
+                      │ HTTP / REST                                                     │ HTTP / REST
+                      ▼                                                                 ▼
+      ┌──────────────────────────────┐                                  ┌──────────────────────────────┐
+      │   React 19 Frontend (5173)   │ ────(Vite Reverse Proxy /api)───▶│   Express 5 Backend (5000)   │
+      │   - Public Marketing Pages   │                                  │   - JWT Cookie Auth & RBAC   │
+      │   - Protected Candidate App  │                                  │   - Candidate Portal Routes  │
+      │   - Admin Dashboard & CMS    │                                  │   - Admin & CMS Controllers  │
+      └──────────────────────────────┘                                  └───────────────┬──────────────┘
+                                                                                        │
+                                        ┌───────────────────────────────────────────────┼──────────────────────────────┐
+                                        │                                               │                              │
+                                        ▼                                               ▼                              ▼
+                         ┌─────────────────────────────┐                 ┌─────────────────────────────┐┌─────────────────────────────┐
+                         │   PostgreSQL (Sequelize)    │                 │     MongoDB (Mongoose)      ││   FastAPI AI Service (8000) │
+                         │   - Neon Cloud Database     │                 │     - Atlas Document Store  ││   - Resume Vector Scorer    │
+                         │   - Relational Structures   │                 │     - CMS & Candidate ATS   ││   - AI Test Gatekeeper      │
+                         └──────────────┬──────────────┘                 └──────────────┬──────────────┘└─────────────────────────────┘
+                                        │                                               │
+                                        └───────────────────────┬───────────────────────┘
+                                                                │ (Graceful Non-Blocking Fallback)
+                                                                ▼
+                                                 ┌─────────────────────────────┐
+                                                 │   In-Memory Mock Fallback   │
+                                                 │   (mockData / adminSeeds)   │
+                                                 └─────────────────────────────┘
+```
 
-- [Node.js](https://nodejs.org/en) (Version 20 or higher) - _Required for the web apps._
-- [Python](https://www.python.org/downloads/) (Version 3.12 or higher) - _Required for the AI service._
+---
+
+## ✨ Key Platform Features
+
+- **🤖 AI Screening Gatekeeper**: Auto-generates custom screening assessments matched to job requirements.
+- **📄 Resume Match Scorer**: Semantic comparison of applicant resumes against requisitions to generate a **Fit Score (0–100%)**.
+- **💼 Bench Management**: Monitors internal unassigned engineers on payroll, tracks daily cost overhead, and enables single-click deployment to client projects.
+- **🎛️ Admin Control Panel & CMS**: 15 integrated modules for ATS recruitment, client billing, staff directories, and live website CMS (pages, blog, media, SEO, announcements).
+- **🛡️ Resilient Dual-Persistence**: The backend boots instantly on port 5000 and connects non-blockingly to PostgreSQL and MongoDB. If remote connections are offline or firewalled, an automatic in-memory fallback guarantees uninterrupted UI testing and demos.
+
+---
+
+## 🚀 Quickstart Setup Guide
+
+### 1️⃣ Prerequisites
+
+- **Node.js** (v20.x or higher)
+- **Python** (v3.12.x or higher)
+- **Git**
 
 ### 2️⃣ Install Dependencies
 
-Open your terminal (Command Prompt, PowerShell, or VS Code Terminal), navigate to this project folder, and run:
+Run from the root directory to install JavaScript packages across all monorepo apps:
 
 ```bash
 npm install
 ```
 
-_(This will download all the necessary JavaScript libraries for the frontend and backend.)_
+### 3️⃣ Configure Environment Variables (`.env`)
 
-### 3️⃣ Set Up Environment Variables (.env files)
+Templates are provided in each application directory:
 
-For security, sensitive data (like API keys) are not saved in code. We have provided `.env.example` files as templates. You need to copy these templates and create actual `.env` files in specific places:
+```bash
+# 1. Backend environment
+cp apps/backend/.env.example apps/backend/.env
 
-**A. Backend (`apps/backend`):**
+# 2. Frontend environment
+cp apps/frontend/.env.example apps/frontend/.env
 
-1. Go to `apps/backend/`.
-2. Copy `.env.example` and rename it to `.env` (if applicable).
+# 3. AI microservice environment
+cp apps/ai_services/.env.example apps/ai_services/.env
+```
 
-**B. AI Microservice (`apps/ai_services`):**
+#### Backend `.env` Keys:
 
-1. Go to `apps/ai_services/`.
-2. Copy `.env.example` and rename it to `.env`.
-3. Ensure your `OPENAI_API_KEY` is pasted here so the AI can function.
+```ini
+PORT=5000
+NODE_ENV=development
+DATABASE_URL=postgresql://user:password@host/dbname?sslmode=require
+MONGODB_URI=mongodb+srv://user:password@cluster.mongodb.net/
+JWT_SECRET=your_secure_random_jwt_secret
+AI_SERVICE_URL=http://localhost:8000
+```
 
-**C. Frontend (`apps/frontend`):**
+### 4️⃣ Set Up AI Microservice (Python Virtual Environment)
 
-1. Go to `apps/frontend/`.
-2. Copy `.env.example` and rename it to `.env`.
-3. This contains `VITE_API_URL=http://localhost:5000` to connect the React app to the Express backend.
+```bash
+cd apps/ai_services
+python -m venv venv
 
-### 4️⃣ Start the Entire Application
+# Windows
+.\venv\Scripts\activate
 
-Now you are ready to launch! Run:
+# macOS / Linux
+source venv/bin/activate
+
+pip install -r requirements.txt
+cd ../..
+```
+
+### 5️⃣ Launch the Entire Application Suite
+
+Run the root Turborepo development script:
 
 ```bash
 npm run dev
 ```
 
-_(Turborepo will magically start the Frontend, Backend, and AI Microservice all at the same time!)_
+Turborepo will concurrently launch:
+
+- 🌐 **Frontend Application**: [`http://localhost:5173`](http://localhost:5173)
+- ⚙️ **Express Core API**: [`http://localhost:5000`](http://localhost:5000)
+- 🧠 **FastAPI AI Microservice**: [`http://localhost:8000`](http://localhost:8000) (Interactive Swagger UI: [`http://localhost:8000/docs`](http://localhost:8000/docs))
 
 ---
 
-## 📂 Folder Structure Guide
+## 🛠️ Monorepo Scripts Reference
 
-If you need to find where something is written, here is a quick map:
+All primary operations can be executed from the root using npm:
 
-- **`/apps/frontend/`**: The visual website the user sees (React + Redux Toolkit).
-- **`/apps/backend/`**: The core server that handles serving data APIs (Express).
-- **`/apps/ai_services/`**: The AI brain that reads resumes and generates tests (Python).
-- **`/docs/`**: Project documentation, including the full Product Requirements Document (PRD).
-- **`turbo.json`**: The rules for how Turborepo runs our apps together.
-
----
-
-## 🤝 Contributing Guidelines
-
-We welcome contributions to ThinkWires! Follow these steps to contribute to the codebase:
-
-### 1. Branching Strategy
-
-- Always create a new branch from `main` before starting work.
-- Use descriptive branch names: `feature/your-feature`, `bugfix/issue-description`, or `chore/cleanup-task`.
-  ```bash
-  git checkout -b feature/awesome-new-component
-  ```
-
-### 2. Making Changes
-
-- **Frontend**: Follow the existing design token architecture in `index.css`. Avoid inline styles unless absolutely necessary. Ensure components are integrated with Redux Toolkit for state management.
-- **Backend**: Add new API routes clearly and return structured JSON.
-- **General**: Keep your commits atomic and logical.
-
-### 3. Commit Standards
-
-We use clear, descriptive commit messages to track history easily. Please follow conventional commits format:
-
-- `feat: added new AI screening component`
-- `fix: resolved API CORS issue`
-- `style: updated primary color tokens`
-- `refactor: simplified Redux slice logic`
-
-### 4. Code Review & Pull Requests
-
-1. Test your code locally by running `npm run dev` and verifying all three apps work.
-2. Push your branch to the repository: `git push origin feature/your-feature`.
-3. Open a Pull Request (PR) against the `master` branch.
-4. Provide a clear description of what your PR solves or adds.
+| Command                  | Action                                                                       |
+| ------------------------ | ---------------------------------------------------------------------------- |
+| `npm run dev`            | Runs Frontend, Backend, and AI Service concurrently in persistent watch mode |
+| `npm run build`          | Builds production-optimized artifacts across all workspaces via Turborepo    |
+| `npm run lint`           | Runs ESLint analysis across apps                                             |
+| `npm run format`         | Auto-formats the entire repository using Prettier                            |
+| `npm run format:check`   | Verifies code adherence to Prettier formatting standards                     |
+| `npm run migrate`        | Executes pending database migrations (`apps/backend`)                        |
+| `npm run migrate:status` | Checks database migration status                                             |
+| `npm run migrate:down`   | Rolls back the latest database migration                                     |
 
 ---
 
-## 🏗️ Individual Application Setup
+## 📂 Detailed Directory Map
 
-While `npm run dev` at the root runs everything automatically, you may want to work on or test an application in isolation.
-
-### 🌐 Frontend Setup (`apps/frontend`)
-
-The React application runs using Vite.
-
-1. Navigate to the frontend directory: `cd apps/frontend`
-2. Install dependencies: `npm install`
-3. Run the development server: `npm run dev`
-4. **Access the App:** Open `http://localhost:5173` in your browser.
-   _Note: The frontend expects the backend to be running on port 5000._
-
-### ⚙️ Backend Core (`apps/backend`)
-
-The Express API serves static data arrays to power the frontend components.
-
-1. Navigate to the backend directory: `cd apps/backend`
-2. Run the development server: `npm run dev` (uses nodemon)
-3. **Access the API:** The server will listen on `http://localhost:5000`.
-
-### 🧠 AI Microservice (`apps/ai_services`)
-
-This Python FastAPI service handles resume vector searches and AI prompt generation.
-
-1. Navigate to the AI service directory: `cd apps/ai_services`
-2. Create a virtual environment : `python -m venv venv`
-3. Activate the virtual environment:
-   - Windows: `venv\Scripts\activate`
-   - Mac/Linux: `source venv/bin/activate`
-4. Install dependencies: `pip install -r requirements.txt`
-5. Run the FastAPI server: `npm run dev` (or run `uvicorn main:app --reload --host 0.0.0.0 --port 8000`)
-6. **Access the API Docs:** Open `http://localhost:8000/docs` in your browser to interact with the AI Swagger UI.
+```
+thinkwires/
+├── apps/
+│   ├── frontend/
+│   │   ├── src/
+│   │   │   ├── admin/            # 15 Admin & CMS management modules
+│   │   │   ├── components/       # Reusable components & 3D Three.js canvas
+│   │   │   ├── pages/            # Public, Auth, and Candidate portal views
+│   │   │   ├── store/            # Redux Toolkit store & 13 domain slices
+│   │   │   ├── index.css         # Design tokens & responsive styles
+│   │   │   └── App.jsx           # React Router v7 routes & React.lazy code-splitting
+│   │   └── vite.config.js        # Vite config with /api proxy to localhost:5000
+│   │
+│   ├── backend/
+│   │   ├── src/
+│   │   │   ├── configs/          # Database (PostgreSQL, MongoDB) & env loaders
+│   │   │   ├── controllers/      # Auth, Candidate Portal, and Admin controllers
+│   │   │   ├── middlewares/      # JWT auth, RBAC permissions, Multer uploads
+│   │   │   ├── migrations/       # Version-controlled schema migrations
+│   │   │   ├── models/           # 14 Mongoose Schema definitions
+│   │   │   ├── routes/           # REST endpoints (/api/auth, /api/candidate, /api/admin)
+│   │   │   ├── seeds/            # Demo data fixtures & seed runners
+│   │   │   ├── app.js            # Express app configuration & middlewares
+│   │   │   └── server.js         # Non-blocking server bootstrap
+│   │   └── uploads/              # Local storage for candidate resumes
+│   │
+│   └── ai_services/
+│       ├── main.py               # FastAPI application entry point
+│       ├── requirements.txt      # LangChain, OpenAI, and pdfplumber dependencies
+│       └── venv/                 # Python virtual environment
+│
+├── docs/                         # PRD, specs, and design documentation
+├── FrontendDocs.md               # Detailed frontend developer & agent guide
+├── BackendDocs.md                # Detailed backend developer & agent guide
+├── adminPanel.md                 # Detailed Admin Panel & CMS manual
+├── package.json                  # Turborepo root configuration
+└── turbo.json                    # Turborepo pipeline tasks
+```
 
 ---
 
-## 🛠️ Built With
+## 🤝 Contribution & Coding Standards
 
-- **Frontend**: React 19, Redux Toolkit, Vite, Vanilla CSS with Design Tokens
-- **Backend**: Node.js, Express
-- **AI Service**: Python, FastAPI, OpenAI, LangChain
-- **Architecture**: Turborepo (Monorepo)
+1. **Branching Strategy**: Always branch from `master` with descriptive prefixes: `feature/your-feature`, `bugfix/issue-description`, or `chore/cleanup`.
+2. **Conventional Commits**: Format commit messages cleanly:
+   - `feat: added candidate resume match visualizer`
+   - `fix: resolved admin persona switching header persistence`
+   - `docs: updated backend API documentation`
+3. **Frontend Rules**: Adhere to CSS design tokens in [`index.css`](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/frontend/src/index.css). Do not use arbitrary inline styles or Tailwind unless explicitly instructed.
+4. **Backend Rules**: Maintain non-blocking database connections and resilient in-memory fallbacks when adding new endpoints.
