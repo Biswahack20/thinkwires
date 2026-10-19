@@ -33,11 +33,7 @@ const Navbar = () => {
 
   const handleQuickApply = () => {
     closeMobileMenu();
-    if (isAuthenticated) {
-      navigate('/jobs/general-pool/apply?title=General%20Engineering%20Candidate%20Pool');
-    } else {
-      navigate('/login?redirect=/jobs/general-pool/apply%3Ftitle%3DGeneral%2520Engineering%2520Candidate%2520Pool');
-    }
+    setIsApplyModalOpen(true);
   };
 
   const isActive = (path) => location.pathname === path ? 'Navbar-active' : '';

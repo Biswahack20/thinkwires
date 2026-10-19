@@ -188,7 +188,7 @@ const Openings = () => {
                         View Job Spec
                       </button>
                       <button
-                        onClick={() => setSelectedJob(job.title)}
+                        onClick={() => setSelectedJob(job)}
                         className={'Openings-applyBtn'}
                       >
                         Apply Now
@@ -238,7 +238,14 @@ const Openings = () => {
             </div>
           </div>
           <button
-            onClick={() => setSelectedJob('General Engineering Candidate Pool')}
+            onClick={() => setSelectedJob({
+              title: 'General Engineering Candidate Pool',
+              jobId: 'general-pool',
+              department: 'Engineering',
+              location: 'Remote',
+              employmentType: 'Permanent',
+              postingDate: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+            })}
             className={'Openings-uploadBtn'}
           >
             Upload CV / Profile
@@ -252,7 +259,7 @@ const Openings = () => {
           onClose={() => setSelectedJobForSpec(null)}
           onApply={(j) => {
             setSelectedJobForSpec(null);
-            setSelectedJob(j.title);
+            setSelectedJob(j);
           }}
         />
       )}
@@ -260,7 +267,8 @@ const Openings = () => {
       <ApplyModal
         isOpen={!!selectedJob}
         onClose={() => setSelectedJob(null)}
-        roleTitle={selectedJob || ''}
+        jobData={selectedJob}
+        roleTitle={typeof selectedJob === 'string' ? selectedJob : selectedJob?.title || ''}
       />
     </section>
   );

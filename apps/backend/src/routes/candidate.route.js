@@ -6,6 +6,7 @@ import {
   applyForJob,
 } from '../controllers/candidatePortal.controller.js';
 import { requireCandidateAuth } from '../middlewares/auth.middleware.js';
+import { resumeUpload } from '../middlewares/upload.middleware.js';
 
 const router = express.Router();
 
@@ -15,6 +16,6 @@ router.use(requireCandidateAuth);
 router.get('/dashboard', getCandidateDashboard);
 router.put('/profile', updateCandidateProfile);
 router.get('/applications', getMyApplications);
-router.post('/apply', applyForJob);
+router.post('/apply', resumeUpload.single('resume'), applyForJob);
 
 export default router;

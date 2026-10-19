@@ -77,7 +77,11 @@ const JobPage = () => {
 
   const handleApplyJob = (job) => {
     const jobIdentifier = job.id || job._id || 'job-' + encodeURIComponent(job.title.toLowerCase().replace(/[^a-z0-9]+/g, '-'));
-    const targetApplyUrl = `/jobs/${jobIdentifier}/apply?title=${encodeURIComponent(job.title)}&department=${encodeURIComponent(job.department || 'Engineering')}&location=${encodeURIComponent(job.location || 'Remote')}`;
+    const empType = job.jobMode || job.employmentType || job.type || 'Permanent';
+    const postDate = job.postedDate
+      ? new Date(job.postedDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+      : (job.postingDate || 'Active Mandate');
+    const targetApplyUrl = `/jobs/${jobIdentifier}/apply?title=${encodeURIComponent(job.title)}&department=${encodeURIComponent(job.department || 'Engineering')}&location=${encodeURIComponent(job.location || 'Remote')}&employmentType=${encodeURIComponent(empType)}&postingDate=${encodeURIComponent(postDate)}`;
 
     if (isAuthenticated) {
       navigate(targetApplyUrl);
@@ -188,7 +192,8 @@ const JobPage = () => {
       <ApplyModal
         isOpen={!!selectedJobForModal}
         onClose={() => setSelectedJobForModal(null)}
-        roleTitle={selectedJobForModal || ''}
+        jobData={selectedJobForModal}
+        roleTitle={typeof selectedJobForModal === 'string' ? selectedJobForModal : selectedJobForModal?.title || ''}
       />
     </div>
   );
