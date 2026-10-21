@@ -5,6 +5,7 @@ import apiRoutes from './routes/api.route.js';
 import adminRoutes from './routes/admin.route.js';
 import authRoutes from './routes/auth.route.js';
 import candidateRoutes from './routes/candidate.route.js';
+import userRoutes from './routes/user.route.js';
 
 import path from 'path';
 
@@ -29,6 +30,7 @@ app.get("/", (req, res) => {
 // Authentication & Candidate Portal Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/candidate', candidateRoutes);
+app.use('/api/user', userRoutes);
 
 // Admin & Legacy API Routes
 app.use('/api/admin', adminRoutes);

@@ -1,6 +1,7 @@
 import { verifyCandidateToken, verifyAdminToken } from '../utils/auth.util.js';
 import Candidate from '../models/candidate.mongo.model.js';
 import UserMongo from '../models/user.mongo.model.js';
+import User from '../models/user.model.js';
 import mongoose from 'mongoose';
 
 // ================= ADMIN ROLE-BASED AUTHENTICATION & RBAC =================
@@ -231,6 +232,67 @@ export const requireCandidateAuth = async (req, res, next) => {
       success: false,
       authenticated: false,
       error: 'Invalid or forged authentication token.',
+    });
+  }
+};
+
+/**
+ * Universal Authenticator for Candidate or Admin sessions
+ * Verifies either candidate JWT or admin JWT and populates req.user
+ */
+export const authenticateCandidateOrAdmin = async (req, res, next) => {
+  try {
+    let token = null;
+
+    if (req.cookies && req.cookies.thinkwires_admin_jwt) {
+      token = req.cookies.thinkwires_admin_jwt;
+    } else if (req.cookies && req.cookies.thinkwires_candidate_jwt) {
+      token = req.cookies.thinkwires_candidate_jwt;
+    } else if (req.headers.authorization && req.headers.authorization.startsWith('Bearer ')) {
+      token = req.headers.authorization.split(' ')[1];
+    } else if (req.headers['x-admin-token']) {
+      token = req.headers['x-admin-token'];
+    }
+
+    if (!token) {
+      return res.status(401).json({
+        success: false,
+        authenticated: false,
+        error: 'Authentication token required.',
+      });
+    }
+
+    let decoded = null;
+    let isAdmin = false;
+
+    try {
+      decoded = verifyAdminToken(token);
+      isAdmin = true;
+    } catch {
+      try {
+        decoded = verifyCandidateToken(token);
+      } catch (candErr) {
+        return res.status(401).json({
+          success: false,
+          authenticated: false,
+          error: candErr.name === 'TokenExpiredError' ? 'Session expired.' : 'Invalid token.',
+        });
+      }
+    }
+
+    req.user = {
+      id: decoded.id || decoded._id,
+      name: decoded.name,
+      email: decoded.email,
+      role: decoded.role || (isAdmin ? 'admin' : 'candidate'),
+    };
+
+    next();
+  } catch (err) {
+    return res.status(401).json({
+      success: false,
+      authenticated: false,
+      error: 'Authentication failed.',
     });
   }
 };
