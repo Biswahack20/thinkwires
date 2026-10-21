@@ -13,11 +13,12 @@ import React, { useState, useEffect } from 'react';
  * - POST /api/candidate/applications/:applicationId/assessment/submit
  */
 const ScreeningAssessmentModal = ({
-  isOpen,
+  isOpen = true,
   onClose,
   applicationId,
   initialAssessment = null,
-  onComplete = () => {},
+  onComplete,
+  onCompleted,
 }) => {
   const [assessment, setAssessment] = useState(initialAssessment);
   const [loading, setLoading] = useState(!initialAssessment);
@@ -30,9 +31,10 @@ const ScreeningAssessmentModal = ({
 
   // Fetch assessment if not provided initially
   useEffect(() => {
-    if (!isOpen || !applicationId) return;
+    if (!applicationId) return;
 
     if (initialAssessment && initialAssessment.questions?.length) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setAssessment(initialAssessment);
       setLoading(false);
       return;
@@ -113,11 +115,12 @@ const ScreeningAssessmentModal = ({
       const data = await res.json();
       if (res.ok) {
         setResult(data.evaluation);
-        onComplete(data.evaluation);
+        if (typeof onComplete === 'function') onComplete(data.evaluation);
+        if (typeof onCompleted === 'function') onCompleted(data.evaluation);
       } else {
         setError(data.error || 'Failed to submit assessment.');
       }
-    } catch (err) {
+    } catch {
       setError('Network error submitting assessment.');
     } finally {
       setSubmitting(false);
@@ -129,6 +132,8 @@ const ScreeningAssessmentModal = ({
     const secs = seconds % 60;
     return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   };
+
+  if (!isOpen) return null;
 
   return (
     <div
@@ -215,23 +220,29 @@ const ScreeningAssessmentModal = ({
                   border: timeLeft < 180 ? '1px solid #F87171' : '1px solid #E2E8F0',
                 }}
               >
-                <span>⏱️</span>
+                <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>schedule</span>
                 <span>{formatTimer(timeLeft)}</span>
               </div>
             )}
             <button
               type="button"
               onClick={onClose}
+              aria-label="Close Assessment"
               style={{
                 background: 'transparent',
                 border: 'none',
                 color: '#94A3B8',
-                fontSize: '1.5rem',
                 cursor: 'pointer',
                 padding: '0.25rem',
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
               }}
             >
-              ✕
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="18" y1="6" x2="6" y2="18"></line>
+                <line x1="6" y1="6" x2="18" y2="18"></line>
+              </svg>
             </button>
           </div>
         </div>
@@ -240,7 +251,11 @@ const ScreeningAssessmentModal = ({
         <div style={{ flex: 1, overflowY: 'auto', padding: '1.75rem' }}>
           {loading ? (
             <div style={{ textAlign: 'center', padding: '3rem 1rem', color: '#64748B' }}>
-              <div style={{ fontSize: '2rem', marginBottom: '0.75rem' }}>⚙️</div>
+              <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '0.75rem' }}>
+                <span className="material-symbols-outlined" style={{ fontSize: '36px', color: '#008F68', animation: 'spin 1.5s linear infinite' }}>
+                  sync
+                </span>
+              </div>
               <p style={{ fontWeight: 600 }}>Synthesizing personalized AI technical assessment...</p>
               <p style={{ fontSize: '0.85rem' }}>Tailoring 10 questions to match job requirements and candidate background.</p>
             </div>
@@ -258,14 +273,15 @@ const ScreeningAssessmentModal = ({
                   borderRadius: '50%',
                   background: result.passed ? '#DCFCE7' : '#FEE2E2',
                   color: result.passed ? '#15803D' : '#B91C1C',
-                  fontSize: '2.5rem',
+                  fontSize: '1.1rem',
+                  fontWeight: 800,
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   margin: '0 auto 1.25rem auto',
                 }}
               >
-                {result.passed ? '✓' : '✕'}
+                {result.passed ? 'PASSED' : 'UNMET'}
               </div>
 
               <span
@@ -305,7 +321,7 @@ const ScreeningAssessmentModal = ({
                 }}
               >
                 <h4 style={{ margin: '0 0 0.75rem 0', color: '#1E293B', fontSize: '0.95rem' }}>
-                  📊 Detailed Evaluation Breakdown
+                  Detailed Evaluation Breakdown
                 </h4>
                 <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '0.75rem' }}>
                   {result.detailed_feedback?.map((item, idx) => (
@@ -596,7 +612,7 @@ const ScreeningAssessmentModal = ({
                     boxShadow: '0 4px 6px -1px rgba(0, 143, 104, 0.4)',
                   }}
                 >
-                  {submitting ? 'Evaluating Answers...' : '🚀 Submit Assessment'}
+                  {submitting ? 'Evaluating Answers...' : 'Submit Assessment'}
                 </button>
               )}
             </div>

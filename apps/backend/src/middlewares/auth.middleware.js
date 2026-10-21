@@ -297,4 +297,52 @@ export const authenticateCandidateOrAdmin = async (req, res, next) => {
   }
 };
 
+/**
+ * Optional Candidate Authenticator
+ * Populates req.candidate if valid session exists, but allows guest applicants through
+ */
+export const optionalCandidateAuth = async (req, res, next) => {
+  try {
+    let token = null;
+
+    if (req.cookies && req.cookies.thinkwires_candidate_jwt) {
+      token = req.cookies.thinkwires_candidate_jwt;
+    } else if (req.headers.authorization && req.headers.authorization.startsWith('Bearer ')) {
+      token = req.headers.authorization.split(' ')[1];
+    }
+
+    if (!token) {
+      req.candidate = null;
+      return next();
+    }
+
+    try {
+      const decoded = verifyCandidateToken(token);
+      if (decoded && decoded.id) {
+        if (mongoose.connection.readyState === 1) {
+          const candidate = await Candidate.findById(decoded.id).select('-password');
+          if (candidate) {
+            req.candidate = candidate;
+          }
+        } else {
+          req.candidate = {
+            _id: decoded.id,
+            id: decoded.id,
+            name: decoded.name,
+            email: decoded.email,
+            role: 'candidate',
+          };
+        }
+      }
+    } catch {
+      req.candidate = null;
+    }
+
+    next();
+  } catch {
+    req.candidate = null;
+    next();
+  }
+};
+
 export default requireAuth;

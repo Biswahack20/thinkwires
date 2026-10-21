@@ -2639,6 +2639,52 @@ body {
   margin: 0;
 }
 
+.ApplyModal-termsBox {
+  margin-top: 1.25rem;
+  padding: 0.85rem 1rem;
+  border-radius: 8px;
+  background-color: var(--color-slate-surface, #f8fafc);
+  border: 1px solid var(--color-card-stroke, #e2e8f0);
+  display: flex;
+  align-items: flex-start;
+  gap: 0.75rem;
+  transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.ApplyModal-termsBox.has-error {
+  border-color: #f87171;
+  background-color: #fef2f2;
+}
+
+.ApplyModal-termsCheckbox {
+  margin-top: 0.2rem;
+  width: 18px;
+  height: 18px;
+  accent-color: var(--color-navy-dark, #003399);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.ApplyModal-termsLabel {
+  font-size: 0.84rem;
+  line-height: 1.45;
+  color: var(--color-slate-text, #475569);
+  cursor: pointer;
+  margin: 0;
+  user-select: none;
+}
+
+.ApplyModal-termsLink {
+  color: var(--color-navy-dark, #003399);
+  font-weight: 600;
+  text-decoration: underline;
+  transition: color 0.15s ease;
+}
+
+.ApplyModal-termsLink:hover {
+  color: #1d4ed8;
+}
+
 .ApplyModal-actions {
   display: flex;
   justify-content: center;

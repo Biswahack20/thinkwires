@@ -27,12 +27,78 @@ const CandidateProfilePage = () => {
   });
 
   const [localSuccess, setLocalSuccess] = useState('');
+  const [resumeFile, setResumeFile] = useState(null);
+  const [parsingResume, setParsingResume] = useState(false);
+  const [resumeNotice, setResumeNotice] = useState('');
+  const [resumeError, setResumeError] = useState('');
+
+  const handleResumeChange = async (e) => {
+    setResumeError('');
+    setResumeNotice('');
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      const validExtensions = ['.pdf', '.doc', '.docx'];
+      const ext = file.name.substring(file.name.lastIndexOf('.')).toLowerCase();
+
+      if (!validExtensions.includes(ext)) {
+        setResumeError('Please upload a valid document (.pdf, .doc, .docx).');
+        return;
+      }
+
+      if (file.size > 10 * 1024 * 1024) {
+        setResumeError('File size exceeds 10MB limit.');
+        return;
+      }
+
+      setResumeFile(file);
+      setParsingResume(true);
+
+      try {
+        const parseData = new FormData();
+        parseData.append('resume', file);
+        const res = await fetch('/api/candidate/parse-resume', {
+          method: 'POST',
+          credentials: 'include',
+          body: parseData,
+        });
+
+        const data = await res.json();
+        if (res.ok && data.parsed) {
+          const p = data.parsed;
+          const parsedFullName = [p.firstName, p.lastName].filter(Boolean).join(' ');
+
+          setFormData((prev) => ({
+            ...prev,
+            name: parsedFullName || prev.name,
+            phone: p.mobileNumber || prev.phone,
+            currentRole: p.currentRole || prev.currentRole,
+            headline: p.headline || p.currentRole || prev.headline,
+            location: p.location || prev.location,
+            experience: p.totalExperienceYears ? Number(p.totalExperienceYears) || prev.experience : prev.experience,
+            technicalSkills: p.skillSet || (Array.isArray(p.skills) ? p.skills.join(', ') : prev.technicalSkills),
+            linkedinUrl: p.linkedInLink || prev.linkedinUrl,
+            githubUrl: p.githubLink || prev.githubUrl,
+            portfolioUrl: p.portfolioUrl || p.portfolioLink || prev.portfolioUrl,
+            bio: p.candidateNote || prev.bio,
+          }));
+          setResumeNotice('Resume parsed. Fields pre-filled.');
+        } else {
+          setResumeError(data.error || 'Failed to parse resume.');
+        }
+      } catch (err) {
+        setResumeError('Error parsing resume: ' + err.message);
+      } finally {
+        setParsingResume(false);
+      }
+    }
+  };
 
   useEffect(() => {
     window.scrollTo(0, 0);
     document.title = 'Edit Candidate Profile | Thinkwires';
 
     if (user) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setFormData({
         name: user.name || '',
         phone: user.phone || '',
@@ -168,6 +234,106 @@ const CandidateProfilePage = () => {
                 </div>
               </div>
             </div>
+          </div>
+
+          {/* Resume Upload & Instant AI Auto-Fill */}
+          <div
+            style={{
+              background: '#FFFFFF',
+              border: '2px dashed #93C5FD',
+              borderRadius: '10px',
+              padding: '1.25rem',
+              marginBottom: '1.5rem',
+              textAlign: 'center',
+              position: 'relative',
+              transition: 'all 0.2s ease',
+            }}
+          >
+            <input
+              type="file"
+              accept=".pdf,.doc,.docx"
+              onChange={handleResumeChange}
+              style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
+                opacity: 0,
+                cursor: 'pointer',
+              }}
+              aria-label="Upload Resume for Auto-Fill"
+            />
+            <div style={{ pointerEvents: 'none' }}>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2563EB" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ margin: '0 auto 0.35rem auto', display: 'block' }}>
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+                <line x1="16" y1="13" x2="8" y2="13"></line>
+                <line x1="16" y1="17" x2="8" y2="17"></line>
+              </svg>
+              <strong style={{ fontSize: '0.95rem', color: '#0F172A', display: 'block' }}>
+                {resumeFile ? resumeFile.name : 'Upload Resume to Auto-Fill Profile Details'}
+              </strong>
+              <p style={{ color: '#64748B', fontSize: '0.82rem', margin: '0.25rem 0 0 0' }}>
+                PDF, DOC, DOCX up to 10MB. Uploading automatically extracts your experience, skills, and contact details into the editable fields below.
+              </p>
+            </div>
+
+            {parsingResume && (
+              <div
+                style={{
+                  marginTop: '0.75rem',
+                  padding: '0.5rem 0.85rem',
+                  background: '#EFF6FF',
+                  borderRadius: '6px',
+                  color: '#1D4ED8',
+                  fontSize: '0.82rem',
+                  fontWeight: 600,
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.4rem',
+                  border: '1px solid #BFDBFE',
+                }}
+              >
+                <span>Parsing resume and prefilling fields...</span>
+              </div>
+            )}
+
+            {resumeNotice && !parsingResume && (
+              <div
+                style={{
+                  marginTop: '0.75rem',
+                  padding: '0.5rem 0.85rem',
+                  background: '#ECFDF5',
+                  borderRadius: '6px',
+                  color: '#065F46',
+                  fontSize: '0.82rem',
+                  fontWeight: 600,
+                  border: '1px solid #A7F3D0',
+                  textAlign: 'left',
+                }}
+              >
+                {resumeNotice}
+              </div>
+            )}
+
+            {resumeError && (
+              <div
+                style={{
+                  marginTop: '0.75rem',
+                  padding: '0.5rem 0.85rem',
+                  background: '#FEF2F2',
+                  borderRadius: '6px',
+                  color: '#991B1B',
+                  fontSize: '0.82rem',
+                  fontWeight: 600,
+                  border: '1px solid #FCA5A5',
+                  textAlign: 'left',
+                }}
+              >
+                {resumeError}
+              </div>
+            )}
           </div>
 
           <form onSubmit={handleSubmit} className="tw-auth-form">

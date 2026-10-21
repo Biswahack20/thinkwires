@@ -70,6 +70,17 @@ const GlobalJobApplicationForm = ({ isOpen, onClose, jobData = {} }) => {
     };
   }, [jobData]);
 
+  // Helper to generate redirect URL with complete job context
+  const getApplyUrl = () => {
+    return `/jobs/${encodeURIComponent(normalizedJob.jobId)}/apply?title=${encodeURIComponent(
+      normalizedJob.title
+    )}&department=${encodeURIComponent(normalizedJob.department)}&location=${encodeURIComponent(
+      normalizedJob.location
+    )}&employmentType=${encodeURIComponent(normalizedJob.employmentType)}&postingDate=${encodeURIComponent(
+      normalizedJob.postingDate
+    )}`;
+  };
+
   // Split name for prefilling into First & Last name if candidate is logged in
   const splitCandidateName = (fullName = '') => {
     const parts = (fullName || '').trim().split(' ');
@@ -105,6 +116,7 @@ const GlobalJobApplicationForm = ({ isOpen, onClose, jobData = {} }) => {
     linkedInLink: user?.linkedinUrl || '',
     facebookLink: '',
     candidateNote: '',
+    agreedToTerms: false,
   }));
 
   const [resumeFile, setResumeFile] = useState(null);
@@ -135,8 +147,11 @@ const GlobalJobApplicationForm = ({ isOpen, onClose, jobData = {} }) => {
   if (!isOpen) return null;
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    const { name, value, type, checked } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: type === 'checkbox' ? checked : value,
+    }));
   };
 
   /**
@@ -165,7 +180,7 @@ const GlobalJobApplicationForm = ({ isOpen, onClose, jobData = {} }) => {
       facebookLink: '',
       candidateNote: user?.bio || '',
     });
-    setAutoFillNotice('⚡ Form pre-filled from your portal profile! You can review and adjust any field.');
+    setAutoFillNotice('Form pre-filled from profile.');
   };
 
   /**
@@ -190,9 +205,10 @@ const GlobalJobApplicationForm = ({ isOpen, onClose, jobData = {} }) => {
       linkedInLink: '',
       facebookLink: '',
       candidateNote: '',
+      agreedToTerms: false,
     });
     setResumeFile(null);
-    setAutoFillNotice('Form cleared. Please fill in your details from scratch.');
+    setAutoFillNotice('Form cleared.');
   };
 
   /**
@@ -247,7 +263,7 @@ const GlobalJobApplicationForm = ({ isOpen, onClose, jobData = {} }) => {
             linkedInLink: p.linkedInLink || prev.linkedInLink,
             candidateNote: p.candidateNote || prev.candidateNote,
           }));
-          setAutoFillNotice('🤖 AI Resume Parsed: Extracted details auto-filled! You can modify any fields below before submitting.');
+          setAutoFillNotice('Resume parsed. Details auto-filled.');
         }
       } catch (parseErr) {
         console.warn('AI resume auto-fill non-blocking warning:', parseErr.message);
@@ -263,17 +279,13 @@ const GlobalJobApplicationForm = ({ isOpen, onClose, jobData = {} }) => {
     setSuccess('');
     setDuplicateApp(null);
 
-    // If candidate is not authenticated, redirect smoothly to login with return redirect
+    // Strictly enforce candidate authentication (No guest applications)
     if (!isAuthenticated) {
-      const redirectUrl = `/jobs/${encodeURIComponent(normalizedJob.jobId)}/apply?title=${encodeURIComponent(
-        normalizedJob.title
-      )}&department=${encodeURIComponent(normalizedJob.department)}&location=${encodeURIComponent(
-        normalizedJob.location
-      )}&employmentType=${encodeURIComponent(normalizedJob.employmentType)}&postingDate=${encodeURIComponent(
-        normalizedJob.postingDate
-      )}`;
-      onClose();
-      navigate(`/login?redirect=${encodeURIComponent(redirectUrl)}`);
+      setError('Sign in required. Only logged-in users can apply.');
+      setTimeout(() => {
+        onClose();
+        navigate(`/login?redirect=${encodeURIComponent(getApplyUrl())}`);
+      }, 1000);
       return;
     }
 
@@ -296,6 +308,10 @@ const GlobalJobApplicationForm = ({ isOpen, onClose, jobData = {} }) => {
     }
     if (!resumeFile && !user?.resumeUrl) {
       setError('Please upload your resume file (PDF, DOC, or DOCX).');
+      return;
+    }
+    if (!formData.agreedToTerms) {
+      setError('Please agree to the Terms & Conditions and Privacy Policy before submitting your application.');
       return;
     }
 
@@ -330,6 +346,7 @@ const GlobalJobApplicationForm = ({ isOpen, onClose, jobData = {} }) => {
       dataPayload.append('linkedInLink', formData.linkedInLink.trim());
       dataPayload.append('facebookLink', formData.facebookLink.trim());
       dataPayload.append('candidateNote', formData.candidateNote.trim());
+      dataPayload.append('agreedToTerms', 'true');
 
       // Attach file if uploaded
       if (resumeFile) {
@@ -348,19 +365,12 @@ const GlobalJobApplicationForm = ({ isOpen, onClose, jobData = {} }) => {
       const data = await response.json();
 
       if (response.ok) {
-        setSuccess(`Application submitted successfully! ATS Fit Score: ${data.fitScore || 85}% (${data.fitBadge || 'Top Match'}). Launching AI Screening Assessment...`);
+        setSuccess('Application submitted. Redirecting to My Applications...');
         setCreatedApp(data.application || { _id: 'app_new' });
         setCreatedAssessment(data.assessment);
-        if (data.assessment) {
-          setTimeout(() => {
-            setIsAssessmentModalOpen(true);
-          }, 800);
-        } else {
-          setTimeout(() => {
-            onClose();
-            navigate('/candidate/applications');
-          }, 1800);
-        }
+        setTimeout(() => {
+          navigate('/candidate/applications?applied=true', { replace: true });
+        }, 1000);
       } else if (response.status === 409) {
         setDuplicateApp(data.existingApplication || true);
         setError(data.error || `You have already applied for "${normalizedJob.title}".`);
@@ -478,52 +488,69 @@ const GlobalJobApplicationForm = ({ isOpen, onClose, jobData = {} }) => {
               color: '#CBD5E1',
             }}
           >
-            <span>📍 {normalizedJob.location}</span>
+            <span>{normalizedJob.location}</span>
             <span>•</span>
-            <span>💼 {normalizedJob.employmentType}</span>
+            <span>{normalizedJob.employmentType}</span>
             <span>•</span>
-            <span>📅 Posted: {normalizedJob.postingDate}</span>
+            <span>Posted: {normalizedJob.postingDate}</span>
           </div>
         </div>
 
-        {/* Authentication Notice if Guest */}
+        {/* Authentication Notice for Unauthenticated Users */}
         {!isAuthenticated && (
           <div
             style={{
-              background: '#FEF3C7',
-              borderBottom: '1px solid #FDE68A',
+              background: '#FEF2F2',
+              borderBottom: '1px solid #FECACA',
               padding: '0.75rem 1.75rem',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
-              gap: '0.75rem',
+              gap: '1rem',
               fontSize: '0.84rem',
-              color: '#92400E',
+              color: '#991B1B',
             }}
           >
-            <span>
-              <strong>Note:</strong> Candidate authentication is required to record applications.
-            </span>
-            <Link
-              to={`/login?redirect=${encodeURIComponent(
-                `/jobs/${encodeURIComponent(normalizedJob.jobId)}/apply?title=${encodeURIComponent(
-                  normalizedJob.title
-                )}&department=${encodeURIComponent(normalizedJob.department)}&location=${encodeURIComponent(
-                  normalizedJob.location
-                )}&employmentType=${encodeURIComponent(normalizedJob.employmentType)}&postingDate=${encodeURIComponent(
-                  normalizedJob.postingDate
-                )}`
-              )}`}
-              onClick={onClose}
-              style={{
-                color: '#B45309',
-                fontWeight: 700,
-                textDecoration: 'underline',
-                whiteSpace: 'nowrap',
-              }}
-            >
-              Log In Now
-            </Link>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <span className="material-symbols-outlined" style={{ fontSize: '18px', color: '#DC2626' }}>
+                lock
+              </span>
+              <span>
+                <strong>Sign in required.</strong> Only logged-in users can apply.
+              </span>
+            </div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexShrink: 0 }}>
+              <Link
+                to={`/login?redirect=${encodeURIComponent(getApplyUrl())}`}
+                onClick={onClose}
+                style={{
+                  background: '#003399',
+                  color: '#FFFFFF',
+                  padding: '0.4rem 0.9rem',
+                  borderRadius: '6px',
+                  fontWeight: 600,
+                  fontSize: '0.8rem',
+                  textDecoration: 'none',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.35rem',
+                }}
+              >
+                <span>Log In to Apply</span>
+              </Link>
+              <Link
+                to={`/register?redirect=${encodeURIComponent(getApplyUrl())}`}
+                onClick={onClose}
+                style={{
+                  color: '#003399',
+                  fontWeight: 600,
+                  fontSize: '0.8rem',
+                  textDecoration: 'underline',
+                }}
+              >
+                Register
+              </Link>
+            </div>
           </div>
         )}
 
@@ -603,12 +630,9 @@ const GlobalJobApplicationForm = ({ isOpen, onClose, jobData = {} }) => {
                 fontSize: '0.8rem',
                 fontWeight: 700,
                 cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '0.35rem',
               }}
             >
-              <span>⚡</span> Pre-fill from Profile
+              Pre-fill from Profile
             </button>
             <button
               type="button"
@@ -624,7 +648,7 @@ const GlobalJobApplicationForm = ({ isOpen, onClose, jobData = {} }) => {
                 cursor: 'pointer',
               }}
             >
-              🧹 Fill from Scratch
+              Clear Form
             </button>
           </div>
         </div>
@@ -678,15 +702,11 @@ const GlobalJobApplicationForm = ({ isOpen, onClose, jobData = {} }) => {
                   borderRadius: '6px',
                   color: '#1D4ED8',
                   fontSize: '0.82rem',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '0.5rem',
                   fontWeight: 600,
                   border: '1px solid #BFDBFE',
                 }}
               >
-                <span>⚙️</span>
-                <span>AI is extracting details from your resume to auto-fill the form...</span>
+                <span>Parsing resume and prefilling fields...</span>
               </div>
             )}
             {autoFillNotice && !parsingResume && (
@@ -698,14 +718,10 @@ const GlobalJobApplicationForm = ({ isOpen, onClose, jobData = {} }) => {
                   borderRadius: '6px',
                   color: '#065F46',
                   fontSize: '0.82rem',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '0.5rem',
                   fontWeight: 600,
                   border: '1px solid #A7F3D0',
                 }}
               >
-                <span>✓</span>
                 <span>{autoFillNotice}</span>
               </div>
             )}
@@ -966,8 +982,74 @@ const GlobalJobApplicationForm = ({ isOpen, onClose, jobData = {} }) => {
             </div>
           </div>
 
+          {/* Terms & Conditions & Privacy Policy Consent */}
+          <div
+            className={`ApplyModal-termsBox ${error && !formData.agreedToTerms ? 'has-error' : ''}`}
+          >
+            <input
+              type="checkbox"
+              id="apply-agreedToTerms"
+              name="agreedToTerms"
+              checked={formData.agreedToTerms}
+              onChange={handleChange}
+              className="ApplyModal-termsCheckbox"
+            />
+            <label htmlFor="apply-agreedToTerms" className="ApplyModal-termsLabel">
+              I agree to the{' '}
+              <Link
+                to="/terms-of-service"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="ApplyModal-termsLink"
+              >
+                Terms &amp; Conditions
+              </Link>{' '}
+              and{' '}
+              <Link
+                to="/privacy-policy"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="ApplyModal-termsLink"
+              >
+                Privacy Policy
+              </Link>
+              . I consent to ThinkWires storing and processing my application details and resume for recruitment and placement purposes.
+            </label>
+          </div>
+
+          {/* Bottom Status Notification visible directly at submit button */}
+          {(error || success) && (
+            <div
+              role="alert"
+              style={{
+                marginTop: '1.25rem',
+                padding: '0.85rem 1.15rem',
+                borderRadius: '8px',
+                background: error ? '#FEF2F2' : '#F0FDF4',
+                border: error ? '1px solid #F87171' : '1px solid #4ADE80',
+                color: error ? '#991B1B' : '#166534',
+                fontSize: '0.88rem',
+                fontWeight: 600,
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '0.4rem',
+              }}
+            >
+              <span>{error || success}</span>
+              {duplicateApp && (
+                <Link
+                  to="/candidate/applications"
+                  onClick={onClose}
+                  style={{ color: '#B91C1C', fontWeight: 700, textDecoration: 'underline', fontSize: '0.84rem' }}
+                >
+                  View My Existing Application
+                </Link>
+              )}
+            </div>
+          )}
+
           {/* Action Buttons */}
-          <div className="ApplyModal-actions" style={{ marginTop: '0.5rem' }}>
+          <div className="ApplyModal-actions" style={{ marginTop: '0.75rem' }}>
             <button
               type="button"
               className="ApplyModal-btnCancel"
@@ -976,40 +1058,60 @@ const GlobalJobApplicationForm = ({ isOpen, onClose, jobData = {} }) => {
             >
               Cancel
             </button>
-            <button
-              type="submit"
-              className="ApplyModal-btnSubmit"
-              disabled={submitting}
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '0.5rem',
-                minWidth: '200px',
-              }}
-            >
-              {submitting ? (
-                <>
-                  <svg
-                    style={{ animation: 'spin 1s linear infinite' }}
-                    width="16"
-                    height="16"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2.5"
-                  >
-                    <circle cx="12" cy="12" r="10" strokeOpacity="0.25"></circle>
-                    <path d="M12 2a10 10 0 0 1 10 10"></path>
-                  </svg>
-                  <span>Submitting Application...</span>
-                </>
-              ) : isAuthenticated ? (
-                'Submit Application'
-              ) : (
-                'Log In & Submit'
-              )}
-            </button>
+            {!isAuthenticated ? (
+              <button
+                type="button"
+                className="ApplyModal-btnSubmit"
+                onClick={() => {
+                  onClose();
+                  navigate(`/login?redirect=${encodeURIComponent(getApplyUrl())}`);
+                }}
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '0.5rem',
+                  minWidth: '200px',
+                  backgroundColor: '#003399',
+                }}
+              >
+                <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>lock</span>
+                <span>Log In to Apply</span>
+              </button>
+            ) : (
+              <button
+                type="submit"
+                className="ApplyModal-btnSubmit"
+                disabled={submitting}
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '0.5rem',
+                  minWidth: '200px',
+                }}
+              >
+                {submitting ? (
+                  <>
+                    <svg
+                      style={{ animation: 'spin 1s linear infinite' }}
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2.5"
+                    >
+                      <circle cx="12" cy="12" r="10" strokeOpacity="0.25"></circle>
+                      <path d="M12 2a10 10 0 0 1 10 10"></path>
+                    </svg>
+                    <span>Submitting Application...</span>
+                  </>
+                ) : (
+                  'Submit Application'
+                )}
+              </button>
+            )}
           </div>
         </form>
       </div>

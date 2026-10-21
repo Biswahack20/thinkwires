@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchOpenings } from '../../store/slices/homeSlice';
 import ApplyModal from '../common/ApplyModal';
@@ -7,8 +7,10 @@ import SectionBadge from '../common/SectionBadge';
 import JobSpecModal from '../JobsComponents/JobSpecModal';
 
 const Openings = () => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const { openings, status } = useSelector((state) => state.home);
+  const { isAuthenticated } = useSelector((state) => state.auth);
   const [selectedJob, setSelectedJob] = useState(null);
   const [selectedJobForSpec, setSelectedJobForSpec] = useState(null);
 
@@ -69,6 +71,21 @@ const Openings = () => {
 
   // Display ONLY the latest 4 job role application cards
   const displayOpenings = filteredOpenings.slice(0, 4);
+
+  const handleApplyClick = (job) => {
+    const jobId = job.id || job._id || 'general-pool';
+    const empType = job.jobMode || job.employmentType || job.type || 'Permanent';
+    const postDate = job.postedDate
+      ? new Date(job.postedDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+      : (job.postingDate || 'Active Mandate');
+    const targetApplyUrl = `/jobs/${encodeURIComponent(jobId)}/apply?title=${encodeURIComponent(job.title || '')}&department=${encodeURIComponent(job.department || 'Engineering')}&location=${encodeURIComponent(job.location || 'Remote')}&employmentType=${encodeURIComponent(empType)}&postingDate=${encodeURIComponent(postDate)}`;
+
+    if (isAuthenticated) {
+      setSelectedJob(job);
+    } else {
+      navigate(`/login?redirect=${encodeURIComponent(targetApplyUrl)}`);
+    }
+  };
 
   return (
     <section className={'Openings-openingsSection'} id="hot-jobs">
@@ -188,7 +205,7 @@ const Openings = () => {
                         View Job Spec
                       </button>
                       <button
-                        onClick={() => setSelectedJob(job)}
+                        onClick={() => handleApplyClick(job)}
                         className={'Openings-applyBtn'}
                       >
                         Apply Now
@@ -238,7 +255,7 @@ const Openings = () => {
             </div>
           </div>
           <button
-            onClick={() => setSelectedJob({
+            onClick={() => handleApplyClick({
               title: 'General Engineering Candidate Pool',
               jobId: 'general-pool',
               department: 'Engineering',
@@ -259,7 +276,7 @@ const Openings = () => {
           onClose={() => setSelectedJobForSpec(null)}
           onApply={(j) => {
             setSelectedJobForSpec(null);
-            setSelectedJob(j);
+            handleApplyClick(j);
           }}
         />
       )}

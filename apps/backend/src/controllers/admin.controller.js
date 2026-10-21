@@ -5,6 +5,7 @@ import mongoose from 'mongoose';
 
 import Employee from '../models/employee.mongo.model.js';
 import Candidate from '../models/candidate.mongo.model.js';
+import JobApplication from '../models/jobApplication.mongo.model.js';
 import Client from '../models/client.mongo.model.js';
 import JobRequirement from '../models/job.mongo.model.js';
 import Placement from '../models/placement.mongo.model.js';
@@ -483,38 +484,133 @@ export const getCandidates = async (req, res) => {
 
     let items = [];
     if (isMongoActive()) {
-      let query = {};
-      if (search) {
-        query.$or = [
-          { name: { $regex: search, $options: 'i' } },
-          { email: { $regex: search, $options: 'i' } },
-          { currentRole: { $regex: search, $options: 'i' } },
-          { technicalSkills: { $in: [new RegExp(search, 'i')] } },
-        ];
-      }
-      if (status && status !== 'All') query.status = status;
+      // 1. Fetch all job applications with their candidate reference
+      const applications = await JobApplication.find()
+        .populate('candidate')
+        .sort({ createdAt: -1 })
+        .lean();
 
-      items = await Candidate.find(query).sort({ createdAt: -1 }).lean();
-    } else {
-      items = inMemoryData.candidates.filter((cand) => {
-        let match = true;
-        if (search) {
-          const s = search.toLowerCase();
-          match =
-            cand.name.toLowerCase().includes(s) ||
-            cand.email.toLowerCase().includes(s) ||
-            cand.currentRole.toLowerCase().includes(s) ||
-            (cand.technicalSkills && cand.technicalSkills.some((sk) => sk.toLowerCase().includes(s)));
+      // 2. Fetch all registered candidates
+      const allCandidates = await Candidate.find()
+        .sort({ createdAt: -1 })
+        .lean();
+
+      // Track candidate IDs that have applications
+      const candidatesWithApps = new Set();
+
+      // Transform applications into ATS candidate pipeline items
+      const appItems = applications.map((app) => {
+        const cand = app.candidate && typeof app.candidate === 'object' ? app.candidate : null;
+        if (cand && cand._id) {
+          candidatesWithApps.add(String(cand._id));
+        } else if (app.candidate) {
+          candidatesWithApps.add(String(app.candidate));
         }
-        if (match && status && status !== 'All') {
-          match = cand.status === status;
-        }
-        return match;
+
+        const candidateName =
+          (app.candidateName || `${app.firstName || ''} ${app.lastName || ''}`).trim() ||
+          (cand && cand.name) ||
+          'Applicant Candidate';
+
+        const email = app.email || (cand && cand.email) || '';
+        const phone = app.mobileNumber || (cand && cand.phone) || '';
+        const currentRole = app.currentEmployer || (cand && cand.currentRole) || 'Software Engineer';
+        const jobTitle = app.jobTitle || 'General Technical Position';
+        const skills = (app.skills && app.skills.length > 0) ? app.skills : (cand && cand.technicalSkills ? cand.technicalSkills : []);
+        const experience = app.totalExperienceYears
+          ? (Number(app.totalExperienceYears) || app.totalExperienceYears)
+          : (cand && cand.experience ? cand.experience : 0);
+        const expectedSalary = app.expectedCTC || (cand && cand.expectedSalary) || 'Market Standard';
+        const pipelineStatus = app.status || (cand && cand.status) || 'Applied';
+
+        return {
+          id: String(app._id),
+          _id: app._id,
+          applicationId: app._id,
+          candidateId: cand ? cand._id : app.candidate,
+          name: candidateName,
+          email,
+          phone,
+          currentRole,
+          jobTitle,
+          department: app.department || 'Engineering',
+          location: app.location || (app.city && app.state ? `${app.city}, ${app.state}` : (cand && cand.location) || 'Remote'),
+          technicalSkills: skills,
+          experience,
+          expectedSalary,
+          status: pipelineStatus,
+          assessmentStatus: app.assessmentStatus || 'Not Started',
+          assessmentScore: app.assessmentScore !== undefined && app.assessmentScore !== null ? app.assessmentScore : (cand && cand.assessmentScore),
+          screeningPassed: app.screeningPassed ?? false,
+          fitScore: app.fitScore || (cand && cand.fitScore) || 85,
+          fitBadge: app.fitBadge || 'Top Match',
+          resumeUrl: app.resumeUrl || (cand && cand.resumeUrl) || '',
+          resumeOriginalName: app.resumeOriginalName || '',
+          notes: app.candidateNote || app.notes || (cand && cand.bio) || '',
+          createdAt: app.createdAt || new Date().toISOString(),
+          updatedAt: app.updatedAt || app.createdAt,
+        };
       });
+
+      // 3. Include registered candidates who have not yet submitted a specific job application
+      const registeredOnly = allCandidates
+        .filter((cand) => !candidatesWithApps.has(String(cand._id)))
+        .map((cand) => ({
+          id: String(cand._id),
+          _id: cand._id,
+          candidateId: cand._id,
+          name: cand.name,
+          email: cand.email,
+          phone: cand.phone || '',
+          currentRole: cand.currentRole || 'Software Engineer',
+          jobTitle: cand.jobTitle || 'General Talent Pool',
+          department: 'Engineering',
+          location: cand.location || 'Remote',
+          technicalSkills: cand.technicalSkills || [],
+          experience: cand.experience || 0,
+          expectedSalary: cand.expectedSalary || 'Market Standard',
+          status: cand.status || 'Applied',
+          assessmentStatus: cand.assessmentStatus || 'Not Started',
+          assessmentScore: cand.assessmentScore || null,
+          fitScore: cand.fitScore || 85,
+          fitBadge: 'Top Match',
+          resumeUrl: cand.resumeUrl || '',
+          notes: cand.notes || cand.bio || '',
+          createdAt: cand.createdAt || new Date().toISOString(),
+          updatedAt: cand.updatedAt || cand.createdAt,
+        }));
+
+      items = [...appItems, ...registeredOnly];
+
+      // In-memory sync for offline fallback
+      if (inMemoryData.candidates.length === 0) {
+        inMemoryData.candidates = items;
+      }
+    } else {
+      items = inMemoryData.candidates;
+    }
+
+    // Filter by search query if provided
+    if (search && search.trim()) {
+      const s = search.trim().toLowerCase();
+      items = items.filter((cand) => {
+        const nameMatch = (cand.name || '').toLowerCase().includes(s);
+        const emailMatch = (cand.email || '').toLowerCase().includes(s);
+        const roleMatch = (cand.currentRole || '').toLowerCase().includes(s);
+        const jobMatch = (cand.jobTitle || '').toLowerCase().includes(s);
+        const skillsMatch = cand.technicalSkills && cand.technicalSkills.some((sk) => (sk || '').toLowerCase().includes(s));
+        return nameMatch || emailMatch || roleMatch || jobMatch || skillsMatch;
+      });
+    }
+
+    // Filter by pipeline stage if specified
+    if (status && status !== 'All') {
+      items = items.filter((cand) => cand.status === status);
     }
 
     res.json({ success: true, candidates: items });
   } catch (err) {
+    console.error('getCandidates error:', err);
     res.status(500).json({ success: false, error: err.message });
   }
 };
@@ -552,7 +648,25 @@ export const createCandidate = async (req, res) => {
     inMemoryData.candidates.unshift(newCand);
 
     if (isMongoActive()) {
-      await Candidate.create(newCand);
+      const createdCandidate = await Candidate.create(newCand);
+      if (jobTitle) {
+        await JobApplication.create({
+          candidate: createdCandidate._id,
+          jobId: 'direct-admin-intake',
+          jobTitle,
+          candidateName: name,
+          email,
+          mobileNumber: phone,
+          lastName: name.split(' ').slice(1).join(' ') || name,
+          firstName: name.split(' ')[0],
+          status: status || 'Applied',
+          skills: skillsArray,
+          totalExperienceYears: String(experience || 0),
+          expectedCTC: expectedSalary || 'Market Standard',
+          resumeUrl: resumeUrl || '',
+          candidateNote: notes || '',
+        });
+      }
     }
 
     await logActivity('New Candidate Application', 'Candidate', newCand.id, `Candidate ${name} applied for ${newCand.jobTitle}.`, req.user, '#3478D4');
@@ -582,8 +696,25 @@ export const updateCandidateStatus = async (req, res) => {
     }
 
     if (isMongoActive()) {
-      const query = mongoose.Types.ObjectId.isValid(id) ? { _id: id } : { id };
-      await Candidate.findOneAndUpdate(query, { status }, { new: true });
+      if (mongoose.Types.ObjectId.isValid(id)) {
+        // Try updating JobApplication first
+        const app = await JobApplication.findByIdAndUpdate(id, { status }, { new: true });
+        if (app) {
+          candidateName = app.candidateName || `${app.firstName || ''} ${app.lastName || ''}`.trim() || candidateName;
+          if (app.candidate) {
+            await Candidate.findByIdAndUpdate(app.candidate, { status });
+          }
+        } else {
+          // If not an application, update Candidate and any linked applications
+          const cand = await Candidate.findByIdAndUpdate(id, { status }, { new: true });
+          if (cand) {
+            candidateName = cand.name || candidateName;
+            await JobApplication.updateMany({ candidate: cand._id }, { status });
+          }
+        }
+      } else {
+        await Candidate.findOneAndUpdate({ id }, { status });
+      }
     }
 
     await logActivity('Candidate Stage Updated', 'Candidate', id, `${candidateName} moved to stage '${status}'.`, req.user, '#3478D4');
@@ -609,8 +740,16 @@ export const updateCandidate = async (req, res) => {
     }
 
     if (isMongoActive()) {
-      const query = mongoose.Types.ObjectId.isValid(id) ? { _id: id } : { id };
-      await Candidate.findOneAndUpdate(query, updates, { new: true });
+      if (mongoose.Types.ObjectId.isValid(id)) {
+        const app = await JobApplication.findByIdAndUpdate(id, updates, { new: true });
+        if (app && app.candidate) {
+          await Candidate.findByIdAndUpdate(app.candidate, updates, { new: true });
+        } else {
+          await Candidate.findByIdAndUpdate(id, updates, { new: true });
+        }
+      } else {
+        await Candidate.findOneAndUpdate({ id }, updates, { new: true });
+      }
     }
 
     res.json({ success: true, message: 'Candidate updated successfully', candidate: inMemoryData.candidates[idx] });
@@ -626,8 +765,14 @@ export const deleteCandidate = async (req, res) => {
     inMemoryData.candidates = inMemoryData.candidates.filter((c) => c.id !== id && String(c._id) !== id);
 
     if (isMongoActive()) {
-      const query = mongoose.Types.ObjectId.isValid(id) ? { _id: id } : { id };
-      await Candidate.findOneAndDelete(query);
+      if (mongoose.Types.ObjectId.isValid(id)) {
+        const app = await JobApplication.findByIdAndDelete(id);
+        if (!app) {
+          await Candidate.findByIdAndDelete(id);
+        }
+      } else {
+        await Candidate.findOneAndDelete({ id });
+      }
     }
 
     await logActivity('Candidate Deleted', 'Candidate', id, `Candidate ID ${id} removed from ATS pipeline.`, req.user, '#DC2626');

@@ -1,4 +1,6 @@
 import fs from 'fs';
+import crypto from 'crypto';
+import bcrypt from 'bcryptjs';
 import mongoose from 'mongoose';
 import Candidate from '../models/candidate.mongo.model.js';
 import JobApplication from '../models/jobApplication.mongo.model.js';
@@ -164,8 +166,8 @@ export const getMyApplications = async (req, res) => {
  */
 export const applyForJob = async (req, res) => {
   try {
-    const candidate = req.candidate;
-    const candidateId = candidate._id || candidate.id;
+    let candidate = req.candidate || null;
+    let candidateId = candidate ? (candidate._id || candidate.id) : null;
 
     // Extract all fields from req.body (works for JSON and multipart)
     const {
@@ -196,6 +198,7 @@ export const applyForJob = async (req, res) => {
       linkedInLink,
       facebookLink,
       candidateNote,
+      agreedToTerms,
 
       // Legacy fallbacks if submitted
       experience,
@@ -214,8 +217,8 @@ export const applyForJob = async (req, res) => {
     // Required fields check
     const resolvedLastName = (lastName || '').trim();
     const resolvedFirstName = (firstName || '').trim();
-    const resolvedMobile = (mobileNumber || candidate.phone || '').trim();
-    const resolvedEmail = (email || candidate.email || '').trim().toLowerCase();
+    const resolvedMobile = (mobileNumber || (candidate && candidate.phone) || '').trim();
+    const resolvedEmail = (email || (candidate && candidate.email) || '').trim().toLowerCase();
 
     if (!resolvedLastName || !resolvedFirstName || !resolvedEmail || !resolvedMobile) {
       return res.status(400).json({
@@ -224,12 +227,19 @@ export const applyForJob = async (req, res) => {
       });
     }
 
+    if (agreedToTerms !== 'true' && agreedToTerms !== true) {
+      return res.status(400).json({
+        success: false,
+        error: 'You must agree to the Terms & Conditions and Privacy Policy to submit your application.',
+      });
+    }
+
     // Handle uploaded file if present
     const uploadedFile = req.file;
     const resumeOriginalName = uploadedFile ? uploadedFile.originalname : (req.body.resumeOriginalName || '');
     const resumeFileName = uploadedFile ? uploadedFile.filename : (req.body.resumeFileName || resumeOriginalName || '');
     const resumePath = uploadedFile ? uploadedFile.path : '';
-    const finalResumeUrl = uploadedFile ? `/uploads/resumes/${uploadedFile.filename}` : (clientResumeUrl || candidate.resumeUrl || '');
+    const finalResumeUrl = uploadedFile ? `/uploads/resumes/${uploadedFile.filename}` : (clientResumeUrl || (candidate && candidate.resumeUrl) || '');
 
     // Parse skills array
     let parsedSkills = [];
@@ -241,11 +251,22 @@ export const applyForJob = async (req, res) => {
       parsedSkills = skillSet.split(',').map((s) => s.trim()).filter(Boolean);
     }
 
+    // Strictly require logged-in candidate authentication (No guest applies)
+    if (!candidateId) {
+      return res.status(401).json({
+        success: false,
+        authenticated: false,
+        error: 'Authentication required. Only logged-in candidates can apply for jobs.',
+      });
+    }
+
     // 1. Prevent duplicate applications for the same candidate and job
     if (mongoose.connection.readyState === 1) {
       const existingApplication = await JobApplication.findOne({
-        candidate: candidateId,
-        jobId: String(jobId),
+        $or: [
+          { candidate: candidateId, jobId: String(jobId) },
+          { email: resolvedEmail, jobId: String(jobId) },
+        ],
       });
 
       if (existingApplication) {
@@ -340,6 +361,8 @@ export const applyForJob = async (req, res) => {
         linkedInLink: (linkedInLink || '').trim(),
         facebookLink: (facebookLink || '').trim(),
         candidateNote: (candidateNote || coverLetter || '').trim(),
+        agreedToTerms: agreedToTerms === 'true' || agreedToTerms === true,
+        agreedAt: (agreedToTerms === 'true' || agreedToTerms === true) ? new Date() : null,
 
         // Legacy compatibility fields
         candidateName: `${resolvedFirstName} ${resolvedLastName}`.trim(),
@@ -368,11 +391,28 @@ export const applyForJob = async (req, res) => {
         emailNotificationStatus: 'Pending',
       });
 
-      // Update candidate profile with ATS fit score
+      // Update candidate profile with application details & ATS fit score
       if (mongoose.connection.readyState === 1) {
-        Candidate.findByIdAndUpdate(candidateId, {
+        const candidateUpdates = {
           fitScore: matchScoreResult.fit_score,
-        }).catch((err) => console.warn('Candidate fitScore update error:', err.message));
+          status: 'Applied',
+        };
+        const resolvedFullName = `${resolvedFirstName} ${resolvedLastName}`.trim();
+        if (resolvedFullName && resolvedFullName !== 'Applicant Candidate') {
+          candidateUpdates.name = resolvedFullName;
+        }
+        if (resolvedMobile) candidateUpdates.phone = resolvedMobile;
+        if (city && state) candidateUpdates.location = `${city}, ${state}`;
+        else if (city || state) candidateUpdates.location = city || state;
+        if (finalResumeUrl) candidateUpdates.resumeUrl = finalResumeUrl;
+        if (parsedSkills.length > 0) candidateUpdates.technicalSkills = parsedSkills;
+        if (currentEmployer) candidateUpdates.currentRole = currentEmployer;
+        if (totalExperienceYears) candidateUpdates.experience = Number(totalExperienceYears) || 1;
+        if (expectedCTC) candidateUpdates.expectedSalary = expectedCTC;
+
+        Candidate.findByIdAndUpdate(candidateId, candidateUpdates).catch((err) =>
+          console.warn('Candidate profile update error:', err.message)
+        );
       }
 
       // Dispatch automated recruitment email asynchronously
@@ -569,6 +609,8 @@ export const parseResumeForAutoFill = async (req, res) => {
         skills: parsed.skills || [],
         linkedInLink: parsed.linkedin_url || '',
         githubLink: parsed.github_url || '',
+        portfolioLink: parsed.portfolio_url || parsed.portfolioLink || '',
+        portfolioUrl: parsed.portfolio_url || parsed.portfolioLink || '',
         candidateNote: parsed.summary || '',
       },
     });
@@ -697,6 +739,7 @@ export const submitApplicationAssessment = async (req, res) => {
     if (mongoose.connection.readyState === 1) {
       await JobApplication.findByIdAndUpdate(applicationId, updateData);
       await Candidate.findByIdAndUpdate(candidateId, {
+        status: updateData.status,
         assessmentScore: evalResult.total_score,
         vettingScore: Math.max(evalResult.total_score, 80),
       });
@@ -716,6 +759,75 @@ export const submitApplicationAssessment = async (req, res) => {
     return res.status(500).json({
       success: false,
       error: 'Failed to evaluate assessment submission.',
+    });
+  }
+};
+
+/**
+ * Withdraw Job Application by Candidate
+ * POST /api/candidate/applications/:applicationId/withdraw
+ */
+export const withdrawApplication = async (req, res) => {
+  try {
+    const candidateId = req.candidate._id || req.candidate.id;
+    const { applicationId } = req.params;
+
+    let application = null;
+    if (mongoose.connection.readyState === 1) {
+      application = await JobApplication.findOne({
+        _id: applicationId,
+        $or: [
+          { candidate: candidateId },
+          { email: req.candidate?.email },
+        ],
+      });
+
+      if (!application) {
+        return res.status(404).json({
+          success: false,
+          error: 'Application not found or unauthorized to withdraw this application.',
+        });
+      }
+
+      if (application.status === 'Withdrawn') {
+        return res.status(400).json({
+          success: false,
+          error: 'This application has already been withdrawn.',
+        });
+      }
+
+      application.status = 'Withdrawn';
+      application.stage = 'Withdrawn by Candidate';
+      await application.save();
+    } else {
+      const idx = localDevApplications.findIndex(
+        (a) =>
+          (String(a._id) === String(applicationId) || String(a.id) === String(applicationId)) &&
+          String(a.candidate) === String(candidateId)
+      );
+
+      if (idx === -1) {
+        return res.status(404).json({
+          success: false,
+          error: 'Application not found.',
+        });
+      }
+
+      localDevApplications[idx].status = 'Withdrawn';
+      localDevApplications[idx].stage = 'Withdrawn by Candidate';
+      application = localDevApplications[idx];
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: 'Application withdrawn successfully.',
+      application,
+    });
+  } catch (error) {
+    console.error('Withdraw application error:', error);
+    return res.status(500).json({
+      success: false,
+      error: 'Failed to withdraw application. Please try again.',
     });
   }
 };

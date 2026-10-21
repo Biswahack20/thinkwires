@@ -129,7 +129,9 @@ const PagesManager = () => {
     let parsed = null;
     try {
       parsed = JSON.parse(newJson);
-    } catch {}
+    } catch {
+      // Ignore invalid JSON while user is actively typing
+    }
     setFormData((prev) => ({
       ...prev,
       dataJson: newJson,

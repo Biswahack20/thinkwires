@@ -18,6 +18,7 @@ class ParsedResumeResponse(BaseModel):
     skill_set: str = ""
     linkedin_url: str = ""
     github_url: str = ""
+    portfolio_url: Optional[str] = ""
     summary: str = ""
 
 class ResumeMatchRequest(BaseModel):

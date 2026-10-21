@@ -303,7 +303,7 @@ const CandidateDashboardPage = () => {
                       <td style={{ fontWeight: 600, color: '#0F172A' }}>{app.jobTitle}</td>
                       <td>{app.department || 'Engineering'}</td>
                       <td>{app.location || 'Remote'}</td>
-                      <td>{new Date(app.createdAt || app.appliedAt || Date.now()).toLocaleDateString()}</td>
+                      <td>{app.createdAt || app.appliedAt ? new Date(app.createdAt || app.appliedAt).toLocaleDateString() : 'Recent'}</td>
                       <td>
                         {app.fitScore != null ? (
                           <span

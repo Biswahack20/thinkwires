@@ -1,6 +1,27 @@
+import { createRequire } from 'module';
 import config from '../configs/dotenv.js';
 
+const require = createRequire(import.meta.url);
+let pdfParse = null;
+try {
+  pdfParse = require('pdf-parse');
+} catch {
+  // pdf-parse optional fallback
+}
+
 const AI_SERVICE_URL = config.AI_SERVICE_URL || 'http://localhost:8000';
+
+const COMMON_TECH_SKILLS = [
+  'JavaScript', 'TypeScript', 'Python', 'React', 'Next.js', 'Node.js', 'Express',
+  'PostgreSQL', 'MongoDB', 'MySQL', 'Redis', 'Docker', 'Kubernetes', 'AWS',
+  'Azure', 'GCP', 'GraphQL', 'REST APIs', 'Tailwind CSS', 'Redux', 'Git',
+  'CI/CD', 'FastAPI', 'Django', 'Flask', 'Java', 'Spring Boot', 'Spring', 'C#', '.NET',
+  'C++', 'Go', 'Rust', 'Linux', 'Microservices', 'Kafka', 'Elasticsearch', 'Three.js',
+  'TensorFlow', 'PyTorch', 'Pandas', 'Scikit-Learn', 'HTML5', 'CSS3', 'Jest',
+  'Terraform', 'Ansible', 'Helm', 'Prometheus', 'Grafana', 'SQL', 'Postman',
+  'Data Structures', 'Algorithms', 'Object-Oriented Design', 'Unit Testing',
+  'SOAP Web Services', 'Relational Database Design', 'Vue.js', 'Angular'
+];
 
 /**
  * AI Service Integration Client
@@ -41,6 +62,8 @@ class AIServiceClient {
         if (response.ok) {
           const data = await response.json();
           return data;
+        } else {
+          console.warn(`AI Microservice parseResume HTTP ${response.status}: ${response.statusText}`);
         }
       } else if (rawText) {
         const formData = new FormData();
@@ -54,14 +77,16 @@ class AIServiceClient {
 
         if (response.ok) {
           return await response.json();
+        } else {
+          console.warn(`AI Microservice parseResume HTTP ${response.status}: ${response.statusText}`);
         }
       }
     } catch (err) {
-      console.warn('⚠️ AI Microservice parseResume offline or timed out, using fallback:', err.message);
+      console.warn('AI Microservice parseResume offline or timed out, using fallback:', err.message);
     }
 
-    // Resilient local fallback
-    return this.fallbackParseResume(rawText || originalname);
+    // Resilient local fallback using direct text extraction
+    return await this.fallbackParseResume(fileBuffer, originalname, rawText);
   }
 
   /**
@@ -164,24 +189,199 @@ class AIServiceClient {
   // DETERMINISTIC LOCAL FALLBACK ENGINES
   // ─────────────────────────────────────────────────────────────────────────
 
-  fallbackParseResume(text = '') {
+  async fallbackParseResume(fileBuffer = null, originalname = '', rawText = '') {
+    let text = rawText || '';
+
+    if (!text && fileBuffer) {
+      if (pdfParse && (originalname.toLowerCase().endsWith('.pdf') || !originalname.includes('.'))) {
+        try {
+          const parser = new pdfParse.PDFParse({ data: fileBuffer });
+          const res = await parser.getText();
+          if (res && res.text) text = res.text;
+        } catch (pdfErr) {
+          console.warn('Node PDF extraction error:', pdfErr.message);
+        }
+      }
+      if (!text) {
+        try {
+          text = fileBuffer.toString('utf-8');
+        } catch {
+          text = '';
+        }
+      }
+    }
+
+    if (!text) {
+      text = originalname || '';
+    }
+
+    const lines = text.split('\n').map((l) => l.trim()).filter(Boolean);
+
+    // 1. Email extraction
+    let email = '';
+    const emailMatch = text.match(/[\w.-]+@[\w.-]+\.\w+/);
+    if (emailMatch) email = emailMatch[0].toLowerCase();
+
+    // 2. Phone extraction
+    let phone = '';
+    const phoneMatch = text.match(/(\+?\d{1,3}[\s-]?)?\(?\d{2,4}\)?[\s-]?\d{3,5}[\s-]?\d{4,5}|\+?\d{10,12}/);
+    if (phoneMatch) phone = phoneMatch[0].trim();
+
+    // 3. Candidate Name
+    let candidateName = '';
+    for (const line of lines.slice(0, 6)) {
+      if (/@|linkedin|github|resume|curriculum|vitae|http|phone|\+?\d{9,}/i.test(line)) continue;
+      const cleaned = line.replace(/[^\w\s.-]/g, '').trim();
+      const words = cleaned.split(/\s+/).filter(Boolean);
+      if (words.length >= 1 && words.length <= 4) {
+        candidateName = cleaned;
+        break;
+      }
+    }
+
+    if (!candidateName) {
+      const baseNoExt = (originalname || '').replace(/\.[^/.]+$/, '').replace(/[-_]/g, ' ').trim();
+      candidateName = baseNoExt || 'Applicant Candidate';
+    }
+
+    if (candidateName === candidateName.toUpperCase() && candidateName.length > 3) {
+      candidateName = candidateName
+        .toLowerCase()
+        .replace(/(?:^|\s)\w/g, (m) => m.toUpperCase());
+    }
+
+    const nameParts = candidateName.split(/\s+/);
+    const firstName = nameParts[0] || 'Applicant';
+    const lastName = nameParts.slice(1).join(' ') || '';
+
+    // 4. LinkedIn & GitHub & Portfolio Links
+    let linkedinUrl = '';
+    const linkedinMatch = text.match(/(?:https?:\/\/)?(?:www\.)?linkedin\.com\/in\/[\w-]+(?:\/)?/i);
+    if (linkedinMatch) linkedinUrl = linkedinMatch[0];
+
+    let githubUrl = '';
+    const githubMatch = text.match(/(?:https?:\/\/)?(?:www\.)?github\.com\/[\w-]+(?:\/)?/i);
+    if (githubMatch) githubUrl = githubMatch[0];
+
+    let portfolioUrl = '';
+    const portfolioMatch = text.match(/(?:https?:\/\/)?[\w.-]+\.(?:vercel\.app|netlify\.app|dev|me|github\.io)(?:\/[\w.-]*)*/i);
+    if (portfolioMatch) portfolioUrl = portfolioMatch[0];
+
+    // 5. Technical Skills matching
+    const matchedSkills = [];
+    const seen = new Set();
+    for (const skill of COMMON_TECH_SKILLS) {
+      const regex = new RegExp(`(?<!\\w)${skill.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(?!\\w)`, 'i');
+      if (regex.test(text)) {
+        const canonical = skill;
+        if (!seen.has(canonical.toLowerCase())) {
+          seen.add(canonical.toLowerCase());
+          matchedSkills.push(canonical);
+        }
+      }
+    }
+
+    // 6. Experience extraction
+    let expYears = 1.0;
+    const expMatch = text.match(/(\d+(?:\.\d+)?)\+?\s*(?:years?|yrs?)\b/i);
+    if (expMatch) {
+      expYears = parseFloat(expMatch[1]) || 2.0;
+    } else {
+      if (/\b(?:intern|internship|undergraduate|student|fresher|junior)\b/i.test(text)) {
+        expYears = 1.0;
+      } else if (/\b(?:senior|lead|architect|staff)\b/i.test(text)) {
+        expYears = 5.0;
+      } else {
+        expYears = 2.5;
+      }
+    }
+
+    // 7. Role / Headline
+    const roleTitles = [
+      'Full Stack Developer', 'Full Stack Engineer', 'Software Engineer', 'Frontend Developer',
+      'Backend Developer', 'MERN Stack Developer', 'Java Developer', 'Python Developer',
+      'DevOps Engineer', 'Data Scientist', 'System Architect', 'Cloud Engineer'
+    ];
+    let currentRole = '';
+    for (const title of roleTitles) {
+      const r = new RegExp(`\\b${title.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}\\b`, 'i');
+      if (r.test(text)) {
+        currentRole = title;
+        break;
+      }
+    }
+
+    if (!currentRole) {
+      if (matchedSkills.includes('React') && matchedSkills.includes('Node.js')) {
+        currentRole = 'Full Stack Engineer';
+      } else if (matchedSkills.includes('Python') || matchedSkills.includes('Java')) {
+        currentRole = 'Backend Software Engineer';
+      } else if (matchedSkills.includes('React')) {
+        currentRole = 'Frontend Developer';
+      } else {
+        currentRole = 'Software Engineer';
+      }
+    }
+
+    // 8. Location extraction
+    const headerBlock = lines.slice(0, 6).join('\n');
+    let location = '';
+    const locMatch = headerBlock.match(/([A-Z][a-zA-Z ]{2,20}),\s*([A-Z][a-zA-Z ]{2,20})/);
+    if (locMatch) {
+      const city = locMatch[1].trim();
+      const state = locMatch[2].trim().split('\n')[0].trim();
+      if (!/phone|email|skills|summary|education|project/i.test(city + state)) {
+        location = `${city}, ${state}`;
+      }
+    }
+
+    if (!location) {
+      const knownLocations = [
+        'Bhubaneswar', 'Bangalore', 'Bengaluru', 'Hyderabad', 'Mumbai', 'Pune',
+        'Delhi', 'Noida', 'Gurgaon', 'Chennai', 'Kolkata', 'New York', 'San Francisco',
+        'Austin', 'London', 'Toronto', 'Berlin', 'Remote', 'India', 'USA'
+      ];
+      for (const loc of knownLocations) {
+        if (new RegExp(`\\b${loc}\\b`, 'i').test(headerBlock)) {
+          location = loc;
+          break;
+        }
+      }
+    }
+
+    if (!location) location = 'Remote';
+
+    // 9. Summary extraction
+    let summary = '';
+    const summaryMatch = text.match(/(?:PROFESSIONAL SUMMARY|SUMMARY|ABOUT ME|PROFILE)[\s:\-\n]+(.*?)(?=\n[A-Z\s]{4,}|\Z)/is);
+    if (summaryMatch && summaryMatch[1].trim().length > 30) {
+      summary = summaryMatch[1].trim().replace(/\s+/g, ' ').slice(0, 300);
+    } else {
+      const topSkills = matchedSkills.slice(0, 4).join(', ') || 'modern software technologies';
+      summary = `Accomplished ${currentRole} with hands-on expertise building scalable solutions using ${topSkills}.`;
+    }
+
+    const headlineSkills = matchedSkills.slice(0, 3).join(', ') || 'Full Stack Development';
+    const headline = `${currentRole} | ${headlineSkills}`;
+
     return {
       success: true,
-      raw_text: text,
-      candidate_name: 'Applicant Candidate',
-      first_name: 'Applicant',
-      last_name: 'Candidate',
-      email: '',
-      phone: '',
-      location: 'Remote',
-      headline: 'Software Engineer',
-      current_role: 'Full Stack Engineer',
-      total_experience_years: 3.5,
-      skills: ['JavaScript', 'React', 'Node.js', 'PostgreSQL'],
-      skill_set: 'JavaScript, React, Node.js, PostgreSQL',
-      linkedin_url: '',
-      github_url: '',
-      summary: 'Experienced software professional with verified competencies in modern full-stack web architectures.',
+      raw_text: text.slice(0, 3000),
+      candidate_name: candidateName,
+      first_name: firstName,
+      last_name: lastName,
+      email,
+      phone,
+      location,
+      headline,
+      current_role: currentRole,
+      total_experience_years: expYears,
+      skills: matchedSkills,
+      skill_set: matchedSkills.join(', '),
+      linkedin_url: linkedinUrl,
+      github_url: githubUrl,
+      portfolio_url: portfolioUrl,
+      summary,
     };
   }
 

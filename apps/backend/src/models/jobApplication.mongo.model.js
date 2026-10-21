@@ -185,7 +185,7 @@ const jobApplicationSchema = new mongoose.Schema(
     // Application Status & Lifecycle
     status: {
       type: String,
-      enum: ['Applied', 'Screening', 'Interview', 'Offered', 'Hired', 'Rejected'],
+      enum: ['Applied', 'Screening', 'Interview', 'Offered', 'Hired', 'Rejected', 'Withdrawn'],
       default: 'Applied',
     },
     stage: {
@@ -245,6 +245,14 @@ const jobApplicationSchema = new mongoose.Schema(
     },
     screeningPassed: {
       type: Boolean,
+      default: null,
+    },
+    agreedToTerms: {
+      type: Boolean,
+      default: false,
+    },
+    agreedAt: {
+      type: Date,
       default: null,
     },
   },

@@ -267,7 +267,30 @@ const CandidatesView = () => {
                           {cand.currentRole}
                         </div>
 
-                        <div style={{ display: 'flex', gap: '0.2rem', flexWrap: 'wrap', margin: '0.5rem 0' }}>
+                        {cand.jobTitle && (
+                          <div style={{ fontSize: '0.72rem', color: '#0F766E', fontWeight: 600, marginTop: '0.2rem' }}>
+                            {cand.jobTitle}
+                          </div>
+                        )}
+
+                        {cand.assessmentStatus && cand.assessmentStatus !== 'Not Started' && (
+                          <div style={{ marginTop: '0.25rem' }}>
+                            <span
+                              style={{
+                                fontSize: '0.66rem',
+                                padding: '0.1rem 0.35rem',
+                                borderRadius: '4px',
+                                fontWeight: 600,
+                                backgroundColor: cand.assessmentStatus === 'Passed' ? '#DCFCE7' : '#FEE2E2',
+                                color: cand.assessmentStatus === 'Passed' ? '#15803D' : '#B91C1C',
+                              }}
+                            >
+                              {cand.assessmentStatus === 'Passed' ? 'Assessment Passed' : 'Assessment Failed'}: {cand.assessmentScore !== null && cand.assessmentScore !== undefined ? `${cand.assessmentScore}/100` : cand.assessmentStatus}
+                            </span>
+                          </div>
+                        )}
+
+                        <div style={{ display: 'flex', gap: '0.2rem', flexWrap: 'wrap', margin: '0.4rem 0' }}>
                           {(cand.technicalSkills || []).slice(0, 2).map((sk, idx) => (
                             <span
                               key={idx}
@@ -359,10 +382,15 @@ const CandidatesView = () => {
                       <div style={{ fontSize: '0.73rem', color: '#64748B' }}>{cand.email}</div>
                     </td>
                     <td>
-                      <div>{cand.currentRole}</div>
-                      <div style={{ fontSize: '0.72rem', color: '#64748B' }}>{cand.experience} yrs exp</div>
+                      <div style={{ fontWeight: 500 }}>{cand.jobTitle}</div>
+                      {cand.assessmentStatus && cand.assessmentStatus !== 'Not Started' && (
+                        <div style={{ fontSize: '0.68rem', marginTop: '0.15rem' }}>
+                          <span style={{ color: cand.assessmentStatus === 'Passed' ? '#15803D' : '#B91C1C', fontWeight: 600 }}>
+                            {cand.assessmentStatus === 'Passed' ? 'Passed' : 'Failed'}: {cand.assessmentScore !== null && cand.assessmentScore !== undefined ? `${cand.assessmentScore}/100` : ''}
+                          </span>
+                        </div>
+                      )}
                     </td>
-                    <td>{cand.jobTitle}</td>
                     <td>
                       <div style={{ display: 'flex', gap: '0.2rem', flexWrap: 'wrap', maxWidth: '200px' }}>
                         {(cand.technicalSkills || []).map((sk, idx) => (
@@ -475,6 +503,91 @@ const CandidatesView = () => {
                 <label className="tw-form-label">Compensation Expectation</label>
                 <div style={{ fontSize: '0.85rem', fontWeight: 600 }}>{selectedCandidate.expectedSalary}</div>
               </div>
+
+              {/* AI Screening Assessment & ATS Fit */}
+              <div
+                style={{
+                  marginBottom: '1rem',
+                  padding: '0.85rem',
+                  backgroundColor: '#F0FDF4',
+                  borderRadius: '8px',
+                  border: '1px solid #BBF7D0',
+                }}
+              >
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem' }}>
+                  <label className="tw-form-label" style={{ margin: 0, color: '#166534', fontWeight: 700 }}>
+                    AI Screening Assessment & ATS Fit
+                  </label>
+                  <span
+                    style={{
+                      fontSize: '0.75rem',
+                      fontWeight: 700,
+                      padding: '0.15rem 0.5rem',
+                      borderRadius: '4px',
+                      backgroundColor:
+                        selectedCandidate.assessmentStatus === 'Passed'
+                          ? '#DCFCE7'
+                          : selectedCandidate.assessmentStatus === 'Failed'
+                          ? '#FEE2E2'
+                          : '#F1F5F9',
+                      color:
+                        selectedCandidate.assessmentStatus === 'Passed'
+                          ? '#15803D'
+                          : selectedCandidate.assessmentStatus === 'Failed'
+                          ? '#B91C1C'
+                          : '#475569',
+                    }}
+                  >
+                    {selectedCandidate.assessmentStatus || 'Not Started'}
+                  </span>
+                </div>
+                <div style={{ fontSize: '0.82rem', color: '#166534', display: 'flex', gap: '1.25rem', flexWrap: 'wrap' }}>
+                  <span>
+                    Assessment Score:{' '}
+                    <strong>
+                      {selectedCandidate.assessmentScore !== null && selectedCandidate.assessmentScore !== undefined
+                        ? `${selectedCandidate.assessmentScore} / 100`
+                        : 'Not Taken'}
+                    </strong>
+                  </span>
+                  <span>
+                    ATS Match Score:{' '}
+                    <strong>
+                      {selectedCandidate.fitScore ? `${selectedCandidate.fitScore}%` : '85%'} ({selectedCandidate.fitBadge || 'Top Match'})
+                    </strong>
+                  </span>
+                </div>
+              </div>
+
+              {/* Resume download / view link */}
+              {selectedCandidate.resumeUrl && (
+                <div style={{ marginBottom: '1rem' }}>
+                  <label className="tw-form-label">Attached Resume</label>
+                  <div>
+                    <a
+                      href={selectedCandidate.resumeUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="tw-btn-secondary"
+                      style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '0.45rem',
+                        padding: '0.4rem 0.85rem',
+                        fontSize: '0.78rem',
+                        textDecoration: 'none',
+                        color: '#0F766E',
+                        fontWeight: 600,
+                        borderRadius: '6px',
+                        border: '1px solid #CCFBF1',
+                        backgroundColor: '#F0FDFA',
+                      }}
+                    >
+                      View Candidate Resume {selectedCandidate.resumeOriginalName ? `(${selectedCandidate.resumeOriginalName})` : ''}
+                    </a>
+                  </div>
+                </div>
+              )}
 
               <div style={{ marginBottom: '1rem' }}>
                 <label className="tw-form-label">Evaluation Notes & Technical Screen</label>

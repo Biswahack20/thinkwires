@@ -1,15 +1,37 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import Navbar from '../../components/common/Navbar';
 import Footer from '../../components/common/Footer';
 import ScreeningAssessmentModal from '../../components/common/ScreeningAssessmentModal';
 import '../auth/auth.css';
 
 const CandidateApplicationsPage = () => {
+  const [searchParams] = useSearchParams();
+  const isJustApplied = searchParams.get('applied') === 'true';
+
   const [applications, setApplications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [noticeMessage, setNoticeMessage] = useState(
+    isJustApplied
+      ? 'Application submitted. Assessment available for 24 hours.'
+      : ''
+  );
   const [assessmentModalApp, setAssessmentModalApp] = useState(null);
+  const [withdrawingId, setWithdrawingId] = useState(null);
+  const [currentTime, setCurrentTime] = useState(() => Date.now());
+
+  useEffect(() => {
+    const timer = setInterval(() => setCurrentTime(Date.now()), 60000);
+    return () => clearInterval(timer);
+  }, []);
+
+  useEffect(() => {
+    if (searchParams.get('applied') === 'true') {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
+      setNoticeMessage('Application submitted. Assessment available for 24 hours.');
+    }
+  }, [searchParams]);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -26,7 +48,7 @@ const CandidateApplicationsPage = () => {
         } else {
           setError(data.error || 'Failed to fetch job applications');
         }
-      } catch (err) {
+      } catch {
         setError('Network error while retrieving applications.');
       } finally {
         setLoading(false);
@@ -35,6 +57,35 @@ const CandidateApplicationsPage = () => {
 
     fetchApplications();
   }, []);
+
+  const handleWithdraw = async (app) => {
+    const appId = app._id || app.id;
+    setWithdrawingId(appId);
+    setError('');
+    try {
+      const res = await fetch(`/api/candidate/applications/${appId}/withdraw`, {
+        method: 'POST',
+        credentials: 'include',
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setApplications((prev) =>
+          prev.map((a) =>
+            (a._id || a.id) === appId
+              ? { ...a, status: 'Withdrawn', stage: 'Withdrawn by Candidate' }
+              : a
+          )
+        );
+        setNoticeMessage('Application withdrawn successfully.');
+      } else {
+        setError(data.error || 'Failed to withdraw application.');
+      }
+    } catch {
+      setError('Network error connecting to Thinkwires service to withdraw application.');
+    } finally {
+      setWithdrawingId(null);
+    }
+  };
 
   return (
     <div className="tw-candidate-shell">
@@ -83,7 +134,7 @@ const CandidateApplicationsPage = () => {
             <div>
               <h1 className="tw-portal-card-title">My Tracked Job Applications</h1>
               <p style={{ color: '#64748B', margin: '0.25rem 0 0 0', fontSize: '0.9rem' }}>
-                View your submission status, client interview rounds, and offer updates.
+                Track your active job applications, take your 24-hour technical assessments, and manage your submissions.
               </p>
             </div>
 
@@ -96,8 +147,25 @@ const CandidateApplicationsPage = () => {
             </Link>
           </div>
 
+          {noticeMessage && (
+            <div
+              className="tw-auth-alert tw-auth-alert-success"
+              style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '1rem', marginBottom: '1.25rem' }}
+            >
+              <span>{noticeMessage}</span>
+              <button
+                type="button"
+                onClick={() => setNoticeMessage('')}
+                style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontSize: '0.85rem', color: '#166534', fontWeight: 700 }}
+                aria-label="Dismiss Alert"
+              >
+                Dismiss
+              </button>
+            </div>
+          )}
+
           {error && (
-            <div className="tw-auth-alert tw-auth-alert-error">
+            <div className="tw-auth-alert tw-auth-alert-error" style={{ marginBottom: '1.25rem' }}>
               <span>{error}</span>
             </div>
           )}
@@ -120,7 +188,7 @@ const CandidateApplicationsPage = () => {
                 No active applications found
               </h3>
               <p style={{ color: '#64748B', margin: '0 0 1.25rem 0', maxWidth: '450px', marginLeft: 'auto', marginRight: 'auto' }}>
-                You have not applied to any Thinkwires partner positions yet. Explore our open positions to submit an expedited application.
+                You have not applied to any Thinkwires partner positions yet. Explore our open positions to submit an application.
               </p>
               <Link
                 to="/jobs"
@@ -138,101 +206,170 @@ const CandidateApplicationsPage = () => {
                     <th>Job Role</th>
                     <th>Department</th>
                     <th>Location</th>
-                    <th>Experience</th>
-                    <th>ATS Fit Score</th>
-                    <th>AI Screening Test</th>
+                    <th>ATS Fit</th>
+                    <th>Screening Assessment (24h Window)</th>
                     <th>Stage</th>
                     <th>Status</th>
                     <th>Submitted</th>
+                    <th>Actions</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {applications.map((app) => (
-                    <tr key={app._id || app.id}>
-                      <td style={{ fontWeight: 600, color: '#0F172A' }}>{app.jobTitle}</td>
-                      <td>{app.department || 'Engineering'}</td>
-                      <td>{app.location || 'Remote'}</td>
-                      <td>{app.experience || 'Not specified'}</td>
-                      <td>
-                        {app.fitScore != null ? (
+                  {applications.map((app) => {
+                    const appId = app._id || app.id;
+                    const submissionTime = new Date(app.createdAt || app.appliedAt || currentTime).getTime();
+                    const hoursElapsed = (currentTime - submissionTime) / (1000 * 60 * 60);
+                    const hoursRemaining = Math.max(0, 24 - hoursElapsed);
+                    const isWithin24Hrs = hoursRemaining > 0;
+                    const isWithdrawn = app.status === 'Withdrawn';
+                    const isCompleted =
+                      app.assessmentStatus === 'Completed' ||
+                      app.assessmentStatus === 'Passed' ||
+                      app.assessmentStatus === 'Failed' ||
+                      app.assessmentScore != null;
+
+                    return (
+                      <tr key={appId} style={{ opacity: isWithdrawn ? 0.65 : 1 }}>
+                        <td style={{ fontWeight: 600, color: '#0F172A' }}>
+                          {app.jobTitle}
+                          {isWithdrawn && (
+                            <span style={{ display: 'block', fontSize: '0.72rem', color: '#64748B', fontWeight: 500 }}>
+                              (Application Withdrawn)
+                            </span>
+                          )}
+                        </td>
+                        <td>{app.department || 'Engineering'}</td>
+                        <td>{app.location || 'Remote'}</td>
+                        <td>
+                          {app.fitScore != null ? (
+                            <span
+                              style={{
+                                display: 'inline-block',
+                                padding: '0.2rem 0.55rem',
+                                borderRadius: '6px',
+                                fontSize: '0.8rem',
+                                fontWeight: 600,
+                                background: app.fitScore >= 75 ? '#DCFCE7' : app.fitScore >= 50 ? '#FEF9C3' : '#FEE2E2',
+                                color: app.fitScore >= 75 ? '#166534' : app.fitScore >= 50 ? '#854D0E' : '#991B1B',
+                              }}
+                            >
+                              {app.fitScore}% {app.fitBadge ? `• ${app.fitBadge}` : ''}
+                            </span>
+                          ) : (
+                            <span style={{ color: '#94A3B8', fontSize: '0.82rem' }}>Calculated</span>
+                          )}
+                        </td>
+                        <td>
+                          {isWithdrawn ? (
+                            <span style={{ color: '#94A3B8', fontSize: '0.82rem' }}>
+                              Withdrawn
+                            </span>
+                          ) : isCompleted ? (
+                            <span
+                              style={{
+                                display: 'inline-block',
+                                padding: '0.25rem 0.6rem',
+                                borderRadius: '6px',
+                                fontSize: '0.8rem',
+                                fontWeight: 600,
+                                background: (app.screeningPassed || (app.assessmentScore || 0) >= 70) ? '#DCFCE7' : '#FEE2E2',
+                                color: (app.screeningPassed || (app.assessmentScore || 0) >= 70) ? '#166534' : '#991B1B',
+                              }}
+                            >
+                              {(app.screeningPassed || (app.assessmentScore || 0) >= 70) ? 'Passed' : 'Completed'} ({app.assessmentScore || 0}%)
+                            </span>
+                          ) : isWithin24Hrs ? (
+                            <div>
+                              <button
+                                type="button"
+                                onClick={() => setAssessmentModalApp(app)}
+                                style={{
+                                  background: '#2563EB',
+                                  color: '#FFFFFF',
+                                  border: 'none',
+                                  borderRadius: '6px',
+                                  padding: '0.35rem 0.75rem',
+                                  fontSize: '0.8rem',
+                                  fontWeight: 600,
+                                  cursor: 'pointer',
+                                  boxShadow: '0 1px 2px rgba(37,99,235,0.2)',
+                                }}
+                              >
+                                Take Assessment
+                              </button>
+                              <div
+                                style={{
+                                  fontSize: '0.74rem',
+                                  color: '#D97706',
+                                  marginTop: '0.3rem',
+                                  fontWeight: 600,
+                                }}
+                              >
+                                {Math.floor(hoursRemaining)}h {Math.floor((hoursRemaining % 1) * 60)}m left
+                              </div>
+                            </div>
+                          ) : (
+                            <span style={{ color: '#DC2626', fontSize: '0.78rem', fontWeight: 600 }}>
+                              Expired (24h limit)
+                            </span>
+                          )}
+                        </td>
+                        <td style={{ color: isWithdrawn ? '#64748B' : '#2563EB', fontWeight: 500 }}>
+                          {app.stage || (isWithdrawn ? 'Withdrawn' : 'Screening')}
+                        </td>
+                        <td>
                           <span
-                            style={{
-                              display: 'inline-block',
-                              padding: '0.2rem 0.55rem',
-                              borderRadius: '6px',
-                              fontSize: '0.8rem',
-                              fontWeight: 600,
-                              background: app.fitScore >= 75 ? '#DCFCE7' : app.fitScore >= 50 ? '#FEF9C3' : '#FEE2E2',
-                              color: app.fitScore >= 75 ? '#166534' : app.fitScore >= 50 ? '#854D0E' : '#991B1B',
-                            }}
+                            className={`tw-badge-status ${
+                              isWithdrawn
+                                ? 'tw-badge-rejected'
+                                : app.status === 'Offered'
+                                ? 'tw-badge-offered'
+                                : app.status === 'Interview'
+                                ? 'tw-badge-interview'
+                                : app.status === 'Screening'
+                                ? 'tw-badge-screening'
+                                : app.status === 'Rejected'
+                                ? 'tw-badge-rejected'
+                                : 'tw-badge-applied'
+                            }`}
                           >
-                            {app.fitScore}% {app.fitBadge ? `• ${app.fitBadge}` : ''}
+                            {app.status || 'Applied'}
                           </span>
-                        ) : (
-                          <span style={{ color: '#94A3B8', fontSize: '0.82rem' }}>Calculated</span>
-                        )}
-                      </td>
-                      <td>
-                        {app.assessmentStatus === 'Completed' || app.assessmentStatus === 'Passed' || app.assessmentStatus === 'Failed' ? (
-                          <span
-                            style={{
-                              display: 'inline-block',
-                              padding: '0.2rem 0.55rem',
-                              borderRadius: '6px',
-                              fontSize: '0.8rem',
-                              fontWeight: 600,
-                              background: (app.screeningPassed || app.assessmentScore >= 70) ? '#DCFCE7' : '#FEE2E2',
-                              color: (app.screeningPassed || app.assessmentScore >= 70) ? '#166534' : '#991B1B',
-                            }}
-                          >
-                            {(app.screeningPassed || app.assessmentScore >= 70) ? 'Passed' : 'Completed'} ({app.assessmentScore || 0}%)
-                          </span>
-                        ) : (
-                          <button
-                            type="button"
-                            onClick={() => setAssessmentModalApp(app)}
-                            style={{
-                              background: '#2563EB',
-                              color: '#FFFFFF',
-                              border: 'none',
-                              borderRadius: '6px',
-                              padding: '0.3rem 0.7rem',
-                              fontSize: '0.8rem',
-                              fontWeight: 600,
-                              cursor: 'pointer',
-                              display: 'inline-flex',
-                              alignItems: 'center',
-                              gap: '0.35rem',
-                              boxShadow: '0 1px 2px rgba(37,99,235,0.2)',
-                            }}
-                          >
-                            <span>📝 Take Test</span>
-                          </button>
-                        )}
-                      </td>
-                      <td style={{ color: '#2563EB', fontWeight: 500 }}>
-                        {app.stage || 'Screening'}
-                      </td>
-                      <td>
-                        <span
-                          className={`tw-badge-status ${
-                            app.status === 'Offered'
-                              ? 'tw-badge-offered'
-                              : app.status === 'Interview'
-                              ? 'tw-badge-interview'
-                              : app.status === 'Screening'
-                              ? 'tw-badge-screening'
-                              : app.status === 'Rejected'
-                              ? 'tw-badge-rejected'
-                              : 'tw-badge-applied'
-                          }`}
-                        >
-                          {app.status || 'Applied'}
-                        </span>
-                      </td>
-                      <td>{new Date(app.createdAt || app.appliedAt || Date.now()).toLocaleDateString()}</td>
-                    </tr>
-                  ))}
+                        </td>
+                        <td>{new Date(submissionTime).toLocaleDateString()}</td>
+                        <td>
+                          {isWithdrawn ? (
+                            <span style={{ color: '#94A3B8', fontSize: '0.82rem', fontStyle: 'italic' }}>
+                              Withdrawn
+                            </span>
+                          ) : app.status !== 'Hired' ? (
+                            <button
+                              type="button"
+                              onClick={() => handleWithdraw(app)}
+                              disabled={withdrawingId === appId}
+                              style={{
+                                background: '#FFF1F2',
+                                color: '#E11D48',
+                                border: '1px solid #FECDD3',
+                                borderRadius: '6px',
+                                padding: '0.3rem 0.65rem',
+                                fontSize: '0.78rem',
+                                fontWeight: 600,
+                                cursor: 'pointer',
+                                transition: 'all 0.15s ease',
+                              }}
+                            >
+                              {withdrawingId === appId ? 'Withdrawing...' : 'Withdraw'}
+                            </button>
+                          ) : (
+                            <span style={{ color: '#166534', fontSize: '0.8rem', fontWeight: 600 }}>
+                              Active Placed
+                            </span>
+                          )}
+                        </td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>
@@ -242,24 +379,26 @@ const CandidateApplicationsPage = () => {
         {/* Proctored Screening Assessment Modal */}
         {assessmentModalApp && (
           <ScreeningAssessmentModal
+            isOpen={true}
             applicationId={assessmentModalApp._id || assessmentModalApp.id}
             jobTitle={assessmentModalApp.jobTitle}
             onClose={() => setAssessmentModalApp(null)}
             onCompleted={(result) => {
+              const score = result.total_score ?? result.percentageScore ?? 0;
               setApplications((prev) =>
                 prev.map((a) =>
                   (a._id || a.id) === (assessmentModalApp._id || assessmentModalApp.id)
                     ? {
                         ...a,
-                        assessmentScore: result.percentageScore,
-                        assessmentStatus: 'Completed',
+                        assessmentScore: score,
+                        assessmentStatus: result.passed ? 'Passed' : 'Completed',
                         screeningPassed: result.passed,
-                        stage: result.gatekeeperStatus || a.stage,
+                        stage: result.gatekeeper_status || result.gatekeeperStatus || a.stage,
                       }
                     : a
                 )
               );
-              setAssessmentModalApp(null);
+              setNoticeMessage('Assessment submitted successfully.');
             }}
           />
         )}
@@ -271,4 +410,3 @@ const CandidateApplicationsPage = () => {
 };
 
 export default CandidateApplicationsPage;
-

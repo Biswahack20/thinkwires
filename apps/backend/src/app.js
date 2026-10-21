@@ -26,6 +26,9 @@ app.use('/uploads', express.static(path.resolve(process.cwd(), 'uploads')));
 app.get("/", (req, res) => {
   res.send("API is running...");
 });
+app.get("/api/health", (req, res) => {
+  res.status(200).json({ status: "healthy", timestamp: new Date().toISOString() });
+});
 
 // Authentication & Candidate Portal Routes
 app.use('/api/auth', authRoutes);

@@ -25,7 +25,7 @@ const JobApplyPage = () => {
   }), [jobId, searchParams]);
 
   const handleClose = () => {
-    navigate(-1);
+    navigate('/jobs');
   };
 
   return (

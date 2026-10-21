@@ -47,3 +47,12 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
+
+# Uploaded User Files and Resumes
+uploads/
+apps/backend/uploads/*
+!apps/backend/uploads/.gitkeep
+!apps/backend/uploads/resumes/
+apps/backend/uploads/resumes/*
+!apps/backend/uploads/resumes/.gitkeep
+
