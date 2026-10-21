@@ -566,34 +566,6 @@ router.post('/contact', (req, res) => {
   }
 });
 
-// --- About Page Data ---
-let currentAboutData = aboutData ? { ...aboutData } : {};
-
-router.get('/about', async (req, res) => {
-  if (isMongoActive()) {
-    try {
-      const page = await Page.findOne({ slug: 'about' }).lean();
-      if (page?.data && Object.keys(page.data).length > 0) {
-        return res.json(page.data);
-      }
-    } catch (dbErr) {
-      console.warn('Error loading about page from MongoDB:', dbErr.message);
-    }
-  }
-  res.json(currentAboutData);
-});
-
-router.post('/about/consultation', (req, res) => {
-  const { fullName, workEmail, phone, primaryNeed, techRoles } = req.body;
-  if (!fullName || !workEmail) {
-    return res.status(400).json({ error: 'Full name and work email are required' });
-  }
-  console.log('New About Page Talent Consultation Request:', { fullName, workEmail, phone, primaryNeed, techRoles });
-  res.json({
-    success: true,
-    message: 'Your talent strategy consultation request has been received. Our team will contact you within 5 hours.'
-  });
-});
 
 // --- Blog & Articles ---
 router.get('/articles', async (req, res) => {
@@ -1326,6 +1298,12 @@ const aboutDataset = {
     hours: "Monday - Friday: 9:00 AM - 7:00 PM IST (EST/PST Overlap Supported)"
   }
 };
+
+// GET /api/about
+router.get('/about', async (req, res) => {
+  const data = await getPageDataBySlug('about', aboutDataset);
+  res.json(data);
+});
 
 // GET /api/about/stats
 router.get('/about/stats', async (req, res) => {
