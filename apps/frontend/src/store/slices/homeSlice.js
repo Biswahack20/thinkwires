@@ -71,18 +71,7 @@ export const fetchOpenings = createAsyncThunk(
 
 export const fetchTechStack = createAsyncThunk(
   'home/fetchTechStack',
-  async () => {
-    try {
-      const response = await fetch(`${API_BASE}/tech-stack`);
-      if (response.ok) {
-        const data = await response.json();
-        if (Array.isArray(data) && data.length > 0) return data;
-      }
-    } catch {
-      // Backend offline or unreachable - use static brand list
-    }
-    return staticTechStack;
-  }
+  async () => staticTechStack
 );
 
 export const fetchStats = createAsyncThunk('home/fetchStats', async () => {
@@ -170,17 +159,10 @@ const homeSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      // Tech Stack
-      .addCase(fetchTechStack.pending, (state) => {
-        state.status.techStack = 'loading';
-      })
-      .addCase(fetchTechStack.fulfilled, (state, action) => {
+      // Tech Stack (Static)
+      .addCase(fetchTechStack.fulfilled, (state) => {
         state.status.techStack = 'succeeded';
-        state.techStack = action.payload;
-      })
-      .addCase(fetchTechStack.rejected, (state, action) => {
-        state.status.techStack = 'failed';
-        state.errors.techStack = action.error.message;
+        state.techStack = staticTechStack;
       })
       // Openings
       .addCase(fetchOpenings.pending, (state) => {

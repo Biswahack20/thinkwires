@@ -15932,8 +15932,9 @@ textarea {
   --logo-text: #f8fafc;
   --logo-aws: #ffffff;
   --logo-ibm: #4589ff;
-  background-color: var(--color-surface-container, #21232b);
-  border-color: rgba(255, 255, 255, 0.08);
+  background-color: #ffffff;
+  border-color: rgba(255, 255, 255, 0.18);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
 }
 
 .TechStack-gridCard:hover {
@@ -15944,7 +15945,8 @@ textarea {
 }
 
 [data-theme="dark"] .TechStack-gridCard:hover {
-  background-color: #2a2d36;
+  background-color: #ffffff;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(59, 130, 246, 0.5);
 }
 
 /* Logo Container */
@@ -15955,16 +15957,22 @@ textarea {
   height: 100%;
 }
 
+.TechStack-logoImg,
 .TechStack-logoSvg {
-  height: 30px;
+  height: 28px;
+  max-height: 32px;
   width: auto;
-  max-width: 145px;
+  max-width: 135px;
+  object-fit: contain;
   display: block;
-  transition: transform 0.2s ease, filter 0.2s ease;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), filter 0.25s ease;
+  user-select: none;
+  pointer-events: none;
 }
 
+.TechStack-gridCard:hover .TechStack-logoImg,
 .TechStack-gridCard:hover .TechStack-logoSvg {
-  transform: scale(1.05);
+  transform: scale(1.06);
 }
 
 /* Responsive Overrides */

@@ -193,7 +193,6 @@ const AdminLayout = () => {
               { label: 'Media Library', path: '/admin/cms/media', icon: <ImageIcon size={18} /> },
               { label: 'SEO Settings', path: '/admin/cms/seo', icon: <SearchIcon size={18} /> },
               { label: 'Announcements', path: '/admin/cms/announcements', icon: <BellIcon size={18} /> },
-              { label: 'Tech Stack Catalog', path: '/admin/cms/tech-stack', icon: <LayersIcon size={18} /> },
             ],
           },
         ]

@@ -161,17 +161,6 @@ const CmsDashboard = () => {
           </p>
         </Link>
 
-        <Link
-          to="/admin/cms/tech-stack"
-          className="tw-chart-card"
-          style={{ textDecoration: 'none', transition: 'all 0.15s ease' }}
-        >
-          <div style={{ marginBottom: '0.6rem', color: '#008F68' }}><LayersIcon size={24} /></div>
-          <strong style={{ color: '#172033', fontSize: '0.95rem' }}>Tech Stack Catalog</strong>
-          <p style={{ color: '#64748B', fontSize: '0.78rem', margin: '0.3rem 0 0 0' }}>
-            Curate enterprise technology badges for the marquee carousel and skills taxonomy.
-          </p>
-        </Link>
 
         <Link
           to="/admin/cms/seo"
