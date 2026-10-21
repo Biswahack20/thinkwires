@@ -1,4 +1,4 @@
-# 🌐 ThinkWire Frontend
+# ThinkWires Frontend
 
 [![React](https://img.shields.io/badge/React-19.x-61DAFB.svg?style=flat&logo=react&logoColor=black)](https://react.dev/)
 [![Vite](https://img.shields.io/badge/Vite-8.x-646CFF.svg?style=flat&logo=vite&logoColor=white)](https://vite.dev/)
@@ -10,7 +10,7 @@ The **ThinkWire Frontend** is the public-facing React 19 Single-Page Application
 
 ---
 
-## 📋 Table of Contents
+## Table of Contents
 
 1. [Architecture Overview](#1-architecture-overview)
 2. [Folder Structure](#2-folder-structure)
@@ -91,7 +91,7 @@ apps/frontend/
     ├── main.jsx             # Application bootstrap — mounts React root into #root
     ├── App.jsx              # Root application component and Design System Showcase
     ├── App.css              # Component-specific styles for App.jsx sections
-    ├── index.css            # ⭐ Global design system: CSS variables, tokens, utilities
+    ├── index.css            # Global design system: CSS variables, tokens, utilities
     ├── theme.js             # Design tokens mirrored as a JS object (for programmatic use)
     ├── ThemeContext.js      # React Context object for theme state (Fast Refresh compatible)
     ├── ThemeProvider.jsx    # Context provider for light/dark mode state management
@@ -291,7 +291,7 @@ Manages the global light/dark theme state. Wraps the entire application in `main
 
 | Prop       | Type              | Required | Description                  |
 | :--------- | :---------------- | :------: | :--------------------------- |
-| `children` | `React.ReactNode` |    ✅    | Child component tree to wrap |
+| `children` | `React.ReactNode` | Yes | Child component tree to wrap |
 
 **Behavior:**
 
@@ -738,7 +738,7 @@ git commit -m "style(index.css): add input focus ring animation token (#10)"
 
 ---
 
-## 📄 License & Maintainers
+## License & Maintainers
 
 - **License**: Proprietary — ThinkWire Staffing and Solutions
 - **Frontend Maintainer**: ThinkWire Frontend Engineering Team

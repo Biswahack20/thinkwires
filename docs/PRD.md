@@ -310,6 +310,12 @@ To guide development, here are the primary user stories for our main user types:
 - **AI Pass/Fail Ratios:** Visual metrics showing how many candidates pass vs. fail AI screening tests across different skill categories.
 - **Financial & Bench Margins:** Real-time monitoring of total billings, candidate payouts, daily bench idle costs, and net profit margins per deployment.
 
+### 4.6 Candidate Terms Agreement and Legal Compliance
+
+- **Mandatory Terms & Conditions Agreement:** Prior to submitting any job application, candidates must review and accept the ThinkWires Terms of Service (`/terms-of-service`) and Candidate Privacy Policy (`/privacy-policy`).
+- **Audit Timestamp:** Submissions record `agreedToTerms: true` and an ISO timestamp `agreedAt`.
+- **Application Withdrawal:** Candidates maintain sovereign control over their active applications, with the ability to withdraw submissions directly from their dashboard (`POST /api/candidate/applications/:id/withdraw`).
+
 ---
 
 ## 5. Complete Page & UI Navigation Map

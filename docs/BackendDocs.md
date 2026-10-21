@@ -1,12 +1,12 @@
-# ⚙️ ThinkWires Backend Architecture & API Documentation (`BackendDocs.md`)
+# ThinkWires Backend Architecture and API Documentation (BackendDocs.md)
 
-This document is the authoritative guide to the **ThinkWires Backend Core** (`apps/backend`). It details the server lifecycle, dual-persistence database strategy, authentication protocols, middleware pipeline, database migrations, and a comprehensive REST API endpoint reference designed for both human engineers and AI agent workflows.
+This document is the authoritative guide to the **ThinkWires Backend Core** (`apps/backend`). It details the server lifecycle, dual-persistence database strategy, connection resilience, authentication protocols, middleware pipeline, database migrations, and a comprehensive REST API endpoint reference designed for both human engineers and AI agent workflows.
 
 ---
 
-## 1. Architectural Overview & Design Philosophy
+## 1. Architectural Overview and Design Philosophy
 
-The ThinkWires backend is an **Express 5 API Gateway** written in modern ES Modules (`type: "module"`). It powers the ThinkWires platform with authentication, candidate portal workflows, enterprise staffing operations, and an integrated Content Management System (CMS).
+The ThinkWires backend is an **Express 5 API Gateway** written in modern ES Modules (`type: "module"`). It powers the ThinkWires platform with authentication, candidate portal workflows, enterprise staffing operations, recruitment email dispatching, and an integrated Content Management System (CMS).
 
 ```
                             ┌────────────────────────────────────────┐
@@ -38,23 +38,25 @@ The ThinkWires backend is an **Express 5 API Gateway** written in modern ES Modu
 
 ### Core Design Principles
 
-1. **Non-Blocking Bootstrap**: The HTTP server begins listening on port 5000 _immediately_ upon execution. It does not await external database network connections, guaranteeing that frontend Vite proxy requests and health checks are never held hostage by database connection latency or timeouts.
+1. **Non-Blocking Bootstrap**: The HTTP server begins listening on port 5000 immediately upon execution. It does not await external database network connections, guaranteeing that frontend Vite proxy requests and health checks are never held hostage by database connection latency or timeouts.
 2. **Dual-Persistence Resilience**:
    - **PostgreSQL (Sequelize)**: Manages relational records with schema auto-alter enabled in development.
    - **MongoDB (Mongoose)**: Manages unstructured document entities, CMS pages, media catalogs, blog articles, and administrative announcements across 14 collections.
-   - **In-Memory Fallback Store**: If either PostgreSQL or MongoDB is offline or blocked (e.g. MongoDB Atlas IP whitelist restriction), the backend automatically and seamlessly serves mock data arrays ([`mockData.json`](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/backend/src/seeds/mockData.json) and [`adminSeedData.json`](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/backend/src/seeds/adminSeedData.json)), ensuring 100% development continuity.
+   - **Atlas Connection Pooling and Supervisor**: Configured with explicit IPv4 DNS resolution (`family: 4`), `maxIdleTimeMS: 60000`, `heartbeatFrequencyMS: 10000`, and `serverSelectionTimeoutMS: 15000`. An automated health supervisor monitors connection states and initiates graceful auto-reconnections if idle cluster drops occur.
+   - **In-Memory Fallback Store**: If either PostgreSQL or MongoDB is offline or blocked, the backend seamlessly serves in-memory mock data arrays (`mockData.json` and `adminSeedData.json`), ensuring uninterrupted development continuity.
 
 ---
 
-## 2. Directory & File Organization
+## 2. Directory and File Organization
 
-The backend is housed in [`apps/backend`](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/backend):
+The backend is housed in `apps/backend`:
 
 ```
 apps/backend/
-├── .env / .env.example       # Database credentials & JWT secrets
+├── .env / .env.example       # Database credentials, SMTP settings & JWT secrets
 ├── package.json              # Express, Sequelize, Mongoose, and migration scripts
-├── uploads/                  # Local storage for candidate resume uploads
+├── uploads/                  # Local storage for candidate resume uploads (.gitignore protected)
+│   └── resumes/              # Uploaded PDF and DOCX documents
 └── src/
     ├── app.js                # Express app initialization, CORS, cookie parser, and route mounts
     ├── server.js             # Server startup & non-blocking DB connection orchestrator
@@ -62,12 +64,12 @@ apps/backend/
     ├── configs/              # Infrastructure Configurations
     │   ├── dotenv.js         # Centralized environment variable loader
     │   ├── db.js             # Sequelize connection to Neon PostgreSQL
-    │   └── mongodb.js        # Mongoose connection to MongoDB Atlas
+    │   └── mongodb.js        # Mongoose connection to MongoDB Atlas with connection pool and auto-reconnect
     │
     ├── controllers/          # Business Logic Controllers
     │   ├── auth.controller.js            # Registration, login, JWT cookies, password resets
-    │   ├── candidatePortal.controller.js # Dashboard metrics, candidate profile, job applications
-    │   └── admin.controller.js           # 80KB+ comprehensive controller for all admin & CMS views
+    │   ├── candidatePortal.controller.js # Dashboard metrics, candidate profile, job applications, withdrawals
+    │   └── admin.controller.js           # Comprehensive controller for all admin & CMS views
     │
     ├── middlewares/          # Request Pipeline Interceptors
     │   ├── auth.middleware.js   # Candidate JWT cookie verification & Admin RBAC
@@ -81,7 +83,7 @@ apps/backend/
     │   ├── client.mongo.model.js         # Corporate enterprise accounts
     │   ├── employee.mongo.model.js       # Technical workforce & bench personnel
     │   ├── job.mongo.model.js            # Open staffing requisitions
-    │   ├── jobApplication.mongo.model.js # Applied candidate records & resume paths
+    │   ├── jobApplication.mongo.model.js # Applied candidate records, terms consent, and resume paths
     │   ├── media.mongo.model.js          # Digital asset library metadata
     │   ├── page.mongo.model.js           # CMS website pages
     │   ├── placement.mongo.model.js      # Billable talent deployments & contract rates
@@ -93,70 +95,52 @@ apps/backend/
     │   └── scripts/          # Version-controlled migration files
     │
     ├── routes/               # Express Route Declarations
-    │   ├── admin.route.js    # All administrative & CMS management routes
+    │   ├── admin.route.js    # Administrative & CMS management routes
     │   ├── api.route.js      # Public content APIs (talent bench, services, blog)
     │   ├── auth.route.js     # Candidate authentication endpoints
     │   └── candidate.route.js# Protected candidate portal endpoints
+    │
+    ├── utils/                # Helper Utilities
+    │   ├── auth.util.js      # JWT signing and verification helpers
+    │   ├── logger.js         # Structured JSON logging utility
+    │   └── recruitmentEmail.util.js # SMTP recruitment and candidate notification dispatcher
     │
     └── seeds/                # Seed Data & Population Scripts
         ├── adminSeedData.json# Fictional demo dataset for admin views
         ├── mockData.json     # Public content datasets (jobs, bench, stats)
         └── seedDemoData.js   # Idempotent MongoDB seed runner
-
-apps/ai_services/
-├── main.py                   # Root entrypoint (delegates to app.main:app for uvicorn)
-├── package.json              # Turbo dev & test task scripts
-├── requirements.txt          # Python dependencies (FastAPI, pypdf, httpx, etc.)
-├── tests/                    # Automated pytest test suites (13 passing tests)
-│   ├── test_api.py           # FastAPI TestClient endpoint integration tests
-│   ├── test_match_scorer.py  # ATS match scoring algorithm tests
-│   ├── test_resume_parser.py # Resume PDF & heuristic extraction tests
-│   └── test_screening.py     # 10-Question generation & rubric grading tests
-└── app/                      # Modular Application Architecture
-    ├── __init__.py           # Package initialization
-    ├── config.py             # Settings, environment configuration, and logger
-    ├── main.py               # create_app() factory, CORS, and router registration
-    ├── api/                  # API Routing Layer
-    │   ├── router.py         # Root API router mounting v1 routes
-    │   └── v1/               # Version 1 Sub-Routers
-    │       ├── health.py     # GET / and GET /health
-    │       ├── resume.py     # POST /api/resume/parse & POST /api/resume/match-score
-    │       └── screening.py  # POST /api/screening/generate-test & evaluate-test
-    ├── schemas/              # Pydantic Schemas & DTOs
-    │   ├── resume.py         # ParsedResumeResponse, ResumeMatchRequest, etc.
-    │   └── screening.py      # GenerateAssessmentRequest, EvaluateAssessmentRequest, etc.
-    └── services/             # Domain Logic & ML Services
-        ├── match_scorer.py   # PRD 4.3 ATS weighted scoring engine
-        ├── resume_parser.py  # pypdf stream extraction and heuristic/LLM parser
-        ├── test_evaluator.py # Automated grading, rubric scoring, and gatekeeper decisions
-        └── test_generator.py # 10-Question assessment suite generator
 ```
 
 ---
 
-## 3. Server Lifecycle & Bootstrap Sequence
+## 3. Server Lifecycle and Connection Resilience
 
-Server bootstrap is defined in [`src/server.js`](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/backend/src/server.js):
+Server bootstrap is defined in `src/server.js`:
 
-1. **Immediate Port Binding**: `app.listen(PORT)` is triggered on line 10. The HTTP server is instantly live.
-2. **PostgreSQL Sync**: `connectDB()` connects to the Sequelize pool. In development (`NODE_ENV !== 'production'`), it executes `sequelize.sync({ alter: true })` to safely sync model schemas with table definitions.
-3. **MongoDB Handshake**: `connectMongoDB()` initializes Mongoose with a 5000ms server selection timeout.
-4. **Resilience Handlers**: Both database connection promises contain `.catch()` blocks that log a non-fatal warning and automatically switch the operational mode to the in-memory fallback datasets.
+1. **Immediate Port Binding**: `app.listen(PORT)` is triggered right away, binding port 5000 synchronously.
+2. **PostgreSQL Sync**: `connectDB()` connects to the Sequelize pool. In development (`NODE_ENV !== 'production'`), it safely synchronizes model definitions using `alter: true`.
+3. **MongoDB Connection**: `connectMongoDB()` initializes Mongoose with configured connection options:
+   - `family: 4`: Forces IPv4 DNS lookups to prevent Node.js dual-stack IPv6 resolution timeouts on Atlas.
+   - `maxIdleTimeMS: 60000`: Automatically cleans up idle sockets before cloud NAT firewalls sever them.
+   - `heartbeatFrequencyMS: 10000`: Regularly verifies cluster topology and replica set health.
+   - `serverSelectionTimeoutMS: 15000`: Sets a responsive connection timeout.
+4. **Active Reconnection Supervisor**: An interval timer checks `mongoose.connection.readyState`. If the cluster disconnects unexpectedly, the supervisor triggers a reconnection automatically.
+5. **In-Memory Fallback**: Both database connection routines contain error catches that safely preserve in-memory operational datasets so development and testing proceed without interruptions.
 
 ---
 
-## 4. Authentication, Authorization & Security Architecture
+## 4. Authentication, Authorization, and Compliance
 
 ### Candidate Authentication (`/api/auth/*`)
 
 - **Password Security**: Hashes user passwords with `bcryptjs` using a minimum salt factor of 10.
 - **Session Tokens**: Issues JSON Web Tokens (JWT) signed with `JWT_SECRET`. Tokens are stored in an **`HttpOnly`** cookie (`token`), preventing client-side JavaScript access and XSS exploitation.
 - **Brute-Force Protection**: Auth routes (`/login`, `/forgot-password`, `/reset-password`) are protected by an `express-rate-limit` window restricting each IP address to 20 attempts per 15 minutes.
-- **Session Verification**: The `GET /api/auth/me` endpoint checks the incoming cookie, validates the JWT, and returns the sanitized candidate profile.
+- **Session Verification**: The `GET /api/auth/me` endpoint checks incoming cookies, validates the JWT, and returns the sanitized candidate profile.
 
 ### Role-Based Access Control (RBAC) in Admin Suite (`/api/admin/*`)
 
-Admin endpoints verify permissions via [`auth.middleware.js`](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/backend/src/middlewares/auth.middleware.js):
+Admin endpoints verify permissions via `auth.middleware.js`:
 
 - Reads the **`X-Demo-Role`** HTTP request header or user session.
 - **Supported Personas**:
@@ -172,28 +156,29 @@ Admin endpoints verify permissions via [`auth.middleware.js`](file:///c:/Users/T
 
 ### A. Candidate Authentication Routes (`/api/auth`)
 
-| Method | Endpoint                    | Auth   | Description                                                      |
-| ------ | --------------------------- | ------ | ---------------------------------------------------------------- |
-| `POST` | `/api/auth/register`        | None   | Register new candidate account (`fullName`, `email`, `password`) |
-| `POST` | `/api/auth/login`           | None   | Authenticate candidate; sets `HttpOnly` JWT cookie               |
-| `POST` | `/api/auth/logout`          | None   | Clears `token` cookie and terminates session                     |
-| `GET`  | `/api/auth/me`              | Cookie | Restores candidate session from `HttpOnly` cookie                |
-| `POST` | `/api/auth/forgot-password` | None   | Generates and dispatches password recovery link                  |
-| `POST` | `/api/auth/reset-password`  | None   | Updates candidate password via valid reset token                 |
+| Method | Endpoint | Auth | Description |
+| --- | --- | --- | --- |
+| `POST` | `/api/auth/register` | None | Register new candidate account (`fullName`, `email`, `password`) |
+| `POST` | `/api/auth/login` | None | Authenticate candidate; sets `HttpOnly` JWT cookie |
+| `POST` | `/api/auth/logout` | None | Clears `token` cookie and terminates session |
+| `GET` | `/api/auth/me` | Cookie | Restores candidate session from `HttpOnly` cookie |
+| `POST` | `/api/auth/forgot-password` | None | Generates and dispatches password recovery link |
+| `POST` | `/api/auth/reset-password` | None | Updates candidate password via valid reset token |
 
 ---
 
 ### B. Candidate Portal & AI Screening Routes (`/api/candidate`)
 
-| Method | Endpoint                                                | Body / Query          | Description                                                                                     |
-| ------ | ------------------------------------------------------- | --------------------- | ----------------------------------------------------------------------------------------------- |
-| `POST` | `/api/candidate/parse-resume`                          | `multipart/form-data` | Extracts name, contact, skills, experience, and summary from resume for instant form auto-fill  |
-| `GET`  | `/api/candidate/dashboard`                              | None                  | Retrieves candidate application metrics, ATS scores, and AI assessment benchmark status         |
-| `PUT`  | `/api/candidate/profile`                                | JSON (profile fields) | Updates candidate contact info, technical skills, title, expected salary, and bench work mode   |
-| `GET`  | `/api/candidate/applications`                           | None                  | Fetches all submitted applications with ATS Fit Score and AI Assessment results                 |
-| `POST` | `/api/candidate/apply`                                  | `multipart/form-data` | Submits application; triggers automatic ATS fit scoring and AI assessment generation            |
-| `GET`  | `/api/candidate/applications/:id/assessment`            | None                  | Retrieves the proctored 10-question screening assessment generated for the application          |
-| `POST` | `/api/candidate/applications/:id/assessment/submit`     | JSON (`{ answers }`)  | Evaluates assessment against rubric; stores score and updates Candidate Portal and Active Bench |
+| Method | Endpoint | Body / Query | Description |
+| --- | --- | --- | --- |
+| `POST` | `/api/candidate/parse-resume` | `multipart/form-data` | Extracts name, contact, skills, experience, summary, and links (LinkedIn, GitHub, portfolio) from PDF/DOCX for form prefill |
+| `GET` | `/api/candidate/dashboard` | None | Retrieves candidate application metrics, ATS scores, and AI assessment benchmark status |
+| `PUT` | `/api/candidate/profile` | JSON (profile fields) | Updates candidate contact info, technical skills, title, expected salary, and bench work mode |
+| `GET` | `/api/candidate/applications` | None | Fetches all submitted applications with ATS Fit Score and AI Assessment results |
+| `POST` | `/api/candidate/apply` | `multipart/form-data` | Submits application; enforces candidate authentication, verifies Terms & Conditions agreement (`agreedToTerms`), triggers ATS scoring & assessment |
+| `POST` | `/api/candidate/applications/:id/withdraw` | None | Withdraws an active job application and sets status to 'Withdrawn' |
+| `GET` | `/api/candidate/applications/:id/assessment` | None | Retrieves the proctored 10-question screening assessment generated for the application |
+| `POST` | `/api/candidate/applications/:id/assessment/submit` | JSON (`{ answers }`) | Evaluates assessment against rubric; stores score and updates Candidate Portal and Active Bench |
 
 ---
 
@@ -201,121 +186,121 @@ Admin endpoints verify permissions via [`auth.middleware.js`](file:///c:/Users/T
 
 A dedicated FastAPI service (`port 8000`) communicates with the Express backend (`port 5000`) for high-performance ML inference, resume parsing, and screening generation:
 
-| Method | Endpoint                       | Input Payload                     | Output Schema                                                                      |
-| ------ | ------------------------------ | --------------------------------- | ---------------------------------------------------------------------------------- |
-| `GET`  | `/`                            | None                              | Service health and version status                                                  |
-| `POST` | `/api/resume/parse`            | PDF file or text string           | `first_name`, `last_name`, `email`, `phone`, `skills`, `total_experience_years`    |
-| `POST` | `/api/resume/match-score`      | Candidate skills + Job spec       | `fit_score` (0-100%), `fit_badge` (`Top Match`, etc.), `matched_skills`            |
-| `POST` | `/api/screening/generate-test` | Job spec + Candidate resume       | 10 questions (7 MCQs, 2 Scenarios, 1 Practical coding task) with grading criteria  |
-| `POST` | `/api/screening/evaluate-test` | Test rubric + Candidate answers   | Percentage score, passed status (`>=75%`), and gatekeeper stage feedback           |
+| Method | Endpoint | Input Payload | Output Schema |
+| --- | --- | --- | --- |
+| `GET` | `/` | None | Service health and version status |
+| `POST` | `/api/resume/parse` | PDF file or text string | `first_name`, `last_name`, `email`, `phone`, `skills`, `total_experience_years`, `linkedin_url`, `github_url`, `portfolio_url` |
+| `POST` | `/api/resume/match-score` | Candidate skills + Job spec | `fit_score` (0-100%), `fit_badge` (`Top Match`, etc.), `matched_skills` |
+| `POST` | `/api/screening/generate-test` | Job spec + Candidate resume | 10 questions (7 MCQs, 2 Scenarios, 1 Practical coding task) with grading criteria |
+| `POST` | `/api/screening/evaluate-test` | Test rubric + Candidate answers | Percentage score, passed status (`>=75%`), and gatekeeper stage feedback |
 
 ---
 
-### C. Admin & CMS Management Routes (`/api/admin`)
+### D. Admin & CMS Management Routes (`/api/admin`)
 
-_All routes require admin authentication and respect `X-Demo-Role` persona permissions._
+*All routes require admin authentication and respect `X-Demo-Role` persona permissions.*
 
 #### 1. Dashboard & Core Analytics
 
-| Method | Endpoint                | Query Parameters               | Description                                                         |
-| ------ | ----------------------- | ------------------------------ | ------------------------------------------------------------------- |
-| `GET`  | `/api/admin/stats`      | `?period=month\|quarter\|year` | Dashboard KPIs, revenue charts, recent placements, announcements    |
-| `GET`  | `/api/admin/activities` | `?limit=20`                    | Operational audit trail stream                                      |
-| `GET`  | `/api/admin/auth/me`    | None                           | Current persona, permission flags, and database connectivity status |
+| Method | Endpoint | Query Parameters | Description |
+| --- | --- | --- | --- |
+| `GET` | `/api/admin/stats` | `?period=month\|quarter\|year` | Dashboard KPIs, revenue charts, recent placements, announcements |
+| `GET` | `/api/admin/activities` | `?limit=20` | Operational audit trail stream |
+| `GET` | `/api/admin/auth/me` | None | Current persona, permission flags, and database connectivity status |
 
 #### 2. Workforce & Manpower Management
 
-| Method   | Endpoint                   | Description                                                        |
-| -------- | -------------------------- | ------------------------------------------------------------------ |
-| `GET`    | `/api/admin/employees`     | Search & paginated list of technical workforce (Bench vs Deployed) |
-| `POST`   | `/api/admin/employees`     | Create workforce employee record                                   |
-| `PUT`    | `/api/admin/employees/:id` | Update employee information or deployment status                   |
-| `DELETE` | `/api/admin/employees/:id` | Remove employee record                                             |
+| Method | Endpoint | Description |
+| --- | --- | --- |
+| `GET` | `/api/admin/employees` | Search & paginated list of technical workforce (Bench vs Deployed) |
+| `POST` | `/api/admin/employees` | Create workforce employee record |
+| `PUT` | `/api/admin/employees/:id` | Update employee information or deployment status |
+| `DELETE` | `/api/admin/employees/:id` | Remove employee record |
 
 #### 3. Candidate ATS Pipeline
 
-| Method   | Endpoint                           | Description                                                                                                 |
-| -------- | ---------------------------------- | ----------------------------------------------------------------------------------------------------------- |
-| `GET`    | `/api/admin/candidates`            | Candidate ATS records across all pipeline stages                                                            |
-| `POST`   | `/api/admin/candidates`            | Create candidate in ATS pipeline                                                                            |
-| `PATCH`  | `/api/admin/candidates/:id/status` | Advance candidate pipeline stage (`Applied` ➔ `Screening` ➔ `Interview` ➔ `Offered` ➔ `Hired` ➔ `Rejected`) |
-| `DELETE` | `/api/admin/candidates/:id`        | Archive candidate                                                                                           |
+| Method | Endpoint | Description |
+| --- | --- | --- |
+| `GET` | `/api/admin/candidates` | Candidate ATS records across all pipeline stages, synchronized with JobApplication submissions |
+| `POST` | `/api/admin/candidates` | Create candidate in ATS pipeline |
+| `PATCH` | `/api/admin/candidates/:id/status` | Advance candidate pipeline stage (`Applied` -> `Screening` -> `Interview` -> `Offered` -> `Hired` -> `Rejected`) |
+| `DELETE` | `/api/admin/candidates/:id` | Archive candidate |
 
 #### 4. Corporate Clients & Requisitions
 
-| Method   | Endpoint                 | Description                    |
-| -------- | ------------------------ | ------------------------------ |
-| `GET`    | `/api/admin/clients`     | List corporate client accounts |
-| `POST`   | `/api/admin/clients`     | Register new corporate client  |
-| `PUT`    | `/api/admin/clients/:id` | Update client details          |
-| `DELETE` | `/api/admin/clients/:id` | Archive client                 |
-| `GET`    | `/api/admin/jobs`        | List staffing requisitions     |
-| `POST`   | `/api/admin/jobs`        | Post new staffing requisition  |
-| `PUT`    | `/api/admin/jobs/:id`    | Update job requisition details |
-| `DELETE` | `/api/admin/jobs/:id`    | Close staffing requisition     |
+| Method | Endpoint | Description |
+| --- | --- | --- |
+| `GET` | `/api/admin/clients` | List corporate client accounts |
+| `POST` | `/api/admin/clients` | Register new corporate client |
+| `PUT` | `/api/admin/clients/:id` | Update client details |
+| `DELETE` | `/api/admin/clients/:id` | Archive client |
+| `GET` | `/api/admin/jobs` | List staffing requisitions |
+| `POST` | `/api/admin/jobs` | Post new staffing requisition |
+| `PUT` | `/api/admin/jobs/:id` | Update job requisition details |
+| `DELETE` | `/api/admin/jobs/:id` | Close staffing requisition |
 
 #### 5. Placements & System Members
 
-| Method   | Endpoint                        | Description                                                               |
-| -------- | ------------------------------- | ------------------------------------------------------------------------- |
-| `GET`    | `/api/admin/placements`         | List active billable client deployments                                   |
-| `POST`   | `/api/admin/placements`         | Deploy candidate/employee to client mandate (checks duplicate deployment) |
-| `PUT`    | `/api/admin/placements/:id`     | Update placement status or billing rates                                  |
-| `DELETE` | `/api/admin/placements/:id`     | Terminate placement                                                       |
-| `GET`    | `/api/admin/system-members`     | List administrative users & assigned RBAC roles                           |
-| `POST`   | `/api/admin/system-members`     | Invite new system member                                                  |
-| `PUT`    | `/api/admin/system-members/:id` | Update member role or status                                              |
-| `DELETE` | `/api/admin/system-members/:id` | Revoke member access                                                      |
+| Method | Endpoint | Description |
+| --- | --- | --- |
+| `GET` | `/api/admin/placements` | List active billable client deployments |
+| `POST` | `/api/admin/placements` | Deploy candidate/employee to client mandate (checks duplicate deployment) |
+| `PUT` | `/api/admin/placements/:id` | Update placement status or billing rates |
+| `DELETE` | `/api/admin/placements/:id` | Terminate placement |
+| `GET` | `/api/admin/system-members` | List administrative users & assigned RBAC roles |
+| `POST` | `/api/admin/system-members` | Invite new system member |
+| `PUT` | `/api/admin/system-members/:id` | Update member role or status |
+| `DELETE` | `/api/admin/system-members/:id` | Revoke member access |
 
 #### 6. CMS Suite (Pages, Blog, Media, SEO, Announcements, Tech Stack)
 
-| Method   | Endpoint                                   | Description                                                   |
-| -------- | ------------------------------------------ | ------------------------------------------------------------- |
-| `GET`    | `/api/admin/cms/stats`                     | CMS overview metrics (pages, published articles, media items) |
-| `GET`    | `/api/admin/cms/pages`                     | List all website pages                                        |
-| `POST`   | `/api/admin/cms/pages`                     | Create new website page with slug                             |
-| `PUT`    | `/api/admin/cms/pages/:id`                 | Update page metadata & content blocks                         |
-| `PATCH`  | `/api/admin/cms/pages/:id/publish`         | Toggle page draft vs published state                          |
-| `DELETE` | `/api/admin/cms/pages/:id`                 | Delete page                                                   |
-| `GET`    | `/api/admin/cms/articles`                  | List blog articles                                            |
-| `POST`   | `/api/admin/cms/articles`                  | Author and publish new article                                |
-| `PUT`    | `/api/admin/cms/articles/:id`              | Update article body, tags, read time                          |
-| `PATCH`  | `/api/admin/cms/articles/:id/publish`      | Toggle article publication                                    |
-| `DELETE` | `/api/admin/cms/articles/:id`              | Delete article                                                |
-| `GET`    | `/api/admin/cms/media`                     | List registered media assets                                  |
-| `POST`   | `/api/admin/cms/media`                     | Register asset URL, dimensions, and type                      |
-| `DELETE` | `/api/admin/cms/media/:id`                 | Delete media asset                                            |
-| `GET`    | `/api/admin/cms/seo`                       | Get global site SEO and page-level directives                 |
-| `PUT`    | `/api/admin/cms/seo`                       | Save SEO meta titles, descriptions, and OG share tags         |
-| `GET`    | `/api/admin/cms/announcements`             | List corporate broadcast alerts                               |
-| `POST`   | `/api/admin/cms/announcements`             | Create broadcast alert                                        |
-| `PATCH`  | `/api/admin/cms/announcements/:id/publish` | Toggle announcement visibility                                |
-| `DELETE` | `/api/admin/cms/announcements/:id`         | Remove announcement                                           |
-| `GET`    | `/api/admin/cms/tech-stack`                | List verified technologies and skills                         |
-| `POST`   | `/api/admin/cms/tech-stack`                | Add new technology tag                                        |
-| `PUT`    | `/api/admin/cms/tech-stack/:id`            | Update technology details                                     |
-| `PATCH`  | `/api/admin/cms/tech-stack/:id/feature`    | Toggle featured badge on home page                            |
-| `DELETE` | `/api/admin/cms/tech-stack/:id`            | Delete technology tag                                         |
+| Method | Endpoint | Description |
+| --- | --- | --- |
+| `GET` | `/api/admin/cms/stats` | CMS overview metrics (pages, published articles, media items) |
+| `GET` | `/api/admin/cms/pages` | List all website pages |
+| `POST` | `/api/admin/cms/pages` | Create new website page with slug |
+| `PUT` | `/api/admin/cms/pages/:id` | Update page metadata & content blocks |
+| `PATCH` | `/api/admin/cms/pages/:id/publish` | Toggle page draft vs published state |
+| `DELETE` | `/api/admin/cms/pages/:id` | Delete page |
+| `GET` | `/api/admin/cms/articles` | List blog articles |
+| `POST` | `/api/admin/cms/articles` | Author and publish new article |
+| `PUT` | `/api/admin/cms/articles/:id` | Update article body, tags, read time |
+| `PATCH` | `/api/admin/cms/articles/:id/publish` | Toggle article publication |
+| `DELETE` | `/api/admin/cms/articles/:id` | Delete article |
+| `GET` | `/api/admin/cms/media` | List registered media assets |
+| `POST` | `/api/admin/cms/media` | Register asset URL, dimensions, and type |
+| `DELETE` | `/api/admin/cms/media/:id` | Delete media asset |
+| `GET` | `/api/admin/cms/seo` | Get global site SEO and page-level directives |
+| `PUT` | `/api/admin/cms/seo` | Save SEO meta titles, descriptions, and OG share tags |
+| `GET` | `/api/admin/cms/announcements` | List corporate broadcast alerts |
+| `POST` | `/api/admin/cms/announcements` | Create broadcast alert |
+| `PATCH` | `/api/admin/cms/announcements/:id/publish` | Toggle announcement visibility |
+| `DELETE` | `/api/admin/cms/announcements/:id` | Remove announcement |
+| `GET` | `/api/admin/cms/tech-stack` | List verified technologies and skills |
+| `POST` | `/api/admin/cms/tech-stack` | Add new technology tag |
+| `PUT` | `/api/admin/cms/tech-stack/:id` | Update technology details |
+| `PATCH` | `/api/admin/cms/tech-stack/:id/feature` | Toggle featured badge on home page |
+| `DELETE` | `/api/admin/cms/tech-stack/:id` | Delete technology tag |
 
 ---
 
-### D. Public Content & Service Routes (`/api`)
+### E. Public Content & Service Routes (`/api`)
 
-_Public endpoints consumed by public landing pages and talent search._
+*Public endpoints consumed by public landing pages and talent search.*
 
-| Method | Endpoint                  | Description                                           |
-| ------ | ------------------------- | ----------------------------------------------------- |
-| `GET`  | `/api/tech-stack`         | Returns verified tech stack categories and items      |
-| `GET`  | `/api/openings`           | Returns active job openings with department filtering |
-| `GET`  | `/api/stats`              | Returns company milestones, placements, and metrics   |
-| `GET`  | `/api/industries`         | Returns industry vertical data                        |
-| `GET`  | `/api/bench`              | Returns talent bench pool for public client browsing  |
-| `GET`  | `/api/articles`           | Returns published blog articles                       |
-| `GET`  | `/api/payroll`            | Returns payroll outsourcing content and FAQ data      |
-| `GET`  | `/api/eor`                | Returns Employer of Record service breakdown          |
-| `GET`  | `/api/staff-augmentation` | Returns staff augmentation engagement models          |
-| `GET`  | `/api/permanent-staffing` | Returns executive search & permanent hiring models    |
-| `POST` | `/api/contact`            | Receives client enterprise staffing inquiry           |
+| Method | Endpoint | Description |
+| --- | --- | --- |
+| `GET` | `/api/tech-stack` | Returns verified tech stack categories and items |
+| `GET` | `/api/openings` | Returns active job openings with department filtering |
+| `GET` | `/api/stats` | Returns company milestones, placements, and metrics |
+| `GET` | `/api/industries` | Returns industry vertical data |
+| `GET` | `/api/bench` | Returns talent bench pool for public client browsing |
+| `GET` | `/api/articles` | Returns published blog articles |
+| `GET` | `/api/payroll` | Returns payroll outsourcing content and FAQ data |
+| `GET` | `/api/eor` | Returns Employer of Record service breakdown |
+| `GET` | `/api/staff-augmentation` | Returns staff augmentation engagement models |
+| `GET` | `/api/permanent-staffing` | Returns executive search & permanent hiring models |
+| `POST` | `/api/contact` | Receives client enterprise staffing inquiry |
 
 ---
 
@@ -323,7 +308,7 @@ _Public endpoints consumed by public landing pages and talent search._
 
 ### Running Migrations
 
-The backend includes a dedicated migration runner in [`src/migrations/runner.js`](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/backend/src/migrations/runner.js):
+The backend includes a dedicated migration runner in `src/migrations/runner.js`:
 
 ```bash
 # Apply pending migrations
@@ -338,14 +323,14 @@ npm run migrate:status
 
 ### Seeding Demo Data
 
-To seed a live MongoDB cluster with fictional demonstration records (employees, clients, jobs, CMS articles):
+To seed a live MongoDB cluster with demonstration records (employees, clients, jobs, CMS articles):
 
 ```bash
 cd apps/backend
 npm run seed
 ```
 
-_Note: Seeding is idempotent and uses `findOneAndUpdate` with `upsert: true` to prevent duplicate record generation._
+*Note: Seeding is idempotent and uses `findOneAndUpdate` with `upsert: true` to prevent duplicate record generation.*
 
 ---
 
@@ -356,20 +341,31 @@ _Note: Seeding is idempotent and uses `findOneAndUpdate` with `upsert: true` to 
 ```ini
 PORT=5000
 NODE_ENV=development
+LOG_LEVEL=debug
 DATABASE_URL=postgresql://user:password@host/dbname?sslmode=require
-MONGODB_URI=mongodb+srv://user:password@cluster.mongodb.net/
+MONGODB_URI=mongodb+srv://user:password@cluster.mongodb.net/thinkwire_db
 REDIS_URL=redis://localhost:6379
 AI_SERVICE_URL=http://localhost:8000
 JWT_SECRET=super_secret_jwt_key_here
+
+# SMTP Recruitment Email Notifications
+SMTP_HOST=smtp.gmail.com
+SMTP_PORT=587
+SMTP_USER=careers@thinkwires.com
+SMTP_PASS=your_app_password
+SMTP_SECURE=false
+EMAIL_FROM="ThinkWires Recruitment" <careers@thinkwires.com>
+RECRUITMENT_NOTIFICATION_EMAIL=recruitment@thinkwires.com
 ```
 
 ### Common Troubleshooting Scenarios
 
-1. **MongoDB Atlas IP Whitelist (`security-whitelist` Warning)**:
-   - **Symptom**: Console logs `⚠️ MongoDB connection optional/bypassed: ... Operating with dual-mode in-memory store`.
-   - **Resolution**: Open your **MongoDB Atlas Console** ➔ **Network Access** ➔ **Add IP Address**. Add your current public IP address or choose `Allow Access from Anywhere` (`0.0.0.0/0`) for development.
-   - **Resilience**: The backend continues running normally even without whitelisting, utilizing the in-memory fallback dataset.
+1. **MongoDB Atlas IP Whitelisting**:
+   - **Symptom**: Console logs `MongoDB connection error: ... Operating with dual-mode in-memory store`.
+   - **Resolution**: Open your **MongoDB Atlas Console** -> **Network Access** -> **Add IP Address**. Add your current public IP address or choose `Allow Access from Anywhere` (`0.0.0.0/0`) for development.
+   - **Resilience**: The backend continues running normally even if network whitelisting is delayed, utilizing the in-memory fallback dataset.
 
 2. **File Upload Restrictions**:
    - Resumes must be **PDF**, **DOC**, or **DOCX** format.
-   - Maximum file size is strictly enforced at **10 MB** in [`upload.middleware.js`](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/backend/src/middlewares/upload.middleware.js).
+   - Maximum file size is strictly enforced at **10 MB** in `upload.middleware.js`.
+   - Resume files stored in `apps/backend/uploads/resumes/` are ignored by Git, preserving directory structure through `.gitkeep`.
