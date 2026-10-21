@@ -199,38 +199,36 @@ router.get('/openings', async (req, res) => {
   if (isMongoActive()) {
     try {
       const dbJobs = await JobRequirement.find({ status: { $ne: 'Closed' } }).sort({ createdAt: -1 }).lean();
-      if (dbJobs && dbJobs.length > 0) {
-        sourceOpenings = dbJobs.map((j) => ({
-          id: j.jobId || j._id,
-          _id: j._id,
-          title: j.title,
-          // STRICT CLIENT CONFIDENTIALITY ON PUBLIC WEBSITE
-          company: 'Enterprise Client (Confidential)',
-          client: 'Enterprise Client (Confidential)',
-          category: j.category || 'Technology',
-          badge: j.badge || '',
-          badgeColor: j.badgeColor || 'blue',
-          logo: j.logo || 'TW',
-          location: j.location || 'Remote',
-          officeLocation: j.officeLocation || '',
-          experience: j.experience || `${j.experienceRequired || 3}+ Years`,
-          experienceTier: j.experienceTier || 'Mid-Senior',
-          experienceRequired: j.experienceRequired || 3,
-          salary: j.salary || j.budget || 'Competitive CTC',
-          budget: j.budget || j.salary || 'Competitive CTC',
-          joining: j.joining || 'Immediate',
-          jobMode: j.jobMode || 'Permanent',
-          workMode: j.workMode || 'Remote',
-          noticePeriod: j.noticePeriod || 'Immediate',
-          description: j.description || '',
-          requirements: j.requirements || '',
-          industry: j.industry || 'Information Technology & Cloud',
-          skills: (j.skills && j.skills.length > 0) ? j.skills : (j.requiredSkills || []),
-          department: j.department || 'Technology',
-          postedDate: j.postedDate || (j.createdAt ? new Date(j.createdAt).toISOString().split('T')[0] : '2026-10-15'),
-          priority: j.priority || 1,
-        }));
-      }
+      sourceOpenings = (dbJobs || []).map((j) => ({
+        id: j.jobId || j._id,
+        _id: j._id,
+        title: j.title,
+        // STRICT CLIENT CONFIDENTIALITY ON PUBLIC WEBSITE
+        company: 'Enterprise Client (Confidential)',
+        client: 'Enterprise Client (Confidential)',
+        category: j.category || 'Technology',
+        badge: j.badge || '',
+        badgeColor: j.badgeColor || 'blue',
+        logo: j.logo || 'TW',
+        location: j.location || 'Remote',
+        officeLocation: j.officeLocation || '',
+        experience: j.experience || `${j.experienceRequired || 3}+ Years`,
+        experienceTier: j.experienceTier || 'Mid-Senior',
+        experienceRequired: j.experienceRequired || 3,
+        salary: j.salary || j.budget || 'Competitive CTC',
+        budget: j.budget || j.salary || 'Competitive CTC',
+        joining: j.joining || 'Immediate',
+        jobMode: j.jobMode || 'Permanent',
+        workMode: j.workMode || 'Remote',
+        noticePeriod: j.noticePeriod || 'Immediate',
+        description: j.description || '',
+        requirements: j.requirements || '',
+        industry: j.industry || 'Information Technology & Cloud',
+        skills: (j.skills && j.skills.length > 0) ? j.skills : (j.requiredSkills || []),
+        department: j.department || 'Technology',
+        postedDate: j.postedDate || (j.createdAt ? new Date(j.createdAt).toISOString().split('T')[0] : '2026-10-15'),
+        priority: j.priority || 1,
+      }));
     } catch (dbErr) {
       console.warn('Fallback to memory openings due to MongoDB error:', dbErr.message);
     }

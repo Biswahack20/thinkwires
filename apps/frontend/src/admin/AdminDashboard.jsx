@@ -366,7 +366,7 @@ const AdminDashboard = () => {
           >
             <strong>Role Permissions:</strong>
             <div style={{ marginTop: '0.25rem', color: '#64748B', lineHeight: '1.4' }}>
-              Admin has full read-write access. Use the top persona switcher to test Editor and Viewer restrictions.
+              Access is determined strictly by your authenticated account. Member credentials and RBAC roles are provisioned exclusively by the Superadmin.
             </div>
           </div>
         </div>

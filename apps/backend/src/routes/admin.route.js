@@ -51,6 +51,8 @@ import {
   getCmsStats,
   getActivities,
   getCurrentUser,
+  loginAdmin,
+  logoutAdmin,
   getSystemMembers,
   createSystemMember,
   updateSystemMember,
@@ -59,7 +61,12 @@ import {
 
 const router = express.Router();
 
-// Apply auth middleware to all admin endpoints (Supports X-Demo-Role: superadmin, cms_admin, admin, editor, viewer)
+// ================= PUBLIC AUTHENTICATION ENDPOINTS =================
+router.post('/auth/login', loginAdmin);
+router.post('/auth/logout', logoutAdmin);
+
+// ================= PROTECTED ADMIN ENDPOINTS =================
+// Strictly requires valid Admin JWT session
 router.use(requireAuth());
 
 // Current User & Active Role

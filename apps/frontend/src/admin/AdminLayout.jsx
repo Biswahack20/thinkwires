@@ -1,6 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate, Outlet } from 'react-router-dom';
-import { adminApi, getAdminRole, setAdminRole } from './adminService';
+import logo from '../assets/logo/logo.png';
+import {
+  adminApi,
+  getAdminRole,
+  getAdminUser,
+  isAdminAuthenticated,
+  clearAdminSession,
+} from './adminService';
 import {
   DashboardIcon,
   UsersIcon,
@@ -20,6 +27,8 @@ import {
   ChevronLeftIcon,
   ChevronRightIcon,
   ExternalLinkIcon,
+  LogoutIcon,
+  CheckIcon,
 } from './AdminIcons';
 import './admin.css';
 
@@ -28,15 +37,75 @@ const AdminLayout = () => {
   const navigate = useNavigate();
   const [collapsed, setCollapsed] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const [activeRole, setActiveRole] = useState(getAdminRole());
+  const [authChecking, setAuthChecking] = useState(true);
+  const [currentUser, setCurrentUser] = useState(getAdminUser());
+  const [activeRole, setActiveRole] = useState(getAdminRole() || 'admin');
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [announcements, setAnnouncements] = useState([]);
+  const [readAnnouncementIds, setReadAnnouncementIds] = useState(() => {
+    try {
+      const stored = localStorage.getItem('tw_admin_read_announcements');
+      return stored ? JSON.parse(stored) : [];
+    } catch {
+      return [];
+    }
+  });
   const [dbStatus, setDbStatus] = useState('In-Memory Resilient Demo');
   const [isMongo, setIsMongo] = useState(false);
   const [toastMessage, setToastMessage] = useState(null);
 
+  const markAllAnnouncementsAsRead = () => {
+    const allIds = announcements.map((a, idx) => a.id || a._id || `ann_${idx}_${a.title}`);
+    setReadAnnouncementIds(allIds);
+    try {
+      localStorage.setItem('tw_admin_read_announcements', JSON.stringify(allIds));
+    } catch (e) {
+      console.warn('Could not save read announcements state:', e);
+    }
+    showToast('All announcements marked as read');
+  };
+
+  const markAnnouncementAsRead = (id) => {
+    setReadAnnouncementIds((prev) => {
+      if (prev.includes(id)) return prev;
+      const next = [...prev, id];
+      try {
+        localStorage.setItem('tw_admin_read_announcements', JSON.stringify(next));
+      } catch (e) {
+        console.warn('Could not save read announcements state:', e);
+      }
+      return next;
+    });
+  };
+
+  // Authentication check on mount
+  useEffect(() => {
+    if (!isAdminAuthenticated()) {
+      navigate('/admin/login', { replace: true, state: { from: location.pathname } });
+      return;
+    }
+
+    adminApi
+      .getMe()
+      .then((data) => {
+        if (data && data.user) {
+          setCurrentUser(data.user);
+          setActiveRole((data.user.role || 'admin').toLowerCase());
+        }
+      })
+      .catch((err) => {
+        console.warn('Admin session validation failed:', err.message);
+        clearAdminSession();
+        navigate('/admin/login', { replace: true, state: { from: location.pathname } });
+      })
+      .finally(() => {
+        setAuthChecking(false);
+      });
+  }, [navigate, location.pathname]);
+
   // Load announcements & db status for notifications based on active role
   useEffect(() => {
+    if (!isAdminAuthenticated()) return;
     const fetchMeta = activeRole === 'cms_admin' ? adminApi.getCmsStats() : adminApi.getDashboardStats();
     fetchMeta
       .then((data) => {
@@ -47,18 +116,14 @@ const AdminLayout = () => {
       .catch((err) => console.warn('Could not fetch topbar stats:', err.message));
   }, [activeRole]);
 
-  const handleRoleChange = (e) => {
-    const newRole = e.target.value;
-    setActiveRole(newRole);
-    setAdminRole(newRole);
-    showToast(`Switched active persona to ${newRole.toUpperCase()}`);
-
-    // Seamless navigation if the current path is forbidden for the newly selected role
-    if (newRole === 'cms_admin' && !location.pathname.startsWith('/admin/cms')) {
-      navigate('/admin/cms');
-    } else if (newRole === 'admin' && location.pathname.startsWith('/admin/cms')) {
-      navigate('/admin');
+  const handleLogout = async () => {
+    try {
+      await adminApi.logout();
+    } catch (err) {
+      console.warn('Logout notice:', err.message);
     }
+    showToast('Signed out of admin portal');
+    navigate('/admin/login', { replace: true });
   };
 
   const showToast = (msg) => {
@@ -107,9 +172,9 @@ const AdminLayout = () => {
             group: 'MANPOWER & RECRUITMENT',
             items: [
               { label: 'Employees', path: '/admin/employees', icon: <UsersIcon size={18} /> },
-              { label: 'Candidates & Pipeline', path: '/admin/candidates', icon: <TargetIcon size={18} />, badge: '8' },
+              { label: 'Candidates & Pipeline', path: '/admin/candidates', icon: <TargetIcon size={18} /> },
               { label: 'Clients', path: '/admin/clients', icon: <BuildingIcon size={18} /> },
-              { label: 'Job Requirements', path: '/admin/jobs', icon: <BriefcaseIcon size={18} />, badge: 'Urgent' },
+              { label: 'Job Requirements', path: '/admin/jobs', icon: <BriefcaseIcon size={18} /> },
               { label: 'Placements', path: '/admin/placements', icon: <HandshakeIcon size={18} /> },
             ],
           },
@@ -147,13 +212,21 @@ const AdminLayout = () => {
       : []),
   ];
 
-  // User Profile metadata based on active persona
+  // User Profile metadata based on authenticated user
   const getUserProfile = () => {
+    const name = currentUser?.name || (activeRole === 'superadmin' ? 'Alexander Vance' : activeRole === 'cms_admin' ? 'Elena Rostova' : 'Biswarupa Swain');
+    const initials = name
+      .split(' ')
+      .map((n) => n[0])
+      .join('')
+      .slice(0, 2)
+      .toUpperCase();
+
     switch (activeRole) {
       case 'superadmin':
         return {
-          initials: 'AV',
-          name: 'Alexander Vance',
+          initials,
+          name,
           roleLabel: 'SUPERADMIN',
           badgeColor: 'linear-gradient(135deg, #10B981, #059669)',
           badgeText: '#FFFFFF',
@@ -161,8 +234,8 @@ const AdminLayout = () => {
         };
       case 'cms_admin':
         return {
-          initials: 'ER',
-          name: 'Elena Rostova',
+          initials,
+          name,
           roleLabel: 'CMS ADMIN',
           badgeColor: '#6366F1',
           badgeText: '#FFFFFF',
@@ -171,8 +244,8 @@ const AdminLayout = () => {
       case 'admin':
       default:
         return {
-          initials: 'BS',
-          name: 'Biswarupa Swain',
+          initials,
+          name,
           roleLabel: 'ADMIN',
           badgeColor: '#3B82F6',
           badgeText: '#FFFFFF',
@@ -183,30 +256,46 @@ const AdminLayout = () => {
 
   const currentProfile = getUserProfile();
 
+  if (authChecking) {
+    return (
+      <div
+        style={{
+          minHeight: '100vh',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          background: '#0B132B',
+          color: '#FFFFFF',
+          fontFamily: "'Inter', sans-serif",
+        }}
+      >
+        <div style={{ textAlign: 'center' }}>
+          <div
+            style={{
+              width: '40px',
+              height: '40px',
+              border: '3px solid rgba(255,255,255,0.2)',
+              borderTopColor: '#008F68',
+              borderRadius: '50%',
+              margin: '0 auto 1rem',
+              animation: 'twSpin 0.8s linear infinite',
+            }}
+          />
+          <p style={{ fontSize: '0.9rem', color: '#94A3B8' }}>Verifying Administrator Credentials...</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="tw-admin-wrapper">
       {/* Sidebar */}
       <aside className={`tw-sidebar ${collapsed ? 'collapsed' : ''} ${mobileOpen ? 'mobile-open' : ''}`}>
         <div className="tw-sidebar-header">
-          <Link to={isCmsAdmin ? '/admin/cms' : '/admin'} className="tw-brand">
-            <span className="tw-brand-dot"></span>
-            {!collapsed && (
-              <>
-                <span className="tw-brand-text-emerald">Think</span>
-                <span className="tw-brand-text-dark">Wires</span>
-                <span
-                  className="tw-brand-badge"
-                  style={{
-                    background: currentProfile.badgeColor,
-                    color: currentProfile.badgeText,
-                    fontSize: '0.62rem',
-                    letterSpacing: '0.5px',
-                  }}
-                >
-                  {currentProfile.roleLabel}
-                </span>
-              </>
-            )}
+          <Link to={isCmsAdmin ? '/admin/cms' : '/admin'} className="tw-brand" title="ThinkWires Admin">
+            <div className="tw-brand-logo-wrap">
+              <img src={logo} alt="ThinkWires" className="tw-brand-logo-img" />
+            </div>
           </Link>
           <button
             className="tw-sidebar-toggle-btn"
@@ -284,66 +373,102 @@ const AdminLayout = () => {
           </div>
 
           <div className="tw-topbar-right">
-            {/* Live Role Switcher (SuperAdmin, CMS Admin, Admin) */}
-            <div className="tw-role-selector-wrapper" title="Switch between RBAC Personas to test security permissions">
-              <span className="tw-role-label">Persona:</span>
-              <select className="tw-role-select" value={activeRole} onChange={handleRoleChange}>
-                <option value="superadmin">SuperAdmin (Complete Control)</option>
-                <option value="cms_admin">CMS Admin (CMS Only)</option>
-                <option value="admin">Admin (Manpower & Recruitment)</option>
-              </select>
+            {/* Authenticated Role Indicator Badge */}
+            <div className="tw-role-pill-indicator" title="Role assigned by Superadmin">
+              <span className="tw-role-pill-dot" style={{ backgroundColor: currentProfile.badgeColor }}></span>
+              <span className="tw-role-pill-label">Role:</span>
+              <strong className="tw-role-pill-value">{currentProfile.roleLabel}</strong>
             </div>
 
             {/* Notification Bell */}
-            <div style={{ position: 'relative' }}>
-              <button
-                className="tw-topbar-action-btn"
-                onClick={() => setNotificationsOpen(!notificationsOpen)}
-                title="View Announcements & Notifications"
-              >
-                <BellIcon size={17} color="#475569" />
-                {announcements.length > 0 && (
-                  <span className="tw-badge-count">{announcements.length}</span>
-                )}
-              </button>
+            {(() => {
+              const unreadCount = announcements.filter(
+                (a, idx) => !readAnnouncementIds.includes(a.id || a._id || `ann_${idx}_${a.title}`)
+              ).length;
 
-              {notificationsOpen && (
-                <div
-                  style={{
-                    position: 'absolute',
-                    top: '48px',
-                    right: 0,
-                    width: '320px',
-                    backgroundColor: '#FFFFFF',
-                    borderRadius: '12px',
-                    boxShadow: '0 10px 25px rgba(0,0,0,0.15)',
-                    border: '1px solid #E2E8F0',
-                    zIndex: 110,
-                    padding: '1rem',
-                  }}
-                >
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
-                    <strong style={{ fontSize: '0.85rem' }}>Announcements</strong>
-                    <span style={{ fontSize: '0.72rem', color: '#64748B' }}>{announcements.length} active</span>
-                  </div>
-                  {announcements.map((a, idx) => (
-                    <div
-                      key={idx}
-                      style={{
-                        padding: '0.5rem 0',
-                        borderBottom: idx < announcements.length - 1 ? '1px solid #F1F5F9' : 'none',
-                        fontSize: '0.78rem',
-                      }}
-                    >
-                      <div style={{ fontWeight: 600, color: '#172033', marginBottom: '0.15rem' }}>{a.title}</div>
-                      <div style={{ color: '#64748B', fontSize: '0.73rem', lineHeight: '1.3' }}>{a.message}</div>
+              return (
+                <div style={{ position: 'relative' }}>
+                  <button
+                    className={`tw-topbar-action-btn ${notificationsOpen ? 'active' : ''}`}
+                    onClick={() => setNotificationsOpen(!notificationsOpen)}
+                    title="View Announcements & Notifications"
+                    aria-label="View Announcements"
+                  >
+                    <BellIcon size={17} color="#475569" />
+                    {unreadCount > 0 && (
+                      <span className="tw-badge-count">{unreadCount}</span>
+                    )}
+                  </button>
+
+                  {notificationsOpen && (
+                    <div className="tw-notifications-dropdown">
+                      <div className="tw-notifications-dropdown-header">
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
+                          <strong>Announcements</strong>
+                          <span>{unreadCount} unread</span>
+                        </div>
+                        {unreadCount > 0 && (
+                          <button
+                            onClick={markAllAnnouncementsAsRead}
+                            className="tw-mark-read-btn"
+                            title="Mark all notifications as read"
+                          >
+                            <CheckIcon size={12} color="#008F68" />
+                            <span>Mark all as read</span>
+                          </button>
+                        )}
+                      </div>
+                      {announcements.length === 0 ? (
+                        <div style={{ padding: '1.5rem', textAlign: 'center', color: '#94A3B8', fontSize: '0.8rem' }}>
+                          No announcements available.
+                        </div>
+                      ) : (
+                        <div style={{ maxHeight: '280px', overflowY: 'auto' }}>
+                          {announcements.map((a, idx) => {
+                            const annId = a.id || a._id || `ann_${idx}_${a.title}`;
+                            const isRead = readAnnouncementIds.includes(annId);
+
+                            return (
+                              <div
+                                key={idx}
+                                className={`tw-notification-item ${isRead ? 'read' : 'unread'}`}
+                              >
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '0.5rem' }}>
+                                  <div style={{ fontWeight: isRead ? 500 : 700, color: isRead ? '#475569' : '#0F172A', marginBottom: '0.2rem', fontSize: '0.8rem' }}>
+                                    {!isRead && <span className="tw-notification-unread-dot" />}
+                                    {a.title}
+                                  </div>
+                                  {!isRead && (
+                                    <button
+                                      onClick={() => markAnnouncementAsRead(annId)}
+                                      className="tw-item-mark-read-btn"
+                                      title="Mark as read"
+                                    >
+                                      Mark read
+                                    </button>
+                                  )}
+                                </div>
+                                <div style={{ color: '#64748B', fontSize: '0.74rem', lineHeight: '1.38', paddingLeft: !isRead ? '12px' : '0' }}>
+                                  {a.message}
+                                </div>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      )}
                     </div>
-                  ))}
+                  )}
                 </div>
-              )}
-            </div>
+              );
+            })()}
 
-            {/* User Profile */}
+            {/* Public Site Link */}
+            <Link to="/" className="tw-exit-link" title="Open Public ThinkWires Website" target="_blank" rel="noopener noreferrer">
+              <span>View Site</span>
+              <ExternalLinkIcon size={13} />
+            </Link>
+
+            {/* User Profile Info */}
             <div className="tw-user-profile">
               <div
                 className="tw-avatar"
@@ -364,9 +489,11 @@ const AdminLayout = () => {
                     background: currentProfile.badgeColor,
                     color: '#FFFFFF',
                     fontWeight: 600,
-                    fontSize: '0.65rem',
-                    padding: '0.1rem 0.4rem',
+                    fontSize: '0.62rem',
+                    padding: '0.12rem 0.45rem',
                     borderRadius: '4px',
+                    display: 'inline-block',
+                    width: 'fit-content',
                   }}
                 >
                   {currentProfile.roleLabel}
@@ -374,11 +501,15 @@ const AdminLayout = () => {
               </div>
             </div>
 
-            {/* Back to Public Site */}
-            <Link to="/" className="tw-exit-link" title="Return to public ThinkWires website">
-              <span>Public Site</span>
-              <ExternalLinkIcon size={12} style={{ marginLeft: '5px' }} />
-            </Link>
+            {/* Sign Out Button */}
+            <button
+              onClick={handleLogout}
+              className="tw-signout-btn"
+              title="Sign Out of Admin Portal"
+            >
+              <LogoutIcon size={14} />
+              <span>Sign Out</span>
+            </button>
           </div>
         </header>
 
@@ -486,13 +617,9 @@ const AdminLayout = () => {
                 <button
                   type="button"
                   className="tw-btn-secondary"
-                  onClick={() => {
-                    setActiveRole('superadmin');
-                    setAdminRole('superadmin');
-                    showToast('Switched to SuperAdmin Persona (Complete Control)');
-                  }}
+                  onClick={handleLogout}
                 >
-                  Switch to SuperAdmin Persona
+                  Sign Out / Switch Account
                 </button>
               </div>
             </div>

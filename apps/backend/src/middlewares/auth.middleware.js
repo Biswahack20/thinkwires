@@ -1,59 +1,115 @@
-import { verifyCandidateToken } from '../utils/auth.util.js';
+import { verifyCandidateToken, verifyAdminToken } from '../utils/auth.util.js';
 import Candidate from '../models/candidate.mongo.model.js';
+import UserMongo from '../models/user.mongo.model.js';
 import mongoose from 'mongoose';
 
 // ================= ADMIN ROLE-BASED AUTHENTICATION & RBAC =================
-// Supports RBAC roles: superadmin (full control), cms_admin (CMS only), admin (manpower & recruitment)
+// Strictly verifies the administrator's JWT cookie or Authorization Bearer header
 export const requireAuth = (allowedRoles = ['superadmin', 'admin', 'cms_admin']) => {
-  return (req, res, next) => {
-    let role = (
-      req.headers['x-demo-role'] ||
-      req.query.role ||
-      'superadmin'
-    ).toString().toLowerCase();
+  return async (req, res, next) => {
+    try {
+      let token = null;
 
-    // Map common aliases
-    if (role === 'superuser' || role === 'owner') role = 'superadmin';
-    if (role === 'cms-admin' || role === 'cmsadmin') role = 'cms_admin';
+      // 1. Check HttpOnly cookie, Authorization header, or x-admin-token header
+      if (req.cookies && req.cookies.thinkwires_admin_jwt) {
+        token = req.cookies.thinkwires_admin_jwt;
+      } else if (req.headers.authorization && req.headers.authorization.startsWith('Bearer ')) {
+        token = req.headers.authorization.split(' ')[1];
+      } else if (req.headers['x-admin-token']) {
+        token = req.headers['x-admin-token'];
+      }
 
-    let userObj = {
-      id: 'usr_001',
-      name: 'Alexander Vance',
-      email: 'superadmin@thinkwires.com',
-      role: 'superadmin',
-      designation: 'Chief Technology Officer / Superadmin',
-    };
+      if (!token) {
+        return res.status(401).json({
+          success: false,
+          authenticated: false,
+          error: 'Authentication required. Please log in with your official credentials to access the admin portal.',
+        });
+      }
 
-    if (role === 'cms_admin') {
-      userObj = {
-        id: 'usr_002',
-        name: 'Elena Rostova',
-        email: 'cmsadmin@thinkwires.com',
-        role: 'cms_admin',
-        designation: 'Chief Content Officer / CMS Admin',
+      // 2. Decode and verify token
+      let decoded;
+      try {
+        decoded = verifyAdminToken(token);
+      } catch (err) {
+        if (err.name === 'TokenExpiredError') {
+          return res.status(401).json({
+            success: false,
+            authenticated: false,
+            error: 'Admin session expired. Please log in again.',
+          });
+        }
+        return res.status(401).json({
+          success: false,
+          authenticated: false,
+          error: 'Invalid or forged admin authentication session. Please log in again.',
+        });
+      }
+
+      if (!decoded || !decoded.email || !decoded.role) {
+        return res.status(401).json({
+          success: false,
+          authenticated: false,
+          error: 'Malformed admin authentication credentials.',
+        });
+      }
+
+      // 3. Database verification if MongoDB is connected
+      let userObj = {
+        id: decoded.id,
+        name: decoded.name || 'System Member',
+        email: decoded.email,
+        role: decoded.role.toLowerCase(),
+        designation: decoded.designation || 'System Member',
       };
-    } else if (role === 'admin') {
-      userObj = {
-        id: 'usr_003',
-        name: 'Biswarupa Swain',
-        email: 'admin@thinkwires.com',
-        role: 'admin',
-        designation: 'Principal System Admin',
-      };
-    }
 
-    req.user = userObj;
+      if (mongoose.connection.readyState === 1) {
+        try {
+          const dbUser = mongoose.Types.ObjectId.isValid(decoded.id)
+            ? await UserMongo.findById(decoded.id).select('-password').lean()
+            : await UserMongo.findOne({ email: decoded.email.toLowerCase() }).select('-password').lean();
 
-    // Role check (superadmin always passes)
-    if (role !== 'superadmin' && allowedRoles.length > 0 && !allowedRoles.includes(role)) {
-      return res.status(403).json({
+          if (dbUser) {
+            if (dbUser.isActive === false) {
+              return res.status(403).json({
+                success: false,
+                error: 'Your administrative account has been deactivated. Please contact your Superadmin.',
+              });
+            }
+            userObj = {
+              id: dbUser._id ? dbUser._id.toString() : dbUser.id,
+              name: dbUser.name,
+              email: dbUser.email,
+              role: (dbUser.role || 'admin').toLowerCase(),
+              designation: dbUser.designation,
+              isActive: dbUser.isActive,
+            };
+          }
+        } catch (dbErr) {
+          console.warn('Admin user DB verification notice:', dbErr.message);
+        }
+      }
+
+      req.user = userObj;
+      const role = (userObj.role || 'admin').toLowerCase();
+
+      // 4. Role check (superadmin always passes)
+      if (role !== 'superadmin' && allowedRoles.length > 0 && !allowedRoles.includes(role)) {
+        return res.status(403).json({
+          success: false,
+          error: `Permission Denied: Your assigned role (${role.toUpperCase()}) is not authorized for this operation. Requires ${allowedRoles.join(' or ')}.`,
+          currentRole: role,
+        });
+      }
+
+      next();
+    } catch (error) {
+      console.error('Admin requireAuth error:', error);
+      return res.status(500).json({
         success: false,
-        error: `Permission Denied: ${role.toUpperCase()} role is not authorized for this operation. Requires ${allowedRoles.join(' or ')}.`,
-        currentRole: role,
+        error: 'Internal authorization error.',
       });
     }
-
-    next();
   };
 };
 
