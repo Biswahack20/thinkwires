@@ -33,6 +33,7 @@ import JobApplyPage from './pages/candidate/JobApplyPage';
 
 // ThinkWires Admin Dashboard & CMS Modules (Code-split with React.lazy)
 const AdminLayout = lazy(() => import('./admin/AdminLayout'));
+const AdminLoginPage = lazy(() => import('./admin/AdminLoginPage'));
 const AdminDashboard = lazy(() => import('./admin/AdminDashboard'));
 const EmployeesView = lazy(() => import('./admin/EmployeesView'));
 const CandidatesView = lazy(() => import('./admin/CandidatesView'));
@@ -186,6 +187,9 @@ function App() {
           <Route path="/security" element={<LegalPage />} />
           <Route path="/compliance" element={<LegalPage />} />
           <Route path="/cookies" element={<LegalPage />} />
+
+          {/* ThinkWires Admin Portal Login */}
+          <Route path="/admin/login" element={<AdminLoginPage />} />
 
           {/* ThinkWires Admin Dashboard & CMS */}
           <Route path="/admin" element={<AdminLayout />}>

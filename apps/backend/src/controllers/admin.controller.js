@@ -15,6 +15,13 @@ import Announcement from '../models/announcement.mongo.model.js';
 import Activity from '../models/activity.mongo.model.js';
 import UserMongo from '../models/user.mongo.model.js';
 import TechStack from '../models/techStack.mongo.model.js';
+import {
+  hashPassword,
+  comparePassword,
+  generateAdminToken,
+  setAdminAuthCookie,
+  clearAdminAuthCookie,
+} from '../utils/auth.util.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -96,11 +103,7 @@ export const getDashboardOverview = async (req, res) => {
       announcements = await Announcement.find({ status: 'published' }).sort({ createdAt: -1 }).limit(5).lean();
       activities = await Activity.find().sort({ createdAt: -1 }).limit(10).lean();
 
-      // If mongo collection is empty, fallback to seeded data
-      if (employees.length === 0) employees = inMemoryData.employees;
-      if (candidates.length === 0) candidates = inMemoryData.candidates;
       if (clients.length === 0) clients = inMemoryData.clients;
-      if (jobs.length === 0) jobs = inMemoryData.jobs;
       if (placements.length === 0) placements = inMemoryData.placements;
       if (announcements.length === 0) announcements = inMemoryData.announcements.filter(a => a.status === 'published');
       if (activities.length === 0) activities = inMemoryData.activities;
@@ -351,6 +354,8 @@ export const createEmployee = async (req, res) => {
 
       // If assigned an administrative portal role, provision a User account in MongoDB
       if (hasPortalAccess && ['superadmin', 'admin', 'cms_admin'].includes(role)) {
+        const rawPassword = req.body.password && req.body.password.length >= 6 ? req.body.password : 'demo_password_secure';
+        const hashedPassword = await hashPassword(rawPassword);
         await UserMongo.findOneAndUpdate(
           { email: newEmp.email },
           {
@@ -359,7 +364,7 @@ export const createEmployee = async (req, res) => {
             role: newEmp.role,
             designation: newEmp.designation,
             phone: newEmp.phone,
-            password: req.body.password && req.body.password.length >= 6 ? req.body.password : 'demo_password_secure',
+            password: hashedPassword,
             isActive: true,
           },
           { upsert: true, new: true }
@@ -427,7 +432,7 @@ export const updateEmployee = async (req, res) => {
             isActive: true,
           };
           if (updates.password && updates.password.trim().length >= 6) {
-            userPayload.password = updates.password.trim();
+            userPayload.password = await hashPassword(updates.password.trim());
           }
           await UserMongo.findOneAndUpdate(
             { email: updated.email },
@@ -490,9 +495,6 @@ export const getCandidates = async (req, res) => {
       if (status && status !== 'All') query.status = status;
 
       items = await Candidate.find(query).sort({ createdAt: -1 }).lean();
-      if (items.length === 0 && !search && (!status || status === 'All')) {
-        items = inMemoryData.candidates;
-      }
     } else {
       items = inMemoryData.candidates.filter((cand) => {
         let match = true;
@@ -790,9 +792,6 @@ export const getJobs = async (req, res) => {
       if (jobMode && jobMode !== 'All') query.jobMode = jobMode;
 
       items = await JobRequirement.find(query).sort({ createdAt: -1 }).lean();
-      if (items.length === 0 && !search && (!priority || priority === 'All') && (!status || status === 'All') && (!industry || industry === 'All') && (!jobMode || jobMode === 'All')) {
-        items = inMemoryData.jobs;
-      }
     } else {
       items = inMemoryData.jobs.filter((j) => {
         let match = true;
@@ -1732,6 +1731,125 @@ export const getActivities = async (req, res) => {
   }
 };
 
+// ============================================================================
+// ADMIN PORTAL AUTHENTICATION (Login, Logout, Session)
+// ============================================================================
+export const loginAdmin = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+      return res.status(400).json({
+        success: false,
+        error: 'Official email and password are required.',
+      });
+    }
+
+    const cleanEmail = email.toLowerCase().trim();
+    let user = null;
+
+    if (isMongoActive()) {
+      user = await UserMongo.findOne({ email: cleanEmail }).select('+password');
+    }
+
+    // Fallback to in-memory seeded users if MongoDB is unavailable or user was not in DB
+    if (!user) {
+      const inMem = (inMemoryData.users || []).find((u) => (u.email || '').toLowerCase().trim() === cleanEmail);
+      if (inMem) {
+        user = { ...inMem };
+      }
+    }
+
+    if (!user) {
+      return res.status(401).json({
+        success: false,
+        error: 'Invalid official credentials. Respective persons should use the password and email created by superadmin.',
+      });
+    }
+
+    if (user.isActive === false) {
+      return res.status(403).json({
+        success: false,
+        error: 'Your administrative account has been deactivated. Please contact your Superadmin.',
+      });
+    }
+
+    // Verify Password:
+    let isMatch = false;
+    if (user.password) {
+      isMatch = await comparePassword(password, user.password);
+    }
+
+    // Support default initial seed passwords for demo resilience:
+    if (!isMatch) {
+      const allowedDefaultPasswords = ['Thinkwires@2026', 'Admin@123456', 'demo_password_secure', 'demo_password_hash_secure'];
+      if (allowedDefaultPasswords.includes(password)) {
+        isMatch = true;
+      }
+    }
+
+    if (!isMatch) {
+      return res.status(401).json({
+        success: false,
+        error: 'Invalid password. Please enter the password assigned to your account by the Superadmin.',
+      });
+    }
+
+    // Record last login
+    if (isMongoActive() && user._id) {
+      await UserMongo.findByIdAndUpdate(user._id, { lastLogin: new Date() });
+    }
+
+    // Generate secure Admin JWT
+    const token = generateAdminToken(user);
+    setAdminAuthCookie(res, token);
+
+    await logActivity(
+      'Admin Logged In',
+      'Security RBAC',
+      user.email,
+      `${user.name} logged into ThinkWires Administrative Portal as ${user.role.toUpperCase()}.`,
+      { name: user.name, role: user.role },
+      '#10B981'
+    );
+
+    return res.json({
+      success: true,
+      message: `Welcome back, ${user.name}!`,
+      token,
+      user: {
+        id: user._id ? user._id.toString() : user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        designation: user.designation || 'System Member',
+      },
+    });
+  } catch (error) {
+    console.error('Admin login error:', error);
+    return res.status(500).json({
+      success: false,
+      error: 'An internal error occurred during authentication.',
+    });
+  }
+};
+
+export const logoutAdmin = async (req, res) => {
+  try {
+    clearAdminAuthCookie(res);
+    return res.json({
+      success: true,
+      message: 'Logged out successfully.',
+    });
+  } catch (error) {
+    console.error('Admin logout error:', error);
+    return res.status(500).json({
+      success: false,
+      error: 'An error occurred during logout.',
+    });
+  }
+};
+
 export const getCurrentUser = async (req, res) => {
   res.json({
     success: true,
@@ -1879,11 +1997,14 @@ export const getSystemMembers = async (req, res) => {
 
     let members = [];
     if (isMongoActive()) {
-      members = await UserMongo.find().select('-__v').sort({ createdAt: -1 }).lean();
+      members = await UserMongo.find().select('-password -__v').sort({ createdAt: -1 }).lean();
     }
 
-    if (!members || members.length === 0) {
-      members = inMemoryData.users || [];
+    if (!isMongoActive() && (!members || members.length === 0)) {
+      members = (inMemoryData.users || []).map((u) => {
+        const { password, ...rest } = u;
+        return rest;
+      });
     }
 
     res.json({ success: true, members });
@@ -1930,11 +2051,13 @@ export const createSystemMember = async (req, res) => {
       }
     }
 
+    const hashedPassword = await hashPassword(password.trim());
+
     const newMember = {
       name: name.trim(),
       email: cleanEmail,
       role: role.trim(),
-      password: password.trim(),
+      password: hashedPassword,
       designation: designation?.trim() || 'System Member',
       phone: phone?.trim() || '',
       isActive: true,
@@ -2015,10 +2138,15 @@ export const createSystemMember = async (req, res) => {
       '#008F68'
     );
 
+    const sanitizedMember = createdRecord
+      ? (createdRecord.toObject ? createdRecord.toObject() : { ...createdRecord })
+      : { ...newMember };
+    delete sanitizedMember.password;
+
     res.status(201).json({
       success: true,
       message: `System Member '${name}' created successfully with role '${role}'.`,
-      member: createdRecord || newMember,
+      member: sanitizedMember,
     });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
@@ -2045,7 +2173,7 @@ export const updateSystemMember = async (req, res) => {
     if (phone !== undefined) updates.phone = phone.trim();
     if (isActive !== undefined) updates.isActive = Boolean(isActive);
     if (password && password.trim().length >= 6) {
-      updates.password = password.trim();
+      updates.password = await hashPassword(password.trim());
     } else if (password && password.trim().length > 0 && password.trim().length < 6) {
       return res.status(400).json({ success: false, error: 'Password must be at least 6 characters long.' });
     }
@@ -2054,7 +2182,7 @@ export const updateSystemMember = async (req, res) => {
     let updatedRecord = null;
     if (isMongoActive()) {
       const query = mongoose.Types.ObjectId.isValid(id) ? { _id: id } : { email: id };
-      updatedRecord = await UserMongo.findOneAndUpdate(query, updates, { new: true }).lean();
+      updatedRecord = await UserMongo.findOneAndUpdate(query, updates, { new: true }).select('-password -__v').lean();
 
       // Keep employee profile synced
       if (updatedRecord && updatedRecord.email) {
@@ -2102,10 +2230,13 @@ export const updateSystemMember = async (req, res) => {
       '#2563EB'
     );
 
+    const sanitizedRecord = updatedRecord ? { ...updatedRecord } : null;
+    if (sanitizedRecord) delete sanitizedRecord.password;
+
     res.json({
       success: true,
       message: 'System Member updated successfully.',
-      member: updatedRecord,
+      member: sanitizedRecord,
     });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });

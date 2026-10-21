@@ -258,7 +258,7 @@ const SystemMembersView = () => {
               color: '#64748B',
             }}
           >
-            <span>Current Persona:</span>
+            <span>Your Active Role:</span>
             <strong style={{ color: '#0F172A', textTransform: 'uppercase' }}>{activeRole}</strong>
           </div>
         </div>

@@ -1,28 +1,110 @@
-// Admin and CMS API Client with dynamic Demo Role injection
+// Admin and CMS API Client with JWT Authentication
 const API_BASE = '/api/admin';
 
-let currentRole = localStorage.getItem('tw_admin_role') || 'superadmin';
+export const getAdminToken = () => {
+  return localStorage.getItem('tw_admin_token') || null;
+};
 
+export const getAdminUser = () => {
+  try {
+    const raw = localStorage.getItem('tw_admin_user');
+    return raw ? JSON.parse(raw) : null;
+  } catch (e) {
+    return null;
+  }
+};
+
+export const getAdminRole = () => {
+  const user = getAdminUser();
+  return user?.role ? user.role.toLowerCase() : '';
+};
+
+export const setAdminSession = (token, user) => {
+  if (token) localStorage.setItem('tw_admin_token', token);
+  if (user) {
+    localStorage.setItem('tw_admin_user', JSON.stringify(user));
+    localStorage.setItem('tw_admin_role', user.role ? user.role.toLowerCase() : '');
+  }
+  window.dispatchEvent(new CustomEvent('tw_admin_auth_changed', { detail: { token, user } }));
+};
+
+export const clearAdminSession = () => {
+  localStorage.removeItem('tw_admin_token');
+  localStorage.removeItem('tw_admin_user');
+  localStorage.removeItem('tw_admin_role');
+  window.dispatchEvent(new CustomEvent('tw_admin_auth_changed', { detail: null }));
+};
+
+export const isAdminAuthenticated = () => {
+  return Boolean(getAdminToken() && getAdminUser());
+};
+
+// Legacy setter maintained for compatibility
 export const setAdminRole = (role) => {
-  currentRole = role;
+  const user = getAdminUser();
+  if (user) {
+    user.role = role;
+    localStorage.setItem('tw_admin_user', JSON.stringify(user));
+  }
   localStorage.setItem('tw_admin_role', role);
   window.dispatchEvent(new CustomEvent('tw_role_changed', { detail: role }));
 };
 
-export const getAdminRole = () => currentRole;
-
-const getHeaders = () => ({
-  'Content-Type': 'application/json',
-  'Accept': 'application/json',
-  'X-Demo-Role': currentRole,
-});
+const getHeaders = () => {
+  const token = getAdminToken();
+  const headers = {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+  };
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+    headers['x-admin-token'] = token;
+  }
+  return headers;
+};
 
 export const adminApi = {
+  // Authentication
+  async login(email, password) {
+    const res = await fetch(`${API_BASE}/auth/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({ email, password }),
+    });
+    const json = await res.json();
+    if (!res.ok) throw new Error(json.error || `Login failed (${res.status})`);
+    if (json.token && json.user) {
+      setAdminSession(json.token, json.user);
+    }
+    return json;
+  },
+
+  async logout() {
+    try {
+      await fetch(`${API_BASE}/auth/logout`, {
+        method: 'POST',
+        headers: getHeaders(),
+        credentials: 'include',
+      });
+    } catch (e) {
+      console.warn('Logout network notice:', e.message);
+    } finally {
+      clearAdminSession();
+    }
+    return { success: true };
+  },
+
   // Current user & role
   async getMe() {
-    const res = await fetch(`${API_BASE}/auth/me`, { headers: getHeaders() });
+    const res = await fetch(`${API_BASE}/auth/me`, { headers: getHeaders(), credentials: 'include' });
     if (!res.ok) throw new Error(`HTTP error ${res.status}`);
-    return res.json();
+    const data = await res.json();
+    if (data && data.user) {
+      const currentToken = getAdminToken();
+      setAdminSession(currentToken, data.user);
+    }
+    return data;
   },
 
   // Dashboard Overview & Charts

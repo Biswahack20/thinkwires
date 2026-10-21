@@ -6,12 +6,35 @@ import config from '../configs/dotenv.js';
 /**
  * Get JWT Secret safely or throw error if not configured
  */
+const INSECURE_DEFAULT_SECRETS = new Set([
+  'your_jwt_secret_here',
+  'super_secret_jwt_key_here',
+  'your_secure_random_jwt_secret',
+  'default_secret',
+  'secret',
+  'changeme',
+]);
+
 export const getJwtSecret = () => {
   const secret = config.JWT_SECRET || process.env.JWT_SECRET;
-  if (!secret) {
+  if (!secret || typeof secret !== 'string' || !secret.trim()) {
     throw new Error('FATAL: JWT_SECRET environment variable is missing. Server cannot sign or verify tokens.');
   }
-  return secret;
+
+  const cleanSecret = secret.trim();
+  const isProduction = (config.NODE_ENV || process.env.NODE_ENV) === 'production';
+
+  if (INSECURE_DEFAULT_SECRETS.has(cleanSecret.toLowerCase())) {
+    throw new Error(
+      'FATAL: Insecure default JWT_SECRET detected. You must set a unique, cryptographically strong JWT_SECRET in your environment.'
+    );
+  }
+
+  if (isProduction && cleanSecret.length < 32) {
+    throw new Error('FATAL: JWT_SECRET in production must be at least 32 characters long.');
+  }
+
+  return cleanSecret;
 };
 
 /**
@@ -108,3 +131,59 @@ export const clearAuthCookie = (res) => {
     path: '/',
   });
 };
+
+/**
+ * Generate signed JWT for Admin Portal members (superadmin, admin, cms_admin)
+ */
+export const generateAdminToken = (user) => {
+  const secret = getJwtSecret();
+  const payload = {
+    id: user._id ? user._id.toString() : user.id,
+    email: user.email,
+    name: user.name,
+    role: user.role,
+    designation: user.designation || 'System Member',
+    portal: 'admin',
+  };
+
+  return jwt.sign(payload, secret, {
+    expiresIn: '7d',
+  });
+};
+
+/**
+ * Verify Admin JWT token string
+ */
+export const verifyAdminToken = (token) => {
+  const secret = getJwtSecret();
+  return jwt.verify(token, secret);
+};
+
+/**
+ * Helper to set HttpOnly Admin auth cookie
+ */
+export const setAdminAuthCookie = (res, token) => {
+  const isProduction = process.env.NODE_ENV === 'production';
+  res.cookie('thinkwires_admin_jwt', token, {
+    httpOnly: true,
+    secure: isProduction,
+    sameSite: isProduction ? 'strict' : 'lax',
+    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+    path: '/',
+  });
+};
+
+/**
+ * Clear Admin auth cookie on logout
+ */
+export const clearAdminAuthCookie = (res) => {
+  const isProduction = process.env.NODE_ENV === 'production';
+  res.cookie('thinkwires_admin_jwt', '', {
+    httpOnly: true,
+    secure: isProduction,
+    sameSite: isProduction ? 'strict' : 'lax',
+    expires: new Date(0),
+    path: '/',
+  });
+};
+

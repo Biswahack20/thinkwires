@@ -16,6 +16,7 @@ import Announcement from '../models/announcement.mongo.model.js';
 import Activity from '../models/activity.mongo.model.js';
 import UserMongo from '../models/user.mongo.model.js';
 import TechStack from '../models/techStack.mongo.model.js';
+import { hashPassword } from '../utils/auth.util.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -31,22 +32,13 @@ export const seedDatabase = async () => {
 
   console.log('🌱 Seeding MongoDB collections from adminSeedData.json and mockData.json...');
 
-  // 1. Users
-  for (const u of adminData.users || []) {
-    await UserMongo.findOneAndUpdate(
-      { email: u.email },
-      {
-        name: u.name,
-        email: u.email,
-        password: 'demo_password_hash_secure',
-        role: u.role,
-        isActive: true,
-      },
-      { upsert: true, new: true }
-    );
-  }
+  const defaultHashedPassword = await hashPassword('demo_password_hash_secure');
 
-  // 2. Employees
+  // 1. Users - Keep authentic administrative accounts only, do not seed mock users
+  console.log('Skipping fake demo users and employees seeding (live DB models active).');
+
+  // 2. Employees - Clean directory; only real employees created by Superadmin
+  /*
   for (const emp of adminData.employees || []) {
     await Employee.findOneAndUpdate(
       { email: emp.email },
@@ -54,8 +46,10 @@ export const seedDatabase = async () => {
       { upsert: true, new: true }
     );
   }
+  */
 
-  // 3. Candidates
+  // 3. Candidates - Clean directory; only real candidates applied or created
+  /*
   for (const cand of adminData.candidates || []) {
     await Candidate.findOneAndUpdate(
       { email: cand.email },
@@ -63,6 +57,7 @@ export const seedDatabase = async () => {
       { upsert: true, new: true }
     );
   }
+  */
 
   // 4. Clients
   for (const cli of adminData.clients || []) {
@@ -73,7 +68,8 @@ export const seedDatabase = async () => {
     );
   }
 
-  // 5. Jobs / Openings (from both adminSeedData and mockData initialOpenings)
+  // 5. Jobs / Openings - Clean directory; only real jobs created by admins
+  /*
   if (Array.isArray(adminData.jobs)) {
     for (const job of adminData.jobs) {
       await JobRequirement.findOneAndUpdate(
@@ -120,6 +116,7 @@ export const seedDatabase = async () => {
       );
     }
   }
+  */
 
   // 6. Placements
   for (const plc of adminData.placements || []) {
