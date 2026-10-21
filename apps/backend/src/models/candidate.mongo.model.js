@@ -74,6 +74,23 @@ const candidateSchema = new mongoose.Schema(
       enum: ['Applied', 'Screening', 'Interview', 'Offered', 'Hired', 'Rejected'],
       default: 'Applied',
     },
+    workMode: {
+      type: String,
+      enum: ['Full-Time Looking', 'Freelancer', 'On-Bench'],
+      default: 'Full-Time Looking',
+    },
+    assessmentScore: {
+      type: Number,
+      default: null,
+    },
+    fitScore: {
+      type: Number,
+      default: null,
+    },
+    vettingScore: {
+      type: Number,
+      default: 85,
+    },
     resetPasswordToken: {
       type: String,
       default: null,

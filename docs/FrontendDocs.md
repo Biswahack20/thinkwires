@@ -256,7 +256,28 @@ export default defineConfig({
 
 ---
 
-## 7. Running & Building the Frontend
+## 7. Candidate Application & AI Screening Test Workflow
+
+### Application Form Modes (`GlobalJobApplicationForm.jsx`)
+- **Fill from Scratch**: Fresh empty inputs for candidate contact, skills, and portfolio details.
+- **Pre-fill from Profile**: Automatically loads verified fields from candidate's logged-in profile.
+- **Resume Upload Auto-Fill**:
+  - Drag-and-drop or select PDF/DOC resume.
+  - Automatically sends file to `/api/candidate/parse-resume`.
+  - Parses first name, last name, phone, email, skills, experience, and summary.
+  - Form fields populate immediately while remaining **100% editable** by the applicant prior to submission.
+
+### AI Assessment Gatekeeper Modal (`ScreeningAssessmentModal.jsx`)
+- Upon submission, the backend triggers the Python FastAPI AI service (`/api/screening/generate-test`) to craft a 10-question evaluation tailored to the job's requirements and candidate skills:
+  - 7 Multiple Choice Questions (MCQs)
+  - 2 Architectural / Engineering Scenarios
+  - 1 Hands-on Practical Task
+- Modal features proctored 20-minute countdown timer, question navigator, and real-time grading.
+- Score is saved to Candidate Portal and placed on the Active Bench (`/bench`).
+
+---
+
+## 8. Running & Building the Frontend
 
 ### Development Mode
 

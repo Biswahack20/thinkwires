@@ -4,15 +4,12 @@ import { fetchAboutData, fallbackAboutData } from '../store/slices/aboutSlice';
 import Navbar from '../components/common/Navbar';
 import Footer from '../components/common/Footer';
 import AboutHero from '../components/AboutComponents/AboutHero';
-import StatsStrip from '../components/AboutComponents/StatsStrip';
-import CompanyOverview from '../components/AboutComponents/CompanyOverview';
 import AggregatorModel from '../components/AboutComponents/AggregatorModel';
 import Philosophy from '../components/AboutComponents/Philosophy';
 import LeadershipTeam from '../components/AboutComponents/LeadershipTeam';
 import GrowthTimeline from '../components/AboutComponents/GrowthTimeline';
 import Methodology from '../components/AboutComponents/Methodology';
 import AboutCTA from '../components/AboutComponents/AboutCTA';
-
 
 const AboutPage = () => {
   const dispatch = useDispatch();
@@ -33,31 +30,28 @@ const AboutPage = () => {
     <div className="AboutPage-wrapper">
       <Navbar />
       <main className="AboutPage-main" id="main-content">
-        {/* 1. Hero Section */}
-        <AboutHero data={aboutData.hero || aboutData.company} />
+        {/* 1. Hero Section with Integrated Key Value Metrics Bar (Stitch Screen 4f907a13785d4a6b9bd9c0cdfa784466) */}
+        <AboutHero
+          data={aboutData.hero || aboutData.company}
+          stats={aboutData.statsStrip || aboutData.stats}
+        />
 
-        {/* 2. Horizontal Key Metrics Strip */}
-        <StatsStrip stats={aboutData.statsStrip || aboutData.stats} />
-
-        {/* 3. Company Overview & Core Mission */}
-        <CompanyOverview company={aboutData.company} />
-
-        {/* 4. The ThinkWires Aggregator Model */}
+        {/* 2. The ThinkWires Aggregator Model */}
         <AggregatorModel data={aboutData.aggregatorModel} />
 
-        {/* 5. Our Core Philosophy (Deep Navy Editorial) */}
+        {/* 3. Our Core Philosophy (Deep Navy Editorial) */}
         <Philosophy data={aboutData.philosophy} />
 
-        {/* 6. Executive Leadership Team (3+2 Arrangement) */}
+        {/* 4. Executive Leadership Team (3+2 Arrangement) */}
         <LeadershipTeam data={aboutData.leadershipTeam || { members: aboutData.leadership }} />
 
-        {/* 7. Our Growth Journey & Separated Future Roadmap */}
+        {/* 5. Chronicle of Execution / Our Growth Evolution (4 Milestone Cards) */}
         <GrowthTimeline data={aboutData.growthTimeline} />
 
-        {/* 8. Methodology (Spec to Squad) */}
+        {/* 6. Methodology (Spec to Squad) */}
         <Methodology data={aboutData.methodology} />
 
-        {/* 9. Strategy Consultation & Direct Operations */}
+        {/* 7. Strategy Consultation & Direct Operations Container */}
         <AboutCTA data={aboutData.ctaSection || aboutData.contact} />
       </main>
       <Footer />

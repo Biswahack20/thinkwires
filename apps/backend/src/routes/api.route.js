@@ -8,6 +8,7 @@ import JobRequirement from '../models/job.mongo.model.js';
 import Article from '../models/article.mongo.model.js';
 import Page from '../models/page.mongo.model.js';
 import TechStack from '../models/techStack.mongo.model.js';
+import Candidate from '../models/candidate.mongo.model.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -805,7 +806,43 @@ const getPageDataBySlug = async (slug, fallback) => {
 // --- Bench / Talent Cloud Endpoints ---
 router.get('/bench', async (req, res) => {
   const benchSource = await getPageDataBySlug('bench', bench);
-  const rawCandidates = benchSource.candidates || benchSource.talents || [];
+  let rawCandidates = [...(benchSource.candidates || benchSource.talents || [])];
+
+  if (isMongoActive()) {
+    try {
+      const assessed = await Candidate.find({
+        $or: [
+          { workMode: 'On-Bench' },
+          { assessmentScore: { $ne: null } }
+        ]
+      }).limit(15);
+
+      assessed.forEach((c) => {
+        rawCandidates.unshift({
+          id: `TW-CAND-${c._id.toString().slice(-4).toUpperCase()}`,
+          code: `TW-CAND-${c._id.toString().slice(-4).toUpperCase()}`,
+          title: c.currentRole || 'Software Professional',
+          role: c.currentRole || 'Software Professional',
+          initials: c.name ? c.name.split(' ').map((n) => n[0]).join('').slice(0, 2).toUpperCase() : 'TW',
+          specialty: 'Systems & Distributed',
+          seniorityTier: (c.experience || 0) >= 8 ? 'staff' : (c.experience || 0) >= 5 ? 'senior' : 'lead',
+          experience: `${c.experience || 5}+ Yrs Exp`,
+          location: c.location || 'Remote Global',
+          technicalRating: c.assessmentScore || c.vettingScore || 90,
+          score: c.assessmentScore || c.vettingScore || 90,
+          assessmentScore: c.assessmentScore,
+          fitScore: c.fitScore,
+          availability: 'Immediate (24-48h)',
+          hourlyRate: c.expectedSalary || '$65 - $80',
+          engineeringProof: c.bio || `Cleared ThinkWires technical screening assessment (${c.assessmentScore || 90}%).`,
+          skills: c.technicalSkills && c.technicalSkills.length > 0 ? c.technicalSkills : ['React', 'Node.js', 'PostgreSQL'],
+        });
+      });
+    } catch (e) {
+      console.warn('Bench query candidates error:', e.message);
+    }
+  }
+
   const normalizedTalents = rawCandidates.map((c) => ({
     id: c.id,
     code: c.id || c.code,
@@ -822,6 +859,8 @@ router.get('/bench', async (req, res) => {
     yearsExp: c.experience || `${c.years || 8}+ Yrs Exp`,
     location: c.location || 'Remote Global',
     score: c.technicalRating || c.score || 96,
+    assessmentScore: c.assessmentScore,
+    fitScore: c.fitScore,
     urgency: c.availability || c.urgency || 'Immediate (24-48h)',
     hourlyRate: c.hourlyRate || '$55 - $75',
     proofQuote: c.engineeringProof || c.proofQuote || 'Architected and scaled production enterprise systems with zero downtime.',
@@ -902,7 +941,43 @@ router.get('/bench', async (req, res) => {
 router.get('/bench/talents', async (req, res) => {
   const { q, specialty, urgency, experience, location, sort } = req.query;
   const benchSource = await getPageDataBySlug('bench', bench);
-  const rawCandidates = benchSource.candidates || benchSource.talents || [];
+  let rawCandidates = [...(benchSource.candidates || benchSource.talents || [])];
+
+  if (isMongoActive()) {
+    try {
+      const assessed = await Candidate.find({
+        $or: [
+          { workMode: 'On-Bench' },
+          { assessmentScore: { $ne: null } }
+        ]
+      }).limit(15);
+
+      assessed.forEach((c) => {
+        rawCandidates.unshift({
+          id: `TW-CAND-${c._id.toString().slice(-4).toUpperCase()}`,
+          code: `TW-CAND-${c._id.toString().slice(-4).toUpperCase()}`,
+          title: c.currentRole || 'Software Professional',
+          role: c.currentRole || 'Software Professional',
+          initials: c.name ? c.name.split(' ').map((n) => n[0]).join('').slice(0, 2).toUpperCase() : 'TW',
+          specialty: 'Systems & Distributed',
+          seniorityTier: (c.experience || 0) >= 8 ? 'staff' : (c.experience || 0) >= 5 ? 'senior' : 'lead',
+          experience: `${c.experience || 5}+ Yrs Exp`,
+          location: c.location || 'Remote Global',
+          technicalRating: c.assessmentScore || c.vettingScore || 90,
+          score: c.assessmentScore || c.vettingScore || 90,
+          assessmentScore: c.assessmentScore,
+          fitScore: c.fitScore,
+          availability: 'Immediate (24-48h)',
+          hourlyRate: c.expectedSalary || '$65 - $80',
+          engineeringProof: c.bio || `Cleared ThinkWires technical screening assessment (${c.assessmentScore || 90}%).`,
+          skills: c.technicalSkills && c.technicalSkills.length > 0 ? c.technicalSkills : ['React', 'Node.js', 'PostgreSQL'],
+        });
+      });
+    } catch (e) {
+      console.warn('Bench query candidates error:', e.message);
+    }
+  }
+
   let filtered = rawCandidates.map((c) => ({
     id: c.id,
     code: c.id || c.code,
@@ -918,6 +993,8 @@ router.get('/bench/talents', async (req, res) => {
     yearsExp: c.experience || `${c.years || 8}+ Yrs Exp`,
     location: c.location || 'Remote Global',
     score: c.technicalRating || c.score || 96,
+    assessmentScore: c.assessmentScore,
+    fitScore: c.fitScore,
     urgency: c.availability || c.urgency || 'Immediate (24-48h)',
     hourlyRate: c.hourlyRate || '$55 - $75',
     proofQuote: c.engineeringProof || c.proofQuote || 'Architected and scaled production enterprise systems.',

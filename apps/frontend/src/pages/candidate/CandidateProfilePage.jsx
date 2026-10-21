@@ -19,6 +19,7 @@ const CandidateProfilePage = () => {
     experience: 0,
     expectedSalary: '',
     technicalSkills: '',
+    workMode: 'Full-Time Looking',
     portfolioUrl: '',
     githubUrl: '',
     linkedinUrl: '',
@@ -43,6 +44,7 @@ const CandidateProfilePage = () => {
         technicalSkills: Array.isArray(user.technicalSkills)
           ? user.technicalSkills.join(', ')
           : user.technicalSkills || '',
+        workMode: user.workMode || 'Full-Time Looking',
         portfolioUrl: user.portfolioUrl || '',
         githubUrl: user.githubUrl || '',
         linkedinUrl: user.linkedinUrl || '',
@@ -132,6 +134,42 @@ const CandidateProfilePage = () => {
             </div>
           )}
 
+          {/* AI Assessment & ATS Scoring Verified Badges */}
+          <div style={{ background: '#F8FAFC', border: '1px solid #E2E8F0', borderRadius: '8px', padding: '1rem', marginBottom: '1.25rem' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem' }}>
+              <div>
+                <span style={{ fontSize: '0.74rem', color: '#64748B', fontWeight: 600, textTransform: 'uppercase' }}>
+                  AI Assessment Score
+                </span>
+                <div style={{ fontSize: '1.15rem', fontWeight: 700, color: '#166534', marginTop: '0.2rem' }}>
+                  {user?.assessmentScore != null
+                    ? `${user.assessmentScore}%`
+                    : user?.vettingScore
+                    ? `${user.vettingScore}% (Calibrated)`
+                    : 'Pending Test'}
+                </div>
+              </div>
+              <div>
+                <span style={{ fontSize: '0.74rem', color: '#64748B', fontWeight: 600, textTransform: 'uppercase' }}>
+                  ATS Resume Match
+                </span>
+                <div style={{ fontSize: '1.15rem', fontWeight: 700, color: '#2563EB', marginTop: '0.2rem' }}>
+                  {user?.fitScore != null ? `${user.fitScore}% Match` : 'Calculated on Submission'}
+                </div>
+              </div>
+              <div>
+                <span style={{ fontSize: '0.74rem', color: '#64748B', fontWeight: 600, textTransform: 'uppercase' }}>
+                  Bench Availability
+                </span>
+                <div style={{ marginTop: '0.2rem' }}>
+                  <span className="tw-badge-status tw-badge-applied" style={{ fontSize: '0.8rem' }}>
+                    {formData.workMode || user?.workMode || 'Full-Time Looking'}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <form onSubmit={handleSubmit} className="tw-auth-form">
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1rem' }}>
               <div className="tw-form-group">
@@ -184,7 +222,7 @@ const CandidateProfilePage = () => {
               </div>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1rem' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1rem' }}>
               <div className="tw-form-group">
                 <label className="tw-form-label">Total Experience (Years)</label>
                 <input
@@ -208,6 +246,20 @@ const CandidateProfilePage = () => {
                   value={formData.expectedSalary}
                   onChange={handleChange}
                 />
+              </div>
+
+              <div className="tw-form-group">
+                <label className="tw-form-label">Talent Availability / Bench Mode</label>
+                <select
+                  name="workMode"
+                  className="tw-form-input"
+                  value={formData.workMode}
+                  onChange={handleChange}
+                >
+                  <option value="Full-Time Looking">Full-Time Looking</option>
+                  <option value="Freelancer">Freelancer / Contractor</option>
+                  <option value="On-Bench">On-Bench (Immediate 48h Deployment)</option>
+                </select>
               </div>
             </div>
 

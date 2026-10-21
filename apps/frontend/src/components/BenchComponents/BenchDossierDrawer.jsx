@@ -37,9 +37,12 @@ const BenchDossierDrawer = () => {
   };
 
   return (
-    <div className="BenchDrawer-overlay" onClick={() => dispatch(closeDrawer())}>
+    <div className="BenchDrawer-overlay" data-lenis-prevent="true" onClick={() => dispatch(closeDrawer())}>
       <div
         className="BenchDrawer-content"
+        data-lenis-prevent="true"
+        onWheel={(e) => e.stopPropagation()}
+        style={{ overscrollBehavior: 'contain' }}
         onClick={(e) => e.stopPropagation()}
       >
         {/* Top Bar with Close Button */}
@@ -83,6 +86,36 @@ const BenchDossierDrawer = () => {
               </div>
             </div>
           </div>
+
+          {/* AI Assessment & ATS Scoring Banner if present */}
+          {(selectedTalent.assessmentScore != null || selectedTalent.fitScore != null) && (
+            <div className="BenchDrawer-cardSection" style={{ background: '#F0FDF4', border: '1px solid #BBF7D0', borderRadius: '8px', padding: '1rem', marginBottom: '1.25rem' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div>
+                  <h4 style={{ margin: 0, fontSize: '0.95rem', color: '#166534', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+                    <span className="material-symbols-outlined" style={{ fontSize: '1.2rem' }}>psychology</span> ThinkWires Proctored AI Assessment
+                  </h4>
+                  <p style={{ margin: '0.25rem 0 0 0', fontSize: '0.82rem', color: '#15803D' }}>
+                    Automated technical screening across MCQs, architecture scenarios, and practical tasks.
+                  </p>
+                </div>
+                <div style={{ display: 'flex', gap: '1rem' }}>
+                  {selectedTalent.assessmentScore != null && (
+                    <div style={{ textAlign: 'right' }}>
+                      <div style={{ fontSize: '0.72rem', color: '#166534', fontWeight: 600, textTransform: 'uppercase' }}>Assessment</div>
+                      <div style={{ fontSize: '1.25rem', fontWeight: 800, color: '#15803D' }}>{selectedTalent.assessmentScore}%</div>
+                    </div>
+                  )}
+                  {selectedTalent.fitScore != null && (
+                    <div style={{ textAlign: 'right' }}>
+                      <div style={{ fontSize: '0.72rem', color: '#1D4ED8', fontWeight: 600, textTransform: 'uppercase' }}>ATS Match</div>
+                      <div style={{ fontSize: '1.25rem', fontWeight: 800, color: '#2563EB' }}>{selectedTalent.fitScore}%</div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* Evaluation Rubric Breakdown */}
           <div className="BenchDrawer-cardSection">

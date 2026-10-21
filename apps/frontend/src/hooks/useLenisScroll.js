@@ -30,6 +30,27 @@ export const useLenisScroll = (enabled = true) => {
       wheelMultiplier: 1.05,
       touchMultiplier: 1.8,
       infinite: false,
+      allowNestedScroll: true,
+      prevent: (node) => {
+        if (!node) return false;
+        if (typeof node.hasAttribute === 'function') {
+          if (
+            node.hasAttribute('data-lenis-prevent') ||
+            node.hasAttribute('data-lenis-prevent-wheel') ||
+            node.hasAttribute('data-lenis-prevent-touch')
+          ) {
+            return true;
+          }
+        }
+        if (typeof node.closest === 'function') {
+          return Boolean(
+            node.closest(
+              '[data-lenis-prevent], [role="dialog"], [role="alertdialog"], .ApplyModal-overlay, .ApplyModal-content, .tw-modal-backdrop, .tw-modal-card, form, textarea, select'
+            )
+          );
+        }
+        return false;
+      },
     });
 
     window.__lenis = lenis;

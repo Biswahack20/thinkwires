@@ -102,6 +102,34 @@ apps/backend/
         ├── adminSeedData.json# Fictional demo dataset for admin views
         ├── mockData.json     # Public content datasets (jobs, bench, stats)
         └── seedDemoData.js   # Idempotent MongoDB seed runner
+
+apps/ai_services/
+├── main.py                   # Root entrypoint (delegates to app.main:app for uvicorn)
+├── package.json              # Turbo dev & test task scripts
+├── requirements.txt          # Python dependencies (FastAPI, pypdf, httpx, etc.)
+├── tests/                    # Automated pytest test suites (13 passing tests)
+│   ├── test_api.py           # FastAPI TestClient endpoint integration tests
+│   ├── test_match_scorer.py  # ATS match scoring algorithm tests
+│   ├── test_resume_parser.py # Resume PDF & heuristic extraction tests
+│   └── test_screening.py     # 10-Question generation & rubric grading tests
+└── app/                      # Modular Application Architecture
+    ├── __init__.py           # Package initialization
+    ├── config.py             # Settings, environment configuration, and logger
+    ├── main.py               # create_app() factory, CORS, and router registration
+    ├── api/                  # API Routing Layer
+    │   ├── router.py         # Root API router mounting v1 routes
+    │   └── v1/               # Version 1 Sub-Routers
+    │       ├── health.py     # GET / and GET /health
+    │       ├── resume.py     # POST /api/resume/parse & POST /api/resume/match-score
+    │       └── screening.py  # POST /api/screening/generate-test & evaluate-test
+    ├── schemas/              # Pydantic Schemas & DTOs
+    │   ├── resume.py         # ParsedResumeResponse, ResumeMatchRequest, etc.
+    │   └── screening.py      # GenerateAssessmentRequest, EvaluateAssessmentRequest, etc.
+    └── services/             # Domain Logic & ML Services
+        ├── match_scorer.py   # PRD 4.3 ATS weighted scoring engine
+        ├── resume_parser.py  # pypdf stream extraction and heuristic/LLM parser
+        ├── test_evaluator.py # Automated grading, rubric scoring, and gatekeeper decisions
+        └── test_generator.py # 10-Question assessment suite generator
 ```
 
 ---
@@ -155,16 +183,31 @@ Admin endpoints verify permissions via [`auth.middleware.js`](file:///c:/Users/T
 
 ---
 
-### B. Candidate Portal Routes (`/api/candidate`)
+### B. Candidate Portal & AI Screening Routes (`/api/candidate`)
 
-_All candidate portal routes strictly require candidate authentication via `requireCandidateAuth` middleware._
+| Method | Endpoint                                                | Body / Query          | Description                                                                                     |
+| ------ | ------------------------------------------------------- | --------------------- | ----------------------------------------------------------------------------------------------- |
+| `POST` | `/api/candidate/parse-resume`                          | `multipart/form-data` | Extracts name, contact, skills, experience, and summary from resume for instant form auto-fill  |
+| `GET`  | `/api/candidate/dashboard`                              | None                  | Retrieves candidate application metrics, ATS scores, and AI assessment benchmark status         |
+| `PUT`  | `/api/candidate/profile`                                | JSON (profile fields) | Updates candidate contact info, technical skills, title, expected salary, and bench work mode   |
+| `GET`  | `/api/candidate/applications`                           | None                  | Fetches all submitted applications with ATS Fit Score and AI Assessment results                 |
+| `POST` | `/api/candidate/apply`                                  | `multipart/form-data` | Submits application; triggers automatic ATS fit scoring and AI assessment generation            |
+| `GET`  | `/api/candidate/applications/:id/assessment`            | None                  | Retrieves the proctored 10-question screening assessment generated for the application          |
+| `POST` | `/api/candidate/applications/:id/assessment/submit`     | JSON (`{ answers }`)  | Evaluates assessment against rubric; stores score and updates Candidate Portal and Active Bench |
 
-| Method | Endpoint                      | Body / Query          | Description                                                           |
-| ------ | ----------------------------- | --------------------- | --------------------------------------------------------------------- |
-| `GET`  | `/api/candidate/dashboard`    | None                  | Retrieves candidate application metrics and stats                     |
-| `PUT`  | `/api/candidate/profile`      | JSON (profile fields) | Updates candidate contact info, technical skills, title               |
-| `GET`  | `/api/candidate/applications` | None                  | Fetches all submitted applications for the authenticated candidate    |
-| `POST` | `/api/candidate/apply`        | `multipart/form-data` | Submits application for a specific job; accepts resume file (PDF/DOC) |
+---
+
+### C. FastAPI AI Microservice Architecture (`apps/ai_services`)
+
+A dedicated FastAPI service (`port 8000`) communicates with the Express backend (`port 5000`) for high-performance ML inference, resume parsing, and screening generation:
+
+| Method | Endpoint                       | Input Payload                     | Output Schema                                                                      |
+| ------ | ------------------------------ | --------------------------------- | ---------------------------------------------------------------------------------- |
+| `GET`  | `/`                            | None                              | Service health and version status                                                  |
+| `POST` | `/api/resume/parse`            | PDF file or text string           | `first_name`, `last_name`, `email`, `phone`, `skills`, `total_experience_years`    |
+| `POST` | `/api/resume/match-score`      | Candidate skills + Job spec       | `fit_score` (0-100%), `fit_badge` (`Top Match`, etc.), `matched_skills`            |
+| `POST` | `/api/screening/generate-test` | Job spec + Candidate resume       | 10 questions (7 MCQs, 2 Scenarios, 1 Practical coding task) with grading criteria  |
+| `POST` | `/api/screening/evaluate-test` | Test rubric + Candidate answers   | Percentage score, passed status (`>=75%`), and gatekeeper stage feedback           |
 
 ---
 
