@@ -93,6 +93,7 @@ const JobSpecModal = ({ job, onClose, onApply }) => {
 
   return (
     <div
+      data-lenis-prevent="true"
       style={{
         position: 'fixed',
         top: 0,
@@ -107,10 +108,13 @@ const JobSpecModal = ({ job, onClose, onApply }) => {
         justifyContent: 'center',
         padding: '1.5rem',
         animation: 'twFadeIn 0.2s ease-out',
+        overscrollBehavior: 'contain',
       }}
       onClick={onClose}
     >
       <div
+        data-lenis-prevent="true"
+        onWheel={(e) => e.stopPropagation()}
         style={{
           background: '#ffffff',
           borderRadius: '16px',
@@ -123,6 +127,7 @@ const JobSpecModal = ({ job, onClose, onApply }) => {
           border: '1px solid #E2E8F0',
           position: 'relative',
           overflow: 'hidden',
+          overscrollBehavior: 'contain',
         }}
         onClick={(e) => e.stopPropagation()}
       >
@@ -250,6 +255,8 @@ const JobSpecModal = ({ job, onClose, onApply }) => {
 
         {/* Modal Scrollable Body */}
         <div
+          data-lenis-prevent="true"
+          onWheel={(e) => e.stopPropagation()}
           style={{
             padding: '1.5rem 1.75rem',
             overflowY: 'auto',
@@ -257,6 +264,7 @@ const JobSpecModal = ({ job, onClose, onApply }) => {
             display: 'flex',
             flexDirection: 'column',
             gap: '1.4rem',
+            overscrollBehavior: 'contain',
           }}
         >
           {/* Confidentiality Notice Alert */}

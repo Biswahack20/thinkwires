@@ -1,182 +1,100 @@
-import React, { useState } from 'react';
+import React from 'react';
 import SectionBadge from '../common/SectionBadge';
 import ScrollReveal from '../common/ScrollReveal';
-import { CloseIcon } from '../../admin/AdminIcons';
 
-const LeadershipCard = ({ member, onOpenModal }) => {
-  const [imgError, setImgError] = useState(false);
-
-  const {
-    name = '',
-    designation = '',
-    initials = '',
-    bio = '',
-    image = null,
-    linkedinUrl = null,
-    avatar = {},
-    badge = {},
-    companies = [],
-    expertise = [],
-    footerTag = ''
-  } = member || {};
-
-  const resolvedInitials = initials || avatar?.value || name.split(' ').map((n) => n[0]).join('').substring(0, 2);
-
-  // Normalize expertise whether it's an array or string
-  const normalizedExpertise = Array.isArray(expertise)
-    ? expertise
-    : (typeof expertise === 'string' && expertise.trim().length > 0)
-      ? expertise.split(',').map(s => s.trim())
-      : [];
-
-  // 3-4 line preview limit
-  const isLongBio = typeof bio === 'string' && bio.length > 170;
-  const bioPreview = isLongBio ? `${bio.substring(0, 165)}...` : bio;
-
-  // Strict check: only render LinkedIn if it contains a valid linkedin.com URL
-  const hasValidLinkedIn =
-    Boolean(linkedinUrl) &&
-    typeof linkedinUrl === 'string' &&
-    linkedinUrl.trim().length > 0 &&
-    linkedinUrl.includes('linkedin.com/in/');
-
-  return (
-    <div className="LeadershipTeam-card">
-      {/* 1. TOP: Avatar | Name and Designation */}
-      <div className="LeadershipTeam-cardTop">
-        <div className="LeadershipTeam-avatarWrapper">
-          {image && !imgError ? (
-            <img
-              src={image}
-              alt={name}
-              className="LeadershipTeam-photo"
-              onError={() => setImgError(true)}
-            />
-          ) : (
-            <div
-              className="LeadershipTeam-avatar"
-              style={{
-                backgroundColor: avatar?.bgColor || '#0037B0',
-                color: avatar?.textColor || '#FFFFFF'
-              }}
-              aria-hidden="true"
-            >
-              {resolvedInitials}
-            </div>
-          )}
-        </div>
-
-        <div className="LeadershipTeam-info">
-          <div className="LeadershipTeam-nameRow">
-            <h3 className="LeadershipTeam-name">{name}</h3>
-            {hasValidLinkedIn && (
-              <a
-                href={linkedinUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="LeadershipTeam-linkedin"
-                aria-label={`${name}'s LinkedIn profile`}
-              >
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
-                </svg>
-              </a>
-            )}
-          </div>
-          <div className="LeadershipTeam-designation">{designation}</div>
-        </div>
-      </div>
-
-      {/* 2. SECOND: Experience indicator, if available */}
-      {badge?.text && (
-        <div className="LeadershipTeam-experienceRow">
-          <div className="LeadershipTeam-experienceBadge">
-            <span
-              className="LeadershipTeam-experienceDot"
-              style={{ backgroundColor: badge.dotColor || '#0037B0' }}
-              aria-hidden="true"
-            ></span>
-            <span>{badge.text}</span>
-          </div>
-        </div>
-      )}
-
-      {/* 3. THIRD: Biography preview limited to 3-4 lines */}
-      <div className="LeadershipTeam-bioWrapper">
-        <p className="LeadershipTeam-bio">{bioPreview}</p>
-      </div>
-
-      {/* 4. FOURTH: Properly styled Read Full Bio action */}
-      {isLongBio && (
-        <div className="LeadershipTeam-actionRow">
-          <button
-            type="button"
-            onClick={() => onOpenModal(member)}
-            className="LeadershipTeam-expandBtn"
-          >
-            <span>Read Full Bio</span>
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-              <line x1="5" y1="12" x2="19" y2="12"></line>
-              <polyline points="12 5 19 12 12 19"></polyline>
-            </svg>
-          </button>
-        </div>
-      )}
-
-      {/* 5. FIFTH: Expertise tags */}
-      {normalizedExpertise.length > 0 && (
-        <div className="LeadershipTeam-expertiseSection">
-          <span className="LeadershipTeam-metaLabel">Core Expertise</span>
-          <div className="LeadershipTeam-expertiseRow">
-            {normalizedExpertise.map((tag, idx) => (
-              <span key={`${name}-exp-${idx}`} className="LeadershipTeam-expertiseTag">
-                {tag}
-              </span>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* OPTIONAL: Prior enterprise experience, only when available */}
-      {companies && companies.length > 0 && (
-        <div className="LeadershipTeam-companiesBlock">
-          <span className="LeadershipTeam-metaLabel">Prior Enterprise Ecosystems</span>
-          <div className="LeadershipTeam-companyChips">
-            {companies.map((company, cIdx) => (
-              <span key={`${name}-comp-${cIdx}`} className="LeadershipTeam-companyChip">
-                {company}
-              </span>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* Card Footer Tag */}
-      {footerTag && (
-        <div className="LeadershipTeam-footerTag">
-          <span className="LeadershipTeam-footerTagIcon" aria-hidden="true">#</span>
-          <span>{footerTag}</span>
-        </div>
-      )}
-    </div>
-  );
-};
+const DEFAULT_MEMBERS = [
+  {
+    id: 'leader-1',
+    initials: 'NH',
+    avatarVariant: 'primary-fixed',
+    badgeText: '14+ Yrs Exp',
+    badgeDotColor: 'cobalt',
+    name: 'Naziya Husain',
+    role: 'Founder Member',
+    bio: 'With over 14 years in recruitment, headhunting, talent mapping, and end-to-end manpower solutions, Naziya has successfully steered complex mandates across KPOs, top-tier management consulting firms, and fast-scaling digital startups.',
+    footerTag: 'Talent Mapping & Manpower',
+    linkedinUrl: 'https://www.linkedin.com/company/thinkwires-technology',
+    colSpan: 1
+  },
+  {
+    id: 'leader-2',
+    initials: 'AB',
+    avatarVariant: 'secondary-container',
+    badgeText: '17+ Yrs Exp',
+    badgeDotColor: 'cobalt',
+    name: 'Anju Balyan',
+    role: 'Co-Founder & Associate Executive Director',
+    bio: 'Enthusiastic enterprise HR leader with 17 years aligning HR initiatives with tier-one business priorities. Specialist in shared services environments, transitions, legal frameworks, ERP rollouts, and HR automation systems.',
+    footerTag: 'ERP Implementations & Ops',
+    linkedinUrl: 'https://www.linkedin.com/company/thinkwires-technology',
+    colSpan: 1
+  },
+  {
+    id: 'leader-3',
+    initials: 'AM',
+    avatarVariant: 'tertiary-fixed',
+    badgeText: 'Executive Search',
+    badgeDotColor: 'emerald',
+    name: 'Ananya Mehta',
+    role: 'Chief Executive Officer (CEO)',
+    bio: 'Dedicated to building teams that drive real business velocity. Expert in strategic talent research, executive search, deep candidate evaluation beyond CVs, and structuring high-trust leadership placements for global scale.',
+    footerTag: 'Strategic Sourcing & Growth',
+    linkedinUrl: 'https://www.linkedin.com/company/thinkwires-technology',
+    colSpan: 1
+  },
+  {
+    id: 'leader-4',
+    initials: 'AV',
+    avatarVariant: 'surface-high',
+    badgeText: '20+ Yrs Exp',
+    badgeDotColor: 'cobalt',
+    name: 'Arjun Verma',
+    role: 'Chief People & Marketing Officer (CPO & CMO)',
+    bio: 'A 20-year veteran at the intersection of talent acquisition, organizational culture, and brand positioning. Focused on solving why high-growth enterprises struggle to hire and how elite culture transforms product velocity.',
+    footerTag: 'People Strategy & Brand',
+    linkedinUrl: 'https://www.linkedin.com/company/thinkwires-technology',
+    colSpan: 1
+  },
+  {
+    id: 'leader-5',
+    initials: 'MI',
+    avatarVariant: 'primary-container',
+    companies: ['BlackRock', 'Microsoft', 'IBM', 'Infosys'],
+    name: 'Meera Iyer',
+    role: 'Senior Director - Global Head of TA Operations & HR Services',
+    bio: 'Strategic Talent Acquisition and HR Operations executive who has built scalable, technology-driven recruitment frameworks across enterprise leaders including BlackRock, Microsoft, IBM, Ameriprise, and Infosys. Ensures institutional governance, risk mitigation, compliance, and flawless multi-region operations.',
+    footerTag: 'Global Delivery Operations & Risk Governance',
+    linkedinUrl: 'https://www.linkedin.com/company/thinkwires-technology',
+    colSpan: 2
+  }
+];
 
 const LeadershipTeam = ({ data }) => {
-  const [modalMember, setModalMember] = useState(null);
-
   const {
     eyebrow = 'EXECUTIVE GOVERNANCE',
     heading = 'Meet Our Leadership Team',
-    subheading = 'Driving cross-border vision, recruitment architecture, and operational integrity across global technology corridors.',
+    subheading = 'Driving cross-border vision, recruitment architecture, and operational integrity across global tech corridors.',
     members = []
   } = data || {};
 
-  // Separate members into 3 + 2 layout:
-  // First row: first 3 members
-  // Second row: remaining members centered underneath
-  const topRowMembers = members.slice(0, 3);
-  const bottomRowMembers = members.slice(3);
+  // Map incoming data to Stitch structure while ensuring exact 5-person 3+2 layout
+  const resolvedMembers = (members && members.length > 0)
+    ? members.map((m, idx) => {
+        const def = DEFAULT_MEMBERS[idx] || {};
+        return {
+          ...def,
+          ...m,
+          name: m.name || def.name,
+          role: m.designation || m.role || def.role,
+          initials: m.initials || m.avatar?.value || def.initials,
+          bio: m.bio || def.bio,
+          badgeText: m.badge?.text || def.badgeText,
+          companies: m.companies || def.companies,
+          footerTag: m.footerTag || def.footerTag,
+          colSpan: idx === 4 ? 2 : 1
+        };
+      })
+    : DEFAULT_MEMBERS;
 
   return (
     <section id="leadership" className="LeadershipTeam-section" aria-label="Executive Leadership Governance">
@@ -187,10 +105,10 @@ const LeadershipTeam = ({ data }) => {
             text={eyebrow}
             icon={
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
-                <circle cx="9" cy="7" r="4"></circle>
-                <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
-                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                <circle cx="9" cy="7" r="4" />
+                <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                <path d="M16 3.13a4 4 0 0 1 0 7.75" />
               </svg>
             }
           />
@@ -198,116 +116,73 @@ const LeadershipTeam = ({ data }) => {
           <p className="LeadershipTeam-subtitle">{subheading}</p>
         </div>
 
-        {/* 3 + 2 Responsive Layout */}
-        <div className="LeadershipTeam-layoutWrapper">
-          {/* Top Row: 3 cards */}
-          <div className="LeadershipTeam-rowTop">
-            {topRowMembers.map((member, idx) => (
-              <ScrollReveal key={member.id} direction="up" delay={idx * 0.1} distance={40} style={{ display: 'flex' }}>
-                <LeadershipCard
-                  member={member}
-                  onOpenModal={setModalMember}
-                />
-              </ScrollReveal>
-            ))}
-          </div>
+        {/* 3 + 2 Grid Layout matching Stitch */}
+        <div className="LeadershipTeam-grid">
+          {resolvedMembers.map((member, idx) => {
+            const isWide = member.colSpan === 2;
 
-          {/* Bottom Row: 2 cards centered */}
-          {bottomRowMembers.length > 0 && (
-            <div className="LeadershipTeam-rowBottom">
-              {bottomRowMembers.map((member, idx) => (
-                <ScrollReveal key={member.id} direction="up" delay={(idx + 3) * 0.1} distance={40} style={{ display: 'flex' }}>
-                  <LeadershipCard
-                    member={member}
-                    onOpenModal={setModalMember}
-                  />
-                </ScrollReveal>
-              ))}
-            </div>
-          )}
+            return (
+              <ScrollReveal
+                key={member.id || idx}
+                direction="up"
+                delay={idx * 0.08}
+                distance={35}
+                className={isWide ? 'LeadershipTeam-colSpan2' : ''}
+                style={{ display: 'flex' }}
+              >
+                <div className={`LeadershipTeam-card ${isWide ? 'LeadershipTeam-card--wide' : ''}`} style={{ width: '100%' }}>
+                  {/* Card Header: Avatar & Experience Badge */}
+                  <div className="LeadershipTeam-cardHeader">
+                    <div className={`LeadershipTeam-avatar LeadershipTeam-avatar--${member.avatarVariant || 'primary-fixed'}`}>
+                      {member.initials}
+                    </div>
+
+                    {member.badgeText && (
+                      <span className="LeadershipTeam-expBadge">
+                        <span className={`LeadershipTeam-expDot ${member.badgeDotColor === 'emerald' ? 'bg-emerald-accent' : 'bg-cobalt-bright'}`} />
+                        <span>{member.badgeText}</span>
+                      </span>
+                    )}
+
+                    {member.companies && member.companies.length > 0 && (
+                      <div className="LeadershipTeam-companyPills">
+                        {member.companies.map((comp, cIdx) => (
+                          <span key={cIdx} className="LeadershipTeam-companyPill">
+                            {comp}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Name and Title */}
+                  <div className="LeadershipTeam-meta">
+                    <h3 className="LeadershipTeam-name">{member.name}</h3>
+                    <span className="LeadershipTeam-designation">{member.role}</span>
+                  </div>
+
+                  {/* Bio */}
+                  <p className="LeadershipTeam-bio">{member.bio}</p>
+
+                  {/* Card Footer: Domain Tag & LinkedIn Link */}
+                  <div className="LeadershipTeam-cardFooter">
+                    <span className="LeadershipTeam-footerTagText">{member.footerTag}</span>
+                    <a
+                      href={member.linkedinUrl || 'https://www.linkedin.com/company/thinkwires-technology'}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="LeadershipTeam-socialLink"
+                      aria-label={`${member.name} LinkedIn Profile`}
+                    >
+                      <span className="LeadershipTeam-socialIcon">in</span>
+                    </a>
+                  </div>
+                </div>
+              </ScrollReveal>
+            );
+          })}
         </div>
       </div>
-
-      {/* Full Biography Modal */}
-      {modalMember && (
-        <div
-          className="LeadershipModal-overlay"
-          onClick={() => setModalMember(null)}
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="leadership-modal-title"
-        >
-          <div className="LeadershipModal-content" onClick={(e) => e.stopPropagation()}>
-            <button
-              type="button"
-              onClick={() => setModalMember(null)}
-              className="LeadershipModal-closeBtn"
-              aria-label="Close Biography Modal"
-            >
-              <CloseIcon size={18} />
-            </button>
-
-            <div className="LeadershipModal-header">
-              <div
-                className="LeadershipModal-avatar"
-                style={{
-                  backgroundColor: modalMember.avatar?.bgColor || '#0037B0',
-                  color: modalMember.avatar?.textColor || '#FFFFFF'
-                }}
-              >
-                {modalMember.initials || modalMember.avatar?.value || modalMember.name.split(' ').map(n => n[0]).join('')}
-              </div>
-
-              <div>
-                <h3 id="leadership-modal-title" className="LeadershipModal-name">{modalMember.name}</h3>
-                <div className="LeadershipModal-designation">{modalMember.designation}</div>
-                {modalMember.badge?.text && (
-                  <div className="LeadershipModal-badge">
-                    <span>{modalMember.badge.text}</span>
-                  </div>
-                )}
-              </div>
-            </div>
-
-            <div className="LeadershipModal-body">
-              <h4 className="LeadershipModal-bioLabel">Executive Biography</h4>
-              <p className="LeadershipModal-bioText">{modalMember.bio}</p>
-
-              {modalMember.expertise && (
-                <div className="LeadershipModal-tagsGroup">
-                  <span className="LeadershipModal-tagsLabel">Areas of Expertise</span>
-                  <div className="LeadershipModal-tagsList">
-                    {(Array.isArray(modalMember.expertise) ? modalMember.expertise : modalMember.expertise.split(',')).map((item, idx) => (
-                      <span key={idx} className="LeadershipModal-tagItem">{item.trim()}</span>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {modalMember.companies && modalMember.companies.length > 0 && (
-                <div className="LeadershipModal-tagsGroup">
-                  <span className="LeadershipModal-tagsLabel">Prior Enterprise Environments</span>
-                  <div className="LeadershipModal-tagsList">
-                    {modalMember.companies.map((comp, idx) => (
-                      <span key={idx} className="LeadershipModal-companyItem">{comp}</span>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-
-            <div className="LeadershipModal-footer">
-              <button
-                type="button"
-                onClick={() => setModalMember(null)}
-                className="LeadershipModal-doneBtn"
-              >
-                Close Biography
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </section>
   );
 };

@@ -205,6 +205,48 @@ const jobApplicationSchema = new mongoose.Schema(
       type: String,
       default: '',
     },
+
+    // AI ATS Fit Scoring & Assessment Gatekeeper
+    fitScore: {
+      type: Number,
+      default: null,
+      min: 0,
+      max: 100,
+    },
+    fitBadge: {
+      type: String,
+      enum: ['Top Match', 'Moderate Match', 'Below Threshold', null],
+      default: null,
+    },
+    aiAnalysis: {
+      skillsMatch: { type: Number, default: 0 },
+      experienceMatch: { type: Number, default: 0 },
+      matchedSkills: { type: [String], default: [] },
+      missingSkills: { type: [String], default: [] },
+      strengths: { type: [String], default: [] },
+      growthAreas: { type: [String], default: [] },
+      recommendation: { type: String, default: '' },
+    },
+    assessment: {
+      testId: { type: String, default: '' },
+      totalPoints: { type: Number, default: 100 },
+      passingThreshold: { type: Number, default: 75 },
+      timeLimitMinutes: { type: Number, default: 20 },
+      questions: { type: [mongoose.Schema.Types.Mixed], default: [] },
+    },
+    assessmentScore: {
+      type: Number,
+      default: null,
+    },
+    assessmentStatus: {
+      type: String,
+      enum: ['Not Started', 'In Progress', 'Passed', 'Failed'],
+      default: 'Not Started',
+    },
+    screeningPassed: {
+      type: Boolean,
+      default: null,
+    },
   },
   {
     timestamps: true,

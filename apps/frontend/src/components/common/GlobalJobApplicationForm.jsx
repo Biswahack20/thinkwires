@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
+import ScreeningAssessmentModal from './ScreeningAssessmentModal';
 
 /**
  * GlobalJobApplicationForm
@@ -109,20 +110,27 @@ const GlobalJobApplicationForm = ({ isOpen, onClose, jobData = {} }) => {
   const [resumeFile, setResumeFile] = useState(null);
   const [resumeError, setResumeError] = useState('');
   const [submitting, setSubmitting] = useState(false);
+  const [parsingResume, setParsingResume] = useState(false);
+  const [autoFillNotice, setAutoFillNotice] = useState('');
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [duplicateApp, setDuplicateApp] = useState(null);
 
+  // Assessment Gatekeeper state
+  const [createdApp, setCreatedApp] = useState(null);
+  const [createdAssessment, setCreatedAssessment] = useState(null);
+  const [isAssessmentModalOpen, setIsAssessmentModalOpen] = useState(false);
+
   // Handle ESC key to close modal
   useEffect(() => {
     const handleKeyDown = (e) => {
-      if (e.key === 'Escape' && isOpen && !submitting) {
+      if (e.key === 'Escape' && isOpen && !submitting && !isAssessmentModalOpen) {
         onClose();
       }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen, submitting, onClose]);
+  }, [isOpen, submitting, isAssessmentModalOpen, onClose]);
 
   if (!isOpen) return null;
 
@@ -131,8 +139,68 @@ const GlobalJobApplicationForm = ({ isOpen, onClose, jobData = {} }) => {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleFileChange = (e) => {
+  /**
+   * Pre-fill form from Candidate Portal Profile
+   */
+  const handleFillFromProfile = () => {
+    const parts = splitCandidateName(user?.name);
+    setFormData({
+      lastName: parts.last || '',
+      firstName: parts.first || '',
+      mobileNumber: user?.phone || '',
+      email: user?.email || '',
+      applicationType: 'Permanent',
+      noticePeriod: 'Immediate',
+      city: user?.location ? user.location.split(',')[0].trim() : '',
+      state: user?.location && user.location.includes(',') ? user.location.split(',')[1].trim() : '',
+      totalExperienceYears: user?.experience ? String(user.experience) : '',
+      relevantExperienceYears: '',
+      currentEmployer: '',
+      currentCTC: '',
+      expectedCTC: user?.expectedSalary || '',
+      skillSet: Array.isArray(user?.technicalSkills)
+        ? user.technicalSkills.join(', ')
+        : user?.skills || '',
+      linkedInLink: user?.linkedinUrl || '',
+      facebookLink: '',
+      candidateNote: user?.bio || '',
+    });
+    setAutoFillNotice('⚡ Form pre-filled from your portal profile! You can review and adjust any field.');
+  };
+
+  /**
+   * Reset all form fields to fill from scratch
+   */
+  const handleClearForm = () => {
+    setFormData({
+      lastName: '',
+      firstName: '',
+      mobileNumber: '',
+      email: '',
+      applicationType: 'Permanent',
+      noticePeriod: 'Immediate',
+      city: '',
+      state: '',
+      totalExperienceYears: '',
+      relevantExperienceYears: '',
+      currentEmployer: '',
+      currentCTC: '',
+      expectedCTC: '',
+      skillSet: '',
+      linkedInLink: '',
+      facebookLink: '',
+      candidateNote: '',
+    });
+    setResumeFile(null);
+    setAutoFillNotice('Form cleared. Please fill in your details from scratch.');
+  };
+
+  /**
+   * Upload resume and trigger AI extraction for auto-fill
+   */
+  const handleFileChange = async (e) => {
     setResumeError('');
+    setAutoFillNotice('');
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
       const validExtensions = ['.pdf', '.doc', '.docx'];
@@ -151,6 +219,41 @@ const GlobalJobApplicationForm = ({ isOpen, onClose, jobData = {} }) => {
       }
 
       setResumeFile(file);
+
+      // Trigger automatic AI resume parsing & form auto-fill
+      setParsingResume(true);
+      try {
+        const parseData = new FormData();
+        parseData.append('resume', file);
+        const res = await fetch('/api/candidate/parse-resume', {
+          method: 'POST',
+          credentials: 'include',
+          body: parseData,
+        });
+
+        const data = await res.json();
+        if (res.ok && data.parsed) {
+          const p = data.parsed;
+          setFormData((prev) => ({
+            ...prev,
+            firstName: p.firstName || prev.firstName,
+            lastName: p.lastName || prev.lastName,
+            email: p.email || prev.email,
+            mobileNumber: p.mobileNumber || prev.mobileNumber,
+            city: p.city || prev.city,
+            state: p.state || prev.state,
+            totalExperienceYears: p.totalExperienceYears || prev.totalExperienceYears,
+            skillSet: p.skillSet || prev.skillSet,
+            linkedInLink: p.linkedInLink || prev.linkedInLink,
+            candidateNote: p.candidateNote || prev.candidateNote,
+          }));
+          setAutoFillNotice('🤖 AI Resume Parsed: Extracted details auto-filled! You can modify any fields below before submitting.');
+        }
+      } catch (parseErr) {
+        console.warn('AI resume auto-fill non-blocking warning:', parseErr.message);
+      } finally {
+        setParsingResume(false);
+      }
     }
   };
 
@@ -245,11 +348,19 @@ const GlobalJobApplicationForm = ({ isOpen, onClose, jobData = {} }) => {
       const data = await response.json();
 
       if (response.ok) {
-        setSuccess(`Application submitted successfully for "${normalizedJob.title}"! Recruitment notification dispatched.`);
-        setTimeout(() => {
-          onClose();
-          navigate('/candidate/applications');
-        }, 1800);
+        setSuccess(`Application submitted successfully! ATS Fit Score: ${data.fitScore || 85}% (${data.fitBadge || 'Top Match'}). Launching AI Screening Assessment...`);
+        setCreatedApp(data.application || { _id: 'app_new' });
+        setCreatedAssessment(data.assessment);
+        if (data.assessment) {
+          setTimeout(() => {
+            setIsAssessmentModalOpen(true);
+          }, 800);
+        } else {
+          setTimeout(() => {
+            onClose();
+            navigate('/candidate/applications');
+          }, 1800);
+        }
       } else if (response.status === 409) {
         setDuplicateApp(data.existingApplication || true);
         setError(data.error || `You have already applied for "${normalizedJob.title}".`);
@@ -268,22 +379,26 @@ const GlobalJobApplicationForm = ({ isOpen, onClose, jobData = {} }) => {
   return (
     <div
       className="ApplyModal-overlay"
+      data-lenis-prevent="true"
       onClick={(e) => {
         if (e.target === e.currentTarget && !submitting) onClose();
       }}
       role="dialog"
       aria-modal="true"
       aria-labelledby="global-apply-modal-title"
-      style={{ zIndex: 9999 }}
+      style={{ zIndex: 9999, overscrollBehavior: 'contain' }}
     >
       <div
         className="ApplyModal-content"
+        data-lenis-prevent="true"
+        onWheel={(e) => e.stopPropagation()}
         style={{
           maxWidth: '680px',
           borderRadius: '12px',
           boxShadow: '0 25px 50px -12px rgba(15, 23, 42, 0.25)',
           overflowY: 'auto',
           maxHeight: '92vh',
+          overscrollBehavior: 'contain',
         }}
       >
         {/* Dismiss Button */}
@@ -461,8 +576,61 @@ const GlobalJobApplicationForm = ({ isOpen, onClose, jobData = {} }) => {
           )}
         </div>
 
+        {/* Auto-fill Options Toolbar */}
+        <div
+          style={{
+            display: 'flex',
+            gap: '0.6rem',
+            padding: '0.75rem 1.75rem 0 1.75rem',
+            flexWrap: 'wrap',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+          }}
+        >
+          <span style={{ fontSize: '0.78rem', color: '#64748B', fontWeight: 700, textTransform: 'uppercase' }}>
+            Form Fill Assistance:
+          </span>
+          <div style={{ display: 'flex', gap: '0.5rem' }}>
+            <button
+              type="button"
+              onClick={handleFillFromProfile}
+              style={{
+                background: '#E6F4F0',
+                color: '#008F68',
+                border: '1px solid #A7F3D0',
+                padding: '0.35rem 0.75rem',
+                borderRadius: '6px',
+                fontSize: '0.8rem',
+                fontWeight: 700,
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.35rem',
+              }}
+            >
+              <span>⚡</span> Pre-fill from Profile
+            </button>
+            <button
+              type="button"
+              onClick={handleClearForm}
+              style={{
+                background: '#F1F5F9',
+                color: '#475569',
+                border: '1px solid #CBD5E1',
+                padding: '0.35rem 0.75rem',
+                borderRadius: '6px',
+                fontSize: '0.8rem',
+                fontWeight: 600,
+                cursor: 'pointer',
+              }}
+            >
+              🧹 Fill from Scratch
+            </button>
+          </div>
+        </div>
+
         {/* Application Form */}
-        <form onSubmit={handleSubmit} className="ApplyModal-form" style={{ padding: '1.5rem 1.75rem', gap: '1.25rem' }}>
+        <form onSubmit={handleSubmit} className="ApplyModal-form" style={{ padding: '1.25rem 1.75rem', gap: '1.25rem' }}>
           
           {/* SECTION 1: RESUME */}
           <div style={{ borderBottom: '1px solid #E2E8F0', paddingBottom: '1.25rem' }}>
@@ -497,10 +665,50 @@ const GlobalJobApplicationForm = ({ isOpen, onClose, jobData = {} }) => {
                   {resumeFile ? resumeFile.name : (user?.resumeUrl ? 'Using existing verified resume (click to replace)' : 'Click to browse or drop resume file')}
                 </p>
                 <p className="ApplyModal-uploadSubText" style={{ margin: '0.2rem 0 0 0' }}>
-                  PDF, DOC, DOCX up to 10MB
+                  PDF, DOC, DOCX up to 10MB (Automatically auto-fills form upon upload)
                 </p>
               </div>
             </div>
+            {parsingResume && (
+              <div
+                style={{
+                  marginTop: '0.6rem',
+                  padding: '0.5rem 0.85rem',
+                  background: '#EFF6FF',
+                  borderRadius: '6px',
+                  color: '#1D4ED8',
+                  fontSize: '0.82rem',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                  fontWeight: 600,
+                  border: '1px solid #BFDBFE',
+                }}
+              >
+                <span>⚙️</span>
+                <span>AI is extracting details from your resume to auto-fill the form...</span>
+              </div>
+            )}
+            {autoFillNotice && !parsingResume && (
+              <div
+                style={{
+                  marginTop: '0.6rem',
+                  padding: '0.5rem 0.85rem',
+                  background: '#ECFDF5',
+                  borderRadius: '6px',
+                  color: '#065F46',
+                  fontSize: '0.82rem',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                  fontWeight: 600,
+                  border: '1px solid #A7F3D0',
+                }}
+              >
+                <span>✓</span>
+                <span>{autoFillNotice}</span>
+              </div>
+            )}
             {resumeError && (
               <span style={{ color: '#DC2626', fontSize: '0.8rem', marginTop: '0.4rem', display: 'block' }}>
                 {resumeError}
@@ -805,6 +1013,27 @@ const GlobalJobApplicationForm = ({ isOpen, onClose, jobData = {} }) => {
           </div>
         </form>
       </div>
+
+      {/* AI Screening Assessment Proctored Modal */}
+      {isAssessmentModalOpen && createdApp && (
+        <ScreeningAssessmentModal
+          isOpen={isAssessmentModalOpen}
+          onClose={() => {
+            setIsAssessmentModalOpen(false);
+            onClose();
+            navigate('/candidate/dashboard');
+          }}
+          applicationId={createdApp._id || createdApp.id}
+          initialAssessment={createdAssessment}
+          onComplete={() => {
+            setTimeout(() => {
+              setIsAssessmentModalOpen(false);
+              onClose();
+              navigate('/candidate/dashboard');
+            }, 2500);
+          }}
+        />
+      )}
     </div>
   );
 };

@@ -2,12 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Navbar from '../../components/common/Navbar';
 import Footer from '../../components/common/Footer';
+import ScreeningAssessmentModal from '../../components/common/ScreeningAssessmentModal';
 import '../auth/auth.css';
 
 const CandidateApplicationsPage = () => {
   const [applications, setApplications] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [assessmentModalApp, setAssessmentModalApp] = useState(null);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -137,9 +139,11 @@ const CandidateApplicationsPage = () => {
                     <th>Department</th>
                     <th>Location</th>
                     <th>Experience</th>
-                    <th>Application Stage</th>
+                    <th>ATS Fit Score</th>
+                    <th>AI Screening Test</th>
+                    <th>Stage</th>
                     <th>Status</th>
-                    <th>Submission Date</th>
+                    <th>Submitted</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -149,8 +153,65 @@ const CandidateApplicationsPage = () => {
                       <td>{app.department || 'Engineering'}</td>
                       <td>{app.location || 'Remote'}</td>
                       <td>{app.experience || 'Not specified'}</td>
+                      <td>
+                        {app.fitScore != null ? (
+                          <span
+                            style={{
+                              display: 'inline-block',
+                              padding: '0.2rem 0.55rem',
+                              borderRadius: '6px',
+                              fontSize: '0.8rem',
+                              fontWeight: 600,
+                              background: app.fitScore >= 75 ? '#DCFCE7' : app.fitScore >= 50 ? '#FEF9C3' : '#FEE2E2',
+                              color: app.fitScore >= 75 ? '#166534' : app.fitScore >= 50 ? '#854D0E' : '#991B1B',
+                            }}
+                          >
+                            {app.fitScore}% {app.fitBadge ? `• ${app.fitBadge}` : ''}
+                          </span>
+                        ) : (
+                          <span style={{ color: '#94A3B8', fontSize: '0.82rem' }}>Calculated</span>
+                        )}
+                      </td>
+                      <td>
+                        {app.assessmentStatus === 'Completed' || app.assessmentStatus === 'Passed' || app.assessmentStatus === 'Failed' ? (
+                          <span
+                            style={{
+                              display: 'inline-block',
+                              padding: '0.2rem 0.55rem',
+                              borderRadius: '6px',
+                              fontSize: '0.8rem',
+                              fontWeight: 600,
+                              background: (app.screeningPassed || app.assessmentScore >= 70) ? '#DCFCE7' : '#FEE2E2',
+                              color: (app.screeningPassed || app.assessmentScore >= 70) ? '#166534' : '#991B1B',
+                            }}
+                          >
+                            {(app.screeningPassed || app.assessmentScore >= 70) ? 'Passed' : 'Completed'} ({app.assessmentScore || 0}%)
+                          </span>
+                        ) : (
+                          <button
+                            type="button"
+                            onClick={() => setAssessmentModalApp(app)}
+                            style={{
+                              background: '#2563EB',
+                              color: '#FFFFFF',
+                              border: 'none',
+                              borderRadius: '6px',
+                              padding: '0.3rem 0.7rem',
+                              fontSize: '0.8rem',
+                              fontWeight: 600,
+                              cursor: 'pointer',
+                              display: 'inline-flex',
+                              alignItems: 'center',
+                              gap: '0.35rem',
+                              boxShadow: '0 1px 2px rgba(37,99,235,0.2)',
+                            }}
+                          >
+                            <span>📝 Take Test</span>
+                          </button>
+                        )}
+                      </td>
                       <td style={{ color: '#2563EB', fontWeight: 500 }}>
-                        {app.stage || 'In Review'}
+                        {app.stage || 'Screening'}
                       </td>
                       <td>
                         <span
@@ -169,7 +230,7 @@ const CandidateApplicationsPage = () => {
                           {app.status || 'Applied'}
                         </span>
                       </td>
-                      <td>{new Date(app.createdAt || app.appliedAt).toLocaleDateString()}</td>
+                      <td>{new Date(app.createdAt || app.appliedAt || Date.now()).toLocaleDateString()}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -177,6 +238,31 @@ const CandidateApplicationsPage = () => {
             </div>
           )}
         </div>
+
+        {/* Proctored Screening Assessment Modal */}
+        {assessmentModalApp && (
+          <ScreeningAssessmentModal
+            applicationId={assessmentModalApp._id || assessmentModalApp.id}
+            jobTitle={assessmentModalApp.jobTitle}
+            onClose={() => setAssessmentModalApp(null)}
+            onCompleted={(result) => {
+              setApplications((prev) =>
+                prev.map((a) =>
+                  (a._id || a.id) === (assessmentModalApp._id || assessmentModalApp.id)
+                    ? {
+                        ...a,
+                        assessmentScore: result.percentageScore,
+                        assessmentStatus: 'Completed',
+                        screeningPassed: result.passed,
+                        stage: result.gatekeeperStatus || a.stage,
+                      }
+                    : a
+                )
+              );
+              setAssessmentModalApp(null);
+            }}
+          />
+        )}
       </main>
 
       <Footer />
@@ -185,3 +271,4 @@ const CandidateApplicationsPage = () => {
 };
 
 export default CandidateApplicationsPage;
+

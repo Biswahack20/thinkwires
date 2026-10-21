@@ -16,6 +16,8 @@ const BenchCandidateCard = ({ talent }) => {
     yearsExp,
     location,
     score,
+    assessmentScore,
+    fitScore,
     urgency,
     hourlyRate,
     proofQuote,
@@ -76,6 +78,20 @@ const BenchCandidateCard = ({ talent }) => {
             style={{ width: `${Math.min(score, 100)}%` }}
           ></div>
         </div>
+        {(assessmentScore != null || fitScore != null) && (
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '0.45rem', fontSize: '0.74rem' }}>
+            {assessmentScore != null && (
+              <span style={{ color: '#15803D', fontWeight: 600, background: '#DCFCE7', padding: '0.15rem 0.4rem', borderRadius: '4px' }}>
+                AI Assessment: {assessmentScore}%
+              </span>
+            )}
+            {fitScore != null && (
+              <span style={{ color: '#1D4ED8', fontWeight: 600, background: '#DBEAFE', padding: '0.15rem 0.4rem', borderRadius: '4px' }}>
+                ATS Match: {fitScore}%
+              </span>
+            )}
+          </div>
+        )}
       </div>
 
       {/* Verified Engineering Proof Quote */}

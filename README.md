@@ -10,12 +10,14 @@ ThinkWires is an enterprise tech manpower supply, global staffing, and talent ma
 
 ## 📚 Project Documentation Hub
 
-| Document                                                                                               | Primary Audience            | Scope & Contents                                                                                                                                 |
-| ------------------------------------------------------------------------------------------------------ | --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
-| 🌐 [**FrontendDocs.md**](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/FrontendDocs.md) | Frontend Engineers & Agents | React 19 architecture, Vite proxy, Redux Toolkit (13 slices), routing inventory, design tokens, Three.js canvas, and auth state.                 |
-| ⚙️ [**BackendDocs.md**](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/BackendDocs.md)   | Backend Engineers & Agents  | Express 5 API Gateway, dual-persistence (PostgreSQL + MongoDB), non-blocking in-memory fallback, rate limiting, and complete REST API reference. |
-| 🎛️ [**adminPanel.md**](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/adminPanel.md)     | Admins, Ops & Agents        | 15 Admin & CMS views, Recharts financial analytics, 6-stage ATS Kanban, RBAC persona switcher (`X-Demo-Role`), and live preview editors.         |
-| 📄 [**docs/PRD.md**](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/docs/PRD.md)         | Product Managers & Leads    | Product Requirements Document, business KPIs, screening test specifications, and platform roadmap.                                               |
+| Document                                                                                                    | Primary Audience            | Scope & Contents                                                                                                                                 |
+| ----------------------------------------------------------------------------------------------------------- | --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 🌐 [**docs/FrontendDocs.md**](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/docs/FrontendDocs.md) | Frontend Engineers & Agents | React 19 architecture, Vite proxy, Redux Toolkit (13 slices), routing inventory, design tokens, Three.js canvas, and auth state.                 |
+| ⚙️ [**docs/BackendDocs.md**](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/docs/BackendDocs.md)   | Backend Engineers & Agents  | Express 5 API Gateway, dual-persistence (PostgreSQL + MongoDB), non-blocking in-memory fallback, rate limiting, and complete REST API reference. |
+| 🧠 [**docs/Ai_ServicesDocs.md**](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/docs/Ai_ServicesDocs.md) | AI Engineers & Agents     | Python FastAPI microservice, resume parsing, ATS match scorer, 10-question assessment generator, and automated test grader.                    |
+| 🎛️ [**docs/adminPanel.md**](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/docs/adminPanel.md)     | Admins, Ops & Agents        | 15 Admin & CMS views, Recharts financial analytics, 6-stage ATS Kanban, RBAC persona switcher (`X-Demo-Role`), and live preview editors.         |
+| 📄 [**docs/PRD.md**](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/docs/PRD.md)                   | Product Managers & Leads    | Product Requirements Document, business KPIs, screening test specifications, and platform roadmap.                                               |
+| 🎨 [**docs/Design.md**](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/docs/Design.md)             | Designers & Developers      | Design aesthetic rules, color tokens, typography scales, glassmorphism specs, and UI guidelines.                                                 |
 
 ---
 
@@ -29,10 +31,7 @@ thinkwires/
 │   ├── frontend/         # React 19 + Vite + Redux Toolkit (Port 5173)
 │   ├── backend/          # Node.js + Express 5 Core API Gateway (Port 5000)
 │   └── ai_services/      # Python 3.12 + FastAPI Microservice (Port 8000)
-├── docs/                 # Product specifications & architectural guides
-├── FrontendDocs.md       # Complete frontend documentation
-├── BackendDocs.md        # Complete backend documentation
-├── adminPanel.md         # Complete Admin Panel & CMS documentation
+├── docs/                 # Consolidated documentation suite (Frontend, Backend, AI, Admin, PRD)
 ├── package.json          # Root orchestration & unified scripts
 └── turbo.json            # Turborepo task pipeline configuration
 ```
@@ -203,13 +202,18 @@ thinkwires/
 │   │
 │   └── ai_services/
 │       ├── main.py               # FastAPI application entry point
-│       ├── requirements.txt      # LangChain, OpenAI, and pdfplumber dependencies
+│       ├── requirements.txt      # FastAPI, pypdf, httpx dependencies
+│       ├── tests/                # Automated pytest suites (13 passing tests)
+│       ├── app/                  # Modular package (config, schemas, services, api/v1)
 │       └── venv/                 # Python virtual environment
 │
-├── docs/                         # PRD, specs, and design documentation
-├── FrontendDocs.md               # Detailed frontend developer & agent guide
-├── BackendDocs.md                # Detailed backend developer & agent guide
-├── adminPanel.md                 # Detailed Admin Panel & CMS manual
+├── docs/                         # Platform & Microservice Documentation
+│   ├── adminPanel.md             # Admin Panel & CMS manual
+│   ├── Ai_ServicesDocs.md        # Comprehensive AI Microservice architecture & API guide
+│   ├── BackendDocs.md            # Detailed backend developer & agent guide
+│   ├── Design.md                 # Design system, tokens, and aesthetic specifications
+│   ├── FrontendDocs.md           # Detailed frontend developer & agent guide
+│   └── PRD.md                    # Platform Product Requirements Document
 ├── package.json                  # Turborepo root configuration
 └── turbo.json                    # Turborepo pipeline tasks
 ```

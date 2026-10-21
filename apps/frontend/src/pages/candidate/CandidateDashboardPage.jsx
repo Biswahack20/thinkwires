@@ -4,6 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { logoutUser } from '../../store/slices/authSlice';
 import Navbar from '../../components/common/Navbar';
 import Footer from '../../components/common/Footer';
+import ScreeningAssessmentModal from '../../components/common/ScreeningAssessmentModal';
 import '../auth/auth.css';
 
 const CandidateDashboardPage = () => {
@@ -14,6 +15,7 @@ const CandidateDashboardPage = () => {
   const [dashboardData, setDashboardData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [assessmentModalApp, setAssessmentModalApp] = useState(null);
 
   useEffect(() => {
     window.scrollTo(0, 0);
@@ -172,7 +174,7 @@ const CandidateDashboardPage = () => {
               Edit Full Profile →
             </Link>
           </div>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))', gap: '1.25rem' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1.25rem' }}>
             <div>
               <div style={{ fontSize: '0.78rem', color: '#64748B', fontWeight: 600, textTransform: 'uppercase' }}>
                 Primary Specialty
@@ -191,10 +193,22 @@ const CandidateDashboardPage = () => {
             </div>
             <div>
               <div style={{ fontSize: '0.78rem', color: '#64748B', fontWeight: 600, textTransform: 'uppercase' }}>
-                Expected CTC / Compensation
+                Expected CTC / Retainer
               </div>
               <div style={{ fontSize: '1rem', fontWeight: 600, color: '#008F68', marginTop: '0.2rem' }}>
                 {candidateProfile.expectedSalary || 'Market Standard'}
+              </div>
+            </div>
+            <div>
+              <div style={{ fontSize: '0.78rem', color: '#64748B', fontWeight: 600, textTransform: 'uppercase' }}>
+                AI Vetting Score
+              </div>
+              <div style={{ fontSize: '1rem', fontWeight: 700, color: '#2563EB', marginTop: '0.2rem' }}>
+                {candidateProfile.assessmentScore != null
+                  ? `${candidateProfile.assessmentScore}%`
+                  : candidateProfile.vettingScore
+                  ? `${candidateProfile.vettingScore}% (Calibrated)`
+                  : 'Pending Test'}
               </div>
             </div>
             <div>
@@ -278,6 +292,8 @@ const CandidateDashboardPage = () => {
                     <th>Department</th>
                     <th>Location</th>
                     <th>Date Applied</th>
+                    <th>ATS Fit Score</th>
+                    <th>AI Screening Test</th>
                     <th>Current Status</th>
                   </tr>
                 </thead>
@@ -287,7 +303,64 @@ const CandidateDashboardPage = () => {
                       <td style={{ fontWeight: 600, color: '#0F172A' }}>{app.jobTitle}</td>
                       <td>{app.department || 'Engineering'}</td>
                       <td>{app.location || 'Remote'}</td>
-                      <td>{new Date(app.createdAt || app.appliedAt).toLocaleDateString()}</td>
+                      <td>{new Date(app.createdAt || app.appliedAt || Date.now()).toLocaleDateString()}</td>
+                      <td>
+                        {app.fitScore != null ? (
+                          <span
+                            style={{
+                              display: 'inline-block',
+                              padding: '0.2rem 0.55rem',
+                              borderRadius: '6px',
+                              fontSize: '0.8rem',
+                              fontWeight: 600,
+                              background: app.fitScore >= 75 ? '#DCFCE7' : app.fitScore >= 50 ? '#FEF9C3' : '#FEE2E2',
+                              color: app.fitScore >= 75 ? '#166534' : app.fitScore >= 50 ? '#854D0E' : '#991B1B',
+                            }}
+                          >
+                            {app.fitScore}% {app.fitBadge ? `• ${app.fitBadge}` : ''}
+                          </span>
+                        ) : (
+                          <span style={{ color: '#94A3B8', fontSize: '0.82rem' }}>Calculated</span>
+                        )}
+                      </td>
+                      <td>
+                        {app.assessmentStatus === 'Completed' || app.assessmentStatus === 'Passed' || app.assessmentStatus === 'Failed' ? (
+                          <span
+                            style={{
+                              display: 'inline-block',
+                              padding: '0.2rem 0.55rem',
+                              borderRadius: '6px',
+                              fontSize: '0.8rem',
+                              fontWeight: 600,
+                              background: (app.screeningPassed || app.assessmentScore >= 70) ? '#DCFCE7' : '#FEE2E2',
+                              color: (app.screeningPassed || app.assessmentScore >= 70) ? '#166534' : '#991B1B',
+                            }}
+                          >
+                            {(app.screeningPassed || app.assessmentScore >= 70) ? 'Passed' : 'Completed'} ({app.assessmentScore || 0}%)
+                          </span>
+                        ) : (
+                          <button
+                            type="button"
+                            onClick={() => setAssessmentModalApp(app)}
+                            style={{
+                              background: '#2563EB',
+                              color: '#FFFFFF',
+                              border: 'none',
+                              borderRadius: '6px',
+                              padding: '0.3rem 0.7rem',
+                              fontSize: '0.8rem',
+                              fontWeight: 600,
+                              cursor: 'pointer',
+                              display: 'inline-flex',
+                              alignItems: 'center',
+                              gap: '0.35rem',
+                              boxShadow: '0 1px 2px rgba(37,99,235,0.2)',
+                            }}
+                          >
+                            <span>📝 Take Test</span>
+                          </button>
+                        )}
+                      </td>
                       <td>
                         <span
                           className={`tw-badge-status ${
@@ -312,6 +385,39 @@ const CandidateDashboardPage = () => {
             </div>
           )}
         </div>
+
+        {/* Proctored Screening Assessment Modal */}
+        {assessmentModalApp && (
+          <ScreeningAssessmentModal
+            applicationId={assessmentModalApp._id || assessmentModalApp.id}
+            jobTitle={assessmentModalApp.jobTitle}
+            onClose={() => setAssessmentModalApp(null)}
+            onCompleted={(result) => {
+              setDashboardData((prev) => {
+                if (!prev) return prev;
+                return {
+                  ...prev,
+                  profile: {
+                    ...(prev.profile || {}),
+                    assessmentScore: result.percentageScore,
+                    vettingScore: Math.max(result.percentageScore, 85),
+                  },
+                  recentApplications: (prev.recentApplications || []).map((a) =>
+                    (a._id || a.id) === (assessmentModalApp._id || assessmentModalApp.id)
+                      ? {
+                          ...a,
+                          assessmentScore: result.percentageScore,
+                          assessmentStatus: 'Completed',
+                          screeningPassed: result.passed,
+                        }
+                      : a
+                  ),
+                };
+              });
+              setAssessmentModalApp(null);
+            }}
+          />
+        )}
       </main>
 
       <Footer />
