@@ -9,6 +9,8 @@ import Article from '../models/article.mongo.model.js';
 import Page from '../models/page.mongo.model.js';
 import TechStack from '../models/techStack.mongo.model.js';
 import Candidate from '../models/candidate.mongo.model.js';
+import Activity from '../models/activity.mongo.model.js';
+import { logger } from '../utils/logger.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -554,14 +556,30 @@ router.post('/reports', async (req, res) => {
 });
 
 // --- Old Contact Form (kept for backward compat) ---
-router.post('/contact', (req, res) => {
+router.post('/contact', async (req, res) => {
   const { email, phone } = req.body;
-  if (email && phone) {
-    console.log('New Contact Request:', { email, phone });
-    res.json({ message: 'Callback requested successfully!' });
-  } else {
-    res.status(400).json({ error: 'Email and Phone are required' });
+  if (!email || !phone) {
+    return res.status(400).json({ error: 'Email and Phone are required' });
   }
+
+  logger.info('New Contact Request received:', { email, phone });
+
+  if (isMongoActive()) {
+    try {
+      await Activity.create({
+        action: 'Callback Requested',
+        entityType: 'Client',
+        entityId: email,
+        description: `Client requested callback for email: ${email}, phone: ${phone}`,
+        user: { name: 'Public Visitor', role: 'user' },
+        badgeColor: '#3478D4',
+      });
+    } catch (err) {
+      logger.warn('Could not persist contact activity to MongoDB:', err.message);
+    }
+  }
+
+  res.json({ message: 'Callback requested successfully!' });
 });
 
 
@@ -1333,7 +1351,7 @@ router.get('/company/contact', async (req, res) => {
 // In-memory consultations log
 const consultationSubmissions = [];
 
-const handleConsultationSubmission = (req, res) => {
+const handleConsultationSubmission = async (req, res) => {
   const { fullName, workEmail, phone, primaryNeed, techRoles } = req.body;
 
   if (!fullName || !fullName.trim()) {
@@ -1362,7 +1380,22 @@ const handleConsultationSubmission = (req, res) => {
   };
 
   consultationSubmissions.push(submission);
-  console.log('⚡ Strategy Consultation Scheduled:', submission);
+  logger.info('⚡ Strategy Consultation Scheduled:', submission);
+
+  if (isMongoActive()) {
+    try {
+      await Activity.create({
+        action: 'Consultation Scheduled',
+        entityType: 'Client',
+        entityId: bookingRef,
+        description: `Strategy consultation booked by ${fullName.trim()} (${workEmail.trim()}) for need: ${primaryNeed || 'Staff Augmentation'}. Roles: ${techRoles || 'General'}`,
+        user: { name: fullName.trim(), role: 'user' },
+        badgeColor: '#008F68',
+      });
+    } catch (err) {
+      logger.warn('Could not persist consultation activity to MongoDB:', err.message);
+    }
+  }
 
   res.status(201).json({
     success: true,
@@ -1550,7 +1583,7 @@ router.get('/find-talent', async (req, res) => {
   res.json(result);
 });
 
-router.post('/find-talent/requisition', (req, res) => {
+router.post('/find-talent/requisition', async (req, res) => {
   const {
     engagementModel,
     targetRole,
@@ -1571,7 +1604,7 @@ router.post('/find-talent/requisition', (req, res) => {
     return res.status(400).json({ error: 'Full name, corporate email, company, and target role are required.' });
   }
 
-  console.log('⚡ New Enterprise Talent Requisition Logged:', {
+  logger.info('⚡ New Enterprise Talent Requisition Logged:', {
     engagementModel,
     targetRole,
     headcount,
@@ -1587,6 +1620,21 @@ router.post('/find-talent/requisition', (req, res) => {
     jobDescription
   });
 
+  if (isMongoActive()) {
+    try {
+      await Activity.create({
+        action: 'Requisition Created',
+        entityType: 'Job',
+        entityId: company,
+        description: `Enterprise talent requisition for ${headcount || 1}x ${targetRole} (${seniority || 'Senior'}) by ${company} (${fullName} - ${corporateEmail})`,
+        user: { name: fullName, role: 'client' },
+        badgeColor: '#8064D8',
+      });
+    } catch (err) {
+      logger.warn('Could not persist requisition activity to MongoDB:', err.message);
+    }
+  }
+
   res.json({
     success: true,
     message: 'Requisition logged with Enterprise Queue. 3 candidate dossiers will be delivered within 5 hours.'
@@ -1599,9 +1647,25 @@ router.get('/candidate-portal', async (req, res) => {
   res.json(result);
 });
 
-router.post('/candidate-portal/timesheet', (req, res) => {
+router.post('/candidate-portal/timesheet', async (req, res) => {
   const { hours, weekEnding, comments } = req.body;
-  console.log('⏱️ Candidate Weekly Timesheet Submitted:', { hours, weekEnding, comments });
+  logger.info('⏱️ Candidate Weekly Timesheet Submitted:', { hours, weekEnding, comments });
+
+  if (isMongoActive()) {
+    try {
+      await Activity.create({
+        action: 'Timesheet Submitted',
+        entityType: 'Placement',
+        entityId: weekEnding || 'Current Week',
+        description: `Weekly timesheet submitted: ${hours || 40} hours logged for week ending ${weekEnding || 'N/A'}. Comments: ${comments || 'None'}`,
+        user: { name: 'Candidate Worker', role: 'candidate' },
+        badgeColor: '#16A34A',
+      });
+    } catch (err) {
+      logger.warn('Could not persist timesheet activity to MongoDB:', err.message);
+    }
+  }
+
   res.json({
     success: true,
     message: 'Weekly timesheet submitted successfully and forwarded to client approval desk.'
