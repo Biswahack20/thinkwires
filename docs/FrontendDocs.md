@@ -61,8 +61,7 @@ apps/frontend/
     │   ├── BlogManager.jsx   # Article authoring & publishing suite
     │   ├── MediaLibrary.jsx  # Asset library with copyable URLs
     │   ├── SeoManager.jsx    # SERP preview & meta directives
-    │   ├── AnnouncementsManager.jsx # Broadcast alerts
-    │   └── TechStackManager.jsx     # Skills & technologies manager
+    │   └── AnnouncementsManager.jsx # Broadcast alerts
     │
     ├── components/           # UI Component Library
     │   ├── common/           # Shared reusable components (GlobalJobApplicationForm, ApplyModal, Navbar, Footer)
@@ -152,7 +151,6 @@ const AdminDashboard = lazy(() => import('./admin/AdminDashboard'));
 | `/admin/cms/media` | `MediaLibrary` | Admin Layout | Asset library with copyable CDN/upload URLs |
 | `/admin/cms/seo` | `SeoManager` | Admin Layout | Page-by-page SEO meta directives & Google SERP preview |
 | `/admin/cms/announcements` | `AnnouncementsManager` | Admin Layout | Corporate broadcasts & topbar alert notifications |
-| `/admin/cms/tech-stack` | `TechStackManager` | Admin Layout | Manage verified tech stack tags & featured items |
 
 ---
 

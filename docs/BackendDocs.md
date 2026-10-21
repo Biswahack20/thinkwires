@@ -87,7 +87,6 @@ apps/backend/
     │   ├── media.mongo.model.js          # Digital asset library metadata
     │   ├── page.mongo.model.js           # CMS website pages
     │   ├── placement.mongo.model.js      # Billable talent deployments & contract rates
-    │   ├── techStack.mongo.model.js      # Skill tags & technology directories
     │   └── user.mongo.model.js           # Candidate accounts & passwords
     │
     ├── migrations/           # Database Migration Framework
@@ -252,7 +251,7 @@ A dedicated FastAPI service (`port 8000`) communicates with the Express backend 
 | `PUT` | `/api/admin/system-members/:id` | Update member role or status |
 | `DELETE` | `/api/admin/system-members/:id` | Revoke member access |
 
-#### 6. CMS Suite (Pages, Blog, Media, SEO, Announcements, Tech Stack)
+#### 6. CMS Suite (Pages, Blog, Media, SEO, Announcements)
 
 | Method | Endpoint | Description |
 | --- | --- | --- |
@@ -276,11 +275,6 @@ A dedicated FastAPI service (`port 8000`) communicates with the Express backend 
 | `POST` | `/api/admin/cms/announcements` | Create broadcast alert |
 | `PATCH` | `/api/admin/cms/announcements/:id/publish` | Toggle announcement visibility |
 | `DELETE` | `/api/admin/cms/announcements/:id` | Remove announcement |
-| `GET` | `/api/admin/cms/tech-stack` | List verified technologies and skills |
-| `POST` | `/api/admin/cms/tech-stack` | Add new technology tag |
-| `PUT` | `/api/admin/cms/tech-stack/:id` | Update technology details |
-| `PATCH` | `/api/admin/cms/tech-stack/:id/feature` | Toggle featured badge on home page |
-| `DELETE` | `/api/admin/cms/tech-stack/:id` | Delete technology tag |
 
 ---
 
@@ -290,7 +284,7 @@ A dedicated FastAPI service (`port 8000`) communicates with the Express backend 
 
 | Method | Endpoint | Description |
 | --- | --- | --- |
-| `GET` | `/api/tech-stack` | Returns verified tech stack categories and items |
+| `GET` | `/api/tech-stack` | Returns static tech stack items |
 | `GET` | `/api/openings` | Returns active job openings with department filtering |
 | `GET` | `/api/stats` | Returns company milestones, placements, and metrics |
 | `GET` | `/api/industries` | Returns industry vertical data |

@@ -7,7 +7,6 @@ import mongoose from 'mongoose';
 import JobRequirement from '../models/job.mongo.model.js';
 import Article from '../models/article.mongo.model.js';
 import Page from '../models/page.mongo.model.js';
-import TechStack from '../models/techStack.mongo.model.js';
 import Candidate from '../models/candidate.mongo.model.js';
 import Activity from '../models/activity.mongo.model.js';
 import { logger } from '../utils/logger.js';
@@ -142,53 +141,9 @@ router.get('/faqs', async (req, res) => {
   res.json(result);
 });
 
-// --- Tech Stack ---
-router.get('/tech-stack', async (req, res) => {
-  if (isMongoActive()) {
-    try {
-      const dbStacks = await TechStack.find({ isActive: true }).sort({ order: 1, name: 1 }).lean();
-      if (dbStacks.length > 0) {
-        if (req.query.details === 'true') {
-          return res.json(dbStacks);
-        }
-        return res.json(dbStacks.map((s) => s.name));
-      }
-    } catch (err) {
-      console.warn('Error reading from TechStack collection:', err.message);
-    }
-  }
-  const result = await getHomeSection('techStack', techStack);
-  res.json(result);
-});
-
-router.post('/tech-stack', async (req, res) => {
-  if (Array.isArray(req.body.newStacks)) {
-    techStack = req.body.newStacks;
-    if (isMongoActive()) {
-      try {
-        await Page.findOneAndUpdate(
-          { slug: 'home' },
-          { $set: { 'data.techStack': techStack } },
-          { upsert: true }
-        );
-
-        for (let i = 0; i < techStack.length; i++) {
-          const name = techStack[i];
-          const slug = name.toLowerCase().replace(/[^\w\s-]/g, '').trim().replace(/\s+/g, '-');
-          await TechStack.findOneAndUpdate(
-            { slug },
-            { $set: { name, slug, order: i + 1, isActive: true } },
-            { upsert: true }
-          );
-        }
-      } catch (err) {
-        console.warn('Could not persist techStack to MongoDB:', err.message);
-      }
-    }
-    res.json({ message: 'Tech stack updated successfully', techStack });
-  } else {
-    res.status(400).json({ error: 'newStacks must be an array of strings' });
-  }
+// --- Tech Stack (Static) ---
+router.get('/tech-stack', (req, res) => {
+  res.json(techStack);
 });
 
 // --- Openings ---
@@ -1604,7 +1559,7 @@ router.post('/find-talent/requisition', async (req, res) => {
     return res.status(400).json({ error: 'Full name, corporate email, company, and target role are required.' });
   }
 
-  logger.info('⚡ New Enterprise Talent Requisition Logged:', {
+  logger.info('New Enterprise Talent Requisition Logged:', {
     engagementModel,
     targetRole,
     headcount,

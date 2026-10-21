@@ -15,7 +15,6 @@ import Media from '../models/media.mongo.model.js';
 import Announcement from '../models/announcement.mongo.model.js';
 import Activity from '../models/activity.mongo.model.js';
 import UserMongo from '../models/user.mongo.model.js';
-import TechStack from '../models/techStack.mongo.model.js';
 import {
   hashPassword,
   comparePassword,
@@ -41,7 +40,6 @@ let inMemoryData = {
   media: [],
   announcements: [],
   activities: [],
-  techstacks: [],
 };
 
 try {
@@ -1805,13 +1803,11 @@ export const getCmsStats = async (req, res) => {
     let articles = isMongoActive() ? await Article.find().lean() : inMemoryData.articles;
     let media = isMongoActive() ? await Media.find().lean() : inMemoryData.media;
     let announcements = isMongoActive() ? await Announcement.find().lean() : inMemoryData.announcements;
-    let techstacks = isMongoActive() ? await TechStack.find().lean() : inMemoryData.techstacks;
 
     if (!pages.length) pages = inMemoryData.pages;
     if (!articles.length) articles = inMemoryData.articles;
     if (!media.length) media = inMemoryData.media;
     if (!announcements.length) announcements = inMemoryData.announcements;
-    if (!techstacks.length) techstacks = inMemoryData.techstacks || [];
 
     const totalPages = pages.length;
     const publishedPages = pages.filter((p) => p.status === 'published').length;
@@ -1848,7 +1844,6 @@ export const getCmsStats = async (req, res) => {
         draftArticles,
         totalMedia: media.length,
         totalAnnouncements: announcements.length,
-        totalTechStacks: techstacks.length,
       },
       recentUpdates,
       publishingActivity: inMemoryData.activities.filter((a) => a.entityType === 'CMS').slice(0, 5),
@@ -2006,129 +2001,6 @@ export const getCurrentUser = async (req, res) => {
     ],
     databaseStatus: isMongoActive() ? 'Connected (MongoDB Atlas / Local)' : 'In-Memory Resilient Storage (Fallback)',
   });
-};
-
-// ============================================================================
-// 14. CMS - TECH STACK CATALOG MANAGEMENT
-// ============================================================================
-export const getCmsTechStacks = async (req, res) => {
-  try {
-    const { search, category } = req.query;
-    let query = {};
-    if (category && category !== 'All') query.category = category;
-    if (search) {
-      query.$or = [
-        { name: { $regex: search, $options: 'i' } },
-        { slug: { $regex: search, $options: 'i' } },
-      ];
-    }
-
-    let items = [];
-    if (isMongoActive()) {
-      items = await TechStack.find(query).sort({ order: 1, name: 1 }).lean();
-    }
-    if (!items.length && !search && (!category || category === 'All')) {
-      items = inMemoryData.techstacks || [];
-    }
-    res.json({ success: true, techstacks: items });
-  } catch (err) {
-    res.status(500).json({ success: false, error: err.message });
-  }
-};
-
-export const createCmsTechStack = async (req, res) => {
-  try {
-    const { name, category, icon, order, isFeatured, isActive } = req.body;
-    if (!name) return res.status(400).json({ success: false, error: 'Technology name is required' });
-
-    const slug = name.toLowerCase().replace(/[^\w\s-]/g, '').trim().replace(/\s+/g, '-');
-    const newStack = {
-      name,
-      slug,
-      category: category || 'Cloud & Infrastructure',
-      icon: icon || 'hub',
-      order: Number(order) || 0,
-      isFeatured: isFeatured !== undefined ? Boolean(isFeatured) : true,
-      isActive: isActive !== undefined ? Boolean(isActive) : true,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    };
-
-    if (isMongoActive()) {
-      const created = await TechStack.findOneAndUpdate({ slug }, { $set: newStack }, { upsert: true, new: true });
-      newStack._id = created._id;
-    }
-    if (!inMemoryData.techstacks) inMemoryData.techstacks = [];
-    inMemoryData.techstacks.push(newStack);
-
-    await logActivity('Created Tech Stack', 'CMS', slug, `Added technology badge '${name}'.`, req.user, '#008F68');
-    res.status(201).json({ success: true, techstack: newStack });
-  } catch (err) {
-    res.status(500).json({ success: false, error: err.message });
-  }
-};
-
-export const updateCmsTechStack = async (req, res) => {
-  try {
-    const { id } = req.params;
-    const updates = req.body;
-    updates.updatedAt = new Date().toISOString();
-
-    let updated = null;
-    if (isMongoActive()) {
-      const query = mongoose.Types.ObjectId.isValid(id) ? { _id: id } : { slug: id };
-      updated = await TechStack.findOneAndUpdate(query, updates, { new: true });
-    }
-
-    if (inMemoryData.techstacks) {
-      const idx = inMemoryData.techstacks.findIndex((t) => t.slug === id || String(t._id) === id);
-      if (idx !== -1) {
-        inMemoryData.techstacks[idx] = { ...inMemoryData.techstacks[idx], ...updates };
-        if (!updated) updated = inMemoryData.techstacks[idx];
-      }
-    }
-
-    await logActivity('Updated Tech Stack', 'CMS', id, `Updated technology '${updates.name || id}'.`, req.user, '#008F68');
-    res.json({ success: true, techstack: updated });
-  } catch (err) {
-    res.status(500).json({ success: false, error: err.message });
-  }
-};
-
-export const toggleCmsTechStackFeatured = async (req, res) => {
-  try {
-    const { id } = req.params;
-    let isFeatured = true;
-    if (isMongoActive()) {
-      const query = mongoose.Types.ObjectId.isValid(id) ? { _id: id } : { slug: id };
-      const found = await TechStack.findOne(query);
-      if (found) {
-        found.isFeatured = !found.isFeatured;
-        await found.save();
-        isFeatured = found.isFeatured;
-      }
-    }
-    res.json({ success: true, isFeatured });
-  } catch (err) {
-    res.status(500).json({ success: false, error: err.message });
-  }
-};
-
-export const deleteCmsTechStack = async (req, res) => {
-  try {
-    const { id } = req.params;
-    if (isMongoActive()) {
-      const query = mongoose.Types.ObjectId.isValid(id) ? { _id: id } : { slug: id };
-      await TechStack.findOneAndDelete(query);
-    }
-    if (inMemoryData.techstacks) {
-      inMemoryData.techstacks = inMemoryData.techstacks.filter((t) => t.slug !== id && String(t._id) !== id);
-    }
-    await logActivity('Deleted Tech Stack', 'CMS', id, `Removed technology '${id}'.`, req.user, '#DC2626');
-    res.json({ success: true, message: 'Technology removed successfully' });
-  } catch (err) {
-    res.status(500).json({ success: false, error: err.message });
-  }
 };
 
 // ============================================================================

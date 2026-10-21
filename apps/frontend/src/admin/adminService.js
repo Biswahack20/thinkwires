@@ -520,56 +520,6 @@ export const adminApi = {
     return json;
   },
 
-  // Tech Stack Catalog
-  async getCmsTechStacks(params = {}) {
-    const query = new URLSearchParams(params).toString();
-    const res = await fetch(`${API_BASE}/cms/tech-stack${query ? `?${query}` : ''}`, { headers: getHeaders() });
-    if (!res.ok) throw new Error(`HTTP error ${res.status}`);
-    return res.json();
-  },
-
-  async createCmsTechStack(data) {
-    const res = await fetch(`${API_BASE}/cms/tech-stack`, {
-      method: 'POST',
-      headers: getHeaders(),
-      body: JSON.stringify(data),
-    });
-    const json = await res.json();
-    if (!res.ok) throw new Error(json.error || `HTTP error ${res.status}`);
-    return json;
-  },
-
-  async updateCmsTechStack(id, data) {
-    const res = await fetch(`${API_BASE}/cms/tech-stack/${id}`, {
-      method: 'PUT',
-      headers: getHeaders(),
-      body: JSON.stringify(data),
-    });
-    const json = await res.json();
-    if (!res.ok) throw new Error(json.error || `HTTP error ${res.status}`);
-    return json;
-  },
-
-  async toggleCmsTechStackFeatured(id) {
-    const res = await fetch(`${API_BASE}/cms/tech-stack/${id}/feature`, {
-      method: 'PATCH',
-      headers: getHeaders(),
-    });
-    const json = await res.json();
-    if (!res.ok) throw new Error(json.error || `HTTP error ${res.status}`);
-    return json;
-  },
-
-  async deleteCmsTechStack(id) {
-    const res = await fetch(`${API_BASE}/cms/tech-stack/${id}`, {
-      method: 'DELETE',
-      headers: getHeaders(),
-    });
-    const json = await res.json();
-    if (!res.ok) throw new Error(json.error || `HTTP error ${res.status}`);
-    return json;
-  },
-
   // System Members (Superadmin Exclusive)
   async getSystemMembers() {
     const res = await fetch(`${API_BASE}/system-members`, { headers: getHeaders() });

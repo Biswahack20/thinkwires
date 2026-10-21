@@ -46,7 +46,6 @@ const BlogManager = lazy(() => import('./admin/BlogManager'));
 const MediaLibrary = lazy(() => import('./admin/MediaLibrary'));
 const SeoManager = lazy(() => import('./admin/SeoManager'));
 const AnnouncementsManager = lazy(() => import('./admin/AnnouncementsManager'));
-const TechStackManager = lazy(() => import('./admin/TechStackManager'));
 const SystemMembersView = lazy(() => import('./admin/SystemMembersView'));
 
 function App() {
@@ -206,7 +205,6 @@ function App() {
             <Route path="cms/media" element={<MediaLibrary />} />
             <Route path="cms/seo" element={<SeoManager />} />
             <Route path="cms/announcements" element={<AnnouncementsManager />} />
-            <Route path="cms/tech-stack" element={<TechStackManager />} />
           </Route>
 
           <Route path="*" element={<HomePage />} />

@@ -43,11 +43,6 @@ import {
   createAnnouncement,
   togglePublishAnnouncement,
   deleteAnnouncement,
-  getCmsTechStacks,
-  createCmsTechStack,
-  updateCmsTechStack,
-  toggleCmsTechStackFeatured,
-  deleteCmsTechStack,
   getCmsStats,
   getActivities,
   getCurrentUser,
@@ -156,12 +151,5 @@ router.get('/cms/announcements', cmsGuard, getAnnouncements);
 router.post('/cms/announcements', cmsGuard, createAnnouncement);
 router.patch('/cms/announcements/:id/publish', cmsGuard, togglePublishAnnouncement);
 router.delete('/cms/announcements/:id', cmsGuard, deleteAnnouncement);
-
-// CMS: Tech Stack Catalog
-router.get('/cms/tech-stack', cmsGuard, getCmsTechStacks);
-router.post('/cms/tech-stack', cmsGuard, createCmsTechStack);
-router.put('/cms/tech-stack/:id', cmsGuard, updateCmsTechStack);
-router.patch('/cms/tech-stack/:id/feature', cmsGuard, toggleCmsTechStackFeatured);
-router.delete('/cms/tech-stack/:id', cmsGuard, deleteCmsTechStack);
 
 export default router;

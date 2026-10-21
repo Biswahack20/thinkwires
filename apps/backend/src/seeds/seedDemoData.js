@@ -15,7 +15,6 @@ import Media from '../models/media.mongo.model.js';
 import Announcement from '../models/announcement.mongo.model.js';
 import Activity from '../models/activity.mongo.model.js';
 import UserMongo from '../models/user.mongo.model.js';
-import TechStack from '../models/techStack.mongo.model.js';
 import { hashPassword } from '../utils/auth.util.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -30,7 +29,7 @@ export const seedDatabase = async () => {
     ? JSON.parse(fs.readFileSync(mockSeedFilePath, 'utf8'))
     : {};
 
-  console.log('🌱 Seeding MongoDB collections from adminSeedData.json and mockData.json...');
+  console.log('Seeding MongoDB collections from adminSeedData.json and mockData.json...');
 
   const defaultHashedPassword = await hashPassword('demo_password_hash_secure');
 
@@ -363,25 +362,7 @@ export const seedDatabase = async () => {
     );
   }
 
-  // 12. TechStack
-  const techStackList = mockData.initialTechStack || [];
-  for (let i = 0; i < techStackList.length; i++) {
-    const name = techStackList[i];
-    const slug = name.toLowerCase().replace(/[^\w\s-]/g, '').trim().replace(/\s+/g, '-');
-    await TechStack.findOneAndUpdate(
-      { slug },
-      {
-        name,
-        slug,
-        order: i + 1,
-        isFeatured: true,
-        isActive: true,
-      },
-      { upsert: true, new: true }
-    );
-  }
-
-  console.log('✅ MongoDB database successfully seeded with both Admin and mockData datasets!');
+  console.log('MongoDB database successfully seeded with both Admin and mockData datasets!');
 };
 
 // If run directly from terminal

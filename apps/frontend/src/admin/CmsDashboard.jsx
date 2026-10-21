@@ -5,7 +5,6 @@ import {
   FileTextIcon,
   EditIcon,
   ImageIcon,
-  LayersIcon,
   BellIcon,
   SearchIcon,
 } from './AdminIcons';
@@ -95,18 +94,6 @@ const CmsDashboard = () => {
           <div className="tw-kpi-footer">
             <span className="tw-trend-badge positive">Modular Storage</span>
             <span>Images & logos</span>
-          </div>
-        </div>
-
-        <div className="tw-kpi-card">
-          <div className="tw-kpi-header">
-            <span className="tw-kpi-title">Tech Stack Catalog</span>
-            <div className="tw-kpi-icon-box emerald"><LayersIcon size={18} color="#008F68" /></div>
-          </div>
-          <div className="tw-kpi-value">{s.totalTechStacks || 25}</div>
-          <div className="tw-kpi-footer">
-            <span className="tw-trend-badge positive">Marquee Badges</span>
-            <span>Skills catalog</span>
           </div>
         </div>
 

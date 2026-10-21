@@ -115,7 +115,6 @@ thinkwires/
 │   │   ├── MediaLibrary.jsx        # Modular media asset library with copyable URLs
 │   │   ├── SeoManager.jsx          # SEO meta directives & Google SERP preview
 │   │   ├── AnnouncementsManager.jsx# Corporate broadcasts & topbar alerts
-│   │   ├── TechStackManager.jsx    # Verified skills & technologies manager
 │   │   └── VisualSectionEditor.jsx # Section-level content editor
 │   │
 │   └── backend/src/
@@ -200,9 +199,6 @@ thinkwires/
   - **Live Google SERP Snippet Preview** showing desktop and mobile search engine appearance.
 - **Corporate Announcements (`/admin/cms/announcements`)**:
   - Create broadcasts with priority tags (`Normal`, `Important`, `Urgent Alert`) and audience targeting (`All`, `Clients`, `Staff`).
-- **Tech Stack Manager (`/admin/cms/tech-stack`)**:
-  - Manage verified technical skill tags (e.g. React, Node.js, Python, AWS, Docker).
-  - Categorize by Frontend, Backend, Cloud, DevOps, AI/ML, and toggle featured badges on the homepage.
 
 ---
 
@@ -220,7 +216,7 @@ Permissions are verified in `auth.middleware.js` using the `X-Demo-Role` header 
 | **Manage System Members** | Allowed | Denied | Denied | Denied | Denied |
 | **Manage CMS Pages & Blog** | Allowed | Allowed | Allowed | Allowed | Read Only |
 | **Manage Media & Announcements** | Allowed | Allowed | Allowed | Allowed | Read Only |
-| **Manage SEO & Tech Stack** | Allowed | Allowed | Allowed | Read Only | Read Only |
+| **Manage SEO Settings** | Allowed | Allowed | Allowed | Read Only | Read Only |
 | **Data Mutations (POST/PUT/DELETE)** | Allowed | Allowed | Allowed (CMS) | Allowed (Content) | Denied (403 Forbidden) |
 
 ---
@@ -259,9 +255,6 @@ All admin routes are mounted under `/api/admin` in `admin.route.js`:
 | `GET` / `PUT` | `/api/admin/cms/seo` | Get / Save global & page-level SEO directives |
 | `GET` / `POST` | `/api/admin/cms/announcements` | List / Broadcast corporate announcements |
 | `PATCH` / `DELETE` | `/api/admin/cms/announcements/:id/publish` | Toggle visibility / Remove announcement |
-| `GET` / `POST` | `/api/admin/cms/tech-stack` | List / Add verified technology tag |
-| `PUT` / `DELETE` | `/api/admin/cms/tech-stack/:id` | Update / Delete technology tag |
-| `PATCH` | `/api/admin/cms/tech-stack/:id/feature` | Toggle featured badge on homepage |
 
 ---
 
@@ -282,4 +275,3 @@ All admin routes are mounted under `/api/admin` in `admin.route.js`:
 | **Digital Media Library** | `http://localhost:5173/admin/cms/media` |
 | **SEO Settings** | `http://localhost:5173/admin/cms/seo` |
 | **Announcements** | `http://localhost:5173/admin/cms/announcements` |
-| **Tech Stack Manager** | `http://localhost:5173/admin/cms/tech-stack` |
