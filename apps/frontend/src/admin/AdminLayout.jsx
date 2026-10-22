@@ -86,25 +86,21 @@ const AdminLayout = () => {
     });
   };
 
-  // Authentication check on mount
+  // Authentication check on mount via server-side HttpOnly cookie session verification
   useEffect(() => {
-    if (!isAdminAuthenticated()) {
-      navigate('/admin/login', {
-        replace: true,
-        state: { from: location.pathname },
-      });
-      return;
-    }
+    let isMounted = true;
 
     adminApi
       .getMe()
       .then((data) => {
+        if (!isMounted) return;
         if (data && data.user) {
           setCurrentUser(data.user);
           setActiveRole((data.user.role || 'admin').toLowerCase());
         }
       })
       .catch((err) => {
+        if (!isMounted) return;
         console.warn('Admin session validation failed:', err.message);
         clearAdminSession();
         navigate('/admin/login', {
@@ -113,13 +109,19 @@ const AdminLayout = () => {
         });
       })
       .finally(() => {
-        setAuthChecking(false);
+        if (isMounted) {
+          setAuthChecking(false);
+        }
       });
+
+    return () => {
+      isMounted = false;
+    };
   }, [navigate, location.pathname]);
 
   // Load announcements & db status for notifications based on active role
   useEffect(() => {
-    if (!isAdminAuthenticated()) return;
+    if (authChecking || !currentUser) return;
     const fetchMeta =
       activeRole === 'cms_admin'
         ? adminApi.getCmsStats()
@@ -134,7 +136,7 @@ const AdminLayout = () => {
       .catch((err) =>
         console.warn('Could not fetch topbar stats:', err.message)
       );
-  }, [activeRole]);
+  }, [activeRole, authChecking, currentUser]);
 
   const handleLogout = async () => {
     try {

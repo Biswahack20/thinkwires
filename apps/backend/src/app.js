@@ -8,13 +8,20 @@ import candidateRoutes from './routes/candidate.route.js';
 import userRoutes from './routes/user.route.js';
 
 import path from 'path';
+import { isAllowedOrigin } from './middlewares/csrf.middleware.js';
 
 const app = express();
 
 // Standard middleware
 app.use(
   cors({
-    origin: true,
+    origin: (origin, callback) => {
+      if (isAllowedOrigin(origin)) {
+        callback(null, true);
+      } else {
+        callback(null, false);
+      }
+    },
     credentials: true,
   })
 );

@@ -54,9 +54,18 @@ import {
   deleteSystemMember,
 } from '../controllers/admin.controller.js';
 
+import {
+  adminCsrfProtection,
+  getCsrfTokenHandler,
+} from '../middlewares/csrf.middleware.js';
+
 const router = express.Router();
 
-// ================= PUBLIC AUTHENTICATION ENDPOINTS =================
+// Apply CSRF protection to all admin routes
+router.use(adminCsrfProtection);
+
+// ================= PUBLIC AUTHENTICATION & CSRF ENDPOINTS =================
+router.get('/auth/csrf-token', getCsrfTokenHandler);
 router.post('/auth/login', loginAdmin);
 router.post('/auth/logout', logoutAdmin);
 

@@ -1,4 +1,8 @@
-import { verifyCandidateToken, verifyAdminToken } from '../utils/auth.util.js';
+import {
+  verifyCandidateToken,
+  verifyAdminToken,
+  isTokenRevoked,
+} from '../utils/auth.util.js';
 import Candidate from '../models/candidate.mongo.model.js';
 import UserMongo from '../models/user.mongo.model.js';
 import User from '../models/user.model.js';
@@ -31,6 +35,15 @@ export const requireAuth = (
           authenticated: false,
           error:
             'Authentication required. Please log in with your official credentials to access the admin portal.',
+        });
+      }
+
+      // Check for token revocation (e.g. after logout)
+      if (isTokenRevoked(token)) {
+        return res.status(401).json({
+          success: false,
+          authenticated: false,
+          error: 'Admin session has been revoked. Please log in again.',
         });
       }
 
@@ -293,6 +306,13 @@ export const authenticateCandidateOrAdmin = async (req, res, next) => {
 
     try {
       decoded = verifyAdminToken(token);
+      if (isTokenRevoked(token)) {
+        return res.status(401).json({
+          success: false,
+          authenticated: false,
+          error: 'Session has been revoked.',
+        });
+      }
       isAdmin = true;
     } catch {
       try {
