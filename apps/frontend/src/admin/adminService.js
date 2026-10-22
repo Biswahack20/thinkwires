@@ -23,16 +23,23 @@ export const setAdminSession = (token, user) => {
   if (token) localStorage.setItem('tw_admin_token', token);
   if (user) {
     localStorage.setItem('tw_admin_user', JSON.stringify(user));
-    localStorage.setItem('tw_admin_role', user.role ? user.role.toLowerCase() : '');
+    localStorage.setItem(
+      'tw_admin_role',
+      user.role ? user.role.toLowerCase() : ''
+    );
   }
-  window.dispatchEvent(new CustomEvent('tw_admin_auth_changed', { detail: { token, user } }));
+  window.dispatchEvent(
+    new CustomEvent('tw_admin_auth_changed', { detail: { token, user } })
+  );
 };
 
 export const clearAdminSession = () => {
   localStorage.removeItem('tw_admin_token');
   localStorage.removeItem('tw_admin_user');
   localStorage.removeItem('tw_admin_role');
-  window.dispatchEvent(new CustomEvent('tw_admin_auth_changed', { detail: null }));
+  window.dispatchEvent(
+    new CustomEvent('tw_admin_auth_changed', { detail: null })
+  );
 };
 
 export const isAdminAuthenticated = () => {
@@ -54,7 +61,7 @@ const getHeaders = () => {
   const token = getAdminToken();
   const headers = {
     'Content-Type': 'application/json',
-    'Accept': 'application/json',
+    Accept: 'application/json',
   };
   if (token) {
     headers['Authorization'] = `Bearer ${token}`;
@@ -68,7 +75,10 @@ export const adminApi = {
   async login(email, password) {
     const res = await fetch(`${API_BASE}/auth/login`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+      },
       credentials: 'include',
       body: JSON.stringify({ email, password }),
     });
@@ -97,7 +107,10 @@ export const adminApi = {
 
   // Current user & role
   async getMe() {
-    const res = await fetch(`${API_BASE}/auth/me`, { headers: getHeaders(), credentials: 'include' });
+    const res = await fetch(`${API_BASE}/auth/me`, {
+      headers: getHeaders(),
+      credentials: 'include',
+    });
     if (!res.ok) throw new Error(`HTTP error ${res.status}`);
     const data = await res.json();
     if (data && data.user) {
@@ -109,13 +122,17 @@ export const adminApi = {
 
   // Dashboard Overview & Charts
   async getDashboardStats(period = 'month') {
-    const res = await fetch(`${API_BASE}/stats?period=${period}`, { headers: getHeaders() });
+    const res = await fetch(`${API_BASE}/stats?period=${period}`, {
+      headers: getHeaders(),
+    });
     if (!res.ok) throw new Error(`HTTP error ${res.status}`);
     return res.json();
   },
 
   async getActivities() {
-    const res = await fetch(`${API_BASE}/activities`, { headers: getHeaders() });
+    const res = await fetch(`${API_BASE}/activities`, {
+      headers: getHeaders(),
+    });
     if (!res.ok) throw new Error(`HTTP error ${res.status}`);
     return res.json();
   },
@@ -123,7 +140,10 @@ export const adminApi = {
   // Employees
   async getEmployees(params = {}) {
     const query = new URLSearchParams(params).toString();
-    const res = await fetch(`${API_BASE}/employees${query ? `?${query}` : ''}`, { headers: getHeaders() });
+    const res = await fetch(
+      `${API_BASE}/employees${query ? `?${query}` : ''}`,
+      { headers: getHeaders() }
+    );
     if (!res.ok) throw new Error(`HTTP error ${res.status}`);
     return res.json();
   },
@@ -163,7 +183,10 @@ export const adminApi = {
   // Candidates
   async getCandidates(params = {}) {
     const query = new URLSearchParams(params).toString();
-    const res = await fetch(`${API_BASE}/candidates${query ? `?${query}` : ''}`, { headers: getHeaders() });
+    const res = await fetch(
+      `${API_BASE}/candidates${query ? `?${query}` : ''}`,
+      { headers: getHeaders() }
+    );
     if (!res.ok) throw new Error(`HTTP error ${res.status}`);
     return res.json();
   },
@@ -214,7 +237,9 @@ export const adminApi = {
   // Clients
   async getClients(params = {}) {
     const query = new URLSearchParams(params).toString();
-    const res = await fetch(`${API_BASE}/clients${query ? `?${query}` : ''}`, { headers: getHeaders() });
+    const res = await fetch(`${API_BASE}/clients${query ? `?${query}` : ''}`, {
+      headers: getHeaders(),
+    });
     if (!res.ok) throw new Error(`HTTP error ${res.status}`);
     return res.json();
   },
@@ -254,7 +279,9 @@ export const adminApi = {
   // Jobs
   async getJobs(params = {}) {
     const query = new URLSearchParams(params).toString();
-    const res = await fetch(`${API_BASE}/jobs${query ? `?${query}` : ''}`, { headers: getHeaders() });
+    const res = await fetch(`${API_BASE}/jobs${query ? `?${query}` : ''}`, {
+      headers: getHeaders(),
+    });
     if (!res.ok) throw new Error(`HTTP error ${res.status}`);
     return res.json();
   },
@@ -293,7 +320,9 @@ export const adminApi = {
 
   // Placements
   async getPlacements() {
-    const res = await fetch(`${API_BASE}/placements`, { headers: getHeaders() });
+    const res = await fetch(`${API_BASE}/placements`, {
+      headers: getHeaders(),
+    });
     if (!res.ok) throw new Error(`HTTP error ${res.status}`);
     return res.json();
   },
@@ -389,7 +418,10 @@ export const adminApi = {
   // CMS Articles
   async getCmsArticles(params = {}) {
     const query = new URLSearchParams(params).toString();
-    const res = await fetch(`${API_BASE}/cms/articles${query ? `?${query}` : ''}`, { headers: getHeaders() });
+    const res = await fetch(
+      `${API_BASE}/cms/articles${query ? `?${query}` : ''}`,
+      { headers: getHeaders() }
+    );
     if (!res.ok) throw new Error(`HTTP error ${res.status}`);
     return res.json();
   },
@@ -484,7 +516,9 @@ export const adminApi = {
 
   // CMS Announcements
   async getAnnouncements() {
-    const res = await fetch(`${API_BASE}/cms/announcements`, { headers: getHeaders() });
+    const res = await fetch(`${API_BASE}/cms/announcements`, {
+      headers: getHeaders(),
+    });
     if (!res.ok) throw new Error(`HTTP error ${res.status}`);
     return res.json();
   },
@@ -522,7 +556,9 @@ export const adminApi = {
 
   // System Members (Superadmin Exclusive)
   async getSystemMembers() {
-    const res = await fetch(`${API_BASE}/system-members`, { headers: getHeaders() });
+    const res = await fetch(`${API_BASE}/system-members`, {
+      headers: getHeaders(),
+    });
     const json = await res.json();
     if (!res.ok) throw new Error(json.error || `HTTP error ${res.status}`);
     return json;

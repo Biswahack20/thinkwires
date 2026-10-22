@@ -55,10 +55,15 @@ const AdminLayout = () => {
   const [toastMessage, setToastMessage] = useState(null);
 
   const markAllAnnouncementsAsRead = () => {
-    const allIds = announcements.map((a, idx) => a.id || a._id || `ann_${idx}_${a.title}`);
+    const allIds = announcements.map(
+      (a, idx) => a.id || a._id || `ann_${idx}_${a.title}`
+    );
     setReadAnnouncementIds(allIds);
     try {
-      localStorage.setItem('tw_admin_read_announcements', JSON.stringify(allIds));
+      localStorage.setItem(
+        'tw_admin_read_announcements',
+        JSON.stringify(allIds)
+      );
     } catch (e) {
       console.warn('Could not save read announcements state:', e);
     }
@@ -70,7 +75,10 @@ const AdminLayout = () => {
       if (prev.includes(id)) return prev;
       const next = [...prev, id];
       try {
-        localStorage.setItem('tw_admin_read_announcements', JSON.stringify(next));
+        localStorage.setItem(
+          'tw_admin_read_announcements',
+          JSON.stringify(next)
+        );
       } catch (e) {
         console.warn('Could not save read announcements state:', e);
       }
@@ -81,7 +89,10 @@ const AdminLayout = () => {
   // Authentication check on mount
   useEffect(() => {
     if (!isAdminAuthenticated()) {
-      navigate('/admin/login', { replace: true, state: { from: location.pathname } });
+      navigate('/admin/login', {
+        replace: true,
+        state: { from: location.pathname },
+      });
       return;
     }
 
@@ -96,7 +107,10 @@ const AdminLayout = () => {
       .catch((err) => {
         console.warn('Admin session validation failed:', err.message);
         clearAdminSession();
-        navigate('/admin/login', { replace: true, state: { from: location.pathname } });
+        navigate('/admin/login', {
+          replace: true,
+          state: { from: location.pathname },
+        });
       })
       .finally(() => {
         setAuthChecking(false);
@@ -106,14 +120,20 @@ const AdminLayout = () => {
   // Load announcements & db status for notifications based on active role
   useEffect(() => {
     if (!isAdminAuthenticated()) return;
-    const fetchMeta = activeRole === 'cms_admin' ? adminApi.getCmsStats() : adminApi.getDashboardStats();
+    const fetchMeta =
+      activeRole === 'cms_admin'
+        ? adminApi.getCmsStats()
+        : adminApi.getDashboardStats();
     fetchMeta
       .then((data) => {
         if (data && data.announcements) setAnnouncements(data.announcements);
         if (data && data.databaseMode) setDbStatus(data.databaseMode);
-        if (data && data.isMongoActive !== undefined) setIsMongo(data.isMongoActive);
+        if (data && data.isMongoActive !== undefined)
+          setIsMongo(data.isMongoActive);
       })
-      .catch((err) => console.warn('Could not fetch topbar stats:', err.message));
+      .catch((err) =>
+        console.warn('Could not fetch topbar stats:', err.message)
+      );
   }, [activeRole]);
 
   const handleLogout = async () => {
@@ -146,53 +166,107 @@ const AdminLayout = () => {
 
   // Route categorization
   const isCmsRoute = location.pathname.startsWith('/admin/cms');
-  const isSystemMembersRoute = location.pathname.startsWith('/admin/system-members');
+  const isSystemMembersRoute = location.pathname.startsWith(
+    '/admin/system-members'
+  );
   const isManpowerRoute = !isCmsRoute && !isSystemMembersRoute;
 
   // Restriction checks:
   // - cms_admin is strictly blocked from Manpower, Overview, and System Members routes
   // - admin is strictly blocked from CMS and System Members routes
   // - only superadmin can access system members
-  const isCmsAdminBlocked = isCmsAdmin && (isManpowerRoute || isSystemMembersRoute);
+  const isCmsAdminBlocked =
+    isCmsAdmin && (isManpowerRoute || isSystemMembersRoute);
   const isAdminCmsBlocked = isAdmin && isCmsRoute;
   const isSystemMembersBlocked = !isSuperAdmin && isSystemMembersRoute;
-  const isRestrictedForCurrentRole = isCmsAdminBlocked || isAdminCmsBlocked || isSystemMembersBlocked;
+  const isRestrictedForCurrentRole =
+    isCmsAdminBlocked || isAdminCmsBlocked || isSystemMembersBlocked;
 
   // Navigation Items dynamic based on RBAC Role:
   // Only assigned pages are visible to respective roles!
   const navItems = [
     // 1. Overview & Manpower (Visible ONLY to SuperAdmin and Admin)
-    ...((isSuperAdmin || isAdmin)
+    ...(isSuperAdmin || isAdmin
       ? [
           {
             group: 'OVERVIEW',
-            items: [{ label: 'Dashboard Overview', path: '/admin', icon: <DashboardIcon size={18} /> }],
+            items: [
+              {
+                label: 'Dashboard Overview',
+                path: '/admin',
+                icon: <DashboardIcon size={18} />,
+              },
+            ],
           },
           {
             group: 'MANPOWER & RECRUITMENT',
             items: [
-              { label: 'Employees', path: '/admin/employees', icon: <UsersIcon size={18} /> },
-              { label: 'Candidates & Pipeline', path: '/admin/candidates', icon: <TargetIcon size={18} /> },
-              { label: 'Clients', path: '/admin/clients', icon: <BuildingIcon size={18} /> },
-              { label: 'Job Requirements', path: '/admin/jobs', icon: <BriefcaseIcon size={18} /> },
-              { label: 'Placements', path: '/admin/placements', icon: <HandshakeIcon size={18} /> },
+              {
+                label: 'Employees',
+                path: '/admin/employees',
+                icon: <UsersIcon size={18} />,
+              },
+              {
+                label: 'Candidates & Pipeline',
+                path: '/admin/candidates',
+                icon: <TargetIcon size={18} />,
+              },
+              {
+                label: 'Clients',
+                path: '/admin/clients',
+                icon: <BuildingIcon size={18} />,
+              },
+              {
+                label: 'Job Requirements',
+                path: '/admin/jobs',
+                icon: <BriefcaseIcon size={18} />,
+              },
+              {
+                label: 'Placements',
+                path: '/admin/placements',
+                icon: <HandshakeIcon size={18} />,
+              },
             ],
           },
         ]
       : []),
 
     // 2. Content Management System (Visible ONLY to SuperAdmin and CMS Admin)
-    ...((isSuperAdmin || isCmsAdmin)
+    ...(isSuperAdmin || isCmsAdmin
       ? [
           {
             group: 'CONTENT MANAGEMENT (CMS)',
             items: [
-              { label: 'CMS Overview', path: '/admin/cms', icon: <MonitorIcon size={18} /> },
-              { label: 'Website Pages', path: '/admin/cms/pages', icon: <FileTextIcon size={18} /> },
-              { label: 'Blog & Articles', path: '/admin/cms/blog', icon: <EditIcon size={18} /> },
-              { label: 'Media Library', path: '/admin/cms/media', icon: <ImageIcon size={18} /> },
-              { label: 'SEO Settings', path: '/admin/cms/seo', icon: <SearchIcon size={18} /> },
-              { label: 'Announcements', path: '/admin/cms/announcements', icon: <BellIcon size={18} /> },
+              {
+                label: 'CMS Overview',
+                path: '/admin/cms',
+                icon: <MonitorIcon size={18} />,
+              },
+              {
+                label: 'Website Pages',
+                path: '/admin/cms/pages',
+                icon: <FileTextIcon size={18} />,
+              },
+              {
+                label: 'Blog & Articles',
+                path: '/admin/cms/blog',
+                icon: <EditIcon size={18} />,
+              },
+              {
+                label: 'Media Library',
+                path: '/admin/cms/media',
+                icon: <ImageIcon size={18} />,
+              },
+              {
+                label: 'SEO Settings',
+                path: '/admin/cms/seo',
+                icon: <SearchIcon size={18} />,
+              },
+              {
+                label: 'Announcements',
+                path: '/admin/cms/announcements',
+                icon: <BellIcon size={18} />,
+              },
             ],
           },
         ]
@@ -204,7 +278,12 @@ const AdminLayout = () => {
           {
             group: 'SYSTEM GOVERNANCE',
             items: [
-              { label: 'System Members', path: '/admin/system-members', icon: <ShieldIcon size={18} />, badge: 'Superadmin' },
+              {
+                label: 'System Members',
+                path: '/admin/system-members',
+                icon: <ShieldIcon size={18} />,
+                badge: 'Superadmin',
+              },
             ],
           },
         ]
@@ -213,7 +292,13 @@ const AdminLayout = () => {
 
   // User Profile metadata based on authenticated user
   const getUserProfile = () => {
-    const name = currentUser?.name || (activeRole === 'superadmin' ? 'Alexander Vance' : activeRole === 'cms_admin' ? 'Elena Rostova' : 'Biswarupa Swain');
+    const name =
+      currentUser?.name ||
+      (activeRole === 'superadmin'
+        ? 'Alexander Vance'
+        : activeRole === 'cms_admin'
+          ? 'Elena Rostova'
+          : 'Biswarupa Swain');
     const initials = name
       .split(' ')
       .map((n) => n[0])
@@ -280,7 +365,9 @@ const AdminLayout = () => {
               animation: 'twSpin 0.8s linear infinite',
             }}
           />
-          <p style={{ fontSize: '0.9rem', color: '#94A3B8' }}>Verifying Administrator Credentials...</p>
+          <p style={{ fontSize: '0.9rem', color: '#94A3B8' }}>
+            Verifying Administrator Credentials...
+          </p>
         </div>
       </div>
     );
@@ -289,9 +376,15 @@ const AdminLayout = () => {
   return (
     <div className="tw-admin-wrapper">
       {/* Sidebar */}
-      <aside className={`tw-sidebar ${collapsed ? 'collapsed' : ''} ${mobileOpen ? 'mobile-open' : ''}`}>
+      <aside
+        className={`tw-sidebar ${collapsed ? 'collapsed' : ''} ${mobileOpen ? 'mobile-open' : ''}`}
+      >
         <div className="tw-sidebar-header">
-          <Link to={isCmsAdmin ? '/admin/cms' : '/admin'} className="tw-brand" title="ThinkWires Admin">
+          <Link
+            to={isCmsAdmin ? '/admin/cms' : '/admin'}
+            className="tw-brand"
+            title="ThinkWires Admin"
+          >
             <div className="tw-brand-logo-wrap">
               <img src={logo} alt="ThinkWires" className="tw-brand-logo-img" />
             </div>
@@ -301,14 +394,20 @@ const AdminLayout = () => {
             onClick={() => setCollapsed(!collapsed)}
             title="Toggle Sidebar"
           >
-            {collapsed ? <ChevronRightIcon size={14} /> : <ChevronLeftIcon size={14} />}
+            {collapsed ? (
+              <ChevronRightIcon size={14} />
+            ) : (
+              <ChevronLeftIcon size={14} />
+            )}
           </button>
         </div>
 
         {/* Navigation list */}
         {navItems.map((grp) => (
           <div key={grp.group} className="tw-nav-group">
-            {!collapsed && <div className="tw-nav-group-title">{grp.group}</div>}
+            {!collapsed && (
+              <div className="tw-nav-group-title">{grp.group}</div>
+            )}
             <ul className="tw-nav-list">
               {grp.items.map((item) => (
                 <li
@@ -332,9 +431,18 @@ const AdminLayout = () => {
         {/* Sidebar Footer with Live Status */}
         <div className="tw-sidebar-footer">
           <div className="tw-db-status-pill" title={`Data Layer: ${dbStatus}`}>
-            <span className={`tw-status-dot ${isMongo ? 'online' : 'demo'}`}></span>
+            <span
+              className={`tw-status-dot ${isMongo ? 'online' : 'demo'}`}
+            ></span>
             {!collapsed && (
-              <span style={{ fontSize: '0.72rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+              <span
+                style={{
+                  fontSize: '0.72rem',
+                  whiteSpace: 'nowrap',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                }}
+              >
                 {isMongo ? 'MongoDB Active' : 'Dual-Mode Demo'}
               </span>
             )}
@@ -343,7 +451,9 @@ const AdminLayout = () => {
       </aside>
 
       {/* Main Container */}
-      <div className={`tw-main-container ${collapsed ? 'sidebar-collapsed' : ''}`}>
+      <div
+        className={`tw-main-container ${collapsed ? 'sidebar-collapsed' : ''}`}
+      >
         {/* Topbar */}
         <header className="tw-topbar">
           <div className="tw-topbar-left">
@@ -364,8 +474,8 @@ const AdminLayout = () => {
                   isCmsAdmin
                     ? 'Search website pages, articles, or media...'
                     : isAdmin
-                    ? 'Search employees, requisitions, candidates, or clients...'
-                    : 'Search across entire enterprise (workforce, CMS, candidates)...'
+                      ? 'Search employees, requisitions, candidates, or clients...'
+                      : 'Search across entire enterprise (workforce, CMS, candidates)...'
                 }
               />
             </div>
@@ -373,16 +483,27 @@ const AdminLayout = () => {
 
           <div className="tw-topbar-right">
             {/* Authenticated Role Indicator Badge */}
-            <div className="tw-role-pill-indicator" title="Role assigned by Superadmin">
-              <span className="tw-role-pill-dot" style={{ backgroundColor: currentProfile.badgeColor }}></span>
+            <div
+              className="tw-role-pill-indicator"
+              title="Role assigned by Superadmin"
+            >
+              <span
+                className="tw-role-pill-dot"
+                style={{ backgroundColor: currentProfile.badgeColor }}
+              ></span>
               <span className="tw-role-pill-label">Role:</span>
-              <strong className="tw-role-pill-value">{currentProfile.roleLabel}</strong>
+              <strong className="tw-role-pill-value">
+                {currentProfile.roleLabel}
+              </strong>
             </div>
 
             {/* Notification Bell */}
             {(() => {
               const unreadCount = announcements.filter(
-                (a, idx) => !readAnnouncementIds.includes(a.id || a._id || `ann_${idx}_${a.title}`)
+                (a, idx) =>
+                  !readAnnouncementIds.includes(
+                    a.id || a._id || `ann_${idx}_${a.title}`
+                  )
               ).length;
 
               return (
@@ -402,7 +523,13 @@ const AdminLayout = () => {
                   {notificationsOpen && (
                     <div className="tw-notifications-dropdown">
                       <div className="tw-notifications-dropdown-header">
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.45rem' }}>
+                        <div
+                          style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '0.45rem',
+                          }}
+                        >
                           <strong>Announcements</strong>
                           <span>{unreadCount} unread</span>
                         </div>
@@ -418,13 +545,21 @@ const AdminLayout = () => {
                         )}
                       </div>
                       {announcements.length === 0 ? (
-                        <div style={{ padding: '1.5rem', textAlign: 'center', color: '#94A3B8', fontSize: '0.8rem' }}>
+                        <div
+                          style={{
+                            padding: '1.5rem',
+                            textAlign: 'center',
+                            color: '#94A3B8',
+                            fontSize: '0.8rem',
+                          }}
+                        >
                           No announcements available.
                         </div>
                       ) : (
                         <div style={{ maxHeight: '280px', overflowY: 'auto' }}>
                           {announcements.map((a, idx) => {
-                            const annId = a.id || a._id || `ann_${idx}_${a.title}`;
+                            const annId =
+                              a.id || a._id || `ann_${idx}_${a.title}`;
                             const isRead = readAnnouncementIds.includes(annId);
 
                             return (
@@ -432,14 +567,32 @@ const AdminLayout = () => {
                                 key={idx}
                                 className={`tw-notification-item ${isRead ? 'read' : 'unread'}`}
                               >
-                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '0.5rem' }}>
-                                  <div style={{ fontWeight: isRead ? 500 : 700, color: isRead ? '#475569' : '#0F172A', marginBottom: '0.2rem', fontSize: '0.8rem' }}>
-                                    {!isRead && <span className="tw-notification-unread-dot" />}
+                                <div
+                                  style={{
+                                    display: 'flex',
+                                    justifyContent: 'space-between',
+                                    alignItems: 'flex-start',
+                                    gap: '0.5rem',
+                                  }}
+                                >
+                                  <div
+                                    style={{
+                                      fontWeight: isRead ? 500 : 700,
+                                      color: isRead ? '#475569' : '#0F172A',
+                                      marginBottom: '0.2rem',
+                                      fontSize: '0.8rem',
+                                    }}
+                                  >
+                                    {!isRead && (
+                                      <span className="tw-notification-unread-dot" />
+                                    )}
                                     {a.title}
                                   </div>
                                   {!isRead && (
                                     <button
-                                      onClick={() => markAnnouncementAsRead(annId)}
+                                      onClick={() =>
+                                        markAnnouncementAsRead(annId)
+                                      }
                                       className="tw-item-mark-read-btn"
                                       title="Mark as read"
                                     >
@@ -447,7 +600,14 @@ const AdminLayout = () => {
                                     </button>
                                   )}
                                 </div>
-                                <div style={{ color: '#64748B', fontSize: '0.74rem', lineHeight: '1.38', paddingLeft: !isRead ? '12px' : '0' }}>
+                                <div
+                                  style={{
+                                    color: '#64748B',
+                                    fontSize: '0.74rem',
+                                    lineHeight: '1.38',
+                                    paddingLeft: !isRead ? '12px' : '0',
+                                  }}
+                                >
                                   {a.message}
                                 </div>
                               </div>
@@ -462,7 +622,13 @@ const AdminLayout = () => {
             })()}
 
             {/* Public Site Link */}
-            <Link to="/" className="tw-exit-link" title="Open Public ThinkWires Website" target="_blank" rel="noopener noreferrer">
+            <Link
+              to="/"
+              className="tw-exit-link"
+              title="Open Public ThinkWires Website"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               <span>View Site</span>
               <ExternalLinkIcon size={13} />
             </Link>
@@ -527,8 +693,23 @@ const AdminLayout = () => {
                 boxShadow: '0 12px 30px rgba(0,0,0,0.06)',
               }}
             >
-              <div style={{ marginBottom: '1.25rem', display: 'flex', justifyContent: 'center' }}>
-                <ShieldIcon size={48} color={isSystemMembersBlocked ? '#DC2626' : isCmsAdminBlocked ? '#4F46E5' : '#2563EB'} />
+              <div
+                style={{
+                  marginBottom: '1.25rem',
+                  display: 'flex',
+                  justifyContent: 'center',
+                }}
+              >
+                <ShieldIcon
+                  size={48}
+                  color={
+                    isSystemMembersBlocked
+                      ? '#DC2626'
+                      : isCmsAdminBlocked
+                        ? '#4F46E5'
+                        : '#2563EB'
+                  }
+                />
               </div>
 
               <div
@@ -540,65 +721,133 @@ const AdminLayout = () => {
                   fontWeight: 700,
                   letterSpacing: '0.5px',
                   marginBottom: '1rem',
-                  background: isSystemMembersBlocked ? '#FEF2F2' : isCmsAdminBlocked ? '#EEF2FF' : '#EFF6FF',
-                  color: isSystemMembersBlocked ? '#DC2626' : isCmsAdminBlocked ? '#4F46E5' : '#1D4ED8',
-                  border: isSystemMembersBlocked ? '1px solid #FECACA' : isCmsAdminBlocked ? '1px solid #C7D2FE' : '1px solid #BFDBFE',
+                  background: isSystemMembersBlocked
+                    ? '#FEF2F2'
+                    : isCmsAdminBlocked
+                      ? '#EEF2FF'
+                      : '#EFF6FF',
+                  color: isSystemMembersBlocked
+                    ? '#DC2626'
+                    : isCmsAdminBlocked
+                      ? '#4F46E5'
+                      : '#1D4ED8',
+                  border: isSystemMembersBlocked
+                    ? '1px solid #FECACA'
+                    : isCmsAdminBlocked
+                      ? '1px solid #C7D2FE'
+                      : '1px solid #BFDBFE',
                 }}
               >
                 {isSystemMembersBlocked
                   ? 'SUPERADMIN PRIVILEGE REQUIRED'
                   : isCmsAdminBlocked
-                  ? 'CMS ADMIN SCOPE RESTRICTION'
-                  : 'ADMIN SCOPE RESTRICTION'}
+                    ? 'CMS ADMIN SCOPE RESTRICTION'
+                    : 'ADMIN SCOPE RESTRICTION'}
               </div>
 
-              <h2 style={{ fontSize: '1.45rem', fontWeight: 700, color: '#0F172A', marginBottom: '0.75rem' }}>
+              <h2
+                style={{
+                  fontSize: '1.45rem',
+                  fontWeight: 700,
+                  color: '#0F172A',
+                  marginBottom: '0.75rem',
+                }}
+              >
                 {isSystemMembersBlocked
                   ? 'Access Restricted to Superadmin'
                   : isCmsAdminBlocked
-                  ? 'Access Restricted to Content Management System (CMS)'
-                  : 'Access Restricted to Manpower & Recruitment'}
+                    ? 'Access Restricted to Content Management System (CMS)'
+                    : 'Access Restricted to Manpower & Recruitment'}
               </h2>
 
-              <p style={{ fontSize: '0.9rem', color: '#64748B', lineHeight: '1.65', marginBottom: '2rem' }}>
+              <p
+                style={{
+                  fontSize: '0.9rem',
+                  color: '#64748B',
+                  lineHeight: '1.65',
+                  marginBottom: '2rem',
+                }}
+              >
                 {isSystemMembersBlocked ? (
                   <>
-                    Your current account is authenticated as <strong>{activeRole.toUpperCase()}</strong>.
-                    <br /><br />
-                    System Members, official email accounts, RBAC role assignments, and authentication passwords can <strong>only be added and edited by the Superadmin</strong>.
+                    Your current account is authenticated as{' '}
+                    <strong>{activeRole.toUpperCase()}</strong>.
+                    <br />
+                    <br />
+                    System Members, official email accounts, RBAC role
+                    assignments, and authentication passwords can{' '}
+                    <strong>only be added and edited by the Superadmin</strong>.
                   </>
                 ) : isCmsAdminBlocked ? (
                   <>
-                    Your current account is authenticated as <strong>CMS Administrator</strong> (<code>cmsadmin@thinkwires.com</code>).
-                    <br /><br />
-                    Per company authorization policy, CMS Administrators have control restricted exclusively to the <strong>Content Management System (CMS)</strong>.
-                    Workforce employees, candidates, clients, job requisitions, and placement rosters require <strong>SuperAdmin</strong> or <strong>Admin</strong> credentials.
+                    Your current account is authenticated as{' '}
+                    <strong>CMS Administrator</strong> (
+                    <code>cmsadmin@thinkwires.com</code>).
+                    <br />
+                    <br />
+                    Per company authorization policy, CMS Administrators have
+                    control restricted exclusively to the{' '}
+                    <strong>Content Management System (CMS)</strong>. Workforce
+                    employees, candidates, clients, job requisitions, and
+                    placement rosters require <strong>SuperAdmin</strong> or{' '}
+                    <strong>Admin</strong> credentials.
                   </>
                 ) : (
                   <>
-                    Your current account is authenticated as <strong>Admin</strong> (<code>admin@thinkwires.com</code>).
-                    <br /><br />
-                    Per company authorization policy, Admins have control restricted exclusively to <strong>Manpower and Recruitment</strong>.
-                    The Content Management System (CMS), page editing, blog publishing, and SEO configurations require <strong>SuperAdmin</strong> or <strong>CMS Admin</strong> credentials.
+                    Your current account is authenticated as{' '}
+                    <strong>Admin</strong> (<code>admin@thinkwires.com</code>).
+                    <br />
+                    <br />
+                    Per company authorization policy, Admins have control
+                    restricted exclusively to{' '}
+                    <strong>Manpower and Recruitment</strong>. The Content
+                    Management System (CMS), page editing, blog publishing, and
+                    SEO configurations require <strong>SuperAdmin</strong> or{' '}
+                    <strong>CMS Admin</strong> credentials.
                   </>
                 )}
               </p>
 
-              <div style={{ display: 'flex', gap: '0.85rem', justifyContent: 'center', flexWrap: 'wrap' }}>
+              <div
+                style={{
+                  display: 'flex',
+                  gap: '0.85rem',
+                  justifyContent: 'center',
+                  flexWrap: 'wrap',
+                }}
+              >
                 {isSystemMembersBlocked ? (
                   <Link
                     to={isCmsAdmin ? '/admin/cms' : '/admin'}
                     className="tw-btn-primary"
-                    style={{ textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}
+                    style={{
+                      textDecoration: 'none',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '0.5rem',
+                    }}
                   >
-                    {isCmsAdmin ? <MonitorIcon size={16} /> : <UsersIcon size={16} />}
-                    <span>{isCmsAdmin ? 'Return to CMS Workspace' : 'Return to Manpower Workspace'}</span>
+                    {isCmsAdmin ? (
+                      <MonitorIcon size={16} />
+                    ) : (
+                      <UsersIcon size={16} />
+                    )}
+                    <span>
+                      {isCmsAdmin
+                        ? 'Return to CMS Workspace'
+                        : 'Return to Manpower Workspace'}
+                    </span>
                   </Link>
                 ) : isCmsAdminBlocked ? (
                   <Link
                     to="/admin/cms"
                     className="tw-btn-primary"
-                    style={{ textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}
+                    style={{
+                      textDecoration: 'none',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '0.5rem',
+                    }}
                   >
                     <MonitorIcon size={16} />
                     <span>Go to Assigned CMS Workspace</span>
@@ -607,7 +856,12 @@ const AdminLayout = () => {
                   <Link
                     to="/admin"
                     className="tw-btn-primary"
-                    style={{ textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '0.5rem' }}
+                    style={{
+                      textDecoration: 'none',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '0.5rem',
+                    }}
                   >
                     <UsersIcon size={16} />
                     <span>Go to Assigned Manpower & Recruitment</span>

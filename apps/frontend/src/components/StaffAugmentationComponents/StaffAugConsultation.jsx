@@ -2,14 +2,13 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   submitStaffAugmentationConsultation,
-  resetConsultationState
+  resetConsultationState,
 } from '../../store/slices/staffAugmentationSlice';
 
 const StaffAugConsultation = ({ data }) => {
   const dispatch = useDispatch();
-  const { consultationStatus, consultationMessage, consultationError } = useSelector(
-    (state) => state.staffAugmentation || {}
-  );
+  const { consultationStatus, consultationMessage, consultationError } =
+    useSelector((state) => state.staffAugmentation || {});
 
   const [formData, setFormData] = useState({
     name: '',
@@ -18,7 +17,7 @@ const StaffAugConsultation = ({ data }) => {
     company: '',
     roleNeeded: '',
     preferredTime: '',
-    details: ''
+    details: '',
   });
 
   const handleChange = (e) => {
@@ -32,15 +31,8 @@ const StaffAugConsultation = ({ data }) => {
   };
 
   if (!data) return null;
-  const {
-    eyebrow,
-    heading,
-    description,
-    hotline,
-    hubs,
-    sla,
-    certifications
-  } = data;
+  const { eyebrow, heading, description, hotline, hubs, sla, certifications } =
+    data;
 
   return (
     <section className="StaffAug-consultationSection" id="consultation-form">
@@ -49,21 +41,34 @@ const StaffAugConsultation = ({ data }) => {
           {/* Left: Contact Points */}
           <div className="StaffAug-contactCol">
             <div>
-              <span className="channel-badge">{eyebrow || 'Direct Channel'}</span>
-              <h3 className="contact-title">{heading || 'Schedule a Workforce Strategy Call'}</h3>
+              <span className="channel-badge">
+                {eyebrow || 'Direct Channel'}
+              </span>
+              <h3 className="contact-title">
+                {heading || 'Schedule a Workforce Strategy Call'}
+              </h3>
               <p className="contact-desc">{description}</p>
 
               <div className="contact-points">
                 <div className="point-item">
-                  <span className="material-symbols-outlined emerald">timer</span>
+                  <span className="material-symbols-outlined emerald">
+                    timer
+                  </span>
                   <div>
-                    <h4 className="point-head">{sla || '5-Hour Response SLA'}</h4>
-                    <p className="point-sub">A specialist reviews your requirements and responds within 5 business hours.</p>
+                    <h4 className="point-head">
+                      {sla || '5-Hour Response SLA'}
+                    </h4>
+                    <p className="point-sub">
+                      A specialist reviews your requirements and responds within
+                      5 business hours.
+                    </p>
                   </div>
                 </div>
 
                 <div className="point-item">
-                  <span className="material-symbols-outlined cobalt">location_on</span>
+                  <span className="material-symbols-outlined cobalt">
+                    location_on
+                  </span>
                   <div>
                     <h4 className="point-head">Global Tech Hubs</h4>
                     <p className="point-sub">{hubs}</p>
@@ -71,10 +76,15 @@ const StaffAugConsultation = ({ data }) => {
                 </div>
 
                 <div className="point-item">
-                  <span className="material-symbols-outlined emerald">chat</span>
+                  <span className="material-symbols-outlined emerald">
+                    chat
+                  </span>
                   <div>
                     <h4 className="point-head">WhatsApp &amp; Direct Phone</h4>
-                    <a href={`tel:${(hotline || '').replace(/[^0-9+]/g, '')}`} className="hotline-link">
+                    <a
+                      href={`tel:${(hotline || '').replace(/[^0-9+]/g, '')}`}
+                      className="hotline-link"
+                    >
                       {hotline || '+91 89205 55626'}
                     </a>
                   </div>
@@ -83,7 +93,8 @@ const StaffAugConsultation = ({ data }) => {
             </div>
 
             <div className="contact-footer">
-              {certifications || 'ISO 27001 • SOC 2 Type II Compliant • 100% NDA Protection Prior to Discussion'}
+              {certifications ||
+                'ISO 27001 • SOC 2 Type II Compliant • 100% NDA Protection Prior to Discussion'}
             </div>
           </div>
 
@@ -91,9 +102,14 @@ const StaffAugConsultation = ({ data }) => {
           <div className="StaffAug-formCol">
             {consultationStatus === 'succeeded' ? (
               <div className="StaffAug-successCard">
-                <span className="material-symbols-outlined success-icon">check_circle</span>
+                <span className="material-symbols-outlined success-icon">
+                  check_circle
+                </span>
                 <h3>Workforce Consultation Requested</h3>
-                <p>{consultationMessage || 'Thank you! A Senior Talent Architect will reach out within 5 hours.'}</p>
+                <p>
+                  {consultationMessage ||
+                    'Thank you! A Senior Talent Architect will reach out within 5 hours.'}
+                </p>
                 <button
                   type="button"
                   className="reset-btn"
@@ -106,7 +122,7 @@ const StaffAugConsultation = ({ data }) => {
                       company: '',
                       roleNeeded: '',
                       preferredTime: '',
-                      details: ''
+                      details: '',
                     });
                   }}
                 >
@@ -184,13 +200,23 @@ const StaffAugConsultation = ({ data }) => {
                       value={formData.roleNeeded}
                       onChange={handleChange}
                     >
-                      <option value="" disabled>Select required domain</option>
-                      <option value="cloud-devops">Cloud &amp; DevOps (AWS / GCP / K8s)</option>
-                      <option value="fullstack">Full-Stack (React / Node / Python)</option>
-                      <option value="data-ai">Data Engineering &amp; AI / ML</option>
+                      <option value="" disabled>
+                        Select required domain
+                      </option>
+                      <option value="cloud-devops">
+                        Cloud &amp; DevOps (AWS / GCP / K8s)
+                      </option>
+                      <option value="fullstack">
+                        Full-Stack (React / Node / Python)
+                      </option>
+                      <option value="data-ai">
+                        Data Engineering &amp; AI / ML
+                      </option>
                       <option value="sap-erp">Enterprise ERP / SAP HANA</option>
                       <option value="qa-auto">QA &amp; Test Automation</option>
-                      <option value="other">Multiple Roles / Custom Squad</option>
+                      <option value="other">
+                        Multiple Roles / Custom Squad
+                      </option>
                     </select>
                   </div>
                   <div className="form-group">
@@ -221,20 +247,26 @@ const StaffAugConsultation = ({ data }) => {
                 </div>
 
                 {consultationError && (
-                  <div className="StaffAug-errorMsg">
-                    {consultationError}
-                  </div>
+                  <div className="StaffAug-errorMsg">{consultationError}</div>
                 )}
 
                 <div className="form-footer">
-                  <span className="no-risk">No credit card or upfront commitment required.</span>
+                  <span className="no-risk">
+                    No credit card or upfront commitment required.
+                  </span>
                   <button
                     type="submit"
                     className="submit-btn"
                     disabled={consultationStatus === 'loading'}
                   >
-                    <span>{consultationStatus === 'loading' ? 'Scheduling...' : 'Schedule Call Now'}</span>
-                    <span className="material-symbols-outlined">arrow_forward</span>
+                    <span>
+                      {consultationStatus === 'loading'
+                        ? 'Scheduling...'
+                        : 'Schedule Call Now'}
+                    </span>
+                    <span className="material-symbols-outlined">
+                      arrow_forward
+                    </span>
                   </button>
                 </div>
               </form>

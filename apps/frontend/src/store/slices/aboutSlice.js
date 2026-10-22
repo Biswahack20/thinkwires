@@ -10,14 +10,17 @@ export const fetchAboutData = createAsyncThunk(
   async () => {
     try {
       const response = await fetch(`${API_BASE}/about`, {
-        headers: { Accept: 'application/json' }
+        headers: { Accept: 'application/json' },
       });
       if (response.ok) {
         const data = await response.json();
         return { ...data, _isMock: false };
       }
     } catch (err) {
-      console.warn('API /about unavailable, utilizing validated mock fallback:', err.message);
+      console.warn(
+        'API /about unavailable, utilizing validated mock fallback:',
+        err.message
+      );
     }
     return { ...mockAboutData, _isMock: true };
   }
@@ -36,8 +39,11 @@ export const submitConsultation = createAsyncThunk(
 
       const response = await fetch(`${API_BASE}/about/consultation`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
-        body: JSON.stringify(formData)
+        headers: {
+          'Content-Type': 'application/json',
+          Accept: 'application/json',
+        },
+        body: JSON.stringify(formData),
       });
 
       if (response.ok) {
@@ -45,14 +51,18 @@ export const submitConsultation = createAsyncThunk(
         return { ...result, _isMock: false };
       }
     } catch (err) {
-      console.warn('Backend consultation endpoint unavailable, completing in safe simulated mock mode:', err.message);
+      console.warn(
+        'Backend consultation endpoint unavailable, completing in safe simulated mock mode:',
+        err.message
+      );
     }
 
     return {
       success: true,
-      message: 'Strategy consultation requested successfully. Our staffing directors will review your brief within 5 business hours.',
+      message:
+        'Strategy consultation requested successfully. Our staffing directors will review your brief within 5 business hours.',
       bookingRef: `TW-MOCK-${Date.now().toString(36).toUpperCase()}`,
-      _isMock: true
+      _isMock: true,
     };
   }
 );
@@ -67,7 +77,7 @@ const aboutSlice = createSlice({
     consultationStatus: 'idle', // 'idle' | 'submitting' | 'succeeded' | 'failed'
     consultationMessage: null,
     bookingRef: null,
-    isConsultationMock: false
+    isConsultationMock: false,
   },
   reducers: {
     resetConsultationStatus: (state) => {
@@ -75,7 +85,7 @@ const aboutSlice = createSlice({
       state.consultationMessage = null;
       state.bookingRef = null;
       state.isConsultationMock = false;
-    }
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -101,16 +111,19 @@ const aboutSlice = createSlice({
       .addCase(submitConsultation.fulfilled, (state, action) => {
         state.consultationStatus = 'succeeded';
         state.consultationMessage =
-          action.payload.message || 'Strategy consultation scheduled successfully!';
+          action.payload.message ||
+          'Strategy consultation scheduled successfully!';
         state.bookingRef = action.payload.bookingRef || null;
         state.isConsultationMock = Boolean(action.payload._isMock);
       })
       .addCase(submitConsultation.rejected, (state, action) => {
         state.consultationStatus = 'failed';
         state.consultationMessage =
-          action.payload || action.error.message || 'Failed to schedule consultation.';
+          action.payload ||
+          action.error.message ||
+          'Failed to schedule consultation.';
       });
-  }
+  },
 });
 
 export const { resetConsultationStatus } = aboutSlice.actions;

@@ -44,12 +44,16 @@ const Reports = () => {
               </div>
               <div className="Reports-content">
                 <span className="Reports-date">{report.date}</span>
-                <h3 className="Reports-cardTitle group-hover:text-primary transition-colors">{report.title}</h3>
+                <h3 className="Reports-cardTitle group-hover:text-primary transition-colors">
+                  {report.title}
+                </h3>
                 <p className="Reports-cardDesc">{report.desc}</p>
                 <div className="Reports-footer">
                   <Link to="/blog" className="Reports-readLink">
                     <span>Read Analysis</span>
-                    <span className="material-symbols-outlined text-[16px]">arrow_forward</span>
+                    <span className="material-symbols-outlined text-[16px]">
+                      arrow_forward
+                    </span>
                   </Link>
                 </div>
               </div>

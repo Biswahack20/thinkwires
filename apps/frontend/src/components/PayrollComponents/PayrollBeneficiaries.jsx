@@ -6,7 +6,10 @@ const PayrollBeneficiaries = ({ data }) => {
   const { eyebrow, heading, description, segments = [] } = data;
 
   return (
-    <section className="Payroll-sectionShell" style={{ backgroundColor: 'var(--color-background, #faf8ff)' }}>
+    <section
+      className="Payroll-sectionShell"
+      style={{ backgroundColor: 'var(--color-background, #faf8ff)' }}
+    >
       <div className="Payroll-sectionContainer">
         <ScrollReveal direction="up">
           <div style={{ maxWidth: '820px' }}>
@@ -24,7 +27,10 @@ const PayrollBeneficiaries = ({ data }) => {
                   <div className="Payroll-segmentHeader">
                     <span className="Payroll-segmentIndex">{seg.step}</span>
                     <div className="Payroll-segmentIcon">
-                      <span className="material-symbols-outlined" style={{ fontSize: '22px' }}>
+                      <span
+                        className="material-symbols-outlined"
+                        style={{ fontSize: '22px' }}
+                      >
                         {seg.icon}
                       </span>
                     </div>

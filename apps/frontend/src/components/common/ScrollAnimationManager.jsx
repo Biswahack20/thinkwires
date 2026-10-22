@@ -188,7 +188,8 @@ const ScrollAnimationManager = () => {
   useEffect(() => {
     // 1. Accessibility: Check user's motion preference
     const prefersReducedMotion =
-      window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      window.matchMedia &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     // Reset scroll to top on route change
     window.scrollTo(0, 0);
@@ -249,7 +250,8 @@ const ScrollAnimationManager = () => {
     observerRef.current = observer;
 
     const registerElements = () => {
-      const windowHeight = window.innerHeight || document.documentElement.clientHeight;
+      const windowHeight =
+        window.innerHeight || document.documentElement.clientHeight;
       const combinedSelector = TARGET_SELECTORS.join(', ');
       const elements = Array.from(document.querySelectorAll(combinedSelector));
 

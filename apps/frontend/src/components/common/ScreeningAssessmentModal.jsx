@@ -45,9 +45,12 @@ const ScreeningAssessmentModal = ({
       setLoading(true);
       setError('');
       try {
-        const res = await fetch(`/api/candidate/applications/${applicationId}/assessment`, {
-          credentials: 'include',
-        });
+        const res = await fetch(
+          `/api/candidate/applications/${applicationId}/assessment`,
+          {
+            credentials: 'include',
+          }
+        );
         const data = await res.json();
         if (res.ok && isMounted) {
           setAssessment(data.assessment);
@@ -105,12 +108,15 @@ const ScreeningAssessmentModal = ({
     setError('');
 
     try {
-      const res = await fetch(`/api/candidate/applications/${applicationId}/assessment/submit`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        body: JSON.stringify({ answers }),
-      });
+      const res = await fetch(
+        `/api/candidate/applications/${applicationId}/assessment/submit`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({ answers }),
+        }
+      );
 
       const data = await res.json();
       if (res.ok) {
@@ -183,7 +189,9 @@ const ScreeningAssessmentModal = ({
           }}
         >
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+            <div
+              style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}
+            >
               <span
                 style={{
                   background: '#008F68',
@@ -197,9 +205,18 @@ const ScreeningAssessmentModal = ({
               >
                 AI Gatekeeper
               </span>
-              <span style={{ fontSize: '0.85rem', color: '#94A3B8' }}>Proctored Evaluation</span>
+              <span style={{ fontSize: '0.85rem', color: '#94A3B8' }}>
+                Proctored Evaluation
+              </span>
             </div>
-            <h2 style={{ fontSize: '1.25rem', fontWeight: 700, margin: '0.35rem 0 0 0', color: '#FFFFFF' }}>
+            <h2
+              style={{
+                fontSize: '1.25rem',
+                fontWeight: 700,
+                margin: '0.35rem 0 0 0',
+                color: '#FFFFFF',
+              }}
+            >
               {assessment?.job_title || 'Technical Assessment'}
             </h2>
           </div>
@@ -217,10 +234,16 @@ const ScreeningAssessmentModal = ({
                   borderRadius: '8px',
                   fontWeight: 700,
                   fontSize: '0.92rem',
-                  border: timeLeft < 180 ? '1px solid #F87171' : '1px solid #E2E8F0',
+                  border:
+                    timeLeft < 180 ? '1px solid #F87171' : '1px solid #E2E8F0',
                 }}
               >
-                <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>schedule</span>
+                <span
+                  className="material-symbols-outlined"
+                  style={{ fontSize: '18px' }}
+                >
+                  schedule
+                </span>
                 <span>{formatTimer(timeLeft)}</span>
               </div>
             )}
@@ -239,7 +262,16 @@ const ScreeningAssessmentModal = ({
                 justifyContent: 'center',
               }}
             >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <svg
+                width="20"
+                height="20"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
                 <line x1="18" y1="6" x2="6" y2="18"></line>
                 <line x1="6" y1="6" x2="18" y2="18"></line>
               </svg>
@@ -250,17 +282,48 @@ const ScreeningAssessmentModal = ({
         {/* Modal Body */}
         <div style={{ flex: 1, overflowY: 'auto', padding: '1.75rem' }}>
           {loading ? (
-            <div style={{ textAlign: 'center', padding: '3rem 1rem', color: '#64748B' }}>
-              <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '0.75rem' }}>
-                <span className="material-symbols-outlined" style={{ fontSize: '36px', color: '#008F68', animation: 'spin 1.5s linear infinite' }}>
+            <div
+              style={{
+                textAlign: 'center',
+                padding: '3rem 1rem',
+                color: '#64748B',
+              }}
+            >
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'center',
+                  marginBottom: '0.75rem',
+                }}
+              >
+                <span
+                  className="material-symbols-outlined"
+                  style={{
+                    fontSize: '36px',
+                    color: '#008F68',
+                    animation: 'spin 1.5s linear infinite',
+                  }}
+                >
                   sync
                 </span>
               </div>
-              <p style={{ fontWeight: 600 }}>Synthesizing personalized AI technical assessment...</p>
-              <p style={{ fontSize: '0.85rem' }}>Tailoring 10 questions to match job requirements and candidate background.</p>
+              <p style={{ fontWeight: 600 }}>
+                Synthesizing personalized AI technical assessment...
+              </p>
+              <p style={{ fontSize: '0.85rem' }}>
+                Tailoring 10 questions to match job requirements and candidate
+                background.
+              </p>
             </div>
           ) : error ? (
-            <div style={{ padding: '1.5rem', background: '#FEF2F2', borderRadius: '8px', color: '#B91C1C' }}>
+            <div
+              style={{
+                padding: '1.5rem',
+                background: '#FEF2F2',
+                borderRadius: '8px',
+                color: '#B91C1C',
+              }}
+            >
               <strong>Error:</strong> {error}
             </div>
           ) : result ? (
@@ -301,10 +364,24 @@ const ScreeningAssessmentModal = ({
                 {result.gatekeeper_status}
               </span>
 
-              <h2 style={{ fontSize: '1.75rem', fontWeight: 800, color: '#0F172A', margin: '0 0 0.5rem 0' }}>
+              <h2
+                style={{
+                  fontSize: '1.75rem',
+                  fontWeight: 800,
+                  color: '#0F172A',
+                  margin: '0 0 0.5rem 0',
+                }}
+              >
                 Your Score: {result.total_score}%
               </h2>
-              <p style={{ color: '#64748B', maxWidth: '500px', margin: '0 auto 1.5rem auto', fontSize: '0.92rem' }}>
+              <p
+                style={{
+                  color: '#64748B',
+                  maxWidth: '500px',
+                  margin: '0 auto 1.5rem auto',
+                  fontSize: '0.92rem',
+                }}
+              >
                 {result.passed
                   ? `Congratulations! You satisfied the ${result.passing_threshold}% passing threshold. Your application has been expedited to 'Accepted - Screened' status and is now visible to client recruiters.`
                   : `Your score is below the required passing threshold of ${result.passing_threshold}%. Your application has been logged for review.`}
@@ -320,10 +397,22 @@ const ScreeningAssessmentModal = ({
                   marginBottom: '1.5rem',
                 }}
               >
-                <h4 style={{ margin: '0 0 0.75rem 0', color: '#1E293B', fontSize: '0.95rem' }}>
+                <h4
+                  style={{
+                    margin: '0 0 0.75rem 0',
+                    color: '#1E293B',
+                    fontSize: '0.95rem',
+                  }}
+                >
                   Detailed Evaluation Breakdown
                 </h4>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '0.75rem' }}>
+                <div
+                  style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+                    gap: '0.75rem',
+                  }}
+                >
                   {result.detailed_feedback?.map((item, idx) => (
                     <div
                       key={idx}
@@ -337,7 +426,13 @@ const ScreeningAssessmentModal = ({
                         justifyContent: 'space-between',
                       }}
                     >
-                      <span style={{ fontSize: '0.82rem', fontWeight: 600, color: '#475569' }}>
+                      <span
+                        style={{
+                          fontSize: '0.82rem',
+                          fontWeight: 600,
+                          color: '#475569',
+                        }}
+                      >
                         Q{idx + 1} ({item.type.toUpperCase()})
                       </span>
                       <span
@@ -386,7 +481,8 @@ const ScreeningAssessmentModal = ({
                 }}
               >
                 {questions.map((q, idx) => {
-                  const isAnswered = answers[q.id] !== undefined && answers[q.id] !== '';
+                  const isAnswered =
+                    answers[q.id] !== undefined && answers[q.id] !== '';
                   const isCurrent = idx === currentQuestionIndex;
                   return (
                     <button
@@ -397,9 +493,19 @@ const ScreeningAssessmentModal = ({
                         width: '34px',
                         height: '34px',
                         borderRadius: '8px',
-                        border: isCurrent ? '2px solid #008F68' : '1px solid #CBD5E1',
-                        background: isCurrent ? '#E6F4F0' : isAnswered ? '#F0FDF4' : '#FFFFFF',
-                        color: isCurrent ? '#006548' : isAnswered ? '#16A34A' : '#475569',
+                        border: isCurrent
+                          ? '2px solid #008F68'
+                          : '1px solid #CBD5E1',
+                        background: isCurrent
+                          ? '#E6F4F0'
+                          : isAnswered
+                            ? '#F0FDF4'
+                            : '#FFFFFF',
+                        color: isCurrent
+                          ? '#006548'
+                          : isAnswered
+                            ? '#16A34A'
+                            : '#475569',
                         fontWeight: 700,
                         fontSize: '0.82rem',
                         cursor: 'pointer',
@@ -414,11 +520,28 @@ const ScreeningAssessmentModal = ({
 
               {currentQ && (
                 <div>
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      marginBottom: '0.5rem',
+                    }}
+                  >
                     <span
                       style={{
-                        background: currentQ.type === 'mcq' ? '#EFF6FF' : currentQ.type === 'scenario' ? '#FAF5FF' : '#FFFBEB',
-                        color: currentQ.type === 'mcq' ? '#2563EB' : currentQ.type === 'scenario' ? '#7E22CE' : '#B45309',
+                        background:
+                          currentQ.type === 'mcq'
+                            ? '#EFF6FF'
+                            : currentQ.type === 'scenario'
+                              ? '#FAF5FF'
+                              : '#FFFBEB',
+                        color:
+                          currentQ.type === 'mcq'
+                            ? '#2563EB'
+                            : currentQ.type === 'scenario'
+                              ? '#7E22CE'
+                              : '#B45309',
                         fontSize: '0.75rem',
                         fontWeight: 700,
                         padding: '0.2rem 0.6rem',
@@ -426,17 +549,33 @@ const ScreeningAssessmentModal = ({
                         textTransform: 'uppercase',
                       }}
                     >
-                      Question {currentQuestionIndex + 1} of {totalQuestions} • {currentQ.type.toUpperCase()} ({currentQ.points || 10} pts)
+                      Question {currentQuestionIndex + 1} of {totalQuestions} •{' '}
+                      {currentQ.type.toUpperCase()} ({currentQ.points || 10}{' '}
+                      pts)
                     </span>
                   </div>
 
-                  <h3 style={{ fontSize: '1.1rem', fontWeight: 700, color: '#0F172A', lineHeight: 1.5, margin: '0 0 1.25rem 0' }}>
+                  <h3
+                    style={{
+                      fontSize: '1.1rem',
+                      fontWeight: 700,
+                      color: '#0F172A',
+                      lineHeight: 1.5,
+                      margin: '0 0 1.25rem 0',
+                    }}
+                  >
                     {currentQ.question || currentQ.title}
                   </h3>
 
                   {/* Render based on Question Type */}
                   {currentQ.type === 'mcq' && (
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+                    <div
+                      style={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '0.75rem',
+                      }}
+                    >
                       {currentQ.options?.map((opt, optIdx) => {
                         const isSelected = answers[currentQ.id] === optIdx;
                         return (
@@ -449,7 +588,9 @@ const ScreeningAssessmentModal = ({
                               gap: '0.75rem',
                               padding: '0.85rem 1rem',
                               borderRadius: '8px',
-                              border: isSelected ? '2px solid #008F68' : '1px solid #E2E8F0',
+                              border: isSelected
+                                ? '2px solid #008F68'
+                                : '1px solid #E2E8F0',
                               background: isSelected ? '#E6F4F0' : '#FFFFFF',
                               cursor: 'pointer',
                               transition: 'all 0.15s ease',
@@ -459,10 +600,20 @@ const ScreeningAssessmentModal = ({
                               type="radio"
                               name={currentQ.id}
                               checked={isSelected}
-                              onChange={() => handleSelectMCQ(currentQ.id, optIdx)}
+                              onChange={() =>
+                                handleSelectMCQ(currentQ.id, optIdx)
+                              }
                               style={{ marginTop: '0.2rem' }}
                             />
-                            <span style={{ fontSize: '0.92rem', color: '#1E293B', lineHeight: 1.45 }}>{opt}</span>
+                            <span
+                              style={{
+                                fontSize: '0.92rem',
+                                color: '#1E293B',
+                                lineHeight: 1.45,
+                              }}
+                            >
+                              {opt}
+                            </span>
                           </label>
                         );
                       })}
@@ -491,7 +642,9 @@ const ScreeningAssessmentModal = ({
                         rows={6}
                         placeholder="Detail your architectural strategy, mitigation steps, and trade-off considerations..."
                         value={answers[currentQ.id] || ''}
-                        onChange={(e) => handleTextChange(currentQ.id, e.target.value)}
+                        onChange={(e) =>
+                          handleTextChange(currentQ.id, e.target.value)
+                        }
                         style={{
                           width: '100%',
                           padding: '0.85rem',
@@ -523,8 +676,14 @@ const ScreeningAssessmentModal = ({
                       <textarea
                         rows={10}
                         placeholder="Implement your solution here..."
-                        value={answers[currentQ.id] !== undefined ? answers[currentQ.id] : currentQ.starter_code || ''}
-                        onChange={(e) => handleTextChange(currentQ.id, e.target.value)}
+                        value={
+                          answers[currentQ.id] !== undefined
+                            ? answers[currentQ.id]
+                            : currentQ.starter_code || ''
+                        }
+                        onChange={(e) =>
+                          handleTextChange(currentQ.id, e.target.value)
+                        }
                         style={{
                           width: '100%',
                           padding: '0.85rem',
@@ -561,7 +720,9 @@ const ScreeningAssessmentModal = ({
             <button
               type="button"
               disabled={currentQuestionIndex === 0}
-              onClick={() => setCurrentQuestionIndex((prev) => Math.max(prev - 1, 0))}
+              onClick={() =>
+                setCurrentQuestionIndex((prev) => Math.max(prev - 1, 0))
+              }
               style={{
                 background: '#FFFFFF',
                 border: '1px solid #CBD5E1',
@@ -581,7 +742,11 @@ const ScreeningAssessmentModal = ({
               {currentQuestionIndex < totalQuestions - 1 ? (
                 <button
                   type="button"
-                  onClick={() => setCurrentQuestionIndex((prev) => Math.min(prev + 1, totalQuestions - 1))}
+                  onClick={() =>
+                    setCurrentQuestionIndex((prev) =>
+                      Math.min(prev + 1, totalQuestions - 1)
+                    )
+                  }
                   style={{
                     background: '#008F68',
                     color: '#FFFFFF',

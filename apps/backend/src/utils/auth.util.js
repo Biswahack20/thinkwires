@@ -18,11 +18,14 @@ const INSECURE_DEFAULT_SECRETS = new Set([
 export const getJwtSecret = () => {
   const secret = config.JWT_SECRET || process.env.JWT_SECRET;
   if (!secret || typeof secret !== 'string' || !secret.trim()) {
-    throw new Error('FATAL: JWT_SECRET environment variable is missing. Server cannot sign or verify tokens.');
+    throw new Error(
+      'FATAL: JWT_SECRET environment variable is missing. Server cannot sign or verify tokens.'
+    );
   }
 
   const cleanSecret = secret.trim();
-  const isProduction = (config.NODE_ENV || process.env.NODE_ENV) === 'production';
+  const isProduction =
+    (config.NODE_ENV || process.env.NODE_ENV) === 'production';
 
   if (INSECURE_DEFAULT_SECRETS.has(cleanSecret.toLowerCase())) {
     throw new Error(
@@ -31,7 +34,9 @@ export const getJwtSecret = () => {
   }
 
   if (isProduction && cleanSecret.length < 32) {
-    throw new Error('FATAL: JWT_SECRET in production must be at least 32 characters long.');
+    throw new Error(
+      'FATAL: JWT_SECRET in production must be at least 32 characters long.'
+    );
   }
 
   return cleanSecret;
@@ -87,7 +92,10 @@ export const verifyCandidateToken = (token) => {
  */
 export const generatePasswordResetToken = () => {
   const rawToken = crypto.randomBytes(32).toString('hex');
-  const hashedToken = crypto.createHash('sha256').update(rawToken).digest('hex');
+  const hashedToken = crypto
+    .createHash('sha256')
+    .update(rawToken)
+    .digest('hex');
   const expiresAt = new Date(Date.now() + 60 * 60 * 1000); // 1 hour validity
 
   return {
@@ -186,4 +194,3 @@ export const clearAdminAuthCookie = (res) => {
     path: '/',
   });
 };
-

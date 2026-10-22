@@ -17,7 +17,11 @@ const EorKpiStrip = ({ kpiStrip = [] }) => {
               <div key={idx} className="Eor-kpiCard">
                 <div className={`Eor-kpiValue ${kpi.accent}`}>
                   {hasNum ? (
-                    <AnimatedCounter value={num} suffix={suffix} duration={1600} />
+                    <AnimatedCounter
+                      value={num}
+                      suffix={suffix}
+                      duration={1600}
+                    />
                   ) : (
                     kpi.value
                   )}

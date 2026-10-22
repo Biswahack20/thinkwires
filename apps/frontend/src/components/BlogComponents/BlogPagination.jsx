@@ -11,7 +11,8 @@ const BlogPagination = ({
   return (
     <div className="BlogPagination-figmaContainer">
       <div className="BlogPagination-figmaSummary">
-        Showing <strong>{Math.min(itemsPerPage, totalItems)}</strong> of <strong>{totalItems}</strong> verified engineering reports
+        Showing <strong>{Math.min(itemsPerPage, totalItems)}</strong> of{' '}
+        <strong>{totalItems}</strong> verified engineering reports
       </div>
 
       <div className="BlogPagination-figmaControls">

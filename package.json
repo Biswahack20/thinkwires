@@ -10,6 +10,8 @@
     "dev": "turbo dev",
     "lint": "turbo lint",
     "test": "turbo test",
+    "test:e2e": "turbo test:e2e",
+    "test:system": "turbo test:system",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "migrate": "npm --prefix apps/backend run migrate",

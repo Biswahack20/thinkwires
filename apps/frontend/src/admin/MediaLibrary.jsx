@@ -1,12 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import { adminApi } from './adminService';
-import {
-  PlusIcon,
-  TrashIcon,
-  CloseIcon,
-  AlertCircleIcon,
-} from './AdminIcons';
+import { PlusIcon, TrashIcon, CloseIcon, AlertCircleIcon } from './AdminIcons';
 
 const MediaLibrary = () => {
   const { showToast, activeRole } = useOutletContext();
@@ -88,7 +83,8 @@ const MediaLibrary = () => {
         <div className="tw-view-title-group">
           <h1>Digital Media Library</h1>
           <p className="tw-view-subtitle">
-            Manage high-resolution branding assets, blog cover photos, team graphics, and corporate collateral.
+            Manage high-resolution branding assets, blog cover photos, team
+            graphics, and corporate collateral.
           </p>
         </div>
 
@@ -121,7 +117,8 @@ const MediaLibrary = () => {
         <div className="tw-demo-notice-content">
           <span className="tw-demo-pill">MODULAR STORAGE</span>
           <span>
-            Metadata is persisted in MongoDB while binary media assets are referenced via external CDN/Cloud URLs to prevent database bloat.
+            Metadata is persisted in MongoDB while binary media assets are
+            referenced via external CDN/Cloud URLs to prevent database bloat.
           </span>
         </div>
       </div>
@@ -157,7 +154,13 @@ const MediaLibrary = () => {
                 <div className="tw-media-meta">
                   {item.dimensions} • {item.fileSizeKb} KB
                 </div>
-                <div style={{ fontSize: '0.68rem', color: '#94A3B8', marginTop: '0.15rem' }}>
+                <div
+                  style={{
+                    fontSize: '0.68rem',
+                    color: '#94A3B8',
+                    marginTop: '0.15rem',
+                  }}
+                >
                   {item.fileType}
                 </div>
 
@@ -213,7 +216,10 @@ const MediaLibrary = () => {
           <div className="tw-modal" style={{ maxWidth: '520px' }}>
             <div className="tw-modal-header">
               <h2 className="tw-modal-title">Register Media Asset</h2>
-              <button className="tw-modal-close-btn" onClick={() => setModalOpen(false)}>
+              <button
+                className="tw-modal-close-btn"
+                onClick={() => setModalOpen(false)}
+              >
                 <CloseIcon size={16} />
               </button>
             </div>
@@ -245,7 +251,9 @@ const MediaLibrary = () => {
                     type="text"
                     className="tw-form-input"
                     value={formData.title}
-                    onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, title: e.target.value })
+                    }
                     placeholder="e.g. Enterprise Client Kickoff Banner"
                     required
                   />
@@ -257,12 +265,21 @@ const MediaLibrary = () => {
                     type="text"
                     className="tw-form-input"
                     value={formData.fileUrl}
-                    onChange={(e) => setFormData({ ...formData, fileUrl: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, fileUrl: e.target.value })
+                    }
                     placeholder="/images/about-hero.jpg or https://..."
                     required
                   />
-                  <div style={{ fontSize: '0.7rem', color: '#64748B', marginTop: '0.25rem' }}>
-                    Demo implementation accepts static assets or public image URLs.
+                  <div
+                    style={{
+                      fontSize: '0.7rem',
+                      color: '#64748B',
+                      marginTop: '0.25rem',
+                    }}
+                  >
+                    Demo implementation accepts static assets or public image
+                    URLs.
                   </div>
                 </div>
 
@@ -272,7 +289,9 @@ const MediaLibrary = () => {
                     <select
                       className="tw-form-select"
                       value={formData.fileType}
-                      onChange={(e) => setFormData({ ...formData, fileType: e.target.value })}
+                      onChange={(e) =>
+                        setFormData({ ...formData, fileType: e.target.value })
+                      }
                     >
                       <option value="image/jpeg">image/jpeg</option>
                       <option value="image/png">image/png</option>
@@ -287,7 +306,12 @@ const MediaLibrary = () => {
                       type="number"
                       className="tw-form-input"
                       value={formData.fileSizeKb}
-                      onChange={(e) => setFormData({ ...formData, fileSizeKb: Number(e.target.value) })}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          fileSizeKb: Number(e.target.value),
+                        })
+                      }
                       min="1"
                     />
                   </div>
@@ -300,17 +324,23 @@ const MediaLibrary = () => {
                       type="text"
                       className="tw-form-input"
                       value={formData.dimensions}
-                      onChange={(e) => setFormData({ ...formData, dimensions: e.target.value })}
+                      onChange={(e) =>
+                        setFormData({ ...formData, dimensions: e.target.value })
+                      }
                       placeholder="1920x1080"
                     />
                   </div>
                   <div className="tw-form-group">
-                    <label className="tw-form-label">Accessibility Alt Text</label>
+                    <label className="tw-form-label">
+                      Accessibility Alt Text
+                    </label>
                     <input
                       type="text"
                       className="tw-form-input"
                       value={formData.altText}
-                      onChange={(e) => setFormData({ ...formData, altText: e.target.value })}
+                      onChange={(e) =>
+                        setFormData({ ...formData, altText: e.target.value })
+                      }
                       placeholder="Descriptive image text"
                     />
                   </div>
@@ -340,18 +370,28 @@ const MediaLibrary = () => {
           <div className="tw-modal" style={{ maxWidth: '440px' }}>
             <div className="tw-modal-header">
               <h2 className="tw-modal-title">Delete Media Asset</h2>
-              <button className="tw-modal-close-btn" onClick={() => setDeleteConfirmId(null)}>
+              <button
+                className="tw-modal-close-btn"
+                onClick={() => setDeleteConfirmId(null)}
+              >
                 <CloseIcon size={16} />
               </button>
             </div>
             <div className="tw-modal-body">
-              Are you sure you want to remove this media record? Any pages referencing this URL will need to be updated.
+              Are you sure you want to remove this media record? Any pages
+              referencing this URL will need to be updated.
             </div>
             <div className="tw-modal-footer">
-              <button className="tw-btn-secondary" onClick={() => setDeleteConfirmId(null)}>
+              <button
+                className="tw-btn-secondary"
+                onClick={() => setDeleteConfirmId(null)}
+              >
                 Cancel
               </button>
-              <button className="tw-btn-danger" onClick={() => handleDelete(deleteConfirmId)}>
+              <button
+                className="tw-btn-danger"
+                onClick={() => handleDelete(deleteConfirmId)}
+              >
                 Delete Asset
               </button>
             </div>

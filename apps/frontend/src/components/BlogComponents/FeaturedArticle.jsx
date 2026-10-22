@@ -1,10 +1,16 @@
 import React from 'react';
 import featuredImgAsset from '../../assets/blog_ai_gcc_dashboard.jpg';
 
-const FeaturedArticle = ({ article, isBookmarked, onBookmarkToggle, onReadClick }) => {
+const FeaturedArticle = ({
+  article,
+  isBookmarked,
+  onBookmarkToggle,
+  onReadClick,
+}) => {
   const defaultArticle = {
     id: 'featured-flagship-1',
-    title: 'Beyond the Code: How Data Science and AI Are Engine-Building the New India',
+    title:
+      'Beyond the Code: How Data Science and AI Are Engine-Building the New India',
     excerpt:
       "India's tech story is undergoing a fundamental structural pivot. The nation is shifting from being the back-office support system for global tech to becoming the primary engine for global R&D and indigenous AI innovations. Over the next five years, data science will evolve from passive business intelligence into an infrastructure-level driver of governance, industry, and economic mobility.",
     primaryFinding:
@@ -65,7 +71,14 @@ const FeaturedArticle = ({ article, isBookmarked, onBookmarkToggle, onReadClick 
           {/* Bottom Left Author Glass Overlay */}
           <div className="FeaturedArticle-authorOverlayBottomLeft">
             <div className="FeaturedArticle-authorIconBadge">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
                 <circle cx="12" cy="12" r="10" />
                 <line x1="2" y1="12" x2="22" y2="12" />
                 <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10z" />
@@ -116,7 +129,14 @@ const FeaturedArticle = ({ article, isBookmarked, onBookmarkToggle, onReadClick 
           {/* Primary Finding Callout Box */}
           <div className="FeaturedArticle-findingBox">
             <div className="FeaturedArticle-findingHeader">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2563eb" strokeWidth="2.5">
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#2563eb"
+                strokeWidth="2.5"
+              >
                 <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
                 <polyline points="17 6 23 6 23 12" />
               </svg>
@@ -151,7 +171,9 @@ const FeaturedArticle = ({ article, isBookmarked, onBookmarkToggle, onReadClick 
             </button>
 
             <button
-              onClick={() => onBookmarkToggle && onBookmarkToggle(currentArticle.id)}
+              onClick={() =>
+                onBookmarkToggle && onBookmarkToggle(currentArticle.id)
+              }
               className={`FeaturedArticle-bookmarkSquareBtn ${isBookmarked ? 'is-active' : ''}`}
               aria-label="Bookmark report"
               title={isBookmarked ? 'Remove Bookmark' : 'Save Report'}

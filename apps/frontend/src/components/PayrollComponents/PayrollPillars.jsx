@@ -6,7 +6,10 @@ const PayrollPillars = ({ data }) => {
   const { eyebrow, heading, description, pillars = [] } = data;
 
   return (
-    <section className="Payroll-sectionShell" style={{ backgroundColor: 'var(--color-surface-container-low, #f3f2fe)' }}>
+    <section
+      className="Payroll-sectionShell"
+      style={{ backgroundColor: 'var(--color-surface-container-low, #f3f2fe)' }}
+    >
       <div className="Payroll-sectionContainer">
         <ScrollReveal direction="up">
           <div style={{ maxWidth: '780px' }}>
@@ -18,11 +21,18 @@ const PayrollPillars = ({ data }) => {
 
         <div className="Payroll-pillarsGrid">
           {pillars.map((pillar, idx) => (
-            <ScrollReveal key={idx} direction={idx % 2 === 0 ? 'left' : 'right'} delay={idx * 0.1}>
+            <ScrollReveal
+              key={idx}
+              direction={idx % 2 === 0 ? 'left' : 'right'}
+              delay={idx * 0.1}
+            >
               <div className="Payroll-pillarCard">
                 <div>
                   <div className="Payroll-pillarIconBox">
-                    <span className="material-symbols-outlined" style={{ fontSize: '28px' }}>
+                    <span
+                      className="material-symbols-outlined"
+                      style={{ fontSize: '28px' }}
+                    >
                       {pillar.icon}
                     </span>
                   </div>
@@ -32,7 +42,10 @@ const PayrollPillars = ({ data }) => {
                 </div>
 
                 <div className="Payroll-pillarHighlight">
-                  <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>
+                  <span
+                    className="material-symbols-outlined"
+                    style={{ fontSize: '16px' }}
+                  >
                     check
                   </span>
                   <span>{pillar.highlight}</span>

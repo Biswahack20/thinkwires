@@ -27,7 +27,9 @@ const NewsletterCTA = ({ isSubmitted = false, onSubmit }) => {
             </h2>
 
             <p className="NewsletterCTA-figmaSubtitle">
-              Join over 4,800 CTOs, VPs of Engineering, and People Leaders receiving ThinkWires unvarnished quarterly compensation, time-to-hire, and skill scarcity reports.
+              Join over 4,800 CTOs, VPs of Engineering, and People Leaders
+              receiving ThinkWires unvarnished quarterly compensation,
+              time-to-hire, and skill scarcity reports.
             </p>
 
             <div className="NewsletterCTA-figmaCheckmarks">
@@ -52,12 +54,20 @@ const NewsletterCTA = ({ isSubmitted = false, onSubmit }) => {
               {submitted ? (
                 <div className="NewsletterCTA-figmaSuccess">
                   <h3>Subscription Confirmed</h3>
-                  <p>You have been added to the quarterly benchmark dispatch. Your first report is in your inbox.</p>
+                  <p>
+                    You have been added to the quarterly benchmark dispatch.
+                    Your first report is in your inbox.
+                  </p>
                 </div>
               ) : (
-                <form onSubmit={handleSubmit} className="NewsletterCTA-figmaForm">
+                <form
+                  onSubmit={handleSubmit}
+                  className="NewsletterCTA-figmaForm"
+                >
                   <div className="NewsletterCTA-figmaField">
-                    <label className="NewsletterCTA-figmaLabel">Work Email Address</label>
+                    <label className="NewsletterCTA-figmaLabel">
+                      Work Email Address
+                    </label>
                     <input
                       type="email"
                       required
@@ -69,7 +79,9 @@ const NewsletterCTA = ({ isSubmitted = false, onSubmit }) => {
                   </div>
 
                   <div className="NewsletterCTA-figmaField">
-                    <label className="NewsletterCTA-figmaLabel">Organization Role</label>
+                    <label className="NewsletterCTA-figmaLabel">
+                      Organization Role
+                    </label>
                     <input
                       type="text"
                       className="NewsletterCTA-figmaInput"
@@ -79,12 +91,16 @@ const NewsletterCTA = ({ isSubmitted = false, onSubmit }) => {
                     />
                   </div>
 
-                  <button type="submit" className="NewsletterCTA-figmaSubmitBtn">
+                  <button
+                    type="submit"
+                    className="NewsletterCTA-figmaSubmitBtn"
+                  >
                     Subscribe to Benchmark Dispatch ⬎
                   </button>
 
                   <p className="NewsletterCTA-figmaNote">
-                    Strictly enterprise research. Unsubscribe at any time with 1 click.
+                    Strictly enterprise research. Unsubscribe at any time with 1
+                    click.
                   </p>
                 </form>
               )}

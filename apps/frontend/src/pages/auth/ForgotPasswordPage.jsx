@@ -32,7 +32,10 @@ const ForgotPasswordPage = () => {
       const data = await response.json();
 
       if (response.ok) {
-        setMessage(data.message || 'Password reset link has been dispatched to your email.');
+        setMessage(
+          data.message ||
+            'Password reset link has been dispatched to your email.'
+        );
         if (data.devResetUrl) {
           setDevResetUrl(data.devResetUrl);
         }
@@ -56,7 +59,8 @@ const ForgotPasswordPage = () => {
             <span className="tw-auth-badge">Account Recovery</span>
             <h1 className="tw-auth-title">Forgot Password</h1>
             <p className="tw-auth-subtitle">
-              Enter your registered email address and we'll send you instructions to reset your password.
+              Enter your registered email address and we'll send you
+              instructions to reset your password.
             </p>
           </div>
 
@@ -73,7 +77,10 @@ const ForgotPasswordPage = () => {
                 {devResetUrl && (
                   <p style={{ margin: '0.5rem 0 0 0', fontSize: '0.82rem' }}>
                     <strong>Developer Shortcut:</strong>{' '}
-                    <Link to={devResetUrl} style={{ color: '#15803D', textDecoration: 'underline' }}>
+                    <Link
+                      to={devResetUrl}
+                      style={{ color: '#15803D', textDecoration: 'underline' }}
+                    >
                       Click here to reset immediately (Dev Mode)
                     </Link>
                   </p>

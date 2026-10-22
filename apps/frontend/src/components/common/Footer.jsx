@@ -125,7 +125,10 @@ const Footer = () => {
             <h4 className={'Footer-colTitle'}>CORE SERVICES</h4>
             <ul className={'Footer-linkList'}>
               <li>
-                <Link to="/services/staff-augmentation" className={'Footer-linkItem'}>
+                <Link
+                  to="/services/staff-augmentation"
+                  className={'Footer-linkItem'}
+                >
                   Staff Augmentation
                 </Link>
               </li>
@@ -135,12 +138,18 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link to="/services/executive-search" className={'Footer-linkItem'}>
+                <Link
+                  to="/services/executive-search"
+                  className={'Footer-linkItem'}
+                >
                   Executive Search
                 </Link>
               </li>
               <li>
-                <Link to="/services/permanent-staffing" className={'Footer-linkItem'}>
+                <Link
+                  to="/services/permanent-staffing"
+                  className={'Footer-linkItem'}
+                >
                   Permanent Staffing
                 </Link>
               </li>
@@ -239,9 +248,6 @@ const Footer = () => {
             </Link>
             <Link to="/cookies" className={'Footer-bottomLink'}>
               Cookie Settings
-            </Link>
-            <Link to="/admin" className={'Footer-bottomLink'} style={{ color: '#008F68', fontWeight: 600 }}>
-              Admin Portal Demo ↗
             </Link>
           </div>
         </div>

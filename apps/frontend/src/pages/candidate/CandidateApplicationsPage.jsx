@@ -29,7 +29,9 @@ const CandidateApplicationsPage = () => {
   useEffect(() => {
     if (searchParams.get('applied') === 'true') {
       // eslint-disable-next-line react-hooks/set-state-in-effect
-      setNoticeMessage('Application submitted. Assessment available for 24 hours.');
+      setNoticeMessage(
+        'Application submitted. Assessment available for 24 hours.'
+      );
     }
   }, [searchParams]);
 
@@ -81,7 +83,9 @@ const CandidateApplicationsPage = () => {
         setError(data.error || 'Failed to withdraw application.');
       }
     } catch {
-      setError('Network error connecting to Thinkwires service to withdraw application.');
+      setError(
+        'Network error connecting to Thinkwires service to withdraw application.'
+      );
     } finally {
       setWithdrawingId(null);
     }
@@ -95,7 +99,14 @@ const CandidateApplicationsPage = () => {
         {/* Navigation Tabs */}
         <div className="tw-portal-navtabs">
           <Link to="/candidate/dashboard" className="tw-portal-tab">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
               <rect x="3" y="3" width="7" height="7"></rect>
               <rect x="14" y="3" width="7" height="7"></rect>
               <rect x="14" y="14" width="7" height="7"></rect>
@@ -104,14 +115,28 @@ const CandidateApplicationsPage = () => {
             Dashboard
           </Link>
           <Link to="/candidate/profile" className="tw-portal-tab">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
               <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
               <circle cx="12" cy="7" r="4"></circle>
             </svg>
             Candidate Profile
           </Link>
           <Link to="/candidate/applications" className="tw-portal-tab active">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
               <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
               <polyline points="14 2 14 8 20 8"></polyline>
               <line x1="16" y1="13" x2="8" y2="13"></line>
@@ -121,7 +146,14 @@ const CandidateApplicationsPage = () => {
             My Applications
           </Link>
           <Link to="/jobs" className="tw-portal-tab">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
               <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
               <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
             </svg>
@@ -132,16 +164,29 @@ const CandidateApplicationsPage = () => {
         <div className="tw-portal-card">
           <div className="tw-portal-card-header">
             <div>
-              <h1 className="tw-portal-card-title">My Tracked Job Applications</h1>
-              <p style={{ color: '#64748B', margin: '0.25rem 0 0 0', fontSize: '0.9rem' }}>
-                Track your active job applications, take your 24-hour technical assessments, and manage your submissions.
+              <h1 className="tw-portal-card-title">
+                My Tracked Job Applications
+              </h1>
+              <p
+                style={{
+                  color: '#64748B',
+                  margin: '0.25rem 0 0 0',
+                  fontSize: '0.9rem',
+                }}
+              >
+                Track your active job applications, take your 24-hour technical
+                assessments, and manage your submissions.
               </p>
             </div>
 
             <Link
               to="/jobs"
               className="Navbar-btnPrimary"
-              style={{ textDecoration: 'none', padding: '0.55rem 1rem', fontSize: '0.88rem' }}
+              style={{
+                textDecoration: 'none',
+                padding: '0.55rem 1rem',
+                fontSize: '0.88rem',
+              }}
             >
               + Apply for More Roles
             </Link>
@@ -150,13 +195,26 @@ const CandidateApplicationsPage = () => {
           {noticeMessage && (
             <div
               className="tw-auth-alert tw-auth-alert-success"
-              style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '1rem', marginBottom: '1.25rem' }}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                gap: '1rem',
+                marginBottom: '1.25rem',
+              }}
             >
               <span>{noticeMessage}</span>
               <button
                 type="button"
                 onClick={() => setNoticeMessage('')}
-                style={{ background: 'transparent', border: 'none', cursor: 'pointer', fontSize: '0.85rem', color: '#166534', fontWeight: 700 }}
+                style={{
+                  background: 'transparent',
+                  border: 'none',
+                  cursor: 'pointer',
+                  fontSize: '0.85rem',
+                  color: '#166534',
+                  fontWeight: 700,
+                }}
                 aria-label="Dismiss Alert"
               >
                 Dismiss
@@ -165,13 +223,18 @@ const CandidateApplicationsPage = () => {
           )}
 
           {error && (
-            <div className="tw-auth-alert tw-auth-alert-error" style={{ marginBottom: '1.25rem' }}>
+            <div
+              className="tw-auth-alert tw-auth-alert-error"
+              style={{ marginBottom: '1.25rem' }}
+            >
               <span>{error}</span>
             </div>
           )}
 
           {loading ? (
-            <div style={{ padding: '3rem', textAlign: 'center', color: '#64748B' }}>
+            <div
+              style={{ padding: '3rem', textAlign: 'center', color: '#64748B' }}
+            >
               Retrieving your applications...
             </div>
           ) : applications.length === 0 ? (
@@ -184,11 +247,26 @@ const CandidateApplicationsPage = () => {
                 border: '1px dashed #CBD5E1',
               }}
             >
-              <h3 style={{ margin: '0 0 0.5rem 0', color: '#0F172A', fontSize: '1.1rem' }}>
+              <h3
+                style={{
+                  margin: '0 0 0.5rem 0',
+                  color: '#0F172A',
+                  fontSize: '1.1rem',
+                }}
+              >
                 No active applications found
               </h3>
-              <p style={{ color: '#64748B', margin: '0 0 1.25rem 0', maxWidth: '450px', marginLeft: 'auto', marginRight: 'auto' }}>
-                You have not applied to any Thinkwires partner positions yet. Explore our open positions to submit an application.
+              <p
+                style={{
+                  color: '#64748B',
+                  margin: '0 0 1.25rem 0',
+                  maxWidth: '450px',
+                  marginLeft: 'auto',
+                  marginRight: 'auto',
+                }}
+              >
+                You have not applied to any Thinkwires partner positions yet.
+                Explore our open positions to submit an application.
               </p>
               <Link
                 to="/jobs"
@@ -217,8 +295,11 @@ const CandidateApplicationsPage = () => {
                 <tbody>
                   {applications.map((app) => {
                     const appId = app._id || app.id;
-                    const submissionTime = new Date(app.createdAt || app.appliedAt || currentTime).getTime();
-                    const hoursElapsed = (currentTime - submissionTime) / (1000 * 60 * 60);
+                    const submissionTime = new Date(
+                      app.createdAt || app.appliedAt || currentTime
+                    ).getTime();
+                    const hoursElapsed =
+                      (currentTime - submissionTime) / (1000 * 60 * 60);
                     const hoursRemaining = Math.max(0, 24 - hoursElapsed);
                     const isWithin24Hrs = hoursRemaining > 0;
                     const isWithdrawn = app.status === 'Withdrawn';
@@ -229,11 +310,21 @@ const CandidateApplicationsPage = () => {
                       app.assessmentScore != null;
 
                     return (
-                      <tr key={appId} style={{ opacity: isWithdrawn ? 0.65 : 1 }}>
+                      <tr
+                        key={appId}
+                        style={{ opacity: isWithdrawn ? 0.65 : 1 }}
+                      >
                         <td style={{ fontWeight: 600, color: '#0F172A' }}>
                           {app.jobTitle}
                           {isWithdrawn && (
-                            <span style={{ display: 'block', fontSize: '0.72rem', color: '#64748B', fontWeight: 500 }}>
+                            <span
+                              style={{
+                                display: 'block',
+                                fontSize: '0.72rem',
+                                color: '#64748B',
+                                fontWeight: 500,
+                              }}
+                            >
                               (Application Withdrawn)
                             </span>
                           )}
@@ -249,19 +340,36 @@ const CandidateApplicationsPage = () => {
                                 borderRadius: '6px',
                                 fontSize: '0.8rem',
                                 fontWeight: 600,
-                                background: app.fitScore >= 75 ? '#DCFCE7' : app.fitScore >= 50 ? '#FEF9C3' : '#FEE2E2',
-                                color: app.fitScore >= 75 ? '#166534' : app.fitScore >= 50 ? '#854D0E' : '#991B1B',
+                                background:
+                                  app.fitScore >= 75
+                                    ? '#DCFCE7'
+                                    : app.fitScore >= 50
+                                      ? '#FEF9C3'
+                                      : '#FEE2E2',
+                                color:
+                                  app.fitScore >= 75
+                                    ? '#166534'
+                                    : app.fitScore >= 50
+                                      ? '#854D0E'
+                                      : '#991B1B',
                               }}
                             >
-                              {app.fitScore}% {app.fitBadge ? `• ${app.fitBadge}` : ''}
+                              {app.fitScore}%{' '}
+                              {app.fitBadge ? `• ${app.fitBadge}` : ''}
                             </span>
                           ) : (
-                            <span style={{ color: '#94A3B8', fontSize: '0.82rem' }}>Calculated</span>
+                            <span
+                              style={{ color: '#94A3B8', fontSize: '0.82rem' }}
+                            >
+                              Calculated
+                            </span>
                           )}
                         </td>
                         <td>
                           {isWithdrawn ? (
-                            <span style={{ color: '#94A3B8', fontSize: '0.82rem' }}>
+                            <span
+                              style={{ color: '#94A3B8', fontSize: '0.82rem' }}
+                            >
                               Withdrawn
                             </span>
                           ) : isCompleted ? (
@@ -272,11 +380,23 @@ const CandidateApplicationsPage = () => {
                                 borderRadius: '6px',
                                 fontSize: '0.8rem',
                                 fontWeight: 600,
-                                background: (app.screeningPassed || (app.assessmentScore || 0) >= 70) ? '#DCFCE7' : '#FEE2E2',
-                                color: (app.screeningPassed || (app.assessmentScore || 0) >= 70) ? '#166534' : '#991B1B',
+                                background:
+                                  app.screeningPassed ||
+                                  (app.assessmentScore || 0) >= 70
+                                    ? '#DCFCE7'
+                                    : '#FEE2E2',
+                                color:
+                                  app.screeningPassed ||
+                                  (app.assessmentScore || 0) >= 70
+                                    ? '#166534'
+                                    : '#991B1B',
                               }}
                             >
-                              {(app.screeningPassed || (app.assessmentScore || 0) >= 70) ? 'Passed' : 'Completed'} ({app.assessmentScore || 0}%)
+                              {app.screeningPassed ||
+                              (app.assessmentScore || 0) >= 70
+                                ? 'Passed'
+                                : 'Completed'}{' '}
+                              ({app.assessmentScore || 0}%)
                             </span>
                           ) : isWithin24Hrs ? (
                             <div>
@@ -305,17 +425,30 @@ const CandidateApplicationsPage = () => {
                                   fontWeight: 600,
                                 }}
                               >
-                                {Math.floor(hoursRemaining)}h {Math.floor((hoursRemaining % 1) * 60)}m left
+                                {Math.floor(hoursRemaining)}h{' '}
+                                {Math.floor((hoursRemaining % 1) * 60)}m left
                               </div>
                             </div>
                           ) : (
-                            <span style={{ color: '#DC2626', fontSize: '0.78rem', fontWeight: 600 }}>
+                            <span
+                              style={{
+                                color: '#DC2626',
+                                fontSize: '0.78rem',
+                                fontWeight: 600,
+                              }}
+                            >
                               Expired (24h limit)
                             </span>
                           )}
                         </td>
-                        <td style={{ color: isWithdrawn ? '#64748B' : '#2563EB', fontWeight: 500 }}>
-                          {app.stage || (isWithdrawn ? 'Withdrawn' : 'Screening')}
+                        <td
+                          style={{
+                            color: isWithdrawn ? '#64748B' : '#2563EB',
+                            fontWeight: 500,
+                          }}
+                        >
+                          {app.stage ||
+                            (isWithdrawn ? 'Withdrawn' : 'Screening')}
                         </td>
                         <td>
                           <span
@@ -323,14 +456,14 @@ const CandidateApplicationsPage = () => {
                               isWithdrawn
                                 ? 'tw-badge-rejected'
                                 : app.status === 'Offered'
-                                ? 'tw-badge-offered'
-                                : app.status === 'Interview'
-                                ? 'tw-badge-interview'
-                                : app.status === 'Screening'
-                                ? 'tw-badge-screening'
-                                : app.status === 'Rejected'
-                                ? 'tw-badge-rejected'
-                                : 'tw-badge-applied'
+                                  ? 'tw-badge-offered'
+                                  : app.status === 'Interview'
+                                    ? 'tw-badge-interview'
+                                    : app.status === 'Screening'
+                                      ? 'tw-badge-screening'
+                                      : app.status === 'Rejected'
+                                        ? 'tw-badge-rejected'
+                                        : 'tw-badge-applied'
                             }`}
                           >
                             {app.status || 'Applied'}
@@ -339,7 +472,13 @@ const CandidateApplicationsPage = () => {
                         <td>{new Date(submissionTime).toLocaleDateString()}</td>
                         <td>
                           {isWithdrawn ? (
-                            <span style={{ color: '#94A3B8', fontSize: '0.82rem', fontStyle: 'italic' }}>
+                            <span
+                              style={{
+                                color: '#94A3B8',
+                                fontSize: '0.82rem',
+                                fontStyle: 'italic',
+                              }}
+                            >
                               Withdrawn
                             </span>
                           ) : app.status !== 'Hired' ? (
@@ -359,10 +498,18 @@ const CandidateApplicationsPage = () => {
                                 transition: 'all 0.15s ease',
                               }}
                             >
-                              {withdrawingId === appId ? 'Withdrawing...' : 'Withdraw'}
+                              {withdrawingId === appId
+                                ? 'Withdrawing...'
+                                : 'Withdraw'}
                             </button>
                           ) : (
-                            <span style={{ color: '#166534', fontSize: '0.8rem', fontWeight: 600 }}>
+                            <span
+                              style={{
+                                color: '#166534',
+                                fontSize: '0.8rem',
+                                fontWeight: 600,
+                              }}
+                            >
                               Active Placed
                             </span>
                           )}
@@ -387,13 +534,19 @@ const CandidateApplicationsPage = () => {
               const score = result.total_score ?? result.percentageScore ?? 0;
               setApplications((prev) =>
                 prev.map((a) =>
-                  (a._id || a.id) === (assessmentModalApp._id || assessmentModalApp.id)
+                  (a._id || a.id) ===
+                  (assessmentModalApp._id || assessmentModalApp.id)
                     ? {
                         ...a,
                         assessmentScore: score,
-                        assessmentStatus: result.passed ? 'Passed' : 'Completed',
+                        assessmentStatus: result.passed
+                          ? 'Passed'
+                          : 'Completed',
                         screeningPassed: result.passed,
-                        stage: result.gatekeeper_status || result.gatekeeperStatus || a.stage,
+                        stage:
+                          result.gatekeeper_status ||
+                          result.gatekeeperStatus ||
+                          a.stage,
                       }
                     : a
                 )

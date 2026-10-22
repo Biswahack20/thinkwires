@@ -43,27 +43,47 @@ const Openings = () => {
     if (activeFilter === 'SAP & Enterprise') {
       return (
         job.title?.toLowerCase().includes('sap') ||
-        (job.skills && job.skills.some((s) => s.toLowerCase().includes('sap') || s.toLowerCase().includes('abap')))
+        (job.skills &&
+          job.skills.some(
+            (s) =>
+              s.toLowerCase().includes('sap') ||
+              s.toLowerCase().includes('abap')
+          ))
       );
     }
     if (activeFilter === 'Full Stack & AEM') {
       return (
         job.title?.toLowerCase().includes('aem') ||
         job.title?.toLowerCase().includes('full stack') ||
-        (job.skills && job.skills.some((s) => s.toLowerCase().includes('aem') || s.toLowerCase().includes('react')))
+        (job.skills &&
+          job.skills.some(
+            (s) =>
+              s.toLowerCase().includes('aem') ||
+              s.toLowerCase().includes('react')
+          ))
       );
     }
     if (activeFilter === 'Platform Architecture') {
       return (
         job.title?.toLowerCase().includes('architect') ||
-        (job.skills && job.skills.some((s) => s.toLowerCase().includes('ach') || s.toLowerCase().includes('platform')))
+        (job.skills &&
+          job.skills.some(
+            (s) =>
+              s.toLowerCase().includes('ach') ||
+              s.toLowerCase().includes('platform')
+          ))
       );
     }
     if (activeFilter === 'PLM & Systems') {
       return (
         job.title?.toLowerCase().includes('plm') ||
         job.title?.toLowerCase().includes('teamcenter') ||
-        (job.skills && job.skills.some((s) => s.toLowerCase().includes('plm') || s.toLowerCase().includes('bmide')))
+        (job.skills &&
+          job.skills.some(
+            (s) =>
+              s.toLowerCase().includes('plm') ||
+              s.toLowerCase().includes('bmide')
+          ))
       );
     }
     return true;
@@ -74,10 +94,15 @@ const Openings = () => {
 
   const handleApplyClick = (job) => {
     const jobId = job.id || job._id || 'general-pool';
-    const empType = job.jobMode || job.employmentType || job.type || 'Permanent';
+    const empType =
+      job.jobMode || job.employmentType || job.type || 'Permanent';
     const postDate = job.postedDate
-      ? new Date(job.postedDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
-      : (job.postingDate || 'Active Mandate');
+      ? new Date(job.postedDate).toLocaleDateString('en-US', {
+          month: 'short',
+          day: 'numeric',
+          year: 'numeric',
+        })
+      : job.postingDate || 'Active Mandate';
     const targetApplyUrl = `/jobs/${encodeURIComponent(jobId)}/apply?title=${encodeURIComponent(job.title || '')}&department=${encodeURIComponent(job.department || 'Engineering')}&location=${encodeURIComponent(job.location || 'Remote')}&employmentType=${encodeURIComponent(empType)}&postingDate=${encodeURIComponent(postDate)}`;
 
     if (isAuthenticated) {
@@ -100,10 +125,35 @@ const Openings = () => {
             </p>
           </div>
           <div className={'Openings-headerRight'}>
-            <span className="material-symbols-outlined" style={{ color: 'var(--color-emerald-accent)', fontSize: '24px' }}>bolt</span>
-            <div style={{ display: 'flex', flexDirection: 'column', lineHeight: 1.2 }}>
-              <span style={{ fontWeight: 800, fontSize: '1.25rem', color: 'var(--color-navy-dark)' }}>130+</span>
-              <span style={{ fontWeight: 500, fontSize: '0.75rem', color: '#64748b' }}>
+            <span
+              className="material-symbols-outlined"
+              style={{ color: 'var(--color-emerald-accent)', fontSize: '24px' }}
+            >
+              bolt
+            </span>
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                lineHeight: 1.2,
+              }}
+            >
+              <span
+                style={{
+                  fontWeight: 800,
+                  fontSize: '1.25rem',
+                  color: 'var(--color-navy-dark)',
+                }}
+              >
+                130+
+              </span>
+              <span
+                style={{
+                  fontWeight: 500,
+                  fontSize: '0.75rem',
+                  color: '#64748b',
+                }}
+              >
                 Verified Tech Roles
               </span>
             </div>
@@ -123,7 +173,11 @@ const Openings = () => {
         </div>
 
         {status.openings === 'loading' ? (
-          <div style={{ padding: '3rem', textAlign: 'center', color: '#64748b' }}>Loading priority openings...</div>
+          <div
+            style={{ padding: '3rem', textAlign: 'center', color: '#64748b' }}
+          >
+            Loading priority openings...
+          </div>
         ) : (
           <>
             <div className={'Openings-grid'}>
@@ -149,45 +203,94 @@ const Openings = () => {
 
                   <div className={'Openings-metaInfo'}>
                     <div className={'Openings-metaItem'}>
-                      <span className="material-symbols-outlined" style={{ fontSize: '18px', color: 'var(--color-secondary)' }}>
-                        {job.workMode === 'Work From Home' ? 'home' : job.workMode === 'Work From Office' ? 'domain' : 'location_on'}
+                      <span
+                        className="material-symbols-outlined"
+                        style={{
+                          fontSize: '18px',
+                          color: 'var(--color-secondary)',
+                        }}
+                      >
+                        {job.workMode === 'Work From Home'
+                          ? 'home'
+                          : job.workMode === 'Work From Office'
+                            ? 'domain'
+                            : 'location_on'}
                       </span>
-                      <span>{job.location} ({job.workMode || 'Hybrid'})</span>
+                      <span>
+                        {job.location} ({job.workMode || 'Hybrid'})
+                      </span>
                     </div>
                     <div className={'Openings-metaItem'}>
-                      <span className="material-symbols-outlined" style={{ fontSize: '18px', color: 'var(--color-secondary)' }}>schedule</span>
-                      <span>{job.experience} • {job.jobMode || 'Permanent'}</span>
+                      <span
+                        className="material-symbols-outlined"
+                        style={{
+                          fontSize: '18px',
+                          color: 'var(--color-secondary)',
+                        }}
+                      >
+                        schedule
+                      </span>
+                      <span>
+                        {job.experience} • {job.jobMode || 'Permanent'}
+                      </span>
                     </div>
                     <div className={'Openings-metaItem'}>
-                      <span className="material-symbols-outlined" style={{ fontSize: '18px', color: 'var(--color-secondary)' }}>payments</span>
+                      <span
+                        className="material-symbols-outlined"
+                        style={{
+                          fontSize: '18px',
+                          color: 'var(--color-secondary)',
+                        }}
+                      >
+                        payments
+                      </span>
                       <span>{job.salary}</span>
                     </div>
                     <div className={'Openings-metaItem'}>
-                      <span className="material-symbols-outlined" style={{ fontSize: '18px', color: 'var(--color-secondary)' }}>timer</span>
-                      <span>Notice: {job.noticePeriod || job.joining || 'Immediate'}</span>
+                      <span
+                        className="material-symbols-outlined"
+                        style={{
+                          fontSize: '18px',
+                          color: 'var(--color-secondary)',
+                        }}
+                      >
+                        timer
+                      </span>
+                      <span>
+                        Notice: {job.noticePeriod || job.joining || 'Immediate'}
+                      </span>
                     </div>
                   </div>
 
                   <p className={'Openings-desc'}>{job.description}</p>
 
                   <div className={'Openings-skills'}>
-                    {job.skills && job.skills.map((skill) => (
-                      <span key={skill} className={'Openings-skillBadge'}>
-                        {skill}
-                      </span>
-                    ))}
+                    {job.skills &&
+                      job.skills.map((skill) => (
+                        <span key={skill} className={'Openings-skillBadge'}>
+                          {skill}
+                        </span>
+                      ))}
                   </div>
 
                   <div className={'Openings-cardFooter'}>
                     <span className={'Openings-postedDate'}>
                       Posted:{' '}
-                      {job.postedDate ? new Date(job.postedDate).toLocaleDateString('en-US', {
-                        month: 'short',
-                        day: 'numeric',
-                        year: 'numeric',
-                      }) : 'Recently'}
+                      {job.postedDate
+                        ? new Date(job.postedDate).toLocaleDateString('en-US', {
+                            month: 'short',
+                            day: 'numeric',
+                            year: 'numeric',
+                          })
+                        : 'Recently'}
                     </span>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+                    <div
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.65rem',
+                      }}
+                    >
                       <button
                         type="button"
                         onClick={() => setSelectedJobForSpec(job)}
@@ -216,7 +319,14 @@ const Openings = () => {
               ))}
             </div>
 
-            <div style={{ display: 'flex', justifyContent: 'center', marginTop: '2rem', marginBottom: '1rem' }}>
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+                marginTop: '2rem',
+                marginBottom: '1rem',
+              }}
+            >
               <Link
                 to="/jobs"
                 style={{
@@ -235,7 +345,12 @@ const Openings = () => {
                 }}
               >
                 <span>Explore All 130+ Tech Openings</span>
-                <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>arrow_forward</span>
+                <span
+                  className="material-symbols-outlined"
+                  style={{ fontSize: '18px' }}
+                >
+                  arrow_forward
+                </span>
               </Link>
             </div>
           </>
@@ -244,7 +359,12 @@ const Openings = () => {
         <div className={'Openings-uploadCtaBanner'}>
           <div className={'Openings-uploadLeft'}>
             <div className={'Openings-uploadIcon'}>
-              <span className="material-symbols-outlined" style={{ fontSize: '30px' }}>folder_special</span>
+              <span
+                className="material-symbols-outlined"
+                style={{ fontSize: '30px' }}
+              >
+                folder_special
+              </span>
             </div>
             <div className={'Openings-uploadText'}>
               <h4>Looking for unlisted or confidential enterprise openings?</h4>
@@ -255,14 +375,20 @@ const Openings = () => {
             </div>
           </div>
           <button
-            onClick={() => handleApplyClick({
-              title: 'General Engineering Candidate Pool',
-              jobId: 'general-pool',
-              department: 'Engineering',
-              location: 'Remote',
-              employmentType: 'Permanent',
-              postingDate: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
-            })}
+            onClick={() =>
+              handleApplyClick({
+                title: 'General Engineering Candidate Pool',
+                jobId: 'general-pool',
+                department: 'Engineering',
+                location: 'Remote',
+                employmentType: 'Permanent',
+                postingDate: new Date().toLocaleDateString('en-US', {
+                  month: 'short',
+                  day: 'numeric',
+                  year: 'numeric',
+                }),
+              })
+            }
             className={'Openings-uploadBtn'}
           >
             Upload CV / Profile
@@ -285,7 +411,11 @@ const Openings = () => {
         isOpen={!!selectedJob}
         onClose={() => setSelectedJob(null)}
         jobData={selectedJob}
-        roleTitle={typeof selectedJob === 'string' ? selectedJob : selectedJob?.title || ''}
+        roleTitle={
+          typeof selectedJob === 'string'
+            ? selectedJob
+            : selectedJob?.title || ''
+        }
       />
     </section>
   );

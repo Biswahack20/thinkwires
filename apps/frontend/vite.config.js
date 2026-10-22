@@ -1,5 +1,5 @@
-import react from '@vitejs/plugin-react'
-import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react';
+import { defineConfig } from 'vite';
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -32,7 +32,8 @@ export default defineConfig({
             if (id.includes('three')) return 'vendor-three';
             if (id.includes('recharts')) return 'vendor-charts';
             if (id.includes('framer-motion')) return 'vendor-motion';
-            if (id.includes('react') || id.includes('@reduxjs')) return 'vendor-react';
+            if (id.includes('react') || id.includes('@reduxjs'))
+              return 'vendor-react';
           }
         },
       },

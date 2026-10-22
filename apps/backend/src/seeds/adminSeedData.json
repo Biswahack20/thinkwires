@@ -43,7 +43,13 @@
       "email": "priya.nair@thinkwires.com",
       "phone": "+91 98451 23456",
       "designation": "Lead Full Stack Engineer",
-      "technicalSkills": ["React", "Node.js", "TypeScript", "PostgreSQL", "Next.js"],
+      "technicalSkills": [
+        "React",
+        "Node.js",
+        "TypeScript",
+        "PostgreSQL",
+        "Next.js"
+      ],
       "experience": 7,
       "availability": "Immediate",
       "deploymentStatus": "Deployed",
@@ -71,7 +77,13 @@
       "email": "ananya.roy@thinkwires.com",
       "phone": "+91 96234 56789",
       "designation": "Data Engineering Specialist",
-      "technicalSkills": ["Apache Spark", "Databricks", "Snowflake", "Python", "SQL"],
+      "technicalSkills": [
+        "Apache Spark",
+        "Databricks",
+        "Snowflake",
+        "Python",
+        "SQL"
+      ],
       "experience": 8,
       "availability": "Immediate",
       "deploymentStatus": "Deployed",
@@ -85,7 +97,13 @@
       "email": "vikram.sethi@thinkwires.com",
       "phone": "+91 95345 67890",
       "designation": "Senior Backend Java Engineer",
-      "technicalSkills": ["Java 21", "Spring Boot", "Kafka", "Microservices", "Redis"],
+      "technicalSkills": [
+        "Java 21",
+        "Spring Boot",
+        "Kafka",
+        "Microservices",
+        "Redis"
+      ],
       "experience": 6,
       "availability": "30 Days",
       "deploymentStatus": "Bench",
@@ -113,7 +131,12 @@
       "email": "marcus.v@thinkwires.com",
       "phone": "+1 (415) 890-1234",
       "designation": "US Solutions Engineering Partner",
-      "technicalSkills": ["Enterprise Architecture", "SOC2", "AWS", "EOR Compliance"],
+      "technicalSkills": [
+        "Enterprise Architecture",
+        "SOC2",
+        "AWS",
+        "EOR Compliance"
+      ],
       "experience": 11,
       "availability": "Employed",
       "deploymentStatus": "Deployed",
@@ -127,7 +150,12 @@
       "email": "kavita.reddy@thinkwires.com",
       "phone": "+91 93567 89012",
       "designation": "Senior React Native & Mobile Lead",
-      "technicalSkills": ["React Native", "iOS/Swift", "Android/Kotlin", "GraphQL"],
+      "technicalSkills": [
+        "React Native",
+        "iOS/Swift",
+        "Android/Kotlin",
+        "GraphQL"
+      ],
       "experience": 5,
       "availability": "Immediate",
       "deploymentStatus": "Available",
@@ -141,7 +169,13 @@
       "email": "tariq.m@thinkwires.com",
       "phone": "+91 92678 90123",
       "designation": "AI / ML Solutions Engineer",
-      "technicalSkills": ["PyTorch", "LangChain", "OpenAI API", "Hugging Face", "FastAPI"],
+      "technicalSkills": [
+        "PyTorch",
+        "LangChain",
+        "OpenAI API",
+        "Hugging Face",
+        "FastAPI"
+      ],
       "experience": 5,
       "availability": "15 Days",
       "deploymentStatus": "Deployed",
@@ -155,7 +189,13 @@
       "email": "devraj.sen@thinkwires.com",
       "phone": "+91 91789 01234",
       "designation": "Cybersecurity & IAM Specialist",
-      "technicalSkills": ["Okta", "OAuth2", "Zero Trust", "Cloud Security", "SIEM"],
+      "technicalSkills": [
+        "Okta",
+        "OAuth2",
+        "Zero Trust",
+        "Cloud Security",
+        "SIEM"
+      ],
       "experience": 8,
       "availability": "Immediate",
       "deploymentStatus": "Bench",
@@ -185,7 +225,12 @@
       "email": "shalini.m@example.com",
       "phone": "+91 98223 44556",
       "currentRole": "Senior Frontend React Engineer",
-      "technicalSkills": ["React", "TypeScript", "Tailwind CSS", "Redux Toolkit"],
+      "technicalSkills": [
+        "React",
+        "TypeScript",
+        "Tailwind CSS",
+        "Redux Toolkit"
+      ],
       "experience": 5,
       "expectedSalary": "24 LPA / $50k",
       "status": "Offered",
@@ -199,7 +244,13 @@
       "email": "aditya.rao@example.com",
       "phone": "+91 97334 55667",
       "currentRole": "Staff DevOps Architect",
-      "technicalSkills": ["Kubernetes", "AWS EKS", "Terraform", "GitOps", "ArgoCD"],
+      "technicalSkills": [
+        "Kubernetes",
+        "AWS EKS",
+        "Terraform",
+        "GitOps",
+        "ArgoCD"
+      ],
       "experience": 9,
       "expectedSalary": "42 LPA / $80k",
       "status": "Screening",
@@ -213,7 +264,13 @@
       "email": "meera.joshi@example.com",
       "phone": "+91 96445 66778",
       "currentRole": "Senior Python Data Scientist",
-      "technicalSkills": ["Python", "Pandas", "Scikit-Learn", "MLflow", "FastAPI"],
+      "technicalSkills": [
+        "Python",
+        "Pandas",
+        "Scikit-Learn",
+        "MLflow",
+        "FastAPI"
+      ],
       "experience": 4,
       "expectedSalary": "22 LPA / $45k",
       "status": "Applied",
@@ -227,7 +284,12 @@
       "email": "gaurav.b@example.com",
       "phone": "+91 95556 77889",
       "currentRole": "SAP S/4 HANA Functional Lead",
-      "technicalSkills": ["SAP S/4 HANA", "FICO", "ABAP Integration", "ERP Migration"],
+      "technicalSkills": [
+        "SAP S/4 HANA",
+        "FICO",
+        "ABAP Integration",
+        "ERP Migration"
+      ],
       "experience": 10,
       "expectedSalary": "45 LPA / $90k",
       "status": "Hired",
@@ -255,7 +317,13 @@
       "email": "naveen.c@example.com",
       "phone": "+91 93778 99001",
       "currentRole": "Site Reliability Engineer",
-      "technicalSkills": ["Linux Kernel", "Bash", "Datadog", "Terraform", "AWS"],
+      "technicalSkills": [
+        "Linux Kernel",
+        "Bash",
+        "Datadog",
+        "Terraform",
+        "AWS"
+      ],
       "experience": 5,
       "expectedSalary": "26 LPA / $52k",
       "status": "Rejected",
@@ -269,7 +337,13 @@
       "email": "zara.williams@example.com",
       "phone": "+1 (212) 555-0188",
       "currentRole": "Technical Product Manager",
-      "technicalSkills": ["Agile", "Jira", "API Design", "User Journeys", "SQL"],
+      "technicalSkills": [
+        "Agile",
+        "Jira",
+        "API Design",
+        "User Journeys",
+        "SQL"
+      ],
       "experience": 7,
       "expectedSalary": "$110k USD",
       "status": "Screening",
@@ -443,7 +517,11 @@
       "id": "job_008",
       "title": "Cross-Border EOR Compliance Specialist",
       "client": "Quantum Logistics Global",
-      "requiredSkills": ["Global Payroll", "Statutory Compliance", "Labor Laws"],
+      "requiredSkills": [
+        "Global Payroll",
+        "Statutory Compliance",
+        "Labor Laws"
+      ],
       "experienceRequired": 6,
       "openingsCount": 1,
       "fulfilledCount": 0,
@@ -597,7 +675,10 @@
       "slug": "gcc-2-global-enterprises-scaling-tech-delivery-india",
       "summary": "How multinational corporations are shifting from legacy cost arbitrage to high-value AI, Cloud, and Product engineering hubs in Tier-1 and Tier-2 Indian tech corridors.",
       "body": "Global Capability Centers (GCCs) in India have evolved from transactional back-office hubs into the primary technological engines of Fortune 500 corporations. Today, more than 1,600 GCCs operate across India, employing upwards of 1.7 million high-tier tech professionals. With specialized engineering leadership in generative AI, low-latency microservices, and enterprise cloud modernization, the Indian workforce offers unparalleled strategic leverage.",
-      "author": { "name": "Biswarupa Swain", "role": "Chief Technology Advisor" },
+      "author": {
+        "name": "Biswarupa Swain",
+        "role": "Chief Technology Advisor"
+      },
       "category": "Industry Insights",
       "featuredImageUrl": "/assets/blog_ai_gcc_dashboard.jpg",
       "tags": ["GCC", "Enterprise Strategy", "India Tech", "Staffing"],

@@ -59,8 +59,13 @@ export const getStatus = async () => {
   for (const file of allFiles) {
     const record = appliedMap.get(file);
     if (record) {
-      const dateStr = new Date(record.appliedAt).toISOString().replace('T', ' ').slice(0, 19);
-      console.log(` ✅ [APPLIED]  Batch #${record.batch} (${dateStr})  ${file}`);
+      const dateStr = new Date(record.appliedAt)
+        .toISOString()
+        .replace('T', ' ')
+        .slice(0, 19);
+      console.log(
+        ` ✅ [APPLIED]  Batch #${record.batch} (${dateStr})  ${file}`
+      );
     } else {
       console.log(` ⏳ [PENDING]  Not applied yet                   ${file}`);
     }
@@ -88,7 +93,9 @@ export const runUp = async () => {
     return;
   }
 
-  const latestRecord = await MigrationRecord.findOne().sort({ batch: -1 }).lean();
+  const latestRecord = await MigrationRecord.findOne()
+    .sort({ batch: -1 })
+    .lean();
   const nextBatch = (latestRecord?.batch || 0) + 1;
 
   console.log(`\n🚀 Starting Migration Pipeline [Batch #${nextBatch}]...`);
@@ -116,19 +123,25 @@ export const runUp = async () => {
       console.log(`   ✔ Successfully applied ${file}`);
     } catch (err) {
       console.error(`\n❌ Migration failed on ${file}:`, err.message);
-      console.error('Aborting subsequent migrations to maintain database integrity.');
+      console.error(
+        'Aborting subsequent migrations to maintain database integrity.'
+      );
       throw err;
     }
   }
 
-  console.log(`\n🎉 All ${pendingFiles.length} migration(s) executed successfully in Batch #${nextBatch}!\n`);
+  console.log(
+    `\n🎉 All ${pendingFiles.length} migration(s) executed successfully in Batch #${nextBatch}!\n`
+  );
 };
 
 export const runDown = async () => {
   const connection = await connectDB();
   const db = connection.db;
 
-  const latestRecord = await MigrationRecord.findOne().sort({ batch: -1 }).lean();
+  const latestRecord = await MigrationRecord.findOne()
+    .sort({ batch: -1 })
+    .lean();
   if (!latestRecord) {
     console.log('ℹ️ No applied migrations found to roll back.');
     return;
@@ -139,13 +152,17 @@ export const runDown = async () => {
     .sort({ name: -1 })
     .lean();
 
-  console.log(`\n⏪ Rolling back Migration Batch #${targetBatch} (${batchRecords.length} migration(s))...\n`);
+  console.log(
+    `\n⏪ Rolling back Migration Batch #${targetBatch} (${batchRecords.length} migration(s))...\n`
+  );
 
   for (const record of batchRecords) {
     console.log(`◀ Reverting: ${record.name}...`);
     const scriptPath = path.join(SCRIPTS_DIR, record.name);
     if (!fs.existsSync(scriptPath)) {
-      console.warn(`   ⚠️ Warning: Migration file ${record.name} no longer exists on disk!`);
+      console.warn(
+        `   ⚠️ Warning: Migration file ${record.name} no longer exists on disk!`
+      );
       await MigrationRecord.deleteOne({ _id: record._id });
       continue;
     }
@@ -156,7 +173,9 @@ export const runDown = async () => {
       if (typeof migrationModule.down === 'function') {
         await migrationModule.down({ db, mongoose });
       } else {
-        console.warn(`   ⚠️ Warning: Migration ${record.name} does not export a 'down' function.`);
+        console.warn(
+          `   ⚠️ Warning: Migration ${record.name} does not export a 'down' function.`
+        );
       }
 
       await MigrationRecord.deleteOne({ _id: record._id });
@@ -167,12 +186,16 @@ export const runDown = async () => {
     }
   }
 
-  console.log(`\n✨ Rollback for Batch #${targetBatch} completed successfully.\n`);
+  console.log(
+    `\n✨ Rollback for Batch #${targetBatch} completed successfully.\n`
+  );
 };
 
 export const createMigration = (rawName) => {
   if (!rawName) {
-    console.error('❌ Please specify a migration name. Example: npm run migrate:create add_indexes');
+    console.error(
+      '❌ Please specify a migration name. Example: npm run migrate:create add_indexes'
+    );
     process.exit(1);
   }
 
@@ -215,7 +238,9 @@ export const down = async ({ db, mongoose }) => {
 `;
 
   fs.writeFileSync(filePath, template, 'utf8');
-  console.log(`\n✨ Created new migration template: src/migrations/scripts/${filename}\n`);
+  console.log(
+    `\n✨ Created new migration template: src/migrations/scripts/${filename}\n`
+  );
 };
 
 // CLI entrypoint
@@ -233,7 +258,9 @@ const main = async () => {
       createMigration(process.argv[3]);
       process.exit(0);
     } else {
-      console.log(`Unknown command '${command}'. Available commands: up, down, status, create <name>`);
+      console.log(
+        `Unknown command '${command}'. Available commands: up, down, status, create <name>`
+      );
     }
   } catch (err) {
     console.error('Pipeline Error:', err.message);

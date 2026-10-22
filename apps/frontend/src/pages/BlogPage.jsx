@@ -19,15 +19,32 @@ import {
   subscribeNewsletter,
 } from '../store/slices/blogSlice';
 
-const FeaturedArticle = lazy(() => import('../components/BlogComponents/FeaturedArticle'));
+const FeaturedArticle = lazy(
+  () => import('../components/BlogComponents/FeaturedArticle')
+);
 const BlogGrid = lazy(() => import('../components/BlogComponents/BlogGrid'));
-const BlogPagination = lazy(() => import('../components/BlogComponents/BlogPagination'));
-const ResearchCollective = lazy(() => import('../components/BlogComponents/ResearchCollective'));
-const NewsletterCTA = lazy(() => import('../components/BlogComponents/NewsletterCTA'));
-const ContactCTA = lazy(() => import('../components/BlogComponents/ContactCTA'));
+const BlogPagination = lazy(
+  () => import('../components/BlogComponents/BlogPagination')
+);
+const ResearchCollective = lazy(
+  () => import('../components/BlogComponents/ResearchCollective')
+);
+const NewsletterCTA = lazy(
+  () => import('../components/BlogComponents/NewsletterCTA')
+);
+const ContactCTA = lazy(
+  () => import('../components/BlogComponents/ContactCTA')
+);
 
 const ComponentLoader = () => (
-  <div style={{ textAlign: 'center', padding: '3rem 1.5rem', color: '#64748b', fontSize: '0.95rem' }}>
+  <div
+    style={{
+      textAlign: 'center',
+      padding: '3rem 1.5rem',
+      color: '#64748b',
+      fontSize: '0.95rem',
+    }}
+  >
     Loading research section...
   </div>
 );
@@ -144,8 +161,14 @@ const BlogPage = () => {
 
       {/* Reader Modal */}
       {activeArticleModal && (
-        <div className="BlogPage-modalOverlay" onClick={() => setActiveArticleModal(null)}>
-          <div className="BlogPage-modalContent" onClick={(e) => e.stopPropagation()}>
+        <div
+          className="BlogPage-modalOverlay"
+          onClick={() => setActiveArticleModal(null)}
+        >
+          <div
+            className="BlogPage-modalContent"
+            onClick={(e) => e.stopPropagation()}
+          >
             <button
               onClick={() => setActiveArticleModal(null)}
               className="BlogPage-modalCloseBtn"
@@ -154,38 +177,81 @@ const BlogPage = () => {
               <CloseIcon size={16} />
             </button>
             <div className="BlogPage-modalHeader">
-              <span className="BlogPage-modalCategory">{activeArticleModal.badge || activeArticleModal.category}</span>
+              <span className="BlogPage-modalCategory">
+                {activeArticleModal.badge || activeArticleModal.category}
+              </span>
               <h2>{activeArticleModal.title}</h2>
               <div className="BlogPage-modalAuthor">
                 {activeArticleModal.author?.avatar ? (
-                  <img src={activeArticleModal.author.avatar} alt={activeArticleModal.author.name} />
+                  <img
+                    src={activeArticleModal.author.avatar}
+                    alt={activeArticleModal.author.name}
+                  />
                 ) : (
-                  <div className="FigmaBlogCard-initialsBubble">{activeArticleModal.author?.initials || 'TW'}</div>
+                  <div className="FigmaBlogCard-initialsBubble">
+                    {activeArticleModal.author?.initials || 'TW'}
+                  </div>
                 )}
                 <div>
-                  <strong>{activeArticleModal.author?.name}</strong> • {activeArticleModal.subCategory}
-                  <div style={{ fontSize: '0.8rem', color: 'var(--color-outline)' }}>
-                    Published on {activeArticleModal.publishedAt} • {activeArticleModal.readTime}
+                  <strong>{activeArticleModal.author?.name}</strong> •{' '}
+                  {activeArticleModal.subCategory}
+                  <div
+                    style={{
+                      fontSize: '0.8rem',
+                      color: 'var(--color-outline)',
+                    }}
+                  >
+                    Published on {activeArticleModal.publishedAt} •{' '}
+                    {activeArticleModal.readTime}
                   </div>
                 </div>
               </div>
             </div>
             <div className="BlogPage-modalBody">
-              <p style={{ fontSize: '1.1rem', fontWeight: '500', color: 'var(--color-on-surface)', lineHeight: '1.7', marginBottom: '1.5rem' }}>
+              <p
+                style={{
+                  fontSize: '1.1rem',
+                  fontWeight: '500',
+                  color: 'var(--color-on-surface)',
+                  lineHeight: '1.7',
+                  marginBottom: '1.5rem',
+                }}
+              >
                 {activeArticleModal.excerpt}
               </p>
-              <p style={{ lineHeight: '1.8', color: 'var(--color-on-surface-variant)' }}>
-                Modern enterprise engineering teams face unprecedented complexity when evaluating infrastructure investment, AI model deployment, and international team scale. In this comprehensive deep-dive, we analyze empirical benchmarks gathered from over 750 enterprise deployments across Americas and Asia-Pacific.
+              <p
+                style={{
+                  lineHeight: '1.8',
+                  color: 'var(--color-on-surface-variant)',
+                }}
+              >
+                Modern enterprise engineering teams face unprecedented
+                complexity when evaluating infrastructure investment, AI model
+                deployment, and international team scale. In this comprehensive
+                deep-dive, we analyze empirical benchmarks gathered from over
+                750 enterprise deployments across Americas and Asia-Pacific.
               </p>
             </div>
             <div className="BlogPage-modalFooter">
               <button
                 onClick={() => dispatch(toggleBookmark(activeArticleModal.id))}
                 className="BlogPage-modalBookmarkBtn"
-                style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.4rem',
+                }}
               >
-                <StarIcon size={14} filled={bookmarkedArticles.includes(activeArticleModal.id)} color="currentColor" />
-                <span>{bookmarkedArticles.includes(activeArticleModal.id) ? 'Bookmarked' : 'Bookmark Article'}</span>
+                <StarIcon
+                  size={14}
+                  filled={bookmarkedArticles.includes(activeArticleModal.id)}
+                  color="currentColor"
+                />
+                <span>
+                  {bookmarkedArticles.includes(activeArticleModal.id)
+                    ? 'Bookmarked'
+                    : 'Bookmark Article'}
+                </span>
               </button>
               <button
                 onClick={() => setActiveArticleModal(null)}

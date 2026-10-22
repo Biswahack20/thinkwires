@@ -44,7 +44,9 @@ export const loginUser = createAsyncThunk(
 
       const data = await response.json();
       if (!response.ok) {
-        return rejectWithValue(data.error || 'Login failed. Please check your credentials.');
+        return rejectWithValue(
+          data.error || 'Login failed. Please check your credentials.'
+        );
       }
 
       return data.candidate;
@@ -59,7 +61,10 @@ export const loginUser = createAsyncThunk(
  */
 export const registerUser = createAsyncThunk(
   'auth/registerUser',
-  async ({ name, email, password, confirmPassword, phone }, { rejectWithValue }) => {
+  async (
+    { name, email, password, confirmPassword, phone },
+    { rejectWithValue }
+  ) => {
     try {
       const response = await fetch('/api/auth/register', {
         method: 'POST',
@@ -75,7 +80,9 @@ export const registerUser = createAsyncThunk(
 
       return data.candidate;
     } catch (err) {
-      return rejectWithValue(err.message || 'Network error during registration.');
+      return rejectWithValue(
+        err.message || 'Network error during registration.'
+      );
     }
   }
 );
@@ -126,7 +133,9 @@ export const updateProfile = createAsyncThunk(
 
       return data.candidate;
     } catch (err) {
-      return rejectWithValue(err.message || 'Network error during profile update.');
+      return rejectWithValue(
+        err.message || 'Network error during profile update.'
+      );
     }
   }
 );

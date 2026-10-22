@@ -14,7 +14,13 @@ const mediaSchema = new mongoose.Schema(
     },
     fileType: {
       type: String,
-      enum: ['image/jpeg', 'image/png', 'image/webp', 'image/svg+xml', 'application/pdf'],
+      enum: [
+        'image/jpeg',
+        'image/png',
+        'image/webp',
+        'image/svg+xml',
+        'application/pdf',
+      ],
       default: 'image/jpeg',
     },
     fileSizeKb: {

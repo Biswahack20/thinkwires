@@ -14,7 +14,7 @@ const DEFAULT_STATS = [
     label: 'First Curated Profiles',
     subLabel: 'Proprietary AI matching engine',
     indicator: 'dot',
-    accentColor: 'blue'
+    accentColor: 'blue',
   },
   {
     id: 'time-to-hire',
@@ -24,7 +24,7 @@ const DEFAULT_STATS = [
     label: 'Time-to-Hire Target',
     subLabel: 'End-to-end interview to contract',
     indicator: 'check',
-    accentColor: 'dark'
+    accentColor: 'dark',
   },
   {
     id: 'executive-experience',
@@ -34,7 +34,7 @@ const DEFAULT_STATS = [
     label: 'Combined Executive Exp.',
     subLabel: 'Ex-Microsoft, IBM, BlackRock',
     indicator: 'yrs',
-    accentColor: 'primary'
+    accentColor: 'primary',
   },
   {
     id: 'statutory-compliance',
@@ -44,8 +44,8 @@ const DEFAULT_STATS = [
     label: 'Statutory Compliance',
     subLabel: 'Zero cross-border legal friction',
     indicator: 'shield',
-    accentColor: 'green'
-  }
+    accentColor: 'green',
+  },
 ];
 
 const AboutHero = ({ data, stats = [] }) => {
@@ -57,10 +57,10 @@ const AboutHero = ({ data, stats = [] }) => {
     headingHighlight = 'Borderless Tech Talent',
     description = 'Founded in 2022 as a premier workforce advisor and staffing aggregator, ThinkWires connects high-growth enterprises with specialized engineering talent and compliant Employer of Record (EOR) infrastructure across India, the US, and Canada.',
     heroImage = STITCH_HERO_IMG,
-    heroImageAlt = 'Global Talent Grid across India, USA, and Canada'
+    heroImageAlt = 'Global Talent Grid across India, USA, and Canada',
   } = data || {};
 
-  const resolvedStats = (stats && stats.length > 0) ? stats : DEFAULT_STATS;
+  const resolvedStats = stats && stats.length > 0 ? stats : DEFAULT_STATS;
 
   const handleScrollTo = (e, href) => {
     if (href.startsWith('#')) {
@@ -72,10 +72,13 @@ const AboutHero = ({ data, stats = [] }) => {
     }
   };
 
-  const resolvedImageSrc = imgError ? heroImg : (heroImage || heroImg);
+  const resolvedImageSrc = imgError ? heroImg : heroImage || heroImg;
 
   return (
-    <section className="AboutHero-section" aria-label="About ThinkWires Overview">
+    <section
+      className="AboutHero-section"
+      aria-label="About ThinkWires Overview"
+    >
       {/* Ambient Radial Background Glows matching Stitch */}
       <div className="AboutHero-glowPrimary" aria-hidden="true" />
       <div className="AboutHero-glowAccent" aria-hidden="true" />
@@ -92,9 +95,18 @@ const AboutHero = ({ data, stats = [] }) => {
                 <span>{badge}</span>
               </span>
               <nav className="AboutHero-breadcrumbs" aria-label="Breadcrumb">
-                <a href="/" className="AboutHero-breadcrumbLink">Home</a>
+                <a href="/" className="AboutHero-breadcrumbLink">
+                  Home
+                </a>
                 <span className="AboutHero-breadcrumbSeparator">
-                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                  <svg
+                    width="12"
+                    height="12"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.5"
+                  >
                     <polyline points="9 18 15 12 9 6" />
                   </svg>
                 </span>
@@ -104,13 +116,15 @@ const AboutHero = ({ data, stats = [] }) => {
 
             {/* Main Title */}
             <h1 className="AboutHero-title">
-              {heading} <span className="AboutHero-titleHighlight">{headingHighlight}</span>.
+              {heading}{' '}
+              <span className="AboutHero-titleHighlight">
+                {headingHighlight}
+              </span>
+              .
             </h1>
 
             {/* Description */}
-            <p className="AboutHero-description">
-              {description}
-            </p>
+            <p className="AboutHero-description">{description}</p>
 
             {/* Action CTAs */}
             <div className="AboutHero-actions">
@@ -120,7 +134,17 @@ const AboutHero = ({ data, stats = [] }) => {
                 className="AboutHero-btn AboutHero-btnPrimary"
               >
                 <span>Meet Our Leadership</span>
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden="true"
+                >
                   <line x1="12" y1="5" x2="12" y2="19" />
                   <polyline points="19 12 12 19 5 12" />
                 </svg>
@@ -132,7 +156,17 @@ const AboutHero = ({ data, stats = [] }) => {
                 className="AboutHero-btn AboutHero-btnOutline"
               >
                 <span>The Aggregator Model</span>
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden="true"
+                >
                   <circle cx="12" cy="12" r="3" />
                   <circle cx="19" cy="6" r="2" />
                   <circle cx="5" cy="6" r="2" />
@@ -162,15 +196,25 @@ const AboutHero = ({ data, stats = [] }) => {
 
               {/* Global Talent Grid Corridor Badge */}
               <div className="AboutHero-floatingBadge">
-                <div className="AboutHero-floatingBadgeDot" aria-hidden="true" />
+                <div
+                  className="AboutHero-floatingBadgeDot"
+                  aria-hidden="true"
+                />
                 <div className="AboutHero-floatingBadgeText">
-                  <span className="AboutHero-floatingBadgeTitle">Global Talent Grid</span>
-                  <span className="AboutHero-floatingBadgeSubtitle">India • United States • Canada</span>
+                  <span className="AboutHero-floatingBadgeTitle">
+                    Global Talent Grid
+                  </span>
+                  <span className="AboutHero-floatingBadgeSubtitle">
+                    India • United States • Canada
+                  </span>
                 </div>
               </div>
 
               {/* Corner SLA Indicator */}
-              <div className="AboutHero-techFrame" aria-label="SLA Protocol: Under 5 hours">
+              <div
+                className="AboutHero-techFrame"
+                aria-label="SLA Protocol: Under 5 hours"
+              >
                 <span className="AboutHero-techStat">SLA: &lt; 5h</span>
                 <span className="AboutHero-techStatus">ACTIVE</span>
               </div>
@@ -185,36 +229,76 @@ const AboutHero = ({ data, stats = [] }) => {
               const suffix = item.unit
                 ? ` ${item.unit}`
                 : item.value && item.value.includes('+')
-                ? '+'
-                : item.value && item.value.includes('%')
-                ? '%'
-                : '';
+                  ? '+'
+                  : item.value && item.value.includes('%')
+                    ? '%'
+                    : '';
 
               return (
                 <div key={item.id || index} className="StatsStrip-item">
                   <div className="StatsStrip-topRow">
                     <span className="StatsStrip-value">
-                      <AnimatedCounter value={item.numericValue || item.value} suffix={suffix} duration={1600} />
+                      <AnimatedCounter
+                        value={item.numericValue || item.value}
+                        suffix={suffix}
+                        duration={1600}
+                      />
                     </span>
 
                     {item.indicator === 'dot' && (
-                      <span className="StatsStrip-indicatorDot" title="Intake SLA" aria-label="Intake SLA" />
+                      <span
+                        className="StatsStrip-indicatorDot"
+                        title="Intake SLA"
+                        aria-label="Intake SLA"
+                      />
                     )}
                     {item.indicator === 'check' && (
-                      <span className="StatsStrip-indicatorIcon" title="Verified Time-to-Hire" aria-label="Verified Time-to-Hire">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                      <span
+                        className="StatsStrip-indicatorIcon"
+                        title="Verified Time-to-Hire"
+                        aria-label="Verified Time-to-Hire"
+                      >
+                        <svg
+                          width="20"
+                          height="20"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          aria-hidden="true"
+                        >
                           <polyline points="20 6 9 17 4 12" />
                         </svg>
                       </span>
                     )}
                     {item.indicator === 'yrs' && (
-                      <span className="StatsStrip-indicatorText" title="Enterprise Depth" aria-label="Enterprise Depth">
+                      <span
+                        className="StatsStrip-indicatorText"
+                        title="Enterprise Depth"
+                        aria-label="Enterprise Depth"
+                      >
                         Yrs
                       </span>
                     )}
                     {item.indicator === 'shield' && (
-                      <span className="StatsStrip-indicatorIcon shield" title="100% Statutory Compliance" aria-label="100% Statutory Compliance">
-                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                      <span
+                        className="StatsStrip-indicatorIcon shield"
+                        title="100% Statutory Compliance"
+                        aria-label="100% Statutory Compliance"
+                      >
+                        <svg
+                          width="20"
+                          height="20"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          aria-hidden="true"
+                        >
                           <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
                         </svg>
                       </span>

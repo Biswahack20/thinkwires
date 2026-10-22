@@ -11,7 +11,9 @@ import { useSelector } from 'react-redux';
  */
 const ProtectedRoute = ({ children }) => {
   const location = useLocation();
-  const { isAuthenticated, isInitializing } = useSelector((state) => state.auth);
+  const { isAuthenticated, isInitializing } = useSelector(
+    (state) => state.auth
+  );
 
   if (isInitializing) {
     return (

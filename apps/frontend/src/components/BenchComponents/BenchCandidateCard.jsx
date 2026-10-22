@@ -22,7 +22,7 @@ const BenchCandidateCard = ({ talent }) => {
     hourlyRate,
     proofQuote,
     skills = [],
-    initials = 'TW'
+    initials = 'TW',
   } = talent;
 
   const isImmediate = urgency && urgency.includes('Immediate');
@@ -32,10 +32,14 @@ const BenchCandidateCard = ({ talent }) => {
       {/* Top Meta Bar */}
       <div className="BenchCard-header">
         <div className="BenchCard-codeBadge">
-          <span className="material-symbols-outlined BenchCard-codeIcon">badge</span>
+          <span className="material-symbols-outlined BenchCard-codeIcon">
+            badge
+          </span>
           <span className="BenchCard-codeText">{code}</span>
         </div>
-        <div className={`BenchCard-urgencyBadge ${isImmediate ? 'is-immediate' : ''}`}>
+        <div
+          className={`BenchCard-urgencyBadge ${isImmediate ? 'is-immediate' : ''}`}
+        >
           <span className="BenchCard-urgencyDot"></span>
           <span>{urgency}</span>
         </div>
@@ -50,11 +54,13 @@ const BenchCandidateCard = ({ talent }) => {
           <h3 className="BenchCard-roleTitle">{role}</h3>
           <div className="BenchCard-metaLine">
             <span className="BenchCard-metaItem">
-              <span className="material-symbols-outlined">work</span> {yearsExp || experienceLevel}
+              <span className="material-symbols-outlined">work</span>{' '}
+              {yearsExp || experienceLevel}
             </span>
             <span className="BenchCard-metaDot">•</span>
             <span className="BenchCard-metaItem">
-              <span className="material-symbols-outlined">location_on</span> {location}
+              <span className="material-symbols-outlined">location_on</span>{' '}
+              {location}
             </span>
           </div>
         </div>
@@ -68,7 +74,8 @@ const BenchCandidateCard = ({ talent }) => {
       <div className="BenchCard-scoreSection">
         <div className="BenchCard-scoreInfo">
           <span className="BenchCard-scoreLabel">
-            <span className="material-symbols-outlined">verified</span> Vetting Score
+            <span className="material-symbols-outlined">verified</span> Vetting
+            Score
           </span>
           <span className="BenchCard-scorePercent">{score}%</span>
         </div>
@@ -79,14 +86,38 @@ const BenchCandidateCard = ({ talent }) => {
           ></div>
         </div>
         {(assessmentScore != null || fitScore != null) && (
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '0.45rem', fontSize: '0.74rem' }}>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'center',
+              marginTop: '0.45rem',
+              fontSize: '0.74rem',
+            }}
+          >
             {assessmentScore != null && (
-              <span style={{ color: '#15803D', fontWeight: 600, background: '#DCFCE7', padding: '0.15rem 0.4rem', borderRadius: '4px' }}>
+              <span
+                style={{
+                  color: '#15803D',
+                  fontWeight: 600,
+                  background: '#DCFCE7',
+                  padding: '0.15rem 0.4rem',
+                  borderRadius: '4px',
+                }}
+              >
                 AI Assessment: {assessmentScore}%
               </span>
             )}
             {fitScore != null && (
-              <span style={{ color: '#1D4ED8', fontWeight: 600, background: '#DBEAFE', padding: '0.15rem 0.4rem', borderRadius: '4px' }}>
+              <span
+                style={{
+                  color: '#1D4ED8',
+                  fontWeight: 600,
+                  background: '#DBEAFE',
+                  padding: '0.15rem 0.4rem',
+                  borderRadius: '4px',
+                }}
+              >
                 ATS Match: {fitScore}%
               </span>
             )}
@@ -96,7 +127,9 @@ const BenchCandidateCard = ({ talent }) => {
 
       {/* Verified Engineering Proof Quote */}
       <div className="BenchCard-quoteBox">
-        <span className="material-symbols-outlined BenchCard-quoteIcon">format_quote</span>
+        <span className="material-symbols-outlined BenchCard-quoteIcon">
+          format_quote
+        </span>
         <p className="BenchCard-quoteText">"{proofQuote}"</p>
       </div>
 

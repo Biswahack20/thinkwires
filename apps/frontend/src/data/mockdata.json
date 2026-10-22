@@ -28,8 +28,18 @@
     "heroImage": "/images/about-hero.jpg",
     "heroImageAlt": "Global Talent Grid - India, USA, Canada",
     "ctaButtons": [
-      { "label": "Meet Our Leadership", "href": "#leadership", "variant": "primary", "icon": "arrowDown" },
-      { "label": "Explore Our Approach", "href": "#aggregator", "variant": "outline", "icon": "settings" }
+      {
+        "label": "Meet Our Leadership",
+        "href": "#leadership",
+        "variant": "primary",
+        "icon": "arrowDown"
+      },
+      {
+        "label": "Explore Our Approach",
+        "href": "#aggregator",
+        "variant": "outline",
+        "icon": "settings"
+      }
     ]
   },
   "statsStrip": [
@@ -157,9 +167,19 @@
         "designation": "Founder Member",
         "initials": "NH",
         "bio": "With over 14 years in recruitment, headhunting, talent mapping, and end-to-end manpower solutions, Naziya has successfully steered complex mandates across KPOs, top-tier management consulting firms, and fast-scaling digital startups.",
-        "avatar": { "type": "initials", "value": "NH", "bgColor": "#0037B0", "textColor": "#FFFFFF" },
+        "avatar": {
+          "type": "initials",
+          "value": "NH",
+          "bgColor": "#0037B0",
+          "textColor": "#FFFFFF"
+        },
         "badge": { "text": "14+ Years Leadership", "dotColor": "#0037B0" },
-        "expertise": ["Talent Mapping", "Executive Headhunting", "Manpower Solutions", "KPO Mandates"],
+        "expertise": [
+          "Talent Mapping",
+          "Executive Headhunting",
+          "Manpower Solutions",
+          "KPO Mandates"
+        ],
         "footerTag": "Founding Vision & Executive Search",
         "linkedinUrl": null,
         "image": null
@@ -170,9 +190,19 @@
         "designation": "Co-Founder & Associate Executive Director",
         "initials": "AB",
         "bio": "Enthusiastic enterprise HR leader with 17 years aligning HR initiatives with tier-one business priorities. Specialist in shared services environments, transitions, legal frameworks, ERP rollouts, and HR automation systems.",
-        "avatar": { "type": "initials", "value": "AB", "bgColor": "#0F172A", "textColor": "#FFFFFF" },
+        "avatar": {
+          "type": "initials",
+          "value": "AB",
+          "bgColor": "#0F172A",
+          "textColor": "#FFFFFF"
+        },
         "badge": { "text": "17+ Years Leadership", "dotColor": "#0F172A" },
-        "expertise": ["Enterprise HR Architecture", "Shared Services", "ERP Transitions", "Labor Frameworks"],
+        "expertise": [
+          "Enterprise HR Architecture",
+          "Shared Services",
+          "ERP Transitions",
+          "Labor Frameworks"
+        ],
         "footerTag": "Enterprise HR & Operations",
         "linkedinUrl": null,
         "image": null
@@ -183,9 +213,19 @@
         "designation": "Chief Executive Officer (CEO)",
         "initials": "AM",
         "bio": "Dedicated to building teams that drive real business velocity. Expert in strategic talent research, executive search, deep candidate evaluation beyond CVs, and structuring high-trust leadership placements for global scale.",
-        "avatar": { "type": "initials", "value": "AM", "bgColor": "#0284C7", "textColor": "#FFFFFF" },
+        "avatar": {
+          "type": "initials",
+          "value": "AM",
+          "bgColor": "#0284C7",
+          "textColor": "#FFFFFF"
+        },
         "badge": { "text": "15+ Years Leadership", "dotColor": "#0284C7" },
-        "expertise": ["Executive Search", "Organizational Scaling", "Strategic Sourcing", "Talent Evaluation"],
+        "expertise": [
+          "Executive Search",
+          "Organizational Scaling",
+          "Strategic Sourcing",
+          "Talent Evaluation"
+        ],
         "footerTag": "Strategic Growth & Enterprise Scaling",
         "linkedinUrl": null,
         "image": null
@@ -196,9 +236,19 @@
         "designation": "Chief People & Marketing Officer (CPO & CMO)",
         "initials": "AV",
         "bio": "A 20+-year veteran at the intersection of talent acquisition, organizational culture, and brand positioning. Focused on solving why high-growth enterprises struggle to hire and how elite culture transforms product velocity.",
-        "avatar": { "type": "initials", "value": "AV", "bgColor": "#4F46E5", "textColor": "#FFFFFF" },
+        "avatar": {
+          "type": "initials",
+          "value": "AV",
+          "bgColor": "#4F46E5",
+          "textColor": "#FFFFFF"
+        },
         "badge": { "text": "20+ Years Leadership", "dotColor": "#4F46E5" },
-        "expertise": ["People Strategy", "Employer Branding", "Talent Acquisition", "Culture Architecture"],
+        "expertise": [
+          "People Strategy",
+          "Employer Branding",
+          "Talent Acquisition",
+          "Culture Architecture"
+        ],
         "footerTag": "People Strategy & Global Brand",
         "linkedinUrl": null,
         "image": null
@@ -209,10 +259,20 @@
         "designation": "Senior Director - Global Head of TA Operations & HR Services",
         "initials": "MI",
         "bio": "Strategic Talent Acquisition and HR Operations executive who has built scalable, technology-driven recruitment frameworks across enterprise leaders including BlackRock, Microsoft, IBM, Ameriprise, and Infosys. Ensures institutional governance, risk mitigation, compliance, and flawless multi-region operations.",
-        "avatar": { "type": "initials", "value": "MI", "bgColor": "#16A34A", "textColor": "#FFFFFF" },
+        "avatar": {
+          "type": "initials",
+          "value": "MI",
+          "bgColor": "#16A34A",
+          "textColor": "#FFFFFF"
+        },
         "badge": { "text": "18+ Years Leadership", "dotColor": "#16A34A" },
         "companies": ["BlackRock", "Microsoft", "IBM", "Infosys", "Ameriprise"],
-        "expertise": ["Global Delivery Operations", "Risk Mitigation", "EOR Compliance", "Operational Integrity"],
+        "expertise": [
+          "Global Delivery Operations",
+          "Risk Mitigation",
+          "EOR Compliance",
+          "Operational Integrity"
+        ],
         "footerTag": "Global Delivery Operations & Risk Governance",
         "linkedinUrl": null,
         "image": null
@@ -353,7 +413,13 @@
       "workMode": "Work From Office",
       "noticePeriod": "On Notice Period",
       "description": "Design zero-trust cloud infrastructure, Kubernetes security mesh, automated CI/CD security gating, and compliance frameworks for multi-region financial platforms.",
-      "skills": ["AWS Security", "Kubernetes", "Terraform", "Zero Trust", "DevSecOps"],
+      "skills": [
+        "AWS Security",
+        "Kubernetes",
+        "Terraform",
+        "Zero Trust",
+        "DevSecOps"
+      ],
       "department": "Cloud & DevOps",
       "postedDate": "2026-10-13",
       "priority": 2
@@ -397,7 +463,13 @@
       "workMode": "Hybrid",
       "noticePeriod": "> 30 Days",
       "description": "Lead greenfield SAP S/4HANA FICO implementation and Central Finance integration for Fortune 500 manufacturing conglomerates with end-to-end global ledger governance.",
-      "skills": ["SAP S/4HANA", "FICO", "Central Finance", "Universal Journal", "BTP"],
+      "skills": [
+        "SAP S/4HANA",
+        "FICO",
+        "Central Finance",
+        "Universal Journal",
+        "BTP"
+      ],
       "department": "SAP & Enterprise",
       "postedDate": "2026-10-11",
       "priority": 4
@@ -438,7 +510,13 @@
       "salary": "₹20+ LPA / Direct",
       "joining": "Principal Tier",
       "description": "Design and build a standalone, high-throughput, fault-tolerant Payment Processing & Ledger Platform from scratch. Core responsibilities include low-latency microservices and ISO 20022 messaging.",
-      "skills": ["Node.js", "TypeScript", "ACH Systems", "Distributed Ledger", "Python"],
+      "skills": [
+        "Node.js",
+        "TypeScript",
+        "ACH Systems",
+        "Distributed Ledger",
+        "Python"
+      ],
       "workMode": "Work From Home",
       "department": "Full Stack & Frontend",
       "postedDate": "2026-10-03",
@@ -460,7 +538,13 @@
       "salary": "Market Premium",
       "joining": "Contract / C2H",
       "description": "Implement scalable AEM Cloud Service micro-sites with modern Web SDK integration, Java OSGi backends, and headless React component architectures.",
-      "skills": ["Adobe AEM 6.5", "Cloud Services", "Web SDK", "Java OSGi", "React.js"],
+      "skills": [
+        "Adobe AEM 6.5",
+        "Cloud Services",
+        "Web SDK",
+        "Java OSGi",
+        "React.js"
+      ],
       "workMode": "Hybrid",
       "department": "Full Stack & Frontend",
       "postedDate": "2026-10-02",
@@ -482,7 +566,13 @@
       "salary": "₹30 - 40 LPA",
       "joining": "15–30 Days",
       "description": "Design, develop, and deploy production-scale LLMs, diffusion systems, and multi-modal computer vision models. Deep expertise in PyTorch, LangChain, and vector embeddings.",
-      "skills": ["LLMs", "PyTorch", "LangChain", "Vision Transformers", "Vector DBs"],
+      "skills": [
+        "LLMs",
+        "PyTorch",
+        "LangChain",
+        "Vision Transformers",
+        "Vector DBs"
+      ],
       "workMode": "Work From Home",
       "department": "AI & Data Engineering",
       "postedDate": "2026-10-01",
@@ -526,7 +616,13 @@
       "salary": "₹28 - 38 LPA",
       "joining": "15 Days",
       "description": "Lead the frontend architecture of complex enterprise dashboards. Drive SSR/SSG patterns using Next.js, TailwindCSS, Redux Toolkit, and micro-frontend design.",
-      "skills": ["React.js", "Next.js", "Redux Toolkit", "TypeScript", "Tailwind CSS"],
+      "skills": [
+        "React.js",
+        "Next.js",
+        "Redux Toolkit",
+        "TypeScript",
+        "Tailwind CSS"
+      ],
       "workMode": "Hybrid",
       "department": "Full Stack & Frontend",
       "postedDate": "2026-09-28",

@@ -53,16 +53,28 @@ const GlobalJobApplicationForm = ({ isOpen, onClose, jobData = {} }) => {
         postingDate: 'Active Mandate',
       };
     }
-    const empType = jobData?.employmentType || jobData?.jobMode || jobData?.type || 'Permanent';
-    const postDate = jobData?.postingDate || (jobData?.postedDate ? new Date(jobData.postedDate).toLocaleDateString('en-US', {
-      month: 'short',
-      day: 'numeric',
-      year: 'numeric',
-    }) : 'Active Mandate');
+    const empType =
+      jobData?.employmentType ||
+      jobData?.jobMode ||
+      jobData?.type ||
+      'Permanent';
+    const postDate =
+      jobData?.postingDate ||
+      (jobData?.postedDate
+        ? new Date(jobData.postedDate).toLocaleDateString('en-US', {
+            month: 'short',
+            day: 'numeric',
+            year: 'numeric',
+          })
+        : 'Active Mandate');
 
     return {
       jobId: jobData?.jobId || jobData?.id || jobData?._id || 'general-pool',
-      title: jobData?.title || jobData?.jobTitle || jobData?.roleTitle || 'General Engineering Candidate Pool',
+      title:
+        jobData?.title ||
+        jobData?.jobTitle ||
+        jobData?.roleTitle ||
+        'General Engineering Candidate Pool',
       department: jobData?.department || jobData?.category || 'Engineering',
       location: jobData?.location || 'Remote',
       employmentType: empType,
@@ -102,7 +114,10 @@ const GlobalJobApplicationForm = ({ isOpen, onClose, jobData = {} }) => {
     applicationType: 'Permanent',
     noticePeriod: 'Immediate',
     city: user?.location ? user.location.split(',')[0].trim() : '',
-    state: user?.location && user.location.includes(',') ? user.location.split(',')[1].trim() : '',
+    state:
+      user?.location && user.location.includes(',')
+        ? user.location.split(',')[1].trim()
+        : '',
 
     // Professional Details
     totalExperienceYears: user?.experience ? String(user.experience) : '',
@@ -136,7 +151,12 @@ const GlobalJobApplicationForm = ({ isOpen, onClose, jobData = {} }) => {
   // Handle ESC key to close modal
   useEffect(() => {
     const handleKeyDown = (e) => {
-      if (e.key === 'Escape' && isOpen && !submitting && !isAssessmentModalOpen) {
+      if (
+        e.key === 'Escape' &&
+        isOpen &&
+        !submitting &&
+        !isAssessmentModalOpen
+      ) {
         onClose();
       }
     };
@@ -167,7 +187,10 @@ const GlobalJobApplicationForm = ({ isOpen, onClose, jobData = {} }) => {
       applicationType: 'Permanent',
       noticePeriod: 'Immediate',
       city: user?.location ? user.location.split(',')[0].trim() : '',
-      state: user?.location && user.location.includes(',') ? user.location.split(',')[1].trim() : '',
+      state:
+        user?.location && user.location.includes(',')
+          ? user.location.split(',')[1].trim()
+          : '',
       totalExperienceYears: user?.experience ? String(user.experience) : '',
       relevantExperienceYears: '',
       currentEmployer: '',
@@ -258,7 +281,8 @@ const GlobalJobApplicationForm = ({ isOpen, onClose, jobData = {} }) => {
             mobileNumber: p.mobileNumber || prev.mobileNumber,
             city: p.city || prev.city,
             state: p.state || prev.state,
-            totalExperienceYears: p.totalExperienceYears || prev.totalExperienceYears,
+            totalExperienceYears:
+              p.totalExperienceYears || prev.totalExperienceYears,
             skillSet: p.skillSet || prev.skillSet,
             linkedInLink: p.linkedInLink || prev.linkedInLink,
             candidateNote: p.candidateNote || prev.candidateNote,
@@ -266,7 +290,10 @@ const GlobalJobApplicationForm = ({ isOpen, onClose, jobData = {} }) => {
           setAutoFillNotice('Resume parsed. Details auto-filled.');
         }
       } catch (parseErr) {
-        console.warn('AI resume auto-fill non-blocking warning:', parseErr.message);
+        console.warn(
+          'AI resume auto-fill non-blocking warning:',
+          parseErr.message
+        );
       } finally {
         setParsingResume(false);
       }
@@ -311,7 +338,9 @@ const GlobalJobApplicationForm = ({ isOpen, onClose, jobData = {} }) => {
       return;
     }
     if (!formData.agreedToTerms) {
-      setError('Please agree to the Terms & Conditions and Privacy Policy before submitting your application.');
+      setError(
+        'Please agree to the Terms & Conditions and Privacy Policy before submitting your application.'
+      );
       return;
     }
 
@@ -337,8 +366,14 @@ const GlobalJobApplicationForm = ({ isOpen, onClose, jobData = {} }) => {
       dataPayload.append('state', formData.state.trim());
 
       // Professional Details
-      dataPayload.append('totalExperienceYears', formData.totalExperienceYears.trim());
-      dataPayload.append('relevantExperienceYears', formData.relevantExperienceYears.trim());
+      dataPayload.append(
+        'totalExperienceYears',
+        formData.totalExperienceYears.trim()
+      );
+      dataPayload.append(
+        'relevantExperienceYears',
+        formData.relevantExperienceYears.trim()
+      );
       dataPayload.append('currentEmployer', formData.currentEmployer.trim());
       dataPayload.append('currentCTC', formData.currentCTC.trim());
       dataPayload.append('expectedCTC', formData.expectedCTC.trim());
@@ -373,14 +408,23 @@ const GlobalJobApplicationForm = ({ isOpen, onClose, jobData = {} }) => {
         }, 1000);
       } else if (response.status === 409) {
         setDuplicateApp(data.existingApplication || true);
-        setError(data.error || `You have already applied for "${normalizedJob.title}".`);
+        setError(
+          data.error || `You have already applied for "${normalizedJob.title}".`
+        );
       } else if (response.status === 401) {
-        setError('Your candidate session has expired. Please log in again to submit your application.');
+        setError(
+          'Your candidate session has expired. Please log in again to submit your application.'
+        );
       } else {
-        setError(data.error || 'Failed to submit application. Please verify all fields.');
+        setError(
+          data.error ||
+            'Failed to submit application. Please verify all fields.'
+        );
       }
     } catch {
-      setError('Network error connecting to ThinkWires application service. Please try again.');
+      setError(
+        'Network error connecting to ThinkWires application service. Please try again.'
+      );
     } finally {
       setSubmitting(false);
     }
@@ -435,8 +479,23 @@ const GlobalJobApplicationForm = ({ isOpen, onClose, jobData = {} }) => {
         </button>
 
         {/* Modal Header */}
-        <div className="ApplyModal-header" style={{ padding: '1.5rem 1.75rem', background: '#0F172A', color: '#FFFFFF' }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '0.5rem', flexWrap: 'wrap' }}>
+        <div
+          className="ApplyModal-header"
+          style={{
+            padding: '1.5rem 1.75rem',
+            background: '#0F172A',
+            color: '#FFFFFF',
+          }}
+        >
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              gap: '0.5rem',
+              flexWrap: 'wrap',
+            }}
+          >
             <span
               style={{
                 fontSize: '0.72rem',
@@ -511,15 +570,28 @@ const GlobalJobApplicationForm = ({ isOpen, onClose, jobData = {} }) => {
               color: '#991B1B',
             }}
           >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
-              <span className="material-symbols-outlined" style={{ fontSize: '18px', color: '#DC2626' }}>
+            <div
+              style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}
+            >
+              <span
+                className="material-symbols-outlined"
+                style={{ fontSize: '18px', color: '#DC2626' }}
+              >
                 lock
               </span>
               <span>
-                <strong>Sign in required.</strong> Only logged-in users can apply.
+                <strong>Sign in required.</strong> Only logged-in users can
+                apply.
               </span>
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexShrink: 0 }}>
+            <div
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.75rem',
+                flexShrink: 0,
+              }}
+            >
               <Link
                 to={`/login?redirect=${encodeURIComponent(getApplyUrl())}`}
                 onClick={onClose}
@@ -555,7 +627,12 @@ const GlobalJobApplicationForm = ({ isOpen, onClose, jobData = {} }) => {
         )}
 
         {/* Status Alerts */}
-        <div style={{ padding: '0 1.75rem', marginTop: error || success ? '1.25rem' : 0 }}>
+        <div
+          style={{
+            padding: '0 1.75rem',
+            marginTop: error || success ? '1.25rem' : 0,
+          }}
+        >
           {error && (
             <div
               className="tw-auth-alert tw-auth-alert-error"
@@ -577,7 +654,12 @@ const GlobalJobApplicationForm = ({ isOpen, onClose, jobData = {} }) => {
                 <Link
                   to="/candidate/applications"
                   onClick={onClose}
-                  style={{ color: '#B91C1C', fontWeight: 700, textDecoration: 'underline', fontSize: '0.84rem' }}
+                  style={{
+                    color: '#B91C1C',
+                    fontWeight: 700,
+                    textDecoration: 'underline',
+                    fontSize: '0.84rem',
+                  }}
                 >
                   View My Existing Application →
                 </Link>
@@ -614,7 +696,14 @@ const GlobalJobApplicationForm = ({ isOpen, onClose, jobData = {} }) => {
             justifyContent: 'space-between',
           }}
         >
-          <span style={{ fontSize: '0.78rem', color: '#64748B', fontWeight: 700, textTransform: 'uppercase' }}>
+          <span
+            style={{
+              fontSize: '0.78rem',
+              color: '#64748B',
+              fontWeight: 700,
+              textTransform: 'uppercase',
+            }}
+          >
             Form Fill Assistance:
           </span>
           <div style={{ display: 'flex', gap: '0.5rem' }}>
@@ -654,11 +743,28 @@ const GlobalJobApplicationForm = ({ isOpen, onClose, jobData = {} }) => {
         </div>
 
         {/* Application Form */}
-        <form onSubmit={handleSubmit} className="ApplyModal-form" style={{ padding: '1.25rem 1.75rem', gap: '1.25rem' }}>
-          
+        <form
+          onSubmit={handleSubmit}
+          className="ApplyModal-form"
+          style={{ padding: '1.25rem 1.75rem', gap: '1.25rem' }}
+        >
           {/* SECTION 1: RESUME */}
-          <div style={{ borderBottom: '1px solid #E2E8F0', paddingBottom: '1.25rem' }}>
-            <h3 style={{ fontSize: '0.82rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.06em', color: '#003399', margin: '0 0 0.75rem 0' }}>
+          <div
+            style={{
+              borderBottom: '1px solid #E2E8F0',
+              paddingBottom: '1.25rem',
+            }}
+          >
+            <h3
+              style={{
+                fontSize: '0.82rem',
+                fontWeight: 800,
+                textTransform: 'uppercase',
+                letterSpacing: '0.06em',
+                color: '#003399',
+                margin: '0 0 0.75rem 0',
+              }}
+            >
               RESUME
             </h3>
             <div className="ApplyModal-uploadBox">
@@ -669,7 +775,10 @@ const GlobalJobApplicationForm = ({ isOpen, onClose, jobData = {} }) => {
                 onChange={handleFileChange}
                 aria-label="Upload Resume"
               />
-              <div className="ApplyModal-uploadContent" style={{ padding: '1.25rem 1rem' }}>
+              <div
+                className="ApplyModal-uploadContent"
+                style={{ padding: '1.25rem 1rem' }}
+              >
                 <svg
                   className="ApplyModal-uploadIcon"
                   width="26"
@@ -685,11 +794,22 @@ const GlobalJobApplicationForm = ({ isOpen, onClose, jobData = {} }) => {
                   <polyline points="17 8 12 3 7 8"></polyline>
                   <line x1="12" y1="3" x2="12" y2="15"></line>
                 </svg>
-                <p className="ApplyModal-uploadText" style={{ margin: 0, fontSize: '0.9rem' }}>
-                  {resumeFile ? resumeFile.name : (user?.resumeUrl ? 'Using existing verified resume (click to replace)' : 'Click to browse or drop resume file')}
+                <p
+                  className="ApplyModal-uploadText"
+                  style={{ margin: 0, fontSize: '0.9rem' }}
+                >
+                  {resumeFile
+                    ? resumeFile.name
+                    : user?.resumeUrl
+                      ? 'Using existing verified resume (click to replace)'
+                      : 'Click to browse or drop resume file'}
                 </p>
-                <p className="ApplyModal-uploadSubText" style={{ margin: '0.2rem 0 0 0' }}>
-                  PDF, DOC, DOCX up to 10MB (Automatically auto-fills form upon upload)
+                <p
+                  className="ApplyModal-uploadSubText"
+                  style={{ margin: '0.2rem 0 0 0' }}
+                >
+                  PDF, DOC, DOCX up to 10MB (Automatically auto-fills form upon
+                  upload)
                 </p>
               </div>
             </div>
@@ -726,15 +846,36 @@ const GlobalJobApplicationForm = ({ isOpen, onClose, jobData = {} }) => {
               </div>
             )}
             {resumeError && (
-              <span style={{ color: '#DC2626', fontSize: '0.8rem', marginTop: '0.4rem', display: 'block' }}>
+              <span
+                style={{
+                  color: '#DC2626',
+                  fontSize: '0.8rem',
+                  marginTop: '0.4rem',
+                  display: 'block',
+                }}
+              >
                 {resumeError}
               </span>
             )}
           </div>
 
           {/* SECTION 2: BASIC INFO */}
-          <div style={{ borderBottom: '1px solid #E2E8F0', paddingBottom: '1.25rem' }}>
-            <h3 style={{ fontSize: '0.82rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.06em', color: '#003399', margin: '0 0 0.85rem 0' }}>
+          <div
+            style={{
+              borderBottom: '1px solid #E2E8F0',
+              paddingBottom: '1.25rem',
+            }}
+          >
+            <h3
+              style={{
+                fontSize: '0.82rem',
+                fontWeight: 800,
+                textTransform: 'uppercase',
+                letterSpacing: '0.06em',
+                color: '#003399',
+                margin: '0 0 0.85rem 0',
+              }}
+            >
               BASIC INFO
             </h3>
 
@@ -853,13 +994,24 @@ const GlobalJobApplicationForm = ({ isOpen, onClose, jobData = {} }) => {
 
           {/* SECTION 3: PROFESSIONAL DETAILS */}
           <div>
-            <h3 style={{ fontSize: '0.82rem', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.06em', color: '#003399', margin: '0 0 0.85rem 0' }}>
+            <h3
+              style={{
+                fontSize: '0.82rem',
+                fontWeight: 800,
+                textTransform: 'uppercase',
+                letterSpacing: '0.06em',
+                color: '#003399',
+                margin: '0 0 0.85rem 0',
+              }}
+            >
               PROFESSIONAL DETAILS
             </h3>
 
             <div className="ApplyModal-row">
               <div className="ApplyModal-fieldGroup">
-                <label htmlFor="apply-totalExp">Total Experience in Years</label>
+                <label htmlFor="apply-totalExp">
+                  Total Experience in Years
+                </label>
                 <input
                   id="apply-totalExp"
                   type="text"
@@ -870,7 +1022,9 @@ const GlobalJobApplicationForm = ({ isOpen, onClose, jobData = {} }) => {
                 />
               </div>
               <div className="ApplyModal-fieldGroup">
-                <label htmlFor="apply-relExp">Relevant Experience in Years</label>
+                <label htmlFor="apply-relExp">
+                  Relevant Experience in Years
+                </label>
                 <input
                   id="apply-relExp"
                   type="text"
@@ -882,7 +1036,10 @@ const GlobalJobApplicationForm = ({ isOpen, onClose, jobData = {} }) => {
               </div>
             </div>
 
-            <div className="ApplyModal-fieldGroup" style={{ marginTop: '0.75rem' }}>
+            <div
+              className="ApplyModal-fieldGroup"
+              style={{ marginTop: '0.75rem' }}
+            >
               <label htmlFor="apply-currentEmp">Current Employer</label>
               <input
                 id="apply-currentEmp"
@@ -919,7 +1076,10 @@ const GlobalJobApplicationForm = ({ isOpen, onClose, jobData = {} }) => {
               </div>
             </div>
 
-            <div className="ApplyModal-fieldGroup" style={{ marginTop: '0.75rem' }}>
+            <div
+              className="ApplyModal-fieldGroup"
+              style={{ marginTop: '0.75rem' }}
+            >
               <label htmlFor="apply-skillSet">Skill Set</label>
               <input
                 id="apply-skillSet"
@@ -956,7 +1116,10 @@ const GlobalJobApplicationForm = ({ isOpen, onClose, jobData = {} }) => {
               </div>
             </div>
 
-            <div className="ApplyModal-fieldGroup" style={{ marginTop: '0.75rem' }}>
+            <div
+              className="ApplyModal-fieldGroup"
+              style={{ marginTop: '0.75rem' }}
+            >
               <label htmlFor="apply-candidateNote">Candidate Note</label>
               <textarea
                 id="apply-candidateNote"
@@ -994,7 +1157,10 @@ const GlobalJobApplicationForm = ({ isOpen, onClose, jobData = {} }) => {
               onChange={handleChange}
               className="ApplyModal-termsCheckbox"
             />
-            <label htmlFor="apply-agreedToTerms" className="ApplyModal-termsLabel">
+            <label
+              htmlFor="apply-agreedToTerms"
+              className="ApplyModal-termsLabel"
+            >
               I agree to the{' '}
               <Link
                 to="/terms-of-service"
@@ -1013,7 +1179,8 @@ const GlobalJobApplicationForm = ({ isOpen, onClose, jobData = {} }) => {
               >
                 Privacy Policy
               </Link>
-              . I consent to ThinkWires storing and processing my application details and resume for recruitment and placement purposes.
+              . I consent to ThinkWires storing and processing my application
+              details and resume for recruitment and placement purposes.
             </label>
           </div>
 
@@ -1040,7 +1207,12 @@ const GlobalJobApplicationForm = ({ isOpen, onClose, jobData = {} }) => {
                 <Link
                   to="/candidate/applications"
                   onClick={onClose}
-                  style={{ color: '#B91C1C', fontWeight: 700, textDecoration: 'underline', fontSize: '0.84rem' }}
+                  style={{
+                    color: '#B91C1C',
+                    fontWeight: 700,
+                    textDecoration: 'underline',
+                    fontSize: '0.84rem',
+                  }}
                 >
                   View My Existing Application
                 </Link>
@@ -1064,7 +1236,9 @@ const GlobalJobApplicationForm = ({ isOpen, onClose, jobData = {} }) => {
                 className="ApplyModal-btnSubmit"
                 onClick={() => {
                   onClose();
-                  navigate(`/login?redirect=${encodeURIComponent(getApplyUrl())}`);
+                  navigate(
+                    `/login?redirect=${encodeURIComponent(getApplyUrl())}`
+                  );
                 }}
                 style={{
                   display: 'inline-flex',
@@ -1075,7 +1249,12 @@ const GlobalJobApplicationForm = ({ isOpen, onClose, jobData = {} }) => {
                   backgroundColor: '#003399',
                 }}
               >
-                <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>lock</span>
+                <span
+                  className="material-symbols-outlined"
+                  style={{ fontSize: '18px' }}
+                >
+                  lock
+                </span>
                 <span>Log In to Apply</span>
               </button>
             ) : (
@@ -1102,7 +1281,12 @@ const GlobalJobApplicationForm = ({ isOpen, onClose, jobData = {} }) => {
                       stroke="currentColor"
                       strokeWidth="2.5"
                     >
-                      <circle cx="12" cy="12" r="10" strokeOpacity="0.25"></circle>
+                      <circle
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        strokeOpacity="0.25"
+                      ></circle>
                       <path d="M12 2a10 10 0 0 1 10 10"></path>
                     </svg>
                     <span>Submitting Application...</span>

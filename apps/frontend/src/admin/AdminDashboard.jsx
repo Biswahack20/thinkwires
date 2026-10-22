@@ -80,7 +80,8 @@ const AdminDashboard = () => {
         <div className="tw-demo-notice-content">
           <span className="tw-demo-pill">DEMO ENVIRONMENT</span>
           <span>
-            {data?.demoNotice || 'Active DEMO dataset with dual-mode MongoDB persistence and simulated enterprise metrics.'}
+            {data?.demoNotice ||
+              'Active DEMO dataset with dual-mode MongoDB persistence and simulated enterprise metrics.'}
           </span>
         </div>
         <div style={{ fontSize: '0.75rem', color: '#166534', fontWeight: 600 }}>
@@ -93,7 +94,8 @@ const AdminDashboard = () => {
         <div className="tw-view-title-group">
           <h1>Staffing & Manpower Operations</h1>
           <p className="tw-view-subtitle">
-            Executive control panel for engineering deployments, client accounts, recruitment pipeline, and CMS.
+            Executive control panel for engineering deployments, client
+            accounts, recruitment pipeline, and CMS.
           </p>
         </div>
 
@@ -123,7 +125,11 @@ const AdminDashboard = () => {
             className="tw-btn-secondary"
             onClick={() => fetchStats(period)}
             title="Refresh metrics"
-            style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.4rem',
+            }}
           >
             <RefreshIcon size={14} />
             <span>Sync</span>
@@ -137,7 +143,9 @@ const AdminDashboard = () => {
         <div className="tw-kpi-card">
           <div className="tw-kpi-header">
             <span className="tw-kpi-title">Total Talent Pool</span>
-            <div className="tw-kpi-icon-box emerald"><UsersIcon size={18} color="#008F68" /></div>
+            <div className="tw-kpi-icon-box emerald">
+              <UsersIcon size={18} color="#008F68" />
+            </div>
           </div>
           <div className="tw-kpi-value">{kpis.totalEmployees || 10}</div>
           <div className="tw-kpi-footer">
@@ -150,7 +158,9 @@ const AdminDashboard = () => {
         <div className="tw-kpi-card">
           <div className="tw-kpi-header">
             <span className="tw-kpi-title">Active Deployments</span>
-            <div className="tw-kpi-icon-box emerald"><HandshakeIcon size={18} color="#008F68" /></div>
+            <div className="tw-kpi-icon-box emerald">
+              <HandshakeIcon size={18} color="#008F68" />
+            </div>
           </div>
           <div className="tw-kpi-value">{kpis.activePlacements || 4}</div>
           <div className="tw-kpi-footer">
@@ -163,7 +173,9 @@ const AdminDashboard = () => {
         <div className="tw-kpi-card">
           <div className="tw-kpi-header">
             <span className="tw-kpi-title">Corporate Clients</span>
-            <div className="tw-kpi-icon-box blue"><BuildingIcon size={18} color="#2563EB" /></div>
+            <div className="tw-kpi-icon-box blue">
+              <BuildingIcon size={18} color="#2563EB" />
+            </div>
           </div>
           <div className="tw-kpi-value">{kpis.totalClients || 5}</div>
           <div className="tw-kpi-footer">
@@ -176,7 +188,9 @@ const AdminDashboard = () => {
         <div className="tw-kpi-card">
           <div className="tw-kpi-header">
             <span className="tw-kpi-title">Open Requisitions</span>
-            <div className="tw-kpi-icon-box amber"><BriefcaseIcon size={18} color="#D97706" /></div>
+            <div className="tw-kpi-icon-box amber">
+              <BriefcaseIcon size={18} color="#D97706" />
+            </div>
           </div>
           <div className="tw-kpi-value">{kpis.openRequirements || 6}</div>
           <div className="tw-kpi-footer">
@@ -188,8 +202,12 @@ const AdminDashboard = () => {
         {/* 5. Period Revenue */}
         <div className="tw-kpi-card">
           <div className="tw-kpi-header">
-            <span className="tw-kpi-title">Billing Revenue ({period.toUpperCase()})</span>
-            <div className="tw-kpi-icon-box emerald"><DollarIcon size={18} color="#008F68" /></div>
+            <span className="tw-kpi-title">
+              Billing Revenue ({period.toUpperCase()})
+            </span>
+            <div className="tw-kpi-icon-box emerald">
+              <DollarIcon size={18} color="#008F68" />
+            </div>
           </div>
           <div className="tw-kpi-value">
             ${(kpis.totalRevenue || 36200).toLocaleString()}
@@ -204,7 +222,9 @@ const AdminDashboard = () => {
         <div className="tw-kpi-card">
           <div className="tw-kpi-header">
             <span className="tw-kpi-title">Candidate Pipeline</span>
-            <div className="tw-kpi-icon-box violet"><TargetIcon size={18} color="#7C3AED" /></div>
+            <div className="tw-kpi-icon-box violet">
+              <TargetIcon size={18} color="#7C3AED" />
+            </div>
           </div>
           <div className="tw-kpi-value">{kpis.candidatePipelineCount || 8}</div>
           <div className="tw-kpi-footer">
@@ -217,9 +237,13 @@ const AdminDashboard = () => {
         <div className="tw-kpi-card">
           <div className="tw-kpi-header">
             <span className="tw-kpi-title">Recruitment SLA</span>
-            <div className="tw-kpi-icon-box blue"><DashboardIcon size={18} color="#2563EB" /></div>
+            <div className="tw-kpi-icon-box blue">
+              <DashboardIcon size={18} color="#2563EB" />
+            </div>
           </div>
-          <div className="tw-kpi-value">{kpis.recruitmentPerformance || 94.6}%</div>
+          <div className="tw-kpi-value">
+            {kpis.recruitmentPerformance || 94.6}%
+          </div>
           <div className="tw-kpi-footer">
             <span className="tw-trend-badge positive">High Velocity</span>
             <span>Curated profiles in 5h</span>
@@ -230,7 +254,9 @@ const AdminDashboard = () => {
         <div className="tw-kpi-card">
           <div className="tw-kpi-header">
             <span className="tw-kpi-title">Fulfillment Ratio</span>
-            <div className="tw-kpi-icon-box emerald"><TrophyIcon size={18} color="#008F68" /></div>
+            <div className="tw-kpi-icon-box emerald">
+              <TrophyIcon size={18} color="#008F68" />
+            </div>
           </div>
           <div className="tw-kpi-value">{kpis.fulfillmentRate || 88.2}%</div>
           <div className="tw-kpi-footer">
@@ -246,9 +272,16 @@ const AdminDashboard = () => {
         <div className="tw-chart-card">
           <div className="tw-card-header">
             <div>
-              <h2 className="tw-card-title">Billing Revenue vs Operational Costs</h2>
+              <h2 className="tw-card-title">
+                Billing Revenue vs Operational Costs
+              </h2>
               <div className="tw-card-subtitle">
-                Financial performance breakdown for {period === 'month' ? 'the current month' : period === 'quarter' ? 'Q3-Q4 quarters' : 'the current fiscal year'}
+                Financial performance breakdown for{' '}
+                {period === 'month'
+                  ? 'the current month'
+                  : period === 'quarter'
+                    ? 'Q3-Q4 quarters'
+                    : 'the current fiscal year'}
               </div>
             </div>
             <span className="tw-badge deployed">Gross Margin ~32%</span>
@@ -269,8 +302,14 @@ const AdminDashboard = () => {
                 </defs>
                 <CartesianGrid strokeDasharray="3 3" stroke="#E2E8F0" />
                 <XAxis dataKey="name" stroke="#64748B" fontSize={12} />
-                <YAxis stroke="#64748B" fontSize={12} tickFormatter={(v) => `$${v / 1000}k`} />
-                <Tooltip formatter={(value) => [`$${value.toLocaleString()}`, '']} />
+                <YAxis
+                  stroke="#64748B"
+                  fontSize={12}
+                  tickFormatter={(v) => `$${v / 1000}k`}
+                />
+                <Tooltip
+                  formatter={(value) => [`$${value.toLocaleString()}`, '']}
+                />
                 <Legend />
                 <Area
                   type="monotone"
@@ -312,8 +351,18 @@ const AdminDashboard = () => {
                 <YAxis stroke="#64748B" fontSize={12} />
                 <Tooltip />
                 <Legend />
-                <Bar dataKey="actual" name="Actual Hired" fill="#008F68" radius={[4, 4, 0, 0]} />
-                <Bar dataKey="target" name="Target Quota" fill="#94A3B8" radius={[4, 4, 0, 0]} />
+                <Bar
+                  dataKey="actual"
+                  name="Actual Hired"
+                  fill="#008F68"
+                  radius={[4, 4, 0, 0]}
+                />
+                <Bar
+                  dataKey="target"
+                  name="Target Quota"
+                  fill="#94A3B8"
+                  radius={[4, 4, 0, 0]}
+                />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -321,34 +370,86 @@ const AdminDashboard = () => {
       </div>
 
       {/* Chart 3 & Quick Actions */}
-      <div className="tw-charts-grid" style={{ gridTemplateColumns: '1.2fr 1.8fr' }}>
+      <div
+        className="tw-charts-grid"
+        style={{ gridTemplateColumns: '1.2fr 1.8fr' }}
+      >
         {/* Quick Actions Panel */}
         <div className="tw-chart-card">
           <div className="tw-card-header">
             <div>
               <h2 className="tw-card-title">Quick Actions</h2>
-              <div className="tw-card-subtitle">Frequent administrative operations</div>
+              <div className="tw-card-subtitle">
+                Frequent administrative operations
+              </div>
             </div>
           </div>
 
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-            <Link to="/admin/employees" className="tw-btn-primary" style={{ justifyContent: 'center', display: 'inline-flex', alignItems: 'center', gap: '0.45rem' }}>
+          <div
+            style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}
+          >
+            <Link
+              to="/admin/employees"
+              className="tw-btn-primary"
+              style={{
+                justifyContent: 'center',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.45rem',
+              }}
+            >
               <PlusIcon size={15} />
               <span>Onboard New Employee</span>
             </Link>
-            <Link to="/admin/jobs" className="tw-btn-secondary" style={{ justifyContent: 'center', display: 'inline-flex', alignItems: 'center', gap: '0.45rem' }}>
+            <Link
+              to="/admin/jobs"
+              className="tw-btn-secondary"
+              style={{
+                justifyContent: 'center',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.45rem',
+              }}
+            >
               <BriefcaseIcon size={15} />
               <span>Post Staffing Requirement</span>
             </Link>
-            <Link to="/admin/candidates" className="tw-btn-secondary" style={{ justifyContent: 'center', display: 'inline-flex', alignItems: 'center', gap: '0.45rem' }}>
+            <Link
+              to="/admin/candidates"
+              className="tw-btn-secondary"
+              style={{
+                justifyContent: 'center',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.45rem',
+              }}
+            >
               <TargetIcon size={15} />
               <span>Review Candidate Pipeline</span>
             </Link>
-            <Link to="/admin/cms/blog" className="tw-btn-secondary" style={{ justifyContent: 'center', display: 'inline-flex', alignItems: 'center', gap: '0.45rem' }}>
+            <Link
+              to="/admin/cms/blog"
+              className="tw-btn-secondary"
+              style={{
+                justifyContent: 'center',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.45rem',
+              }}
+            >
               <EditIcon size={15} />
               <span>Draft New CMS Article</span>
             </Link>
-            <Link to="/admin/cms/announcements" className="tw-btn-secondary" style={{ justifyContent: 'center', display: 'inline-flex', alignItems: 'center', gap: '0.45rem' }}>
+            <Link
+              to="/admin/cms/announcements"
+              className="tw-btn-secondary"
+              style={{
+                justifyContent: 'center',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.45rem',
+              }}
+            >
               <BellIcon size={15} />
               <span>Broadcast Announcement</span>
             </Link>
@@ -365,8 +466,16 @@ const AdminDashboard = () => {
             }}
           >
             <strong>Role Permissions:</strong>
-            <div style={{ marginTop: '0.25rem', color: '#64748B', lineHeight: '1.4' }}>
-              Access is determined strictly by your authenticated account. Member credentials and RBAC roles are provisioned exclusively by the Superadmin.
+            <div
+              style={{
+                marginTop: '0.25rem',
+                color: '#64748B',
+                lineHeight: '1.4',
+              }}
+            >
+              Access is determined strictly by your authenticated account.
+              Member credentials and RBAC roles are provisioned exclusively by
+              the Superadmin.
             </div>
           </div>
         </div>
@@ -375,8 +484,12 @@ const AdminDashboard = () => {
         <div className="tw-chart-card">
           <div className="tw-card-header">
             <div>
-              <h2 className="tw-card-title">Recruitment Performance & SLA Trends</h2>
-              <div className="tw-card-subtitle">Speed of delivery vs client satisfaction index</div>
+              <h2 className="tw-card-title">
+                Recruitment Performance & SLA Trends
+              </h2>
+              <div className="tw-card-subtitle">
+                Speed of delivery vs client satisfaction index
+              </div>
             </div>
             <span className="tw-badge available">Top 1% Efficiency</span>
           </div>
@@ -417,7 +530,11 @@ const AdminDashboard = () => {
         <div className="tw-table-container">
           <div className="tw-table-toolbar">
             <h2 className="tw-card-title">Recent Billable Placements</h2>
-            <Link to="/admin/placements" className="tw-btn-secondary" style={{ padding: '0.35rem 0.75rem', fontSize: '0.75rem' }}>
+            <Link
+              to="/admin/placements"
+              className="tw-btn-secondary"
+              style={{ padding: '0.35rem 0.75rem', fontSize: '0.75rem' }}
+            >
               View All Deployments →
             </Link>
           </div>
@@ -437,17 +554,27 @@ const AdminDashboard = () => {
                 {recentPlacements.map((plc) => (
                   <tr key={plc.id}>
                     <td>
-                      <div style={{ fontWeight: 600 }}>{plc.candidateOrEmployeeName}</div>
-                      <div style={{ fontSize: '0.72rem', color: '#64748B' }}>{plc.personType}</div>
+                      <div style={{ fontWeight: 600 }}>
+                        {plc.candidateOrEmployeeName}
+                      </div>
+                      <div style={{ fontSize: '0.72rem', color: '#64748B' }}>
+                        {plc.personType}
+                      </div>
                     </td>
                     <td>{plc.clientName}</td>
                     <td>{plc.jobTitle}</td>
                     <td>
-                      <strong>${Number(plc.billingRate).toLocaleString()}</strong>
-                      <span style={{ fontSize: '0.7rem', color: '#64748B' }}>/mo</span>
+                      <strong>
+                        ${Number(plc.billingRate).toLocaleString()}
+                      </strong>
+                      <span style={{ fontSize: '0.7rem', color: '#64748B' }}>
+                        /mo
+                      </span>
                     </td>
                     <td>
-                      <span className={`tw-badge ${plc.assignmentStatus.toLowerCase()}`}>
+                      <span
+                        className={`tw-badge ${plc.assignmentStatus.toLowerCase()}`}
+                      >
                         {plc.assignmentStatus}
                       </span>
                     </td>
@@ -463,7 +590,9 @@ const AdminDashboard = () => {
           <div className="tw-card-header">
             <div>
               <h2 className="tw-card-title">Operational Audit Log</h2>
-              <div className="tw-card-subtitle">Live system activity stream</div>
+              <div className="tw-card-subtitle">
+                Live system activity stream
+              </div>
             </div>
           </div>
 
@@ -479,7 +608,10 @@ const AdminDashboard = () => {
                   <div className="tw-activity-desc">{act.description}</div>
                   <div className="tw-activity-time">
                     {act.user?.name} ({act.user?.role}) •{' '}
-                    {new Date(act.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                    {new Date(act.createdAt).toLocaleTimeString([], {
+                      hour: '2-digit',
+                      minute: '2-digit',
+                    })}
                   </div>
                 </div>
               </div>

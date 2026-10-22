@@ -10,7 +10,7 @@ const StaffAugHero = ({ data, valueProps = [] }) => {
     ctaConsultationText,
     ctaBenchText,
     trustLine,
-    talentReadiness = {}
+    talentReadiness = {},
   } = data;
 
   return (
@@ -35,17 +35,25 @@ const StaffAugHero = ({ data, valueProps = [] }) => {
           <div className="StaffAug-heroContent">
             <h1 className="StaffAug-heroHeadline">
               Scale High-Velocity Engineering Squads{' '}
-              <span className="StaffAug-headlineGradient">Without Long-Term Overhead.</span>
+              <span className="StaffAug-headlineGradient">
+                Without Long-Term Overhead.
+              </span>
             </h1>
             <p className="StaffAug-heroDesc">{description}</p>
 
             <div className="StaffAug-heroCtas">
               <a href="#consultation-form" className="StaffAug-btnPrimary">
-                <span className="material-symbols-outlined">calendar_today</span>
-                <span>{ctaConsultationText || 'Schedule Workforce Consultation'}</span>
+                <span className="material-symbols-outlined">
+                  calendar_today
+                </span>
+                <span>
+                  {ctaConsultationText || 'Schedule Workforce Consultation'}
+                </span>
               </a>
               <a href="#bench-pool" className="StaffAug-btnSecondary">
-                <span>{ctaBenchText || 'Explore Available Bench (48h SLA)'}</span>
+                <span>
+                  {ctaBenchText || 'Explore Available Bench (48h SLA)'}
+                </span>
                 <span className="material-symbols-outlined">arrow_forward</span>
               </a>
             </div>
@@ -69,14 +77,18 @@ const StaffAugHero = ({ data, valueProps = [] }) => {
               </div>
 
               <div className="StaffAug-statRow">
-                <div className="stat-number">{talentReadiness.acceptanceRate || '3.4%'}</div>
+                <div className="stat-number">
+                  {talentReadiness.acceptanceRate || '3.4%'}
+                </div>
                 <p className="stat-desc">{talentReadiness.acceptanceDesc}</p>
               </div>
 
               <div className="StaffAug-sparkline">
                 <div className="sparkline-header">
                   <span>Deployment Velocity</span>
-                  <span className="bold">{talentReadiness.velocity || 'Avg 48 Hours'}</span>
+                  <span className="bold">
+                    {talentReadiness.velocity || 'Avg 48 Hours'}
+                  </span>
                 </div>
                 <div className="sparkline-bar">
                   <div
@@ -91,8 +103,14 @@ const StaffAugHero = ({ data, valueProps = [] }) => {
                   <span className="material-symbols-outlined">speed</span>
                 </div>
                 <div className="text-col">
-                  <div className="title">{talentReadiness.guaranteeTitle || 'Zero Idle Cost Guarantee'}</div>
-                  <div className="sub">{talentReadiness.guaranteeSub || '15-Day Roll-off flexibility'}</div>
+                  <div className="title">
+                    {talentReadiness.guaranteeTitle ||
+                      'Zero Idle Cost Guarantee'}
+                  </div>
+                  <div className="sub">
+                    {talentReadiness.guaranteeSub ||
+                      '15-Day Roll-off flexibility'}
+                  </div>
                 </div>
               </div>
             </div>

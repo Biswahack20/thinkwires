@@ -1,6 +1,9 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchPayrollData, fallbackPayrollData } from '../store/slices/payrollSlice';
+import {
+  fetchPayrollData,
+  fallbackPayrollData,
+} from '../store/slices/payrollSlice';
 import Navbar from '../components/common/Navbar';
 import Footer from '../components/common/Footer';
 import PayrollHero from '../components/PayrollComponents/PayrollHero';
@@ -13,11 +16,13 @@ const PayrollPage = () => {
   const dispatch = useDispatch();
   const { data: rawData, status } = useSelector((state) => state.payroll || {});
 
-  const payrollData = rawData && Object.keys(rawData).length > 0 ? rawData : fallbackPayrollData;
+  const payrollData =
+    rawData && Object.keys(rawData).length > 0 ? rawData : fallbackPayrollData;
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    document.title = 'Payroll Outsourcing Services | ThinkWires - 100% Statutory Compliance';
+    document.title =
+      'Payroll Outsourcing Services | ThinkWires - 100% Statutory Compliance';
     if (status === 'idle') {
       dispatch(fetchPayrollData());
     }

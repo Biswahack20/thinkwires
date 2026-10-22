@@ -1,16 +1,25 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { submitTalentRequisition, resetRequisitionState } from '../../store/slices/findTalentSlice';
+import {
+  submitTalentRequisition,
+  resetRequisitionState,
+} from '../../store/slices/findTalentSlice';
 
 const FindTalentIntakeForm = ({ data }) => {
   const dispatch = useDispatch();
-  const { submitStatus, submitError, submitSuccess } = useSelector((state) => state.findTalent || {});
+  const { submitStatus, submitError, submitSuccess } = useSelector(
+    (state) => state.findTalent || {}
+  );
 
   const [engagementModel, setEngagementModel] = useState('staff_augmentation');
   const [targetRole, setTargetRole] = useState('');
   const [headcount, setHeadcount] = useState('1');
   const [seniority, setSeniority] = useState('senior');
-  const [selectedTechs, setSelectedTechs] = useState(['AWS & Kubernetes', 'SAP HANA / ABAP', 'GenAI & PyTorch']);
+  const [selectedTechs, setSelectedTechs] = useState([
+    'AWS & Kubernetes',
+    'SAP HANA / ABAP',
+    'GenAI & PyTorch',
+  ]);
   const [urgency, setUrgency] = useState('immediate');
   const [workArrangement, setWorkArrangement] = useState('remote_global');
   const [budgetEnvelope, setBudgetEnvelope] = useState('bracket_2');
@@ -47,7 +56,7 @@ const FindTalentIntakeForm = ({ data }) => {
         corporateEmail,
         company,
         phone,
-        jobDescription
+        jobDescription,
       })
     );
   };
@@ -68,12 +77,18 @@ const FindTalentIntakeForm = ({ data }) => {
         {/* Header Bar */}
         <div className="FindTalent-intakeHeader">
           <div>
-            <span className="FindTalent-eyebrow">{tag || 'Dynamic Requisition Desk'}</span>
-            <h2 className="FindTalent-sectionTitle">{title || 'Post Your Technical Requirements'}</h2>
+            <span className="FindTalent-eyebrow">
+              {tag || 'Dynamic Requisition Desk'}
+            </span>
+            <h2 className="FindTalent-sectionTitle">
+              {title || 'Post Your Technical Requirements'}
+            </h2>
           </div>
           <div className="FindTalent-statusPill">
             <span className="status-dot"></span>
-            <span>{status || 'Talent Specialists Online • Instant Dispatch Queue'}</span>
+            <span>
+              {status || 'Talent Specialists Online • Instant Dispatch Queue'}
+            </span>
           </div>
         </div>
 
@@ -81,15 +96,24 @@ const FindTalentIntakeForm = ({ data }) => {
         {submitSuccess && (
           <div className="FindTalent-successBanner">
             <div className="banner-content">
-              <span className="material-symbols-outlined icon">check_circle</span>
+              <span className="material-symbols-outlined icon">
+                check_circle
+              </span>
               <div>
-                <h4 className="banner-title">Requisition Logged with Enterprise Queue</h4>
+                <h4 className="banner-title">
+                  Requisition Logged with Enterprise Queue
+                </h4>
                 <p className="banner-desc">
-                  Our Technical Staffing Director has received your request. Candidate profiles are currently compiling.
+                  Our Technical Staffing Director has received your request.
+                  Candidate profiles are currently compiling.
                 </p>
               </div>
             </div>
-            <button type="button" onClick={handleReset} className="FindTalent-btnSuccessReset">
+            <button
+              type="button"
+              onClick={handleReset}
+              className="FindTalent-btnSuccessReset"
+            >
               Submit Another Role
             </button>
           </div>
@@ -103,7 +127,9 @@ const FindTalentIntakeForm = ({ data }) => {
               <div className="stage-header">
                 <div className="stage-title-wrap">
                   <span className="stage-number">1</span>
-                  <h3 className="stage-title">Select Enterprise Engagement Model</h3>
+                  <h3 className="stage-title">
+                    Select Enterprise Engagement Model
+                  </h3>
                 </div>
                 <span className="stage-indicator">Stage 1 of 4</span>
               </div>
@@ -118,9 +144,15 @@ const FindTalentIntakeForm = ({ data }) => {
                       onClick={() => setEngagementModel(model.id)}
                     >
                       <div className="card-top">
-                        <span className="material-symbols-outlined icon">{model.icon}</span>
-                        <span className={`check-dot ${isSelected ? 'active' : ''}`}>
-                          <span className="material-symbols-outlined check-icon">check</span>
+                        <span className="material-symbols-outlined icon">
+                          {model.icon}
+                        </span>
+                        <span
+                          className={`check-dot ${isSelected ? 'active' : ''}`}
+                        >
+                          <span className="material-symbols-outlined check-icon">
+                            check
+                          </span>
                         </span>
                       </div>
                       <div className="card-bottom">
@@ -140,7 +172,9 @@ const FindTalentIntakeForm = ({ data }) => {
               <div className="stage-header">
                 <div className="stage-title-wrap">
                   <span className="stage-number">2</span>
-                  <h3 className="stage-title">Role Specification &amp; Tech Stack</h3>
+                  <h3 className="stage-title">
+                    Role Specification &amp; Tech Stack
+                  </h3>
                 </div>
                 <span className="stage-indicator">Stage 2 of 4</span>
               </div>
@@ -148,10 +182,13 @@ const FindTalentIntakeForm = ({ data }) => {
               <div className="FindTalent-rowGrid">
                 <div className="field-group span-8">
                   <label className="field-label" htmlFor="target-role">
-                    Target Job Title / Technical Mandate <span className="req">*</span>
+                    Target Job Title / Technical Mandate{' '}
+                    <span className="req">*</span>
                   </label>
                   <div className="input-wrap icon-left">
-                    <span className="material-symbols-outlined field-icon">terminal</span>
+                    <span className="material-symbols-outlined field-icon">
+                      terminal
+                    </span>
                     <input
                       id="target-role"
                       type="text"
@@ -180,13 +217,31 @@ const FindTalentIntakeForm = ({ data }) => {
                 </div>
 
                 <div className="field-group span-12">
-                  <label className="field-label">Required Seniority Level</label>
+                  <label className="field-label">
+                    Required Seniority Level
+                  </label>
                   <div className="seniority-grid">
                     {[
-                      { id: 'mid', title: 'Mid-Level', desc: '3 – 5 Years Experience' },
-                      { id: 'senior', title: 'Senior Engineer', desc: '5 – 8 Years Experience' },
-                      { id: 'principal', title: 'Principal / Staff', desc: '8 – 12 Years Experience' },
-                      { id: 'executive', title: 'VP / Director / Head', desc: '12+ Years Leadership' }
+                      {
+                        id: 'mid',
+                        title: 'Mid-Level',
+                        desc: '3 – 5 Years Experience',
+                      },
+                      {
+                        id: 'senior',
+                        title: 'Senior Engineer',
+                        desc: '5 – 8 Years Experience',
+                      },
+                      {
+                        id: 'principal',
+                        title: 'Principal / Staff',
+                        desc: '8 – 12 Years Experience',
+                      },
+                      {
+                        id: 'executive',
+                        title: 'VP / Director / Head',
+                        desc: '12+ Years Leadership',
+                      },
                     ].map((s) => (
                       <div
                         key={s.id}
@@ -202,8 +257,12 @@ const FindTalentIntakeForm = ({ data }) => {
 
                 <div className="field-group span-12">
                   <div className="label-with-counter">
-                    <label className="field-label">Mandatory Technical Stack (Click to tag)</label>
-                    <span className="counter-text">Selected: <strong>{selectedTechs.length}</strong> tags</span>
+                    <label className="field-label">
+                      Mandatory Technical Stack (Click to tag)
+                    </label>
+                    <span className="counter-text">
+                      Selected: <strong>{selectedTechs.length}</strong> tags
+                    </span>
                   </div>
                   <div className="tech-tags-list">
                     {techTags.map((tag) => {
@@ -231,7 +290,9 @@ const FindTalentIntakeForm = ({ data }) => {
               <div className="stage-header">
                 <div className="stage-title-wrap">
                   <span className="stage-number">3</span>
-                  <h3 className="stage-title">Timeline, Location &amp; Budget Envelope</h3>
+                  <h3 className="stage-title">
+                    Timeline, Location &amp; Budget Envelope
+                  </h3>
                 </div>
                 <span className="stage-indicator">Stage 3 of 4</span>
               </div>
@@ -239,32 +300,65 @@ const FindTalentIntakeForm = ({ data }) => {
               <div className="FindTalent-triGrid">
                 <div className="field-group">
                   <label className="field-label">Deployment Urgency</label>
-                  <select value={urgency} onChange={(e) => setUrgency(e.target.value)}>
-                    <option value="immediate">Immediate Joining (&lt; 48 Hours)</option>
+                  <select
+                    value={urgency}
+                    onChange={(e) => setUrgency(e.target.value)}
+                  >
+                    <option value="immediate">
+                      Immediate Joining (&lt; 48 Hours)
+                    </option>
                     <option value="15days">Notice Period: Under 15 Days</option>
                     <option value="30days">Standard Notice: 30 Days</option>
-                    <option value="pipeline">Strategic Pipeline (Next Quarter)</option>
+                    <option value="pipeline">
+                      Strategic Pipeline (Next Quarter)
+                    </option>
                   </select>
                 </div>
 
                 <div className="field-group">
                   <label className="field-label">Work Arrangement</label>
-                  <select value={workArrangement} onChange={(e) => setWorkArrangement(e.target.value)}>
-                    <option value="remote_global">100% Remote (Pan-India / US / CA)</option>
-                    <option value="hybrid_ncr">Hybrid — Noida / Delhi-NCR Tech Hub</option>
-                    <option value="hybrid_bangalore">Hybrid — Bengaluru / Hyderabad / Pune</option>
-                    <option value="onsite">On-Site Dedicated Client Facility</option>
+                  <select
+                    value={workArrangement}
+                    onChange={(e) => setWorkArrangement(e.target.value)}
+                  >
+                    <option value="remote_global">
+                      100% Remote (Pan-India / US / CA)
+                    </option>
+                    <option value="hybrid_ncr">
+                      Hybrid — Noida / Delhi-NCR Tech Hub
+                    </option>
+                    <option value="hybrid_bangalore">
+                      Hybrid — Bengaluru / Hyderabad / Pune
+                    </option>
+                    <option value="onsite">
+                      On-Site Dedicated Client Facility
+                    </option>
                   </select>
                 </div>
 
                 <div className="field-group">
-                  <label className="field-label">Commercial Target / Bracket</label>
-                  <select value={budgetEnvelope} onChange={(e) => setBudgetEnvelope(e.target.value)}>
-                    <option value="bracket_1">12 – 18 LPA (₹2,500 – ₹3,750 / hr)</option>
-                    <option value="bracket_2">18 – 28 LPA (₹3,750 – ₹6,250 / hr)</option>
-                    <option value="bracket_3">28 – 45 LPA (₹6,250 – ₹9,500 / hr)</option>
-                    <option value="bracket_4">45+ LPA / Executive Retainer Tier</option>
-                    <option value="market_rate">Advise Market Rate for Scope</option>
+                  <label className="field-label">
+                    Commercial Target / Bracket
+                  </label>
+                  <select
+                    value={budgetEnvelope}
+                    onChange={(e) => setBudgetEnvelope(e.target.value)}
+                  >
+                    <option value="bracket_1">
+                      12 – 18 LPA (₹2,500 – ₹3,750 / hr)
+                    </option>
+                    <option value="bracket_2">
+                      18 – 28 LPA (₹3,750 – ₹6,250 / hr)
+                    </option>
+                    <option value="bracket_3">
+                      28 – 45 LPA (₹6,250 – ₹9,500 / hr)
+                    </option>
+                    <option value="bracket_4">
+                      45+ LPA / Executive Retainer Tier
+                    </option>
+                    <option value="market_rate">
+                      Advise Market Rate for Scope
+                    </option>
                   </select>
                 </div>
               </div>
@@ -277,7 +371,9 @@ const FindTalentIntakeForm = ({ data }) => {
               <div className="stage-header">
                 <div className="stage-title-wrap">
                   <span className="stage-number">4</span>
-                  <h3 className="stage-title">Company Authority &amp; Job Description</h3>
+                  <h3 className="stage-title">
+                    Company Authority &amp; Job Description
+                  </h3>
                 </div>
                 <span className="stage-indicator">Final Stage</span>
               </div>
@@ -355,9 +451,13 @@ const FindTalentIntakeForm = ({ data }) => {
                 </div>
 
                 <div className="field-group span-4 upload-box-field">
-                  <label className="field-label">Attach Official Spec (PDF / DOCX)</label>
+                  <label className="field-label">
+                    Attach Official Spec (PDF / DOCX)
+                  </label>
                   <div className="file-drop-area">
-                    <span className="material-symbols-outlined file-icon">upload_file</span>
+                    <span className="material-symbols-outlined file-icon">
+                      upload_file
+                    </span>
                     <span className="file-label">Drop Job Description</span>
                     <span className="file-sub">PDF, DOCX up to 15MB</span>
                   </div>
@@ -366,15 +466,24 @@ const FindTalentIntakeForm = ({ data }) => {
             </div>
 
             {/* Error Message */}
-            {submitError && <div className="FindTalent-errorMessage">{submitError}</div>}
+            {submitError && (
+              <div className="FindTalent-errorMessage">{submitError}</div>
+            )}
 
             {/* Bottom Action Bar */}
             <div className="FindTalent-formFooter">
               <div className="nda-note">
-                <span className="material-symbols-outlined nda-icon">verified</span>
+                <span className="material-symbols-outlined nda-icon">
+                  verified
+                </span>
                 <div>
-                  <span className="nda-title">Standard Mutual NDA Protection Applied</span>
-                  <span className="nda-sub">Zero placement fee incurred until successful hire trial approval.</span>
+                  <span className="nda-title">
+                    Standard Mutual NDA Protection Applied
+                  </span>
+                  <span className="nda-sub">
+                    Zero placement fee incurred until successful hire trial
+                    approval.
+                  </span>
                 </div>
               </div>
 
@@ -388,7 +497,9 @@ const FindTalentIntakeForm = ({ data }) => {
                     ? 'Transmitting Mandate...'
                     : 'Submit Mandate & Receive 3 Profiles in 5 Hours'}
                 </span>
-                <span className="material-symbols-outlined arrow">arrow_forward</span>
+                <span className="material-symbols-outlined arrow">
+                  arrow_forward
+                </span>
               </button>
             </div>
           </form>

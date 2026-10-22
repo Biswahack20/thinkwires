@@ -11,7 +11,7 @@ const DEFAULT_CARDS = [
     description:
       'Proprietary matching algorithms search verified repositories to deliver pre-screened, job-fit candidate dossiers within 5 working hours of intake.',
     ctaLabel: 'SLA Guarantee',
-    ctaHref: '#methodology'
+    ctaHref: '#methodology',
   },
   {
     id: 'pillar-2',
@@ -21,7 +21,7 @@ const DEFAULT_CARDS = [
     description:
       'Specialized domain depth spanning SAP ABAP/HANA, Adobe Experience Manager (AEM), Teamcenter PLM, Kubernetes/DevOps, and Generative AI frameworks.',
     ctaLabel: 'Deep Tech Benches',
-    ctaHref: '#methodology'
+    ctaHref: '#methodology',
   },
   {
     id: 'pillar-3',
@@ -31,7 +31,7 @@ const DEFAULT_CARDS = [
     description:
       'Complete Employer of Record (EOR) indemnification. We manage local statutory payroll, benefits, strict IP NDA assignments, and multi-jurisdiction tax withholding.',
     ctaLabel: 'Full Statutory Shield',
-    ctaHref: '#contact'
+    ctaHref: '#contact',
   },
   {
     id: 'pillar-4',
@@ -41,8 +41,8 @@ const DEFAULT_CARDS = [
     description:
       'A curated network of certified boutique recruitment partners providing instant surge capacity without inflating fixed operational overhead.',
     ctaLabel: 'Marketplace Scalability',
-    ctaHref: '#contact'
-  }
+    ctaHref: '#contact',
+  },
 ];
 
 const AggregatorModel = ({ data }) => {
@@ -51,27 +51,38 @@ const AggregatorModel = ({ data }) => {
     heading = 'The ThinkWires Aggregator Model',
     description = 'Traditional recruitment agencies bottleneck on internal databases. ThinkWires functions as an enterprise staffing aggregator orchestrating a high-velocity ecosystem of verified agencies, independent specialists, and automated compliance pipelines.',
     statusBadge = {
-      text: 'Aggregator Architecture 3.2 Active'
+      text: 'Aggregator Architecture 3.2 Active',
     },
-    cards = []
+    cards = [],
   } = data || {};
 
-  const resolvedCards = (cards && cards.length > 0)
-    ? cards.map((c, i) => ({
-        ...DEFAULT_CARDS[i],
-        ...c,
-        title: c.title || DEFAULT_CARDS[i]?.title,
-        description: c.description || DEFAULT_CARDS[i]?.description,
-        ctaLabel: c.ctaLabel || DEFAULT_CARDS[i]?.ctaLabel
-      }))
-    : DEFAULT_CARDS;
+  const resolvedCards =
+    cards && cards.length > 0
+      ? cards.map((c, i) => ({
+          ...DEFAULT_CARDS[i],
+          ...c,
+          title: c.title || DEFAULT_CARDS[i]?.title,
+          description: c.description || DEFAULT_CARDS[i]?.description,
+          ctaLabel: c.ctaLabel || DEFAULT_CARDS[i]?.ctaLabel,
+        }))
+      : DEFAULT_CARDS;
 
   const getPillarIcon = (iconName) => {
     switch (iconName) {
       case 'timer':
       case 'clock':
         return (
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+          >
             <circle cx="12" cy="12" r="10" />
             <polyline points="12 6 12 12 16 14" />
           </svg>
@@ -79,7 +90,17 @@ const AggregatorModel = ({ data }) => {
       case 'developer_board':
       case 'grid':
         return (
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+          >
             <rect x="4" y="4" width="16" height="16" rx="2" />
             <rect x="9" y="9" width="6" height="6" />
             <line x1="9" y1="1" x2="9" y2="4" />
@@ -95,7 +116,17 @@ const AggregatorModel = ({ data }) => {
       case 'gavel':
       case 'shield':
         return (
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+          >
             <path d="M14 13l-7.5 7.5c-.8.8-2.2.8-3 0a2.1 2.1 0 0 1 0-3L11 10" />
             <path d="M16 16l6-6" />
             <path d="M8 8l6-6" />
@@ -106,7 +137,17 @@ const AggregatorModel = ({ data }) => {
       case 'share':
       default:
         return (
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+          <svg
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+          >
             <circle cx="18" cy="5" r="3" />
             <circle cx="6" cy="12" r="3" />
             <circle cx="18" cy="19" r="3" />
@@ -126,18 +167,40 @@ const AggregatorModel = ({ data }) => {
   };
 
   return (
-    <section id="model" className="AggregatorModel-section" aria-label="The ThinkWires Aggregator Model">
+    <section
+      id="model"
+      className="AggregatorModel-section"
+      aria-label="The ThinkWires Aggregator Model"
+    >
       {/* Hidden legacy anchor for backwards compatibility */}
-      <span id="aggregator" style={{ position: 'relative', top: '-100px', display: 'block', visibility: 'hidden' }} />
+      <span
+        id="aggregator"
+        style={{
+          position: 'relative',
+          top: '-100px',
+          display: 'block',
+          visibility: 'hidden',
+        }}
+      />
 
       <div className="AggregatorModel-container">
         {/* Header Section */}
         <div className="AggregatorModel-header">
           <div className="AggregatorModel-headerLeft">
-            <SectionBadge 
+            <SectionBadge
               text={eyebrow}
               icon={
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden="true"
+                >
                   <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" />
                 </svg>
               }
@@ -148,13 +211,26 @@ const AggregatorModel = ({ data }) => {
 
           <div className="AggregatorModel-headerRight">
             <div className="AggregatorModel-statusBadge">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-cobalt-bright" aria-hidden="true">
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="text-cobalt-bright"
+                aria-hidden="true"
+              >
                 <rect x="3" y="3" width="7" height="7" />
                 <rect x="14" y="3" width="7" height="7" />
                 <rect x="14" y="14" width="7" height="7" />
                 <rect x="3" y="14" width="7" height="7" />
               </svg>
-              <span>{statusBadge?.text || 'Aggregator Architecture 3.2 Active'}</span>
+              <span>
+                {statusBadge?.text || 'Aggregator Architecture 3.2 Active'}
+              </span>
             </div>
           </div>
         </div>
@@ -170,12 +246,17 @@ const AggregatorModel = ({ data }) => {
               style={{ display: 'flex' }}
             >
               <div className="AggregatorModel-card" style={{ width: '100%' }}>
-                <div className={`AggregatorModel-iconBox AggregatorModel-icon--${card.iconVariant || 'secondary'}`} aria-hidden="true">
+                <div
+                  className={`AggregatorModel-iconBox AggregatorModel-icon--${card.iconVariant || 'secondary'}`}
+                  aria-hidden="true"
+                >
                   {getPillarIcon(card.icon)}
                 </div>
 
                 <h3 className="AggregatorModel-cardTitle">{card.title}</h3>
-                <p className="AggregatorModel-cardDescription">{card.description}</p>
+                <p className="AggregatorModel-cardDescription">
+                  {card.description}
+                </p>
 
                 <div className="AggregatorModel-cardFooter">
                   <a
@@ -184,7 +265,17 @@ const AggregatorModel = ({ data }) => {
                     className="AggregatorModel-cardLink"
                   >
                     <span>{card.ctaLabel}</span>
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      aria-hidden="true"
+                    >
                       <line x1="5" y1="12" x2="19" y2="12" />
                       <polyline points="12 5 19 12 12 19" />
                     </svg>

@@ -27,7 +27,8 @@ export const getCandidateDashboard = async (req, res) => {
         .sort({ createdAt: -1 })
         .lean();
 
-      const freshCandidate = await Candidate.findById(candidateId).select('-password');
+      const freshCandidate =
+        await Candidate.findById(candidateId).select('-password');
       if (freshCandidate) candidateData = freshCandidate;
     } else {
       applications = localDevApplications.filter(
@@ -40,8 +41,11 @@ export const getCandidateDashboard = async (req, res) => {
       profile: candidateData,
       metrics: {
         totalApplications: applications.length,
-        inReview: applications.filter((a) => a.status === 'Applied' || a.status === 'Screening').length,
-        interviewing: applications.filter((a) => a.status === 'Interview').length,
+        inReview: applications.filter(
+          (a) => a.status === 'Applied' || a.status === 'Screening'
+        ).length,
+        interviewing: applications.filter((a) => a.status === 'Interview')
+          .length,
         offers: applications.filter((a) => a.status === 'Offered').length,
       },
       recentApplications: applications.slice(0, 5),
@@ -86,10 +90,15 @@ export const updateCandidateProfile = async (req, res) => {
     if (technicalSkills !== undefined) {
       updateFields.technicalSkills = Array.isArray(technicalSkills)
         ? technicalSkills
-        : technicalSkills.split(',').map((s) => s.trim()).filter(Boolean);
+        : technicalSkills
+            .split(',')
+            .map((s) => s.trim())
+            .filter(Boolean);
     }
-    if (experience !== undefined) updateFields.experience = Number(experience) || 0;
-    if (expectedSalary !== undefined) updateFields.expectedSalary = expectedSalary;
+    if (experience !== undefined)
+      updateFields.experience = Number(experience) || 0;
+    if (expectedSalary !== undefined)
+      updateFields.expectedSalary = expectedSalary;
     if (bio !== undefined) updateFields.bio = bio;
     if (githubUrl !== undefined) updateFields.githubUrl = githubUrl;
     if (linkedinUrl !== undefined) updateFields.linkedinUrl = linkedinUrl;
@@ -167,7 +176,7 @@ export const getMyApplications = async (req, res) => {
 export const applyForJob = async (req, res) => {
   try {
     let candidate = req.candidate || null;
-    let candidateId = candidate ? (candidate._id || candidate.id) : null;
+    let candidateId = candidate ? candidate._id || candidate.id : null;
 
     // Extract all fields from req.body (works for JSON and multipart)
     const {
@@ -217,10 +226,21 @@ export const applyForJob = async (req, res) => {
     // Required fields check
     const resolvedLastName = (lastName || '').trim();
     const resolvedFirstName = (firstName || '').trim();
-    const resolvedMobile = (mobileNumber || (candidate && candidate.phone) || '').trim();
-    const resolvedEmail = (email || (candidate && candidate.email) || '').trim().toLowerCase();
+    const resolvedMobile = (
+      mobileNumber ||
+      (candidate && candidate.phone) ||
+      ''
+    ).trim();
+    const resolvedEmail = (email || (candidate && candidate.email) || '')
+      .trim()
+      .toLowerCase();
 
-    if (!resolvedLastName || !resolvedFirstName || !resolvedEmail || !resolvedMobile) {
+    if (
+      !resolvedLastName ||
+      !resolvedFirstName ||
+      !resolvedEmail ||
+      !resolvedMobile
+    ) {
       return res.status(400).json({
         success: false,
         error: 'First Name, Last Name, Email, and Mobile Number are required.',
@@ -230,25 +250,38 @@ export const applyForJob = async (req, res) => {
     if (agreedToTerms !== 'true' && agreedToTerms !== true) {
       return res.status(400).json({
         success: false,
-        error: 'You must agree to the Terms & Conditions and Privacy Policy to submit your application.',
+        error:
+          'You must agree to the Terms & Conditions and Privacy Policy to submit your application.',
       });
     }
 
     // Handle uploaded file if present
     const uploadedFile = req.file;
-    const resumeOriginalName = uploadedFile ? uploadedFile.originalname : (req.body.resumeOriginalName || '');
-    const resumeFileName = uploadedFile ? uploadedFile.filename : (req.body.resumeFileName || resumeOriginalName || '');
+    const resumeOriginalName = uploadedFile
+      ? uploadedFile.originalname
+      : req.body.resumeOriginalName || '';
+    const resumeFileName = uploadedFile
+      ? uploadedFile.filename
+      : req.body.resumeFileName || resumeOriginalName || '';
     const resumePath = uploadedFile ? uploadedFile.path : '';
-    const finalResumeUrl = uploadedFile ? `/uploads/resumes/${uploadedFile.filename}` : (clientResumeUrl || (candidate && candidate.resumeUrl) || '');
+    const finalResumeUrl = uploadedFile
+      ? `/uploads/resumes/${uploadedFile.filename}`
+      : clientResumeUrl || (candidate && candidate.resumeUrl) || '';
 
     // Parse skills array
     let parsedSkills = [];
     if (Array.isArray(skills)) {
       parsedSkills = skills;
     } else if (typeof skills === 'string' && skills.trim()) {
-      parsedSkills = skills.split(',').map((s) => s.trim()).filter(Boolean);
+      parsedSkills = skills
+        .split(',')
+        .map((s) => s.trim())
+        .filter(Boolean);
     } else if (skillSet) {
-      parsedSkills = skillSet.split(',').map((s) => s.trim()).filter(Boolean);
+      parsedSkills = skillSet
+        .split(',')
+        .map((s) => s.trim())
+        .filter(Boolean);
     }
 
     // Strictly require logged-in candidate authentication (No guest applies)
@@ -256,7 +289,8 @@ export const applyForJob = async (req, res) => {
       return res.status(401).json({
         success: false,
         authenticated: false,
-        error: 'Authentication required. Only logged-in candidates can apply for jobs.',
+        error:
+          'Authentication required. Only logged-in candidates can apply for jobs.',
       });
     }
 
@@ -294,7 +328,10 @@ export const applyForJob = async (req, res) => {
         matchScoreResult = await aiService.calculateMatchScore(
           {
             skills: parsedSkills,
-            resumeText: candidateNote || coverLetter || `${skillSet} ${currentEmployer} ${totalExperienceYears} years`,
+            resumeText:
+              candidateNote ||
+              coverLetter ||
+              `${skillSet} ${currentEmployer} ${totalExperienceYears} years`,
           },
           {
             jobTitle,
@@ -322,7 +359,10 @@ export const applyForJob = async (req, res) => {
           }
         );
       } catch (aiErr) {
-        console.warn('AI Assessment generator non-blocking warning:', aiErr.message);
+        console.warn(
+          'AI Assessment generator non-blocking warning:',
+          aiErr.message
+        );
       }
 
       const application = await JobApplication.create({
@@ -362,13 +402,18 @@ export const applyForJob = async (req, res) => {
         facebookLink: (facebookLink || '').trim(),
         candidateNote: (candidateNote || coverLetter || '').trim(),
         agreedToTerms: agreedToTerms === 'true' || agreedToTerms === true,
-        agreedAt: (agreedToTerms === 'true' || agreedToTerms === true) ? new Date() : null,
+        agreedAt:
+          agreedToTerms === 'true' || agreedToTerms === true
+            ? new Date()
+            : null,
 
         // Legacy compatibility fields
         candidateName: `${resolvedFirstName} ${resolvedLastName}`.trim(),
         candidateEmail: resolvedEmail,
         candidatePhone: resolvedMobile,
-        experience: totalExperienceYears ? `${totalExperienceYears} Years` : (experience || '3 - 5 Years'),
+        experience: totalExperienceYears
+          ? `${totalExperienceYears} Years`
+          : experience || '3 - 5 Years',
         coverLetter: candidateNote || coverLetter || '',
 
         // AI ATS Scoring & Assessment Fields
@@ -397,7 +442,8 @@ export const applyForJob = async (req, res) => {
           fitScore: matchScoreResult.fit_score,
           status: 'Applied',
         };
-        const resolvedFullName = `${resolvedFirstName} ${resolvedLastName}`.trim();
+        const resolvedFullName =
+          `${resolvedFirstName} ${resolvedLastName}`.trim();
         if (resolvedFullName && resolvedFullName !== 'Applicant Candidate') {
           candidateUpdates.name = resolvedFullName;
         }
@@ -405,13 +451,15 @@ export const applyForJob = async (req, res) => {
         if (city && state) candidateUpdates.location = `${city}, ${state}`;
         else if (city || state) candidateUpdates.location = city || state;
         if (finalResumeUrl) candidateUpdates.resumeUrl = finalResumeUrl;
-        if (parsedSkills.length > 0) candidateUpdates.technicalSkills = parsedSkills;
+        if (parsedSkills.length > 0)
+          candidateUpdates.technicalSkills = parsedSkills;
         if (currentEmployer) candidateUpdates.currentRole = currentEmployer;
-        if (totalExperienceYears) candidateUpdates.experience = Number(totalExperienceYears) || 1;
+        if (totalExperienceYears)
+          candidateUpdates.experience = Number(totalExperienceYears) || 1;
         if (expectedCTC) candidateUpdates.expectedSalary = expectedCTC;
 
-        Candidate.findByIdAndUpdate(candidateId, candidateUpdates).catch((err) =>
-          console.warn('Candidate profile update error:', err.message)
+        Candidate.findByIdAndUpdate(candidateId, candidateUpdates).catch(
+          (err) => console.warn('Candidate profile update error:', err.message)
         );
       }
 
@@ -422,7 +470,8 @@ export const applyForJob = async (req, res) => {
           location,
           employmentType,
           postingDate,
-          resumeFileName: resumeOriginalName || resumeFileName || 'Resume Attached',
+          resumeFileName:
+            resumeOriginalName || resumeFileName || 'Resume Attached',
           lastName: resolvedLastName,
           firstName: resolvedFirstName,
           mobileNumber: resolvedMobile,
@@ -441,12 +490,15 @@ export const applyForJob = async (req, res) => {
           facebookLink,
           candidateNote,
         },
-        uploadedFile ? { filename: uploadedFile.originalname, path: uploadedFile.path } : null
+        uploadedFile
+          ? { filename: uploadedFile.originalname, path: uploadedFile.path }
+          : null
       )
         .then(async (emailResult) => {
           if (emailResult.success) {
             await JobApplication.findByIdAndUpdate(application._id, {
-              emailNotificationStatus: emailResult.mode === 'smtp_delivered' ? 'Sent' : 'Disabled',
+              emailNotificationStatus:
+                emailResult.mode === 'smtp_delivered' ? 'Sent' : 'Disabled',
             });
           } else {
             await JobApplication.findByIdAndUpdate(application._id, {
@@ -469,7 +521,9 @@ export const applyForJob = async (req, res) => {
     } else {
       // In-memory fallback for local dev without MongoDB connection
       const existing = localDevApplications.find(
-        (a) => String(a.candidate) === String(candidateId) && String(a.jobId) === String(jobId)
+        (a) =>
+          String(a.candidate) === String(candidateId) &&
+          String(a.jobId) === String(jobId)
       );
 
       if (existing) {
@@ -486,7 +540,10 @@ export const applyForJob = async (req, res) => {
       );
       const assessmentResult = await aiService.generateAssessment(
         { jobId, jobTitle, department, requiredSkills: parsedSkills },
-        { name: `${resolvedFirstName} ${resolvedLastName}`, skills: parsedSkills }
+        {
+          name: `${resolvedFirstName} ${resolvedLastName}`,
+          skills: parsedSkills,
+        }
       );
 
       const application = {
@@ -523,7 +580,9 @@ export const applyForJob = async (req, res) => {
         candidateName: `${resolvedFirstName} ${resolvedLastName}`.trim(),
         candidateEmail: resolvedEmail,
         candidatePhone: resolvedMobile,
-        experience: totalExperienceYears ? `${totalExperienceYears} Years` : (experience || '3 - 5 Years'),
+        experience: totalExperienceYears
+          ? `${totalExperienceYears} Years`
+          : experience || '3 - 5 Years',
         coverLetter: candidateNote || coverLetter || '',
         fitScore: matchScoreResult.fit_score,
         fitBadge: matchScoreResult.fit_badge,
@@ -540,7 +599,9 @@ export const applyForJob = async (req, res) => {
       // Trigger notification email in dev mode
       sendRecruitmentNotificationEmail(
         application,
-        uploadedFile ? { filename: uploadedFile.originalname, path: uploadedFile.path } : null
+        uploadedFile
+          ? { filename: uploadedFile.originalname, path: uploadedFile.path }
+          : null
       ).catch((err) => console.error('Dev email error:', err.message));
 
       return res.status(201).json({
@@ -579,17 +640,25 @@ export const parseResumeForAutoFill = async (req, res) => {
       parsed = await aiService.parseResume(fileBuffer, req.file.originalname);
     } else if (req.body && (req.body.resumeText || req.body.text)) {
       const text = req.body.resumeText || req.body.text;
-      parsed = await aiService.parseResume(Buffer.from(text, 'utf-8'), 'resume.txt');
+      parsed = await aiService.parseResume(
+        Buffer.from(text, 'utf-8'),
+        'resume.txt'
+      );
     } else {
       return res.status(400).json({
         success: false,
-        error: 'Please upload a resume file (PDF, DOC, or DOCX) or provide resume text.',
+        error:
+          'Please upload a resume file (PDF, DOC, or DOCX) or provide resume text.',
       });
     }
 
     const locationStr = parsed.location || '';
-    const city = locationStr.includes(',') ? locationStr.split(',')[0].trim() : locationStr;
-    const state = locationStr.includes(',') ? locationStr.split(',')[1].trim() : '';
+    const city = locationStr.includes(',')
+      ? locationStr.split(',')[0].trim()
+      : locationStr;
+    const state = locationStr.includes(',')
+      ? locationStr.split(',')[1].trim()
+      : '';
 
     return res.status(200).json({
       success: true,
@@ -602,10 +671,13 @@ export const parseResumeForAutoFill = async (req, res) => {
         location: locationStr,
         city,
         state,
-        totalExperienceYears: parsed.total_experience_years ? String(parsed.total_experience_years) : '',
+        totalExperienceYears: parsed.total_experience_years
+          ? String(parsed.total_experience_years)
+          : '',
         currentRole: parsed.current_role || '',
         headline: parsed.headline || '',
-        skillSet: parsed.skill_set || (parsed.skills ? parsed.skills.join(', ') : ''),
+        skillSet:
+          parsed.skill_set || (parsed.skills ? parsed.skills.join(', ') : ''),
         skills: parsed.skills || [],
         linkedInLink: parsed.linkedin_url || '',
         githubLink: parsed.github_url || '',
@@ -640,7 +712,9 @@ export const getApplicationAssessment = async (req, res) => {
       });
     } else {
       app = localDevApplications.find(
-        (a) => String(a._id) === String(applicationId) && String(a.candidate) === String(candidateId)
+        (a) =>
+          String(a._id) === String(applicationId) &&
+          String(a.candidate) === String(candidateId)
       );
     }
 
@@ -652,7 +726,11 @@ export const getApplicationAssessment = async (req, res) => {
     }
 
     let assessment = app.assessment;
-    if (!assessment || !assessment.questions || assessment.questions.length === 0) {
+    if (
+      !assessment ||
+      !assessment.questions ||
+      assessment.questions.length === 0
+    ) {
       assessment = await aiService.generateAssessment(
         {
           jobId: app.jobId,
@@ -714,7 +792,9 @@ export const submitApplicationAssessment = async (req, res) => {
       });
     } else {
       app = localDevApplications.find(
-        (a) => String(a._id) === String(applicationId) && String(a.candidate) === String(candidateId)
+        (a) =>
+          String(a._id) === String(applicationId) &&
+          String(a.candidate) === String(candidateId)
       );
     }
 
@@ -726,7 +806,10 @@ export const submitApplicationAssessment = async (req, res) => {
     }
 
     const assessment = app.assessment || {};
-    const evalResult = await aiService.evaluateAssessment(assessment, answers || {});
+    const evalResult = await aiService.evaluateAssessment(
+      assessment,
+      answers || {}
+    );
 
     const updateData = {
       assessmentScore: evalResult.total_score,
@@ -776,16 +859,14 @@ export const withdrawApplication = async (req, res) => {
     if (mongoose.connection.readyState === 1) {
       application = await JobApplication.findOne({
         _id: applicationId,
-        $or: [
-          { candidate: candidateId },
-          { email: req.candidate?.email },
-        ],
+        $or: [{ candidate: candidateId }, { email: req.candidate?.email }],
       });
 
       if (!application) {
         return res.status(404).json({
           success: false,
-          error: 'Application not found or unauthorized to withdraw this application.',
+          error:
+            'Application not found or unauthorized to withdraw this application.',
         });
       }
 
@@ -802,7 +883,8 @@ export const withdrawApplication = async (req, res) => {
     } else {
       const idx = localDevApplications.findIndex(
         (a) =>
-          (String(a._id) === String(applicationId) || String(a.id) === String(applicationId)) &&
+          (String(a._id) === String(applicationId) ||
+            String(a.id) === String(applicationId)) &&
           String(a.candidate) === String(candidateId)
       );
 

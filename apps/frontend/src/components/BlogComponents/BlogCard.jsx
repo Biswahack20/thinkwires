@@ -34,7 +34,9 @@ const BlogCard = ({ article, onReadClick }) => {
       <div className="FigmaBlogCard-dateSubRow">
         <span>{article.publishedAt || 'Aug 26, 2026'}</span>
         <span className="FigmaBlogCard-dot">•</span>
-        <span className="FigmaBlogCard-subCategory">{article.subCategory || 'Talent Benchmarks'}</span>
+        <span className="FigmaBlogCard-subCategory">
+          {article.subCategory || 'Talent Benchmarks'}
+        </span>
       </div>
 
       {/* Title */}
@@ -56,8 +58,12 @@ const BlogCard = ({ article, onReadClick }) => {
         {telemetry.type === 'progress-bar' ? (
           <div className="FigmaBlogCard-progressWrapper">
             <div className="FigmaBlogCard-progressHeader">
-              <span className="FigmaBlogCard-telemetryLabel">{telemetry.label1}</span>
-              <span className="FigmaBlogCard-telemetryValue">{telemetry.value1}</span>
+              <span className="FigmaBlogCard-telemetryLabel">
+                {telemetry.label1}
+              </span>
+              <span className="FigmaBlogCard-telemetryValue">
+                {telemetry.value1}
+              </span>
             </div>
             <div className="FigmaBlogCard-progressBarBg">
               <div
@@ -69,8 +75,13 @@ const BlogCard = ({ article, onReadClick }) => {
         ) : telemetry.type === 'chart-trend' ? (
           <div className="FigmaBlogCard-chartWrapper">
             <div>
-              <div className="FigmaBlogCard-telemetryLabel">{telemetry.label1}</div>
-              <div className="FigmaBlogCard-telemetryValue" style={{ color: '#ef4444' }}>
+              <div className="FigmaBlogCard-telemetryLabel">
+                {telemetry.label1}
+              </div>
+              <div
+                className="FigmaBlogCard-telemetryValue"
+                style={{ color: '#ef4444' }}
+              >
                 {telemetry.value1}
               </div>
             </div>
@@ -86,13 +97,21 @@ const BlogCard = ({ article, onReadClick }) => {
         ) : (
           <div className="FigmaBlogCard-splitWrapper">
             <div>
-              <div className="FigmaBlogCard-telemetryLabel">{telemetry.label1}</div>
-              <div className="FigmaBlogCard-telemetryValue">{telemetry.value1}</div>
+              <div className="FigmaBlogCard-telemetryLabel">
+                {telemetry.label1}
+              </div>
+              <div className="FigmaBlogCard-telemetryValue">
+                {telemetry.value1}
+              </div>
             </div>
             {telemetry.badgeLabel && (
               <div className="FigmaBlogCard-rightPillBadge">
-                <span className="FigmaBlogCard-rightPillTitle">{telemetry.badgeLabel}</span>
-                <span className="FigmaBlogCard-rightPillSub">{telemetry.badgeValue}</span>
+                <span className="FigmaBlogCard-rightPillTitle">
+                  {telemetry.badgeLabel}
+                </span>
+                <span className="FigmaBlogCard-rightPillSub">
+                  {telemetry.badgeValue}
+                </span>
               </div>
             )}
           </div>
@@ -113,7 +132,9 @@ const BlogCard = ({ article, onReadClick }) => {
               {article.author?.initials || 'TW'}
             </span>
           )}
-          <span className="FigmaBlogCard-authorName">{article.author?.name}</span>
+          <span className="FigmaBlogCard-authorName">
+            {article.author?.name}
+          </span>
         </div>
 
         <button

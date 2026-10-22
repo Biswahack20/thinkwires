@@ -7,10 +7,15 @@ const FindTalentComparison = ({ matrix = [] }) => {
     <section className="FindTalent-comparisonSection">
       <div className="FindTalent-container">
         <div className="FindTalent-comparisonHeader">
-          <span className="FindTalent-eyebrow">Structural Sourcing Advantage</span>
-          <h2 className="FindTalent-sectionTitle">Why Engineering Leaders Choose ThinkWires vs. Legacy Agencies</h2>
+          <span className="FindTalent-eyebrow">
+            Structural Sourcing Advantage
+          </span>
+          <h2 className="FindTalent-sectionTitle">
+            Why Engineering Leaders Choose ThinkWires vs. Legacy Agencies
+          </h2>
           <p className="FindTalent-sectionSubtitle">
-            Compare the engineering-first talent aggregation model against traditional cold recruiters.
+            Compare the engineering-first talent aggregation model against
+            traditional cold recruiters.
           </p>
         </div>
 
@@ -22,7 +27,9 @@ const FindTalentComparison = ({ matrix = [] }) => {
                 <th className="col-traditional">Traditional Consultancies</th>
                 <th className="col-thinkwires">
                   <div className="thinkwires-badge">
-                    <span className="material-symbols-outlined star-icon">stars</span>
+                    <span className="material-symbols-outlined star-icon">
+                      stars
+                    </span>
                     <span>ThinkWires Aggregator</span>
                   </div>
                 </th>

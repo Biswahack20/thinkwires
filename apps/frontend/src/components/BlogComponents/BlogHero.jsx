@@ -13,7 +13,16 @@ const BlogHero = ({ children }) => {
 
           <div className="BlogHero-peerMeta">
             <span className="BlogHero-peerItem">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2563eb" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#2563eb"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
                 <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
                 <polyline points="22 4 12 14.01 9 11.01" />
               </svg>
@@ -21,7 +30,16 @@ const BlogHero = ({ children }) => {
             </span>
             <span className="BlogHero-peerDot">•</span>
             <span className="BlogHero-peerItem">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#2563eb" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+              <svg
+                width="14"
+                height="14"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#2563eb"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
                 <circle cx="12" cy="12" r="10" />
                 <polyline points="12 6 12 12 16 14" />
               </svg>
@@ -38,7 +56,9 @@ const BlogHero = ({ children }) => {
               Talent &amp; Tech Advisory Insights
             </h1>
             <p className="BlogHero-subtitle">
-              Deep-dive analysis on the future of work, AI engineering, global capability centers (GCCs), and talent acquisition trends across high-growth engineering markets.
+              Deep-dive analysis on the future of work, AI engineering, global
+              capability centers (GCCs), and talent acquisition trends across
+              high-growth engineering markets.
             </p>
           </div>
 
@@ -46,19 +66,24 @@ const BlogHero = ({ children }) => {
           <div className="BlogHero-rightCol">
             <div className="BlogHero-velocityCard">
               <div className="BlogHero-velocityHeader">
-                <span className="BlogHero-velocityLabel">HIRING INDEX VELOCITY</span>
+                <span className="BlogHero-velocityLabel">
+                  HIRING INDEX VELOCITY
+                </span>
                 <span className="BlogHero-velocityBadge">+14.8% Q3</span>
               </div>
 
               <div className="BlogHero-velocityValueRow">
                 <span className="BlogHero-velocityValue">125,000+</span>
                 <span className="BlogHero-velocitySubLabel">
-                  Tech mandates<br />tracked
+                  Tech mandates
+                  <br />
+                  tracked
                 </span>
               </div>
 
               <p className="BlogHero-velocityDescription">
-                Aggregated cross-GCC hiring telemetry from Bengaluru, Hyderabad, Pune, and NCR hubs.
+                Aggregated cross-GCC hiring telemetry from Bengaluru, Hyderabad,
+                Pune, and NCR hubs.
               </p>
             </div>
           </div>

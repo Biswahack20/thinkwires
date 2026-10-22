@@ -91,7 +91,14 @@ const jobApplicationSchema = new mongoose.Schema(
     },
     noticePeriod: {
       type: String,
-      enum: ['Immediate', '15 Days', 'Serving NP', '30 Days', '60 Days', '90 Days'],
+      enum: [
+        'Immediate',
+        '15 Days',
+        'Serving NP',
+        '30 Days',
+        '60 Days',
+        '90 Days',
+      ],
       default: 'Immediate',
     },
     city: {
@@ -185,7 +192,15 @@ const jobApplicationSchema = new mongoose.Schema(
     // Application Status & Lifecycle
     status: {
       type: String,
-      enum: ['Applied', 'Screening', 'Interview', 'Offered', 'Hired', 'Rejected', 'Withdrawn'],
+      enum: [
+        'Applied',
+        'Screening',
+        'Interview',
+        'Offered',
+        'Hired',
+        'Rejected',
+        'Withdrawn',
+      ],
       default: 'Applied',
     },
     stage: {
@@ -264,7 +279,8 @@ const jobApplicationSchema = new mongoose.Schema(
 // Pre-save hook to populate legacy candidate fields for backwards compatibility with candidate portal & admin views
 jobApplicationSchema.pre('save', function (next) {
   if (!this.candidateName) {
-    this.candidateName = `${this.firstName || ''} ${this.lastName || ''}`.trim() || 'Candidate';
+    this.candidateName =
+      `${this.firstName || ''} ${this.lastName || ''}`.trim() || 'Candidate';
   }
   if (!this.candidateEmail) {
     this.candidateEmail = this.email;
@@ -273,7 +289,9 @@ jobApplicationSchema.pre('save', function (next) {
     this.candidatePhone = this.mobileNumber;
   }
   if (!this.experience) {
-    this.experience = this.totalExperienceYears ? `${this.totalExperienceYears} Years` : '3 - 5 Years';
+    this.experience = this.totalExperienceYears
+      ? `${this.totalExperienceYears} Years`
+      : '3 - 5 Years';
   }
   if (!this.coverLetter) {
     this.coverLetter = this.candidateNote || '';
@@ -285,6 +303,7 @@ jobApplicationSchema.pre('save', function (next) {
 jobApplicationSchema.index({ candidate: 1, jobId: 1 }, { unique: true });
 
 const JobApplication =
-  mongoose.models.JobApplication || mongoose.model('JobApplication', jobApplicationSchema);
+  mongoose.models.JobApplication ||
+  mongoose.model('JobApplication', jobApplicationSchema);
 
 export default JobApplication;

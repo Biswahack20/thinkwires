@@ -109,8 +109,10 @@ export const ScrollStaggerItem = ({
   style = {},
   ...props
 }) => {
-  const x = direction === 'left' ? -distance : direction === 'right' ? distance : 0;
-  const y = direction === 'up' ? distance : direction === 'down' ? -distance : 0;
+  const x =
+    direction === 'left' ? -distance : direction === 'right' ? distance : 0;
+  const y =
+    direction === 'up' ? distance : direction === 'down' ? -distance : 0;
 
   return (
     <motion.div

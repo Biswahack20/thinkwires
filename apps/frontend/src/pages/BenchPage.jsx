@@ -21,12 +21,13 @@ const BenchPage = () => {
     activeLocation,
     sortBy,
     searchQuery,
-    status
+    status,
   } = useSelector((state) => state.bench);
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    document.title = 'Talent Cloud Bench Explorer | ThinkWires - Pre-Vetted Tech Talent & Dossiers';
+    document.title =
+      'Talent Cloud Bench Explorer | ThinkWires - Pre-Vetted Tech Talent & Dossiers';
     if (status === 'idle') {
       dispatch(fetchBenchData());
     }
@@ -50,22 +51,38 @@ const BenchPage = () => {
     }
 
     // Specialty filter
-    if (activeSpecialty && activeSpecialty !== 'All Engineering' && activeSpecialty !== 'All') {
+    if (
+      activeSpecialty &&
+      activeSpecialty !== 'All Engineering' &&
+      activeSpecialty !== 'All'
+    ) {
       result = result.filter((t) => t.specialty === activeSpecialty);
     }
 
     // Urgency filter
-    if (activeUrgency && activeUrgency !== 'All Urgency' && activeUrgency !== 'All') {
+    if (
+      activeUrgency &&
+      activeUrgency !== 'All Urgency' &&
+      activeUrgency !== 'All'
+    ) {
       result = result.filter((t) => t.urgency === activeUrgency);
     }
 
     // Experience filter
-    if (activeExperience && activeExperience !== 'All Experience' && activeExperience !== 'All') {
+    if (
+      activeExperience &&
+      activeExperience !== 'All Experience' &&
+      activeExperience !== 'All'
+    ) {
       result = result.filter((t) => t.experienceLevel === activeExperience);
     }
 
     // Location filter
-    if (activeLocation && activeLocation !== 'All Locations' && activeLocation !== 'All') {
+    if (
+      activeLocation &&
+      activeLocation !== 'All Locations' &&
+      activeLocation !== 'All'
+    ) {
       result = result.filter((t) => t.location === activeLocation);
     }
 
@@ -73,8 +90,15 @@ const BenchPage = () => {
     if (sortBy === 'Highest Score') {
       result.sort((a, b) => b.score - a.score);
     } else if (sortBy === 'Fastest Availability') {
-      const urgencyOrder = { 'Immediate (24-48h)': 1, 'Within 1 Week': 2, 'Within 2 Weeks': 3 };
-      result.sort((a, b) => (urgencyOrder[a.urgency] || 99) - (urgencyOrder[b.urgency] || 99));
+      const urgencyOrder = {
+        'Immediate (24-48h)': 1,
+        'Within 1 Week': 2,
+        'Within 2 Weeks': 3,
+      };
+      result.sort(
+        (a, b) =>
+          (urgencyOrder[a.urgency] || 99) - (urgencyOrder[b.urgency] || 99)
+      );
     } else if (sortBy === 'Lowest Rate') {
       result.sort((a, b) => {
         const rateA = parseInt(a.hourlyRate.replace(/[^0-9]/g, '')) || 0;
@@ -84,7 +108,15 @@ const BenchPage = () => {
     }
 
     return result;
-  }, [talents, searchQuery, activeSpecialty, activeUrgency, activeExperience, activeLocation, sortBy]);
+  }, [
+    talents,
+    searchQuery,
+    activeSpecialty,
+    activeUrgency,
+    activeExperience,
+    activeLocation,
+    sortBy,
+  ]);
 
   return (
     <div className="BenchPage-root">
@@ -98,7 +130,10 @@ const BenchPage = () => {
         <section className="BenchExplorer-section">
           <div className="BenchExplorer-container">
             <BenchFilterBar totalCount={filteredTalents.length} />
-            <BenchCandidateGrid talents={filteredTalents} totalCount={filteredTalents.length} />
+            <BenchCandidateGrid
+              talents={filteredTalents}
+              totalCount={filteredTalents.length}
+            />
           </div>
         </section>
 

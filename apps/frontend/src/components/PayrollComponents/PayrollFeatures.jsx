@@ -6,10 +6,18 @@ const PayrollFeatures = ({ data }) => {
   const { eyebrow, heading, description, features = [] } = data;
 
   return (
-    <section className="Payroll-sectionShell" id="compliance-suite" style={{ backgroundColor: 'var(--color-surface-container-lowest, #ffffff)' }}>
+    <section
+      className="Payroll-sectionShell"
+      id="compliance-suite"
+      style={{
+        backgroundColor: 'var(--color-surface-container-lowest, #ffffff)',
+      }}
+    >
       <div className="Payroll-sectionContainer">
         <ScrollReveal direction="up">
-          <div style={{ textAlign: 'center', maxWidth: '780px', margin: '0 auto' }}>
+          <div
+            style={{ textAlign: 'center', maxWidth: '780px', margin: '0 auto' }}
+          >
             <span className="Payroll-sectionEyebrow secondary">{eyebrow}</span>
             <h2 className="Payroll-sectionTitle">{heading}</h2>
             <p className="Payroll-sectionDesc">{description}</p>
@@ -21,7 +29,10 @@ const PayrollFeatures = ({ data }) => {
             <ScrollReveal key={idx} direction="up" delay={idx * 0.1}>
               <div className="Payroll-featureCard">
                 <div className={`Payroll-featureIconBox ${feat.accent}`}>
-                  <span className="material-symbols-outlined" style={{ fontSize: '28px' }}>
+                  <span
+                    className="material-symbols-outlined"
+                    style={{ fontSize: '28px' }}
+                  >
                     {feat.icon}
                   </span>
                 </div>

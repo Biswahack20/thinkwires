@@ -31,11 +31,30 @@ const BenchFilterBar = ({ totalCount }) => {
     { label: 'Data & Analytics', count: 22 },
   ];
 
-  const specialties = specialtyFilters && specialtyFilters.length > 0 ? specialtyFilters : defaultSpecialties;
+  const specialties =
+    specialtyFilters && specialtyFilters.length > 0
+      ? specialtyFilters
+      : defaultSpecialties;
 
-  const defaultUrgency = ['All Urgency', 'Immediate (24-48h)', 'Within 1 Week', 'Within 2 Weeks'];
-  const defaultExperience = ['All Experience', 'Staff/Principal (10+y)', 'Senior (6-9y)', 'Lead (8+y)'];
-  const defaultLocations = ['All Locations', 'US East / Hybrid', 'US Remote', 'EU Remote', 'Global / Flexible'];
+  const defaultUrgency = [
+    'All Urgency',
+    'Immediate (24-48h)',
+    'Within 1 Week',
+    'Within 2 Weeks',
+  ];
+  const defaultExperience = [
+    'All Experience',
+    'Staff/Principal (10+y)',
+    'Senior (6-9y)',
+    'Lead (8+y)',
+  ];
+  const defaultLocations = [
+    'All Locations',
+    'US East / Hybrid',
+    'US Remote',
+    'EU Remote',
+    'Global / Flexible',
+  ];
   const defaultSorts = ['Highest Score', 'Fastest Availability', 'Lowest Rate'];
 
   const urgencyList = filterOptions?.urgency || defaultUrgency;
@@ -48,7 +67,9 @@ const BenchFilterBar = ({ totalCount }) => {
       {/* Search Input & Primary Console Header */}
       <div className="BenchFilter-searchBar">
         <div className="BenchFilter-searchInputWrapper">
-          <span className="material-symbols-outlined BenchFilter-searchIcon">search</span>
+          <span className="material-symbols-outlined BenchFilter-searchIcon">
+            search
+          </span>
           <input
             type="text"
             className="BenchFilter-searchInput"
@@ -98,7 +119,8 @@ const BenchFilterBar = ({ totalCount }) => {
         <div className="BenchFilter-dropdownGroup">
           <div className="BenchFilter-selectField">
             <label className="BenchFilter-selectLabel">
-              <span className="material-symbols-outlined">schedule</span> Urgency:
+              <span className="material-symbols-outlined">schedule</span>{' '}
+              Urgency:
             </label>
             <select
               value={activeUrgency}
@@ -106,14 +128,19 @@ const BenchFilterBar = ({ totalCount }) => {
               className="BenchFilter-select"
             >
               {urgencyList.map((u, i) => (
-                <option key={i} value={u}>{u}</option>
+                <option key={i} value={u}>
+                  {u}
+                </option>
               ))}
             </select>
           </div>
 
           <div className="BenchFilter-selectField">
             <label className="BenchFilter-selectLabel">
-              <span className="material-symbols-outlined">workspace_premium</span> Experience:
+              <span className="material-symbols-outlined">
+                workspace_premium
+              </span>{' '}
+              Experience:
             </label>
             <select
               value={activeExperience}
@@ -121,14 +148,17 @@ const BenchFilterBar = ({ totalCount }) => {
               className="BenchFilter-select"
             >
               {experienceList.map((exp, i) => (
-                <option key={i} value={exp}>{exp}</option>
+                <option key={i} value={exp}>
+                  {exp}
+                </option>
               ))}
             </select>
           </div>
 
           <div className="BenchFilter-selectField">
             <label className="BenchFilter-selectLabel">
-              <span className="material-symbols-outlined">public</span> Location:
+              <span className="material-symbols-outlined">public</span>{' '}
+              Location:
             </label>
             <select
               value={activeLocation}
@@ -136,7 +166,9 @@ const BenchFilterBar = ({ totalCount }) => {
               className="BenchFilter-select"
             >
               {locationList.map((loc, i) => (
-                <option key={i} value={loc}>{loc}</option>
+                <option key={i} value={loc}>
+                  {loc}
+                </option>
               ))}
             </select>
           </div>
@@ -152,7 +184,9 @@ const BenchFilterBar = ({ totalCount }) => {
             className="BenchFilter-select BenchFilter-selectSort"
           >
             {sortList.map((s, i) => (
-              <option key={i} value={s}>{s}</option>
+              <option key={i} value={s}>
+                {s}
+              </option>
             ))}
           </select>
         </div>

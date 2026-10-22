@@ -9,7 +9,9 @@ const About = () => {
         {/* Left Content */}
         <div className="About-aboutContent">
           <div className="About-brandBadge">
-            <span className="material-symbols-outlined text-[16px]">corporate_fare</span>
+            <span className="material-symbols-outlined text-[16px]">
+              corporate_fare
+            </span>
             <span>About ThinkWires</span>
           </div>
 
@@ -36,7 +38,8 @@ const About = () => {
                 <AnimatedCounter value={2022} duration={1600} />
               </div>
               <div className="About-statText">
-                Incorporated &amp; rapidly scaled to bilateral enterprise corridors
+                Incorporated &amp; rapidly scaled to bilateral enterprise
+                corridors
               </div>
             </div>
             <div className="About-statBox">
@@ -52,7 +55,9 @@ const About = () => {
           <div className="pt-2">
             <Link to="/about" className="About-readMoreBtn">
               <span>Read Full Executive Story</span>
-              <span className="material-symbols-outlined text-[18px]">arrow_forward</span>
+              <span className="material-symbols-outlined text-[18px]">
+                arrow_forward
+              </span>
             </Link>
           </div>
         </div>
@@ -62,7 +67,12 @@ const About = () => {
           {/* Feature 1 */}
           <div className={'About-featureCard'}>
             <div className={`${'About-iconWrapper'} ${'About-blue'}`}>
-              <span className="material-symbols-outlined" style={{ fontSize: '24px' }}>lightbulb</span>
+              <span
+                className="material-symbols-outlined"
+                style={{ fontSize: '24px' }}
+              >
+                lightbulb
+              </span>
             </div>
             <h3 className={'About-featureTitle'}>Innovation First</h3>
             <p className={'About-featureDesc'}>
@@ -74,7 +84,12 @@ const About = () => {
           {/* Feature 2 */}
           <div className={'About-featureCard'}>
             <div className={`${'About-iconWrapper'} ${'About-gray'}`}>
-              <span className="material-symbols-outlined" style={{ fontSize: '24px' }}>tune</span>
+              <span
+                className="material-symbols-outlined"
+                style={{ fontSize: '24px' }}
+              >
+                tune
+              </span>
             </div>
             <h3 className={'About-featureTitle'}>Agile Adaptability</h3>
             <p className={'About-featureDesc'}>
@@ -86,7 +101,12 @@ const About = () => {
           {/* Feature 3 */}
           <div className={'About-featureCard'}>
             <div className={`${'About-iconWrapper'} ${'About-green'}`}>
-              <span className="material-symbols-outlined" style={{ fontSize: '24px' }}>public</span>
+              <span
+                className="material-symbols-outlined"
+                style={{ fontSize: '24px' }}
+              >
+                public
+              </span>
             </div>
             <h3 className={'About-featureTitle'}>Global Reach</h3>
             <p className={'About-featureDesc'}>
@@ -98,7 +118,12 @@ const About = () => {
           {/* Feature 4 */}
           <div className={'About-featureCard'}>
             <div className={`${'About-iconWrapper'} ${'About-indigo'}`}>
-              <span className="material-symbols-outlined" style={{ fontSize: '24px' }}>verified_user</span>
+              <span
+                className="material-symbols-outlined"
+                style={{ fontSize: '24px' }}
+              >
+                verified_user
+              </span>
             </div>
             <h3 className={'About-featureTitle'}>Zero-Compromise Vetting</h3>
             <p className={'About-featureDesc'}>

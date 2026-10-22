@@ -99,7 +99,9 @@ const PagesManager = () => {
       status: pg.status || 'published',
     });
     setFormError('');
-    setActiveModalTab(Object.keys(initialData).length > 0 ? 'visual' : 'general');
+    setActiveModalTab(
+      Object.keys(initialData).length > 0 ? 'visual' : 'general'
+    );
     setEditorOpen(true);
   };
 
@@ -147,7 +149,11 @@ const PagesManager = () => {
     }
 
     let finalData = formData.data;
-    if (activeModalTab === 'json' && formData.dataJson && formData.dataJson.trim()) {
+    if (
+      activeModalTab === 'json' &&
+      formData.dataJson &&
+      formData.dataJson.trim()
+    ) {
       try {
         finalData = JSON.parse(formData.dataJson);
       } catch (err) {
@@ -160,7 +166,8 @@ const PagesManager = () => {
       title: formData.title,
       slug: formData.slug,
       category: formData.category,
-      content: formData.content || 'Content configured via Visual Section Editor.',
+      content:
+        formData.content || 'Content configured via Visual Section Editor.',
       data: finalData || {},
       metaTitle: formData.metaTitle,
       metaDescription: formData.metaDescription,
@@ -209,7 +216,8 @@ const PagesManager = () => {
         <div className="tw-view-title-group">
           <h1>Website Pages Management</h1>
           <p className="tw-view-subtitle">
-            Manage page content, URL slugs, publication statuses, SEO meta properties, and live web previews.
+            Manage page content, URL slugs, publication statuses, SEO meta
+            properties, and live web previews.
           </p>
         </div>
 
@@ -243,7 +251,14 @@ const PagesManager = () => {
             <tbody>
               {loading ? (
                 <tr>
-                  <td colSpan="7" style={{ textAlign: 'center', padding: '2rem', color: '#64748B' }}>
+                  <td
+                    colSpan="7"
+                    style={{
+                      textAlign: 'center',
+                      padding: '2rem',
+                      color: '#64748B',
+                    }}
+                  >
                     Loading pages...
                   </td>
                 </tr>
@@ -252,12 +267,28 @@ const PagesManager = () => {
                   <tr key={pg.id || pg._id}>
                     <td>
                       <div style={{ fontWeight: 600 }}>{pg.title}</div>
-                      <div style={{ fontSize: '0.72rem', color: '#64748B', maxWidth: '280px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                      <div
+                        style={{
+                          fontSize: '0.72rem',
+                          color: '#64748B',
+                          maxWidth: '280px',
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis',
+                          whiteSpace: 'nowrap',
+                        }}
+                      >
                         {pg.content}
                       </div>
                     </td>
                     <td>
-                      <code style={{ fontSize: '0.75rem', backgroundColor: '#F1F5F9', padding: '0.15rem 0.4rem', borderRadius: '4px' }}>
+                      <code
+                        style={{
+                          fontSize: '0.75rem',
+                          backgroundColor: '#F1F5F9',
+                          padding: '0.15rem 0.4rem',
+                          borderRadius: '4px',
+                        }}
+                      >
                         /{pg.slug}
                       </code>
                     </td>
@@ -273,9 +304,16 @@ const PagesManager = () => {
                       </button>
                     </td>
                     <td>{pg.lastUpdatedBy || 'Admin'}</td>
-                    <td>{pg.publishedAt ? new Date(pg.publishedAt).toLocaleDateString() : 'Unpublished'}</td>
+                    <td>
+                      {pg.publishedAt
+                        ? new Date(pg.publishedAt).toLocaleDateString()
+                        : 'Unpublished'}
+                    </td>
                     <td style={{ textAlign: 'right' }}>
-                      <div className="tw-action-btn-group" style={{ justifyContent: 'flex-end' }}>
+                      <div
+                        className="tw-action-btn-group"
+                        style={{ justifyContent: 'flex-end' }}
+                      >
                         <button
                           className="tw-action-icon-btn"
                           onClick={() => setPreviewPage(pg)}
@@ -313,12 +351,18 @@ const PagesManager = () => {
           <div className="tw-modal" style={{ maxWidth: '680px' }}>
             <div className="tw-modal-header">
               <div>
-                <span className="tw-badge deployed" style={{ marginBottom: '0.25rem' }}>
+                <span
+                  className="tw-badge deployed"
+                  style={{ marginBottom: '0.25rem' }}
+                >
                   Live Preview: /{previewPage.slug}
                 </span>
                 <h2 className="tw-modal-title">{previewPage.title}</h2>
               </div>
-              <button className="tw-modal-close-btn" onClick={() => setPreviewPage(null)}>
+              <button
+                className="tw-modal-close-btn"
+                onClick={() => setPreviewPage(null)}
+              >
                 <CloseIcon size={16} />
               </button>
             </div>
@@ -333,11 +377,19 @@ const PagesManager = () => {
                   marginBottom: '1rem',
                 }}
               >
-                <div style={{ fontSize: '0.75rem', color: '#64748B', marginBottom: '0.5rem' }}>
-                  <strong>Meta Title:</strong> {previewPage.metaTitle || previewPage.title}
+                <div
+                  style={{
+                    fontSize: '0.75rem',
+                    color: '#64748B',
+                    marginBottom: '0.5rem',
+                  }}
+                >
+                  <strong>Meta Title:</strong>{' '}
+                  {previewPage.metaTitle || previewPage.title}
                 </div>
                 <div style={{ fontSize: '0.75rem', color: '#64748B' }}>
-                  <strong>Meta Description:</strong> {previewPage.metaDescription || 'No description provided.'}
+                  <strong>Meta Description:</strong>{' '}
+                  {previewPage.metaDescription || 'No description provided.'}
                 </div>
               </div>
 
@@ -357,7 +409,10 @@ const PagesManager = () => {
             </div>
 
             <div className="tw-modal-footer">
-              <button className="tw-btn-secondary" onClick={() => setPreviewPage(null)}>
+              <button
+                className="tw-btn-secondary"
+                onClick={() => setPreviewPage(null)}
+              >
                 Close Preview
               </button>
               <button
@@ -381,13 +436,18 @@ const PagesManager = () => {
             <div className="tw-modal-header">
               <div>
                 <h2 className="tw-modal-title" style={{ margin: 0 }}>
-                  {editingPage ? `Edit: ${editingPage.title}` : 'Create Website Page'}
+                  {editingPage
+                    ? `Edit: ${editingPage.title}`
+                    : 'Create Website Page'}
                 </h2>
                 <span style={{ fontSize: '0.74rem', color: '#64748B' }}>
                   /{formData.slug || 'url-slug'} • {formData.category}
                 </span>
               </div>
-              <button className="tw-modal-close-btn" onClick={() => setEditorOpen(false)}>
+              <button
+                className="tw-modal-close-btn"
+                onClick={() => setEditorOpen(false)}
+              >
                 <CloseIcon size={16} />
               </button>
             </div>
@@ -409,7 +469,8 @@ const PagesManager = () => {
                   padding: '0.4rem 0.85rem',
                   borderRadius: '6px',
                   border: 'none',
-                  backgroundColor: activeModalTab === 'visual' ? '#008F68' : 'transparent',
+                  backgroundColor:
+                    activeModalTab === 'visual' ? '#008F68' : 'transparent',
                   color: activeModalTab === 'visual' ? '#FFFFFF' : '#475569',
                   fontWeight: 600,
                   fontSize: '0.8rem',
@@ -430,7 +491,8 @@ const PagesManager = () => {
                   padding: '0.4rem 0.85rem',
                   borderRadius: '6px',
                   border: 'none',
-                  backgroundColor: activeModalTab === 'general' ? '#008F68' : 'transparent',
+                  backgroundColor:
+                    activeModalTab === 'general' ? '#008F68' : 'transparent',
                   color: activeModalTab === 'general' ? '#FFFFFF' : '#475569',
                   fontWeight: 600,
                   fontSize: '0.8rem',
@@ -451,7 +513,8 @@ const PagesManager = () => {
                   padding: '0.4rem 0.85rem',
                   borderRadius: '6px',
                   border: 'none',
-                  backgroundColor: activeModalTab === 'json' ? '#008F68' : 'transparent',
+                  backgroundColor:
+                    activeModalTab === 'json' ? '#008F68' : 'transparent',
                   color: activeModalTab === 'json' ? '#FFFFFF' : '#475569',
                   fontWeight: 600,
                   fontSize: '0.8rem',
@@ -467,7 +530,14 @@ const PagesManager = () => {
             </div>
 
             <form onSubmit={handleSubmit}>
-              <div className="tw-modal-body" style={{ maxHeight: '65vh', overflowY: 'auto', padding: '1.25rem 1.5rem' }}>
+              <div
+                className="tw-modal-body"
+                style={{
+                  maxHeight: '65vh',
+                  overflowY: 'auto',
+                  padding: '1.25rem 1.5rem',
+                }}
+              >
                 {formError && (
                   <div
                     style={{
@@ -490,9 +560,26 @@ const PagesManager = () => {
                 {/* TAB 1: VISUAL SECTION EDITOR (NO-CODE FOR NON-TECHIES) */}
                 {activeModalTab === 'visual' && (
                   <div>
-                    <div style={{ marginBottom: '1rem', padding: '0.65rem 0.85rem', backgroundColor: '#E6F4F0', borderRadius: '6px', color: '#006548', fontSize: '0.78rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+                    <div
+                      style={{
+                        marginBottom: '1rem',
+                        padding: '0.65rem 0.85rem',
+                        backgroundColor: '#E6F4F0',
+                        borderRadius: '6px',
+                        color: '#006548',
+                        fontSize: '0.78rem',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.5rem',
+                      }}
+                    >
                       <InfoIcon size={16} color="#006548" />
-                      <span><strong>Visual Form Editor</strong>: Edit headers, comparison points, badges, and metrics below. Changes automatically update the database without writing JSON syntax!</span>
+                      <span>
+                        <strong>Visual Form Editor</strong>: Edit headers,
+                        comparison points, badges, and metrics below. Changes
+                        automatically update the database without writing JSON
+                        syntax!
+                      </span>
                     </div>
 
                     <VisualSectionEditor
@@ -512,7 +599,9 @@ const PagesManager = () => {
                           type="text"
                           className="tw-form-input"
                           value={formData.title}
-                          onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                          onChange={(e) =>
+                            setFormData({ ...formData, title: e.target.value })
+                          }
                           placeholder="e.g. Industries We Serve"
                           required
                         />
@@ -523,7 +612,9 @@ const PagesManager = () => {
                           type="text"
                           className="tw-form-input"
                           value={formData.slug}
-                          onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
+                          onChange={(e) =>
+                            setFormData({ ...formData, slug: e.target.value })
+                          }
                           placeholder="industries"
                           required
                         />
@@ -537,16 +628,25 @@ const PagesManager = () => {
                           type="text"
                           className="tw-form-input"
                           value={formData.category}
-                          onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                          onChange={(e) =>
+                            setFormData({
+                              ...formData,
+                              category: e.target.value,
+                            })
+                          }
                           placeholder="Core Website / Solutions"
                         />
                       </div>
                       <div className="tw-form-group">
-                        <label className="tw-form-label">Publication Status</label>
+                        <label className="tw-form-label">
+                          Publication Status
+                        </label>
                         <select
                           className="tw-form-select"
                           value={formData.status}
-                          onChange={(e) => setFormData({ ...formData, status: e.target.value })}
+                          onChange={(e) =>
+                            setFormData({ ...formData, status: e.target.value })
+                          }
                         >
                           <option value="published">Published</option>
                           <option value="draft">Draft</option>
@@ -555,12 +655,16 @@ const PagesManager = () => {
                     </div>
 
                     <div className="tw-form-group">
-                      <label className="tw-form-label">Markdown / Summary Copy</label>
+                      <label className="tw-form-label">
+                        Markdown / Summary Copy
+                      </label>
                       <textarea
                         className="tw-form-textarea"
                         rows="4"
                         value={formData.content}
-                        onChange={(e) => setFormData({ ...formData, content: e.target.value })}
+                        onChange={(e) =>
+                          setFormData({ ...formData, content: e.target.value })
+                        }
                         placeholder="Overview copy or markdown notes for this page..."
                       ></textarea>
                     </div>
@@ -571,18 +675,30 @@ const PagesManager = () => {
                         type="text"
                         className="tw-form-input"
                         value={formData.metaTitle}
-                        onChange={(e) => setFormData({ ...formData, metaTitle: e.target.value })}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            metaTitle: e.target.value,
+                          })
+                        }
                         placeholder="ThinkWires — Transforming Global Tech Talent"
                       />
                     </div>
 
                     <div className="tw-form-group">
-                      <label className="tw-form-label">SEO Meta Description</label>
+                      <label className="tw-form-label">
+                        SEO Meta Description
+                      </label>
                       <textarea
                         className="tw-form-textarea"
                         rows="2"
                         value={formData.metaDescription}
-                        onChange={(e) => setFormData({ ...formData, metaDescription: e.target.value })}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            metaDescription: e.target.value,
+                          })
+                        }
                         placeholder="Search engine summary text..."
                       ></textarea>
                     </div>
@@ -592,7 +708,14 @@ const PagesManager = () => {
                 {/* TAB 3: ADVANCED DEVELOPER JSON */}
                 {activeModalTab === 'json' && (
                   <div>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem' }}>
+                    <div
+                      style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        marginBottom: '0.4rem',
+                      }}
+                    >
                       <label className="tw-form-label" style={{ margin: 0 }}>
                         Developer Raw JSON Editor
                       </label>
@@ -608,7 +731,11 @@ const PagesManager = () => {
                         }}
                         onClick={() => {
                           try {
-                            const formatted = JSON.stringify(JSON.parse(formData.dataJson || '{}'), null, 2);
+                            const formatted = JSON.stringify(
+                              JSON.parse(formData.dataJson || '{}'),
+                              null,
+                              2
+                            );
                             setFormData({ ...formData, dataJson: formatted });
                             showToast('Formatted JSON payload.');
                           } catch (e) {
@@ -622,12 +749,17 @@ const PagesManager = () => {
                     <textarea
                       className="tw-form-textarea"
                       rows="14"
-                      style={{ fontFamily: 'monospace', fontSize: '0.78rem', backgroundColor: '#F8FAFC' }}
+                      style={{
+                        fontFamily: 'monospace',
+                        fontSize: '0.78rem',
+                        backgroundColor: '#F8FAFC',
+                      }}
                       value={formData.dataJson}
                       onChange={(e) => handleJsonDataChange(e.target.value)}
                     ></textarea>
                     <span style={{ fontSize: '0.72rem', color: '#64748B' }}>
-                      Raw representation of page sections. Edits here synchronize with the Visual Editor.
+                      Raw representation of page sections. Edits here
+                      synchronize with the Visual Editor.
                     </span>
                   </div>
                 )}
@@ -656,18 +788,28 @@ const PagesManager = () => {
           <div className="tw-modal" style={{ maxWidth: '440px' }}>
             <div className="tw-modal-header">
               <h2 className="tw-modal-title">Delete Page</h2>
-              <button className="tw-modal-close-btn" onClick={() => setDeleteConfirmId(null)}>
+              <button
+                className="tw-modal-close-btn"
+                onClick={() => setDeleteConfirmId(null)}
+              >
                 <CloseIcon size={16} />
               </button>
             </div>
             <div className="tw-modal-body">
-              Are you sure you want to permanently delete this page? This will remove its route mapping and SEO index metadata.
+              Are you sure you want to permanently delete this page? This will
+              remove its route mapping and SEO index metadata.
             </div>
             <div className="tw-modal-footer">
-              <button className="tw-btn-secondary" onClick={() => setDeleteConfirmId(null)}>
+              <button
+                className="tw-btn-secondary"
+                onClick={() => setDeleteConfirmId(null)}
+              >
                 Cancel
               </button>
-              <button className="tw-btn-danger" onClick={() => handleDelete(deleteConfirmId)}>
+              <button
+                className="tw-btn-danger"
+                onClick={() => handleDelete(deleteConfirmId)}
+              >
                 Delete Page
               </button>
             </div>

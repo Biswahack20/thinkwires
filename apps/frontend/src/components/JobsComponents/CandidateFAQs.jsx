@@ -4,21 +4,29 @@ import { fetchFaqs } from '../../store/slices/homeSlice';
 
 const DEFAULT_FAQS = [
   {
-    question: 'What is the average turnaround time between applying and client interviews?',
-    answer: 'Our talent acquisition directors review incoming candidate profiles within 24 to 48 hours. Pre-screened candidates typically receive direct interview routing with client VPs of Engineering within 3 to 5 business days.'
+    question:
+      'What is the average turnaround time between applying and client interviews?',
+    answer:
+      'Our talent acquisition directors review incoming candidate profiles within 24 to 48 hours. Pre-screened candidates typically receive direct interview routing with client VPs of Engineering within 3 to 5 business days.',
   },
   {
-    question: 'Does ThinkWires deduct any commission or placement fees from my salary?',
-    answer: 'No, 100% free for candidates. All recruitment, technical vetting, and placement advisory costs are funded entirely by enterprise client partners.'
+    question:
+      'Does ThinkWires deduct any commission or placement fees from my salary?',
+    answer:
+      'No, 100% free for candidates. All recruitment, technical vetting, and placement advisory costs are funded entirely by enterprise client partners.',
   },
   {
-    question: 'Can I transition from a contract or C2H role to a full-time position?',
-    answer: 'Yes! Over 80% of our contract and Contract-to-Hire (C2H) placements convert to permanent full-time employment within 6 to 12 months based on mutual performance evaluations.'
+    question:
+      'Can I transition from a contract or C2H role to a full-time position?',
+    answer:
+      'Yes! Over 80% of our contract and Contract-to-Hire (C2H) placements convert to permanent full-time employment within 6 to 12 months based on mutual performance evaluations.',
   },
   {
-    question: 'How does ThinkWires handle cross-border payments for Remote US/Canada roles?',
-    answer: 'We manage end-to-end Employer of Record (EOR) operations, handling multi-currency salary disbursements, local tax compliance, health insurance, and statutory benefits with zero hassle.'
-  }
+    question:
+      'How does ThinkWires handle cross-border payments for Remote US/Canada roles?',
+    answer:
+      'We manage end-to-end Employer of Record (EOR) operations, handling multi-currency salary disbursements, local tax compliance, health insurance, and statutory benefits with zero hassle.',
+  },
 ];
 
 const CandidateFAQs = () => {
@@ -52,27 +60,32 @@ const CandidateFAQs = () => {
           {displayFaqs.map((faq, index) => {
             const isOpen = openIndex === index;
             return (
-              <div 
-                key={index} 
+              <div
+                key={index}
                 className={`CandidateFAQs-accordionItem ${isOpen ? 'CandidateFAQs-itemOpen' : ''}`}
               >
-                <button 
+                <button
                   className="CandidateFAQs-questionBtn"
                   onClick={() => toggleFAQ(index)}
                   aria-expanded={isOpen}
                 >
-                  <span className="CandidateFAQs-questionText">{faq.question}</span>
+                  <span className="CandidateFAQs-questionText">
+                    {faq.question}
+                  </span>
                   <span className="CandidateFAQs-chevronIcon">
-                    <svg 
-                      width="16" 
-                      height="10" 
-                      viewBox="0 0 16 10" 
-                      fill="none" 
-                      stroke="currentColor" 
-                      strokeWidth="2" 
-                      strokeLinecap="round" 
+                    <svg
+                      width="16"
+                      height="10"
+                      viewBox="0 0 16 10"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
                       strokeLinejoin="round"
-                      style={{ transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.2s' }}
+                      style={{
+                        transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+                        transition: 'transform 0.2s',
+                      }}
                     >
                       <path d="M2 2L8 8L14 2" />
                     </svg>

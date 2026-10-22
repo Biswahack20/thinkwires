@@ -13,10 +13,15 @@ const StaffAugFaq = ({ faqs = [] }) => {
     <section className="StaffAug-faqSection">
       <div className="StaffAug-faqContainer">
         <div className="StaffAug-sectionHeader">
-          <span className="StaffAug-eyebrow primary">Frequently Asked Questions</span>
-          <h2 className="StaffAug-title">Let's Discuss How Your Setup Should Look</h2>
+          <span className="StaffAug-eyebrow primary">
+            Frequently Asked Questions
+          </span>
+          <h2 className="StaffAug-title">
+            Let's Discuss How Your Setup Should Look
+          </h2>
           <p className="StaffAug-desc">
-            Answers to common questions about onboarding augmented technical specialists.
+            Answers to common questions about onboarding augmented technical
+            specialists.
           </p>
         </div>
 
@@ -32,7 +37,9 @@ const StaffAugFaq = ({ faqs = [] }) => {
                   aria-expanded={isOpen}
                 >
                   <span>{faq.question}</span>
-                  <span className={`material-symbols-outlined faq-icon ${isOpen ? 'rotated' : ''}`}>
+                  <span
+                    className={`material-symbols-outlined faq-icon ${isOpen ? 'rotated' : ''}`}
+                  >
                     expand_more
                   </span>
                 </button>

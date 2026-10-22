@@ -1,11 +1,16 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { submitCandidateTimesheet, resetTimesheetState } from '../../store/slices/candidatePortalSlice';
+import {
+  submitCandidateTimesheet,
+  resetTimesheetState,
+} from '../../store/slices/candidatePortalSlice';
 import { CloseIcon } from '../../admin/AdminIcons';
 
 const CandidatePayoutAndCompliance = ({ data = {} }) => {
   const dispatch = useDispatch();
-  const { timesheetStatus, timesheetSuccess } = useSelector((state) => state.candidatePortal || {});
+  const { timesheetStatus, timesheetSuccess } = useSelector(
+    (state) => state.candidatePortal || {}
+  );
   const { activePlacement = {}, escrow = {}, complianceVault = [] } = data;
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -18,7 +23,7 @@ const CandidatePayoutAndCompliance = ({ data = {} }) => {
       submitCandidateTimesheet({
         hours,
         weekEnding: new Date().toLocaleDateString(),
-        comments
+        comments,
       })
     );
   };
@@ -28,16 +33,25 @@ const CandidatePayoutAndCompliance = ({ data = {} }) => {
       <div className="section-header-bar">
         <div>
           <div className="title-with-icon">
-            <span className="material-symbols-outlined header-icon">account_balance</span>
-            <h2 className="section-main-title">Timesheet, Payouts &amp; EOR Compliance</h2>
+            <span className="material-symbols-outlined header-icon">
+              account_balance
+            </span>
+            <h2 className="section-main-title">
+              Timesheet, Payouts &amp; EOR Compliance
+            </h2>
           </div>
           <p className="section-subtext">
-            Governed by ThinkWires Global Employer of Record &amp; Multi-Currency Escrow Facility.
+            Governed by ThinkWires Global Employer of Record &amp;
+            Multi-Currency Escrow Facility.
           </p>
         </div>
 
         <div className="action-buttons-group">
-          <button type="button" onClick={() => setIsModalOpen(true)} className="btn-submit-timesheet">
+          <button
+            type="button"
+            onClick={() => setIsModalOpen(true)}
+            className="btn-submit-timesheet"
+          >
             <span className="material-symbols-outlined">more_time</span>
             <span>Submit Weekly Timesheet</span>
           </button>
@@ -50,7 +64,8 @@ const CandidatePayoutAndCompliance = ({ data = {} }) => {
 
       {timesheetSuccess && (
         <div className="timesheet-success-alert">
-          ✓ Weekly timesheet of {hours} hours has been transmitted to client manager for auto-approval.
+          ✓ Weekly timesheet of {hours} hours has been transmitted to client
+          manager for auto-approval.
         </div>
       )}
 
@@ -63,16 +78,25 @@ const CandidatePayoutAndCompliance = ({ data = {} }) => {
             <span className="gov-pill success">Logged</span>
           </div>
           <div className="gov-mid">
-            <h3 className="client-name">{activePlacement.client || 'Vantage Cloud Systems'}</h3>
-            <span className="contract-type">{activePlacement.contract || 'On-demand Staff Augmentation Pod (Tier-1)'}</span>
+            <h3 className="client-name">
+              {activePlacement.client || 'Vantage Cloud Systems'}
+            </h3>
+            <span className="contract-type">
+              {activePlacement.contract ||
+                'On-demand Staff Augmentation Pod (Tier-1)'}
+            </span>
           </div>
           <div className="gov-stat-box">
             <div>
               <span className="stat-sub">Current Week</span>
-              <span className="stat-hours">{activePlacement.hours || '38.5 / 40.0 hrs'}</span>
+              <span className="stat-hours">
+                {activePlacement.hours || '38.5 / 40.0 hrs'}
+              </span>
             </div>
             <span className="status-approved">
-              <span className="material-symbols-outlined check-icon">check_circle</span>
+              <span className="material-symbols-outlined check-icon">
+                check_circle
+              </span>
               <span>Approved</span>
             </span>
           </div>
@@ -86,12 +110,18 @@ const CandidatePayoutAndCompliance = ({ data = {} }) => {
           </div>
           <div className="gov-mid">
             <div className="amount-row">
-              <span className="amt-primary">{escrow.amountInr || '₹3,50,000'}</span>
-              <span className="amt-secondary">{escrow.amountUsd || '/ Month Net'}</span>
+              <span className="amt-primary">
+                {escrow.amountInr || '₹3,50,000'}
+              </span>
+              <span className="amt-secondary">
+                {escrow.amountUsd || '/ Month Net'}
+              </span>
             </div>
             <span className="release-notice">
               <span className="pulse-ping"></span>
-              <span>{escrow.releaseDate || 'Automated Direct Transfer on 30th'}</span>
+              <span>
+                {escrow.releaseDate || 'Automated Direct Transfer on 30th'}
+              </span>
             </span>
           </div>
           <div className="bank-account-box">
@@ -104,7 +134,9 @@ const CandidatePayoutAndCompliance = ({ data = {} }) => {
         <div className="governance-card">
           <div className="gov-top">
             <span className="gov-label">Compliance Vault</span>
-            <span className="material-symbols-outlined gov-icon shield">security</span>
+            <span className="material-symbols-outlined gov-icon shield">
+              security
+            </span>
           </div>
           <div className="compliance-list">
             {complianceVault.map((doc, idx) => (
@@ -125,11 +157,21 @@ const CandidatePayoutAndCompliance = ({ data = {} }) => {
 
       {/* Timesheet Modal */}
       {isModalOpen && (
-        <div className="CandidatePortal-modalOverlay" onClick={() => setIsModalOpen(false)}>
-          <div className="CandidatePortal-modalCard" onClick={(e) => e.stopPropagation()}>
+        <div
+          className="CandidatePortal-modalOverlay"
+          onClick={() => setIsModalOpen(false)}
+        >
+          <div
+            className="CandidatePortal-modalCard"
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className="modal-header">
               <h3 className="modal-title">Log Timesheet Hours</h3>
-              <button type="button" onClick={() => setIsModalOpen(false)} className="modal-close-btn">
+              <button
+                type="button"
+                onClick={() => setIsModalOpen(false)}
+                className="modal-close-btn"
+              >
                 <CloseIcon size={16} />
               </button>
             </div>
@@ -160,7 +202,9 @@ const CandidatePayoutAndCompliance = ({ data = {} }) => {
                   disabled={timesheetStatus === 'loading'}
                   className="btn-confirm-action"
                 >
-                  {timesheetStatus === 'loading' ? 'Submitting...' : 'Sign & Submit to Client Manager'}
+                  {timesheetStatus === 'loading'
+                    ? 'Submitting...'
+                    : 'Sign & Submit to Client Manager'}
                 </button>
               </div>
             </form>

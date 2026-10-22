@@ -56,6 +56,7 @@ const placementSchema = new mongoose.Schema(
   }
 );
 
-const Placement = mongoose.models.Placement || mongoose.model('Placement', placementSchema);
+const Placement =
+  mongoose.models.Placement || mongoose.model('Placement', placementSchema);
 
 export default Placement;

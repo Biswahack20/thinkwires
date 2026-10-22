@@ -46,8 +46,15 @@ const Industries = () => {
 
         <div className="Industries-grid">
           {industries.map((ind) => (
-            <Link key={ind.id} to="/industries" className="Industries-card group" style={{ textDecoration: 'none', color: 'inherit' }}>
-              <div className={`Industries-iconWrapper Industries-${ind.color} group-hover:scale-110 transition-transform`}>
+            <Link
+              key={ind.id}
+              to="/industries"
+              className="Industries-card group"
+              style={{ textDecoration: 'none', color: 'inherit' }}
+            >
+              <div
+                className={`Industries-iconWrapper Industries-${ind.color} group-hover:scale-110 transition-transform`}
+              >
                 <span className="material-symbols-outlined text-[26px]">
                   {getIndustryMaterialIcon(ind.icon)}
                 </span>

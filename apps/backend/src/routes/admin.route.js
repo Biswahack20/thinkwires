@@ -149,7 +149,11 @@ router.put('/cms/seo', cmsGuard, updateSeoSettings);
 // CMS: Announcements
 router.get('/cms/announcements', cmsGuard, getAnnouncements);
 router.post('/cms/announcements', cmsGuard, createAnnouncement);
-router.patch('/cms/announcements/:id/publish', cmsGuard, togglePublishAnnouncement);
+router.patch(
+  '/cms/announcements/:id/publish',
+  cmsGuard,
+  togglePublishAnnouncement
+);
 router.delete('/cms/announcements/:id', cmsGuard, deleteAnnouncement);
 
 export default router;

@@ -1,6 +1,9 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchFindTalentData, fallbackFindTalentData } from '../store/slices/findTalentSlice';
+import {
+  fetchFindTalentData,
+  fallbackFindTalentData,
+} from '../store/slices/findTalentSlice';
 import Navbar from '../components/common/Navbar';
 import Footer from '../components/common/Footer';
 import FindTalentHero from '../components/FindTalentComponents/FindTalentHero';
@@ -11,9 +14,14 @@ import FindTalentProof from '../components/FindTalentComponents/FindTalentProof'
 
 const FindTalentPage = () => {
   const dispatch = useDispatch();
-  const { data: rawData, status } = useSelector((state) => state.findTalent || {});
+  const { data: rawData, status } = useSelector(
+    (state) => state.findTalent || {}
+  );
 
-  const data = rawData && Object.keys(rawData).length > 0 ? rawData : fallbackFindTalentData;
+  const data =
+    rawData && Object.keys(rawData).length > 0
+      ? rawData
+      : fallbackFindTalentData;
 
   useEffect(() => {
     window.scrollTo(0, 0);

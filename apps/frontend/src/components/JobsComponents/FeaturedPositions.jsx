@@ -2,7 +2,13 @@ import React, { useState } from 'react';
 import JobCard from './JobCard';
 import ScrollReveal from '../common/ScrollReveal';
 
-const FeaturedPositions = ({ jobsList = [], onApplyClick, onViewSpecClick, activeCategory, setActiveCategory }) => {
+const FeaturedPositions = ({
+  jobsList = [],
+  onApplyClick,
+  onViewSpecClick,
+  activeCategory,
+  setActiveCategory,
+}) => {
   const [visibleCount, setVisibleCount] = useState(6);
 
   const jobsToDisplay = Array.isArray(jobsList) ? jobsList : [];
@@ -13,7 +19,7 @@ const FeaturedPositions = ({ jobsList = [], onApplyClick, onViewSpecClick, activ
     'Full Stack & Frontend',
     'Cloud & DevOps',
     'AI & Data Engineering',
-    'FinTech & Systems'
+    'FinTech & Systems',
   ];
 
   // Filter jobs based on active category
@@ -21,7 +27,8 @@ const FeaturedPositions = ({ jobsList = [], onApplyClick, onViewSpecClick, activ
     if (!activeCategory || activeCategory === 'All Roles') return true;
     return (
       job.department === activeCategory ||
-      (job.category && job.category.toLowerCase().includes(activeCategory.toLowerCase())) ||
+      (job.category &&
+        job.category.toLowerCase().includes(activeCategory.toLowerCase())) ||
       job.tag === activeCategory
     );
   });
@@ -37,12 +44,15 @@ const FeaturedPositions = ({ jobsList = [], onApplyClick, onViewSpecClick, activ
             <div className="FeaturedPositions-curatedBadge">
               CURATED HIGH-IMPACT ROLES
             </div>
-            <h2 className="FeaturedPositions-mainHeading">Featured Positions</h2>
+            <h2 className="FeaturedPositions-mainHeading">
+              Featured Positions
+            </h2>
           </div>
 
           <div className="FeaturedPositions-headerSubCol">
             <p className="FeaturedPositions-headerDesc">
-              Verified openings from global Tier-1 software organizations and enterprise consultancies with guaranteed prompt response.
+              Verified openings from global Tier-1 software organizations and
+              enterprise consultancies with guaranteed prompt response.
             </p>
           </div>
         </div>
@@ -53,7 +63,8 @@ const FeaturedPositions = ({ jobsList = [], onApplyClick, onViewSpecClick, activ
             <button
               key={cat}
               className={`FeaturedPositions-categoryPill ${
-                (activeCategory === cat || (!activeCategory && cat === 'All Roles'))
+                activeCategory === cat ||
+                (!activeCategory && cat === 'All Roles')
                   ? 'FeaturedPositions-activePill'
                   : ''
               }`}
@@ -75,20 +86,35 @@ const FeaturedPositions = ({ jobsList = [], onApplyClick, onViewSpecClick, activ
                 distance={40}
                 style={{ display: 'flex' }}
               >
-                <JobCard job={job} onApplyClick={onApplyClick} onViewSpecClick={onViewSpecClick} />
+                <JobCard
+                  job={job}
+                  onApplyClick={onApplyClick}
+                  onViewSpecClick={onViewSpecClick}
+                />
               </ScrollReveal>
             ))}
           </div>
         ) : (
           <div className="FeaturedPositions-emptyState">
-            <span className="material-symbols-outlined" style={{ fontSize: '48px', color: '#94a3b8', marginBottom: '0.75rem' }}>
+            <span
+              className="material-symbols-outlined"
+              style={{
+                fontSize: '48px',
+                color: '#94a3b8',
+                marginBottom: '0.75rem',
+              }}
+            >
               search_off
             </span>
             <h3>No positions found matching this criteria</h3>
-            <p>Try resetting your filter or searching with different keywords.</p>
-            <button 
+            <p>
+              Try resetting your filter or searching with different keywords.
+            </p>
+            <button
               className="FeaturedPositions-resetBtn"
-              onClick={() => setActiveCategory && setActiveCategory('All Roles')}
+              onClick={() =>
+                setActiveCategory && setActiveCategory('All Roles')
+              }
             >
               Show All Roles
             </button>
@@ -102,7 +128,8 @@ const FeaturedPositions = ({ jobsList = [], onApplyClick, onViewSpecClick, activ
               className="FeaturedPositions-loadMoreBtn"
               onClick={() => setVisibleCount((prev) => prev + 6)}
             >
-              View More Openings ({filteredJobs.length - visibleCount} Remaining)
+              View More Openings ({filteredJobs.length - visibleCount}{' '}
+              Remaining)
             </button>
           </div>
         )}

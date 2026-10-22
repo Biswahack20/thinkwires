@@ -44,7 +44,11 @@ const setupConnectionListeners = () => {
 };
 
 const scheduleReconnect = () => {
-  if (isReconnecting || mongoose.connection.readyState === 1 || mongoose.connection.readyState === 2) {
+  if (
+    isReconnecting ||
+    mongoose.connection.readyState === 1 ||
+    mongoose.connection.readyState === 2
+  ) {
     return;
   }
   isReconnecting = true;

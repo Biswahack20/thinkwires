@@ -185,9 +185,13 @@ const EmployeesView = () => {
       phone: emp.phone || '',
       designation: emp.designation || '',
       role: emp.role || 'employee',
-      portalAccess: Boolean(emp.portalAccess || (emp.role && emp.role !== 'employee')),
+      portalAccess: Boolean(
+        emp.portalAccess || (emp.role && emp.role !== 'employee')
+      ),
       password: '',
-      technicalSkills: Array.isArray(emp.technicalSkills) ? emp.technicalSkills.join(', ') : emp.technicalSkills || '',
+      technicalSkills: Array.isArray(emp.technicalSkills)
+        ? emp.technicalSkills.join(', ')
+        : emp.technicalSkills || '',
       experience: emp.experience || 0,
       availability: emp.availability || 'Immediate',
       deploymentStatus: emp.deploymentStatus || 'Available',
@@ -201,22 +205,37 @@ const EmployeesView = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!formData.name.trim() || !formData.email.trim() || !formData.designation.trim()) {
+    if (
+      !formData.name.trim() ||
+      !formData.email.trim() ||
+      !formData.designation.trim()
+    ) {
       setFormError('Please enter Full Name, Work Email, and Designation.');
       return;
     }
 
     if (formData.role !== 'employee' && activeRole !== 'superadmin') {
-      setFormError('Access Denied: Only Superadmin can assign portal roles or create System Members.');
+      setFormError(
+        'Access Denied: Only Superadmin can assign portal roles or create System Members.'
+      );
       return;
     }
 
     if (activeRole === 'superadmin' && formData.role !== 'employee') {
-      if (!editingEmployee && (!formData.password || formData.password.trim().length < 6)) {
-        setFormError('Please specify an initial password of at least 6 characters for this system member.');
+      if (
+        !editingEmployee &&
+        (!formData.password || formData.password.trim().length < 6)
+      ) {
+        setFormError(
+          'Please specify an initial password of at least 6 characters for this system member.'
+        );
         return;
       }
-      if (editingEmployee && formData.password && formData.password.trim().length < 6) {
+      if (
+        editingEmployee &&
+        formData.password &&
+        formData.password.trim().length < 6
+      ) {
         setFormError('New password must be at least 6 characters long.');
         return;
       }
@@ -278,7 +297,8 @@ const EmployeesView = () => {
         <div className="tw-view-title-group">
           <h1>Workforce Directory & Role Management</h1>
           <p className="tw-view-subtitle">
-            Manage technical employees and system administrators created by Superadmin, including Admin, CMS Admin, and Job Requirement Adders.
+            Manage technical employees and system administrators created by
+            Superadmin, including Admin, CMS Admin, and Job Requirement Adders.
           </p>
         </div>
 
@@ -287,14 +307,27 @@ const EmployeesView = () => {
             <Link
               to="/admin/system-members"
               className="tw-btn-secondary"
-              style={{ display: 'inline-flex', alignItems: 'center', gap: '0.45rem', textDecoration: 'none' }}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.45rem',
+                textDecoration: 'none',
+              }}
               title="System Members Portal (Superadmin Only)"
             >
               <ShieldIcon size={15} />
               <span>System Members</span>
             </Link>
           )}
-          <button className="tw-btn-primary" onClick={openAddModal} style={{ display: 'inline-flex', alignItems: 'center', gap: '0.45rem' }}>
+          <button
+            className="tw-btn-primary"
+            onClick={openAddModal}
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.45rem',
+            }}
+          >
             <PlusIcon size={15} />
             <span>Onboard Employee</span>
           </button>
@@ -304,8 +337,14 @@ const EmployeesView = () => {
       {/* Table Container */}
       <div className="tw-table-container">
         {/* Table Filters Toolbar */}
-        <div className="tw-table-toolbar" style={{ flexWrap: 'wrap', gap: '0.65rem' }}>
-          <div className="tw-table-filters" style={{ flexWrap: 'wrap', gap: '0.5rem' }}>
+        <div
+          className="tw-table-toolbar"
+          style={{ flexWrap: 'wrap', gap: '0.65rem' }}
+        >
+          <div
+            className="tw-table-filters"
+            style={{ flexWrap: 'wrap', gap: '0.5rem' }}
+          >
             <input
               type="text"
               className="tw-filter-input"
@@ -352,7 +391,9 @@ const EmployeesView = () => {
             </select>
           </div>
 
-          <div style={{ fontSize: '0.8rem', color: '#64748B', marginLeft: 'auto' }}>
+          <div
+            style={{ fontSize: '0.8rem', color: '#64748B', marginLeft: 'auto' }}
+          >
             Active Personnel: <strong>{employees.length}</strong>
           </div>
         </div>
@@ -369,29 +410,76 @@ const EmployeesView = () => {
                 <th style={{ minWidth: '100px' }}>Availability</th>
                 <th style={{ minWidth: '110px' }}>Deployment</th>
                 <th style={{ minWidth: '120px' }}>Billing Rate</th>
-                <th style={{ textAlign: 'right', minWidth: '80px' }}>Actions</th>
+                <th style={{ textAlign: 'right', minWidth: '80px' }}>
+                  Actions
+                </th>
               </tr>
             </thead>
             <tbody>
               {loading ? (
                 <tr>
-                  <td colSpan="8" style={{ textAlign: 'center', padding: '3rem', color: '#64748B' }}>
+                  <td
+                    colSpan="8"
+                    style={{
+                      textAlign: 'center',
+                      padding: '3rem',
+                      color: '#64748B',
+                    }}
+                  >
                     Loading employee directory...
                   </td>
                 </tr>
               ) : employees.length === 0 ? (
                 <tr>
-                  <td colSpan="8" style={{ textAlign: 'center', padding: '3.5rem 1rem', color: '#64748B' }}>
-                    <div style={{ marginBottom: '0.75rem', color: '#94A3B8', display: 'flex', justifyContent: 'center' }}>
+                  <td
+                    colSpan="8"
+                    style={{
+                      textAlign: 'center',
+                      padding: '3.5rem 1rem',
+                      color: '#64748B',
+                    }}
+                  >
+                    <div
+                      style={{
+                        marginBottom: '0.75rem',
+                        color: '#94A3B8',
+                        display: 'flex',
+                        justifyContent: 'center',
+                      }}
+                    >
                       <UsersIcon size={40} />
                     </div>
-                    <div style={{ fontWeight: 600, color: '#1E293B', marginBottom: '0.35rem', fontSize: '0.95rem' }}>
+                    <div
+                      style={{
+                        fontWeight: 600,
+                        color: '#1E293B',
+                        marginBottom: '0.35rem',
+                        fontSize: '0.95rem',
+                      }}
+                    >
                       No Employee Records Found
                     </div>
-                    <div style={{ fontSize: '0.82rem', color: '#64748B', maxWidth: '420px', margin: '0 auto 1.25rem' }}>
-                      All demo fake employees have been cleared. As Superadmin, click below to onboard real employees, portal admins, CMS admins, or recruiters.
+                    <div
+                      style={{
+                        fontSize: '0.82rem',
+                        color: '#64748B',
+                        maxWidth: '420px',
+                        margin: '0 auto 1.25rem',
+                      }}
+                    >
+                      All demo fake employees have been cleared. As Superadmin,
+                      click below to onboard real employees, portal admins, CMS
+                      admins, or recruiters.
                     </div>
-                    <button className="tw-btn-primary" onClick={openAddModal} style={{ display: 'inline-flex', alignItems: 'center', gap: '0.45rem' }}>
+                    <button
+                      className="tw-btn-primary"
+                      onClick={openAddModal}
+                      style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '0.45rem',
+                      }}
+                    >
                       <PlusIcon size={15} />
                       <span>Onboard First Employee</span>
                     </button>
@@ -401,42 +489,65 @@ const EmployeesView = () => {
                 employees.map((emp) => (
                   <tr key={emp.id || emp._id}>
                     <td>
-                      <div style={{ fontWeight: 600, color: '#0F172A' }}>{emp.name}</div>
-                      <div style={{ fontSize: '0.73rem', color: '#64748B', marginTop: '0.1rem' }}>
+                      <div style={{ fontWeight: 600, color: '#0F172A' }}>
+                        {emp.name}
+                      </div>
+                      <div
+                        style={{
+                          fontSize: '0.73rem',
+                          color: '#64748B',
+                          marginTop: '0.1rem',
+                        }}
+                      >
                         {emp.email} {emp.phone ? `• ${emp.phone}` : ''}
                       </div>
                     </td>
 
                     <td>
                       <div style={{ fontWeight: 500 }}>{emp.designation}</div>
-                      <div style={{ fontSize: '0.73rem', color: '#64748B', marginTop: '0.1rem' }}>
+                      <div
+                        style={{
+                          fontSize: '0.73rem',
+                          color: '#64748B',
+                          marginTop: '0.1rem',
+                        }}
+                      >
                         {emp.experience} yrs exp • {emp.location || 'Remote'}
                       </div>
                     </td>
 
-                    <td>
-                      {renderRoleBadge(emp.role)}
-                    </td>
+                    <td>{renderRoleBadge(emp.role)}</td>
 
                     <td>
-                      <div style={{ display: 'flex', gap: '0.25rem', flexWrap: 'wrap', maxWidth: '240px' }}>
-                        {(emp.technicalSkills || []).slice(0, 3).map((sk, idx) => (
-                          <span
-                            key={idx}
-                            style={{
-                              fontSize: '0.68rem',
-                              padding: '0.1rem 0.4rem',
-                              borderRadius: '4px',
-                              backgroundColor: '#EBF2FC',
-                              color: '#3478D4',
-                              fontWeight: 500,
-                            }}
-                          >
-                            {sk}
-                          </span>
-                        ))}
+                      <div
+                        style={{
+                          display: 'flex',
+                          gap: '0.25rem',
+                          flexWrap: 'wrap',
+                          maxWidth: '240px',
+                        }}
+                      >
+                        {(emp.technicalSkills || [])
+                          .slice(0, 3)
+                          .map((sk, idx) => (
+                            <span
+                              key={idx}
+                              style={{
+                                fontSize: '0.68rem',
+                                padding: '0.1rem 0.4rem',
+                                borderRadius: '4px',
+                                backgroundColor: '#EBF2FC',
+                                color: '#3478D4',
+                                fontWeight: 500,
+                              }}
+                            >
+                              {sk}
+                            </span>
+                          ))}
                         {(emp.technicalSkills || []).length > 3 && (
-                          <span style={{ fontSize: '0.68rem', color: '#94A3B8' }}>
+                          <span
+                            style={{ fontSize: '0.68rem', color: '#94A3B8' }}
+                          >
                             +{(emp.technicalSkills || []).length - 3}
                           </span>
                         )}
@@ -444,22 +555,33 @@ const EmployeesView = () => {
                     </td>
 
                     <td>
-                      <span className="tw-badge available">{emp.availability || 'Immediate'}</span>
+                      <span className="tw-badge available">
+                        {emp.availability || 'Immediate'}
+                      </span>
                     </td>
 
                     <td>
-                      <span className={`tw-badge ${(emp.deploymentStatus || 'Available').toLowerCase().replace(' ', '-')}`}>
+                      <span
+                        className={`tw-badge ${(emp.deploymentStatus || 'Available').toLowerCase().replace(' ', '-')}`}
+                      >
                         {emp.deploymentStatus || 'Available'}
                       </span>
                     </td>
 
                     <td>
-                      <strong>${Number(emp.billingRate || 0).toLocaleString()}</strong>
-                      <span style={{ fontSize: '0.7rem', color: '#64748B' }}>/mo</span>
+                      <strong>
+                        ${Number(emp.billingRate || 0).toLocaleString()}
+                      </strong>
+                      <span style={{ fontSize: '0.7rem', color: '#64748B' }}>
+                        /mo
+                      </span>
                     </td>
 
                     <td style={{ textAlign: 'right' }}>
-                      <div className="tw-action-btn-group" style={{ justifyContent: 'flex-end' }}>
+                      <div
+                        className="tw-action-btn-group"
+                        style={{ justifyContent: 'flex-end' }}
+                      >
                         <button
                           className="tw-action-icon-btn"
                           onClick={() => openEditModal(emp)}
@@ -515,9 +637,15 @@ const EmployeesView = () => {
           <div className="tw-modal" style={{ maxWidth: '680px' }}>
             <div className="tw-modal-header">
               <h2 className="tw-modal-title">
-                {editingEmployee ? `Edit ${editingEmployee.name}` : 'Onboard New Employee / System Member'}
+                {editingEmployee
+                  ? `Edit ${editingEmployee.name}`
+                  : 'Onboard New Employee / System Member'}
               </h2>
-              <button className="tw-modal-close-btn" onClick={() => setModalOpen(false)} title="Close">
+              <button
+                className="tw-modal-close-btn"
+                onClick={() => setModalOpen(false)}
+                title="Close"
+              >
                 <CloseIcon size={16} />
               </button>
             </div>
@@ -551,7 +679,9 @@ const EmployeesView = () => {
                       type="text"
                       className="tw-form-input"
                       value={formData.name}
-                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                      onChange={(e) =>
+                        setFormData({ ...formData, name: e.target.value })
+                      }
                       placeholder="e.g. Vikram Sethi"
                       required
                     />
@@ -562,7 +692,9 @@ const EmployeesView = () => {
                       type="email"
                       className="tw-form-input"
                       value={formData.email}
-                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                      onChange={(e) =>
+                        setFormData({ ...formData, email: e.target.value })
+                      }
                       placeholder="vikram@thinkwires.com"
                       required
                     />
@@ -572,26 +704,41 @@ const EmployeesView = () => {
                 {/* Row 2: Designation and System / Portal Role */}
                 <div className="tw-form-row">
                   <div className="tw-form-group">
-                    <label className="tw-form-label">Designation / Title *</label>
+                    <label className="tw-form-label">
+                      Designation / Title *
+                    </label>
                     <input
                       type="text"
                       className="tw-form-input"
                       value={formData.designation}
-                      onChange={(e) => setFormData({ ...formData, designation: e.target.value })}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          designation: e.target.value,
+                        })
+                      }
                       placeholder="e.g. Lead Cloud Architect / CMS Lead"
                       required
                     />
                   </div>
                   <div className="tw-form-group">
-                    <label className="tw-form-label">System / Portal Role *</label>
+                    <label className="tw-form-label">
+                      System / Portal Role *
+                    </label>
                     <select
                       className="tw-form-select"
                       value={formData.role}
-                      disabled={activeRole !== 'superadmin' && editingEmployee && editingEmployee.role !== 'employee'}
+                      disabled={
+                        activeRole !== 'superadmin' &&
+                        editingEmployee &&
+                        editingEmployee.role !== 'employee'
+                      }
                       onChange={(e) => {
                         const r = e.target.value;
                         if (activeRole !== 'superadmin' && r !== 'employee') {
-                          showToast('System Members with portal roles can only be added or edited by Superadmin.');
+                          showToast(
+                            'System Members with portal roles can only be added or edited by Superadmin.'
+                          );
                           return;
                         }
                         setFormData({
@@ -601,50 +748,111 @@ const EmployeesView = () => {
                         });
                       }}
                     >
-                      <option value="employee">Workforce Engineer (No Portal Admin Access)</option>
+                      <option value="employee">
+                        Workforce Engineer (No Portal Admin Access)
+                      </option>
                       {activeRole === 'superadmin' ? (
                         <>
-                          <option value="superadmin">Superadmin (Full Control Across All Modules)</option>
-                          <option value="admin">Admin (General System & Workforce)</option>
-                          <option value="cms_admin">CMS Admin (Content Management System Only)</option>
+                          <option value="superadmin">
+                            Superadmin (Full Control Across All Modules)
+                          </option>
+                          <option value="admin">
+                            Admin (General System & Workforce)
+                          </option>
+                          <option value="cms_admin">
+                            CMS Admin (Content Management System Only)
+                          </option>
                         </>
                       ) : (
                         formData.role !== 'employee' && (
                           <option value={formData.role} disabled>
-                            {formData.role.toUpperCase()} (Superadmin Authority Required)
+                            {formData.role.toUpperCase()} (Superadmin Authority
+                            Required)
                           </option>
                         )
                       )}
                     </select>
                     {activeRole !== 'superadmin' && (
-                      <span style={{ fontSize: '0.7rem', color: '#64748B', marginTop: '0.25rem', display: 'block' }}>
-                        Portal roles (Admin, CMS Admin, Superadmin) can only be added and edited by Superadmin.
+                      <span
+                        style={{
+                          fontSize: '0.7rem',
+                          color: '#64748B',
+                          marginTop: '0.25rem',
+                          display: 'block',
+                        }}
+                      >
+                        Portal roles (Admin, CMS Admin, Superadmin) can only be
+                        added and edited by Superadmin.
                       </span>
                     )}
                   </div>
                 </div>
 
                 {/* Optional Portal Password for Superadmin */}
-                {activeRole === 'superadmin' && formData.role !== 'employee' && (
-                  <div className="tw-form-group" style={{ backgroundColor: '#F8FAFC', padding: '0.85rem', borderRadius: '8px', border: '1px solid #E2E8F0', marginBottom: '1rem' }}>
-                    <label className="tw-form-label" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                      <span>Portal Password {editingEmployee ? '(Leave blank to retain current)' : '*'}</span>
-                      <span style={{ fontSize: '0.72rem', color: '#059669', fontWeight: 600 }}>Superadmin Provisioning</span>
-                    </label>
-                    <input
-                      type="password"
-                      className="tw-form-input"
-                      value={formData.password || ''}
-                      onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                      placeholder={editingEmployee ? 'Leave empty to keep existing password' : 'Enter portal access password (min 6 chars)'}
-                      minLength={editingEmployee ? 0 : 6}
-                      required={!editingEmployee}
-                    />
-                    <span style={{ fontSize: '0.72rem', color: '#64748B', marginTop: '0.25rem', display: 'block' }}>
-                      Password configured here will be assigned to this member's system login account.
-                    </span>
-                  </div>
-                )}
+                {activeRole === 'superadmin' &&
+                  formData.role !== 'employee' && (
+                    <div
+                      className="tw-form-group"
+                      style={{
+                        backgroundColor: '#F8FAFC',
+                        padding: '0.85rem',
+                        borderRadius: '8px',
+                        border: '1px solid #E2E8F0',
+                        marginBottom: '1rem',
+                      }}
+                    >
+                      <label
+                        className="tw-form-label"
+                        style={{
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          alignItems: 'center',
+                        }}
+                      >
+                        <span>
+                          Portal Password{' '}
+                          {editingEmployee
+                            ? '(Leave blank to retain current)'
+                            : '*'}
+                        </span>
+                        <span
+                          style={{
+                            fontSize: '0.72rem',
+                            color: '#059669',
+                            fontWeight: 600,
+                          }}
+                        >
+                          Superadmin Provisioning
+                        </span>
+                      </label>
+                      <input
+                        type="password"
+                        className="tw-form-input"
+                        value={formData.password || ''}
+                        onChange={(e) =>
+                          setFormData({ ...formData, password: e.target.value })
+                        }
+                        placeholder={
+                          editingEmployee
+                            ? 'Leave empty to keep existing password'
+                            : 'Enter portal access password (min 6 chars)'
+                        }
+                        minLength={editingEmployee ? 0 : 6}
+                        required={!editingEmployee}
+                      />
+                      <span
+                        style={{
+                          fontSize: '0.72rem',
+                          color: '#64748B',
+                          marginTop: '0.25rem',
+                          display: 'block',
+                        }}
+                      >
+                        Password configured here will be assigned to this
+                        member's system login account.
+                      </span>
+                    </div>
+                  )}
 
                 {/* Row 3: Phone and Location */}
                 <div className="tw-form-row">
@@ -654,7 +862,9 @@ const EmployeesView = () => {
                       type="text"
                       className="tw-form-input"
                       value={formData.phone}
-                      onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                      onChange={(e) =>
+                        setFormData({ ...formData, phone: e.target.value })
+                      }
                       placeholder="+91 98765 43210"
                     />
                   </div>
@@ -664,7 +874,9 @@ const EmployeesView = () => {
                       type="text"
                       className="tw-form-input"
                       value={formData.location}
-                      onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+                      onChange={(e) =>
+                        setFormData({ ...formData, location: e.target.value })
+                      }
                       placeholder="e.g. Bangalore, India / Remote"
                     />
                   </div>
@@ -672,12 +884,19 @@ const EmployeesView = () => {
 
                 {/* Row 4: Technical Skills */}
                 <div className="tw-form-group">
-                  <label className="tw-form-label">Technical Skills (comma separated)</label>
+                  <label className="tw-form-label">
+                    Technical Skills (comma separated)
+                  </label>
                   <input
                     type="text"
                     className="tw-form-input"
                     value={formData.technicalSkills}
-                    onChange={(e) => setFormData({ ...formData, technicalSkills: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        technicalSkills: e.target.value,
+                      })
+                    }
                     placeholder="React, TypeScript, AWS, Docker, Kubernetes"
                   />
                 </div>
@@ -690,17 +909,29 @@ const EmployeesView = () => {
                       type="number"
                       className="tw-form-input"
                       value={formData.experience}
-                      onChange={(e) => setFormData({ ...formData, experience: Number(e.target.value) })}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          experience: Number(e.target.value),
+                        })
+                      }
                       min="0"
                     />
                   </div>
                   <div className="tw-form-group">
-                    <label className="tw-form-label">Monthly Billing Rate ($)</label>
+                    <label className="tw-form-label">
+                      Monthly Billing Rate ($)
+                    </label>
                     <input
                       type="number"
                       className="tw-form-input"
                       value={formData.billingRate}
-                      onChange={(e) => setFormData({ ...formData, billingRate: Number(e.target.value) })}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          billingRate: Number(e.target.value),
+                        })
+                      }
                       min="0"
                     />
                   </div>
@@ -713,7 +944,12 @@ const EmployeesView = () => {
                     <select
                       className="tw-form-select"
                       value={formData.availability}
-                      onChange={(e) => setFormData({ ...formData, availability: e.target.value })}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          availability: e.target.value,
+                        })
+                      }
                     >
                       <option value="Immediate">Immediate</option>
                       <option value="15 Days">15 Days</option>
@@ -726,7 +962,12 @@ const EmployeesView = () => {
                     <select
                       className="tw-form-select"
                       value={formData.deploymentStatus}
-                      onChange={(e) => setFormData({ ...formData, deploymentStatus: e.target.value })}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          deploymentStatus: e.target.value,
+                        })
+                      }
                     >
                       <option value="Available">Available</option>
                       <option value="Deployed">Deployed</option>
@@ -738,12 +979,16 @@ const EmployeesView = () => {
 
                 {/* Row 7: Notes */}
                 <div className="tw-form-group">
-                  <label className="tw-form-label">Deployment / Access Notes</label>
+                  <label className="tw-form-label">
+                    Deployment / Access Notes
+                  </label>
                   <textarea
                     className="tw-form-textarea"
                     rows="2"
                     value={formData.notes}
-                    onChange={(e) => setFormData({ ...formData, notes: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, notes: e.target.value })
+                    }
                     placeholder="Candidate background, security clearances, client fit details, portal access justification..."
                   ></textarea>
                 </div>
@@ -772,18 +1017,29 @@ const EmployeesView = () => {
           <div className="tw-modal" style={{ maxWidth: '440px' }}>
             <div className="tw-modal-header">
               <h2 className="tw-modal-title">Confirm Deletion</h2>
-              <button className="tw-modal-close-btn" onClick={() => setDeleteConfirmId(null)} title="Close">
+              <button
+                className="tw-modal-close-btn"
+                onClick={() => setDeleteConfirmId(null)}
+                title="Close"
+              >
                 <CloseIcon size={16} />
               </button>
             </div>
             <div className="tw-modal-body">
-              Are you sure you want to permanently remove this employee from the directory? Any linked portal account will also be deactivated.
+              Are you sure you want to permanently remove this employee from the
+              directory? Any linked portal account will also be deactivated.
             </div>
             <div className="tw-modal-footer">
-              <button className="tw-btn-secondary" onClick={() => setDeleteConfirmId(null)}>
+              <button
+                className="tw-btn-secondary"
+                onClick={() => setDeleteConfirmId(null)}
+              >
                 Cancel
               </button>
-              <button className="tw-btn-danger" onClick={() => handleDelete(deleteConfirmId)}>
+              <button
+                className="tw-btn-danger"
+                onClick={() => handleDelete(deleteConfirmId)}
+              >
                 Delete Employee
               </button>
             </div>

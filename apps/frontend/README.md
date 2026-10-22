@@ -291,7 +291,7 @@ Manages the global light/dark theme state. Wraps the entire application in `main
 
 | Prop       | Type              | Required | Description                  |
 | :--------- | :---------------- | :------: | :--------------------------- |
-| `children` | `React.ReactNode` | Yes | Child component tree to wrap |
+| `children` | `React.ReactNode` |   Yes    | Child component tree to wrap |
 
 **Behavior:**
 

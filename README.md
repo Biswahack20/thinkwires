@@ -10,14 +10,14 @@ ThinkWires is an enterprise technical manpower supply, global staffing, and tale
 
 ## Project Documentation Hub
 
-| Document | Primary Audience | Scope and Contents |
-| --- | --- | --- |
-| [**docs/FrontendDocs.md**](docs/FrontendDocs.md) | Frontend Engineers & Agents | React 19 architecture, Vite proxy, Redux Toolkit slices, routing inventory, design tokens, Three.js canvas, and auth state. |
-| [**docs/BackendDocs.md**](docs/BackendDocs.md) | Backend Engineers & Agents | Express 5 API Gateway, dual-persistence (PostgreSQL + MongoDB Atlas), connection resilience, in-memory fallback, rate limiting, and complete REST API reference. |
-| [**docs/Ai_ServicesDocs.md**](docs/Ai_ServicesDocs.md) | AI Engineers & Agents | Python FastAPI microservice, PDF link annotation parsing, ATS match scorer, assessment generator, and automated test grader. |
-| [**docs/adminPanel.md**](docs/adminPanel.md) | Admins, Ops & Agents | 15 Admin & CMS views, Recharts financial analytics, 6-stage ATS Kanban, RBAC persona switcher, candidate tracking, and live preview editors. |
-| [**docs/PRD.md**](docs/PRD.md) | Product Managers & Leads | Product Requirements Document, business KPIs, legal compliance, screening test specifications, and platform roadmap. |
-| [**docs/Design.md**](docs/Design.md) | Designers & Developers | Design aesthetic rules, color tokens, typography scales, glassmorphism specs, and UI guidelines. |
+| Document                                               | Primary Audience            | Scope and Contents                                                                                                                                               |
+| ------------------------------------------------------ | --------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [**docs/FrontendDocs.md**](docs/FrontendDocs.md)       | Frontend Engineers & Agents | React 19 architecture, Vite proxy, Redux Toolkit slices, routing inventory, design tokens, Three.js canvas, and auth state.                                      |
+| [**docs/BackendDocs.md**](docs/BackendDocs.md)         | Backend Engineers & Agents  | Express 5 API Gateway, dual-persistence (PostgreSQL + MongoDB Atlas), connection resilience, in-memory fallback, rate limiting, and complete REST API reference. |
+| [**docs/Ai_ServicesDocs.md**](docs/Ai_ServicesDocs.md) | AI Engineers & Agents       | Python FastAPI microservice, PDF link annotation parsing, ATS match scorer, assessment generator, and automated test grader.                                     |
+| [**docs/adminPanel.md**](docs/adminPanel.md)           | Admins, Ops & Agents        | 15 Admin & CMS views, Recharts financial analytics, 6-stage ATS Kanban, RBAC persona switcher, candidate tracking, and live preview editors.                     |
+| [**docs/PRD.md**](docs/PRD.md)                         | Product Managers & Leads    | Product Requirements Document, business KPIs, legal compliance, screening test specifications, and platform roadmap.                                             |
+| [**docs/Design.md**](docs/Design.md)                   | Designers & Developers      | Design aesthetic rules, color tokens, typography scales, glassmorphism specs, and UI guidelines.                                                                 |
 
 ---
 
@@ -170,16 +170,16 @@ Turborepo will concurrently launch:
 
 All primary operations can be executed from the root directory:
 
-| Command | Action |
-| --- | --- |
-| `npm run dev` | Runs Frontend, Backend, and AI Service concurrently in persistent watch mode |
-| `npm run build` | Builds production-optimized artifacts across all workspaces via Turborepo |
-| `npm run lint` | Runs ESLint analysis across apps |
-| `npm run format` | Auto-formats code using Prettier |
-| `npm run format:check` | Verifies code adherence to Prettier formatting standards |
-| `npm run migrate` | Executes pending database migrations (`apps/backend`) |
-| `npm run migrate:status` | Checks database migration status |
-| `npm run migrate:down` | Rolls back the latest database migration |
+| Command                  | Action                                                                       |
+| ------------------------ | ---------------------------------------------------------------------------- |
+| `npm run dev`            | Runs Frontend, Backend, and AI Service concurrently in persistent watch mode |
+| `npm run build`          | Builds production-optimized artifacts across all workspaces via Turborepo    |
+| `npm run lint`           | Runs ESLint analysis across apps                                             |
+| `npm run format`         | Auto-formats code using Prettier                                             |
+| `npm run format:check`   | Verifies code adherence to Prettier formatting standards                     |
+| `npm run migrate`        | Executes pending database migrations (`apps/backend`)                        |
+| `npm run migrate:status` | Checks database migration status                                             |
+| `npm run migrate:down`   | Rolls back the latest database migration                                     |
 
 ---
 

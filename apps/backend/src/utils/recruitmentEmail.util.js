@@ -257,7 +257,10 @@ function escapeHtml(str) {
  * Sends recruitment notification email matching the layout from the specification.
  * Attaches the uploaded resume if available on disk.
  */
-export const sendRecruitmentNotificationEmail = async (applicationData, resumeAttachment = null) => {
+export const sendRecruitmentNotificationEmail = async (
+  applicationData,
+  resumeAttachment = null
+) => {
   try {
     const transport = getTransporter();
 
@@ -271,14 +274,18 @@ export const sendRecruitmentNotificationEmail = async (applicationData, resumeAt
       process.env.EMAIL_FROM ||
       `"ThinkWires Talent Engine" <${process.env.SMTP_USER || 'careers@thinkwires.com'}>`;
 
-    const subject = `Submit Candidate for - ${applicationData.jobTitle || 'Technical Specialist'} [${applicationData.firstName || ''} ${applicationData.lastName || ''}]`.trim();
+    const subject =
+      `Submit Candidate for - ${applicationData.jobTitle || 'Technical Specialist'} [${applicationData.firstName || ''} ${applicationData.lastName || ''}]`.trim();
 
     const htmlContent = buildRecruitmentEmailHtml(applicationData);
 
     const attachments = [];
     if (resumeAttachment && resumeAttachment.path) {
       attachments.push({
-        filename: resumeAttachment.filename || applicationData.resumeFileName || 'Resume.pdf',
+        filename:
+          resumeAttachment.filename ||
+          applicationData.resumeFileName ||
+          'Resume.pdf',
         path: resumeAttachment.path,
       });
     }
@@ -288,8 +295,12 @@ export const sendRecruitmentNotificationEmail = async (applicationData, resumeAt
       console.log('📧 [MOCK EMAIL SERVICE] SMTP credentials not set.');
       console.log(`To: ${recipient}`);
       console.log(`Subject: ${subject}`);
-      console.log(`Candidate: ${applicationData.firstName} ${applicationData.lastName} (${applicationData.email})`);
-      console.log(`Job: ${applicationData.jobTitle} [${applicationData.jobId}]`);
+      console.log(
+        `Candidate: ${applicationData.firstName} ${applicationData.lastName} (${applicationData.email})`
+      );
+      console.log(
+        `Job: ${applicationData.jobTitle} [${applicationData.jobId}]`
+      );
       console.log('----------------------------------------------------');
       return {
         success: true,
@@ -307,7 +318,9 @@ export const sendRecruitmentNotificationEmail = async (applicationData, resumeAt
       attachments,
     });
 
-    console.log(`✅ [EMAIL SENT] Recruitment notification delivered to ${recipient}: ${info.messageId}`);
+    console.log(
+      `✅ [EMAIL SENT] Recruitment notification delivered to ${recipient}: ${info.messageId}`
+    );
     return {
       success: true,
       mode: 'smtp_delivered',
@@ -315,7 +328,10 @@ export const sendRecruitmentNotificationEmail = async (applicationData, resumeAt
       recipient,
     };
   } catch (error) {
-    console.error('❌ [EMAIL ERROR] Failed to send recruitment notification email:', error.message);
+    console.error(
+      '❌ [EMAIL ERROR] Failed to send recruitment notification email:',
+      error.message
+    );
     return {
       success: false,
       error: error.message,

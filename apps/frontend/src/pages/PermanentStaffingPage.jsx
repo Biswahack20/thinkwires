@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   fetchPermanentStaffingData,
-  fallbackPermanentStaffingData
+  fallbackPermanentStaffingData,
 } from '../store/slices/permanentStaffingSlice';
 import Navbar from '../components/common/Navbar';
 import Footer from '../components/common/Footer';
@@ -15,9 +15,14 @@ import PermStaffConsultation from '../components/PermanentStaffingComponents/Per
 
 const PermanentStaffingPage = () => {
   const dispatch = useDispatch();
-  const { data: rawData, status } = useSelector((state) => state.permanentStaffing || {});
+  const { data: rawData, status } = useSelector(
+    (state) => state.permanentStaffing || {}
+  );
 
-  const data = rawData && Object.keys(rawData).length > 0 ? rawData : fallbackPermanentStaffingData;
+  const data =
+    rawData && Object.keys(rawData).length > 0
+      ? rawData
+      : fallbackPermanentStaffingData;
 
   useEffect(() => {
     window.scrollTo(0, 0);

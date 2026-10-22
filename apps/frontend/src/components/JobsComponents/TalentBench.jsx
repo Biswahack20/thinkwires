@@ -33,19 +33,24 @@ const TalentBench = () => {
             </h2>
 
             <p className="TalentBench-bannerSubtext">
-              Our talent benchmarks analyze unlisted mandates from 740+ enterprise partners daily. 
-              Submit your resume, and our senior recruitment directors will connect with targeted roles in under 24 hours.
+              Our talent benchmarks analyze unlisted mandates from 740+
+              enterprise partners daily. Submit your resume, and our senior
+              recruitment directors will connect with targeted roles in under 24
+              hours.
             </p>
 
             <div className="TalentBench-checksRow">
               <span className="TalentBench-checkItem">
-                <span className="TalentBench-checkIcon">✓</span> 100% Confidential
+                <span className="TalentBench-checkIcon">✓</span> 100%
+                Confidential
               </span>
               <span className="TalentBench-checkItem">
-                <span className="TalentBench-checkIcon">✓</span> Direct CTO Referrals
+                <span className="TalentBench-checkIcon">✓</span> Direct CTO
+                Referrals
               </span>
               <span className="TalentBench-checkItem">
-                <span className="TalentBench-checkIcon">✓</span> Free Salary Benchmarking
+                <span className="TalentBench-checkIcon">✓</span> Free Salary
+                Benchmarking
               </span>
             </div>
           </div>
@@ -63,9 +68,11 @@ const TalentBench = () => {
                   <div className="TalentBench-successCheck">✓</div>
                   <h4>CV Submitted Successfully!</h4>
                   <p>
-                    Thank you, <strong>{fullName}</strong>. Our senior recruitment team will review your profile and match you with unlisted roles.
+                    Thank you, <strong>{fullName}</strong>. Our senior
+                    recruitment team will review your profile and match you with
+                    unlisted roles.
                   </p>
-                  <button 
+                  <button
                     className="TalentBench-submitAnotherBtn"
                     onClick={() => {
                       setIsSubmitted(false);
@@ -110,18 +117,37 @@ const TalentBench = () => {
                       className="TalentBench-hiddenFileInput"
                       id="bench-cv-upload"
                     />
-                    <label htmlFor="bench-cv-upload" className="TalentBench-uploadLabel">
-                      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="TalentBench-cloudIcon">
+                    <label
+                      htmlFor="bench-cv-upload"
+                      className="TalentBench-uploadLabel"
+                    >
+                      <svg
+                        width="24"
+                        height="24"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        className="TalentBench-cloudIcon"
+                      >
                         <path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z"></path>
                         <polyline points="12 13 12 9 12 9"></polyline>
                         <polyline points="9 11 12 8 15 11"></polyline>
                       </svg>
                       {file ? (
-                        <span className="TalentBench-selectedFileName">{file.name}</span>
+                        <span className="TalentBench-selectedFileName">
+                          {file.name}
+                        </span>
                       ) : (
                         <>
-                          <span className="TalentBench-uploadMainText">Click to browse or drop file</span>
-                          <span className="TalentBench-uploadSubText">PDF, DOC, DOCX up to 10MB</span>
+                          <span className="TalentBench-uploadMainText">
+                            Click to browse or drop file
+                          </span>
+                          <span className="TalentBench-uploadSubText">
+                            PDF, DOC, DOCX up to 10MB
+                          </span>
                         </>
                       )}
                     </label>

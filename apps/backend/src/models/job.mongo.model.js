@@ -145,6 +145,7 @@ const jobRequirementSchema = new mongoose.Schema(
 );
 
 const JobRequirement =
-  mongoose.models.JobRequirement || mongoose.model('JobRequirement', jobRequirementSchema);
+  mongoose.models.JobRequirement ||
+  mongoose.model('JobRequirement', jobRequirementSchema);
 
 export default JobRequirement;

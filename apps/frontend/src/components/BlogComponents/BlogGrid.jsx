@@ -18,8 +18,14 @@ const BlogGrid = ({
           <div key={i} className="BlogGrid-skeletonCard">
             <div className="BlogGrid-skeletonImage" />
             <div className="BlogGrid-skeletonText" style={{ width: '40%' }} />
-            <div className="BlogGrid-skeletonText" style={{ width: '90%', height: '24px' }} />
-            <div className="BlogGrid-skeletonText" style={{ width: '75%', height: '16px' }} />
+            <div
+              className="BlogGrid-skeletonText"
+              style={{ width: '90%', height: '24px' }}
+            />
+            <div
+              className="BlogGrid-skeletonText"
+              style={{ width: '75%', height: '16px' }}
+            />
             <div className="BlogGrid-skeletonFooter" />
           </div>
         ))}
@@ -35,7 +41,8 @@ const BlogGrid = ({
         </div>
         <h3 className="BlogGrid-emptyTitle">No Research Articles Found</h3>
         <p className="BlogGrid-emptyText">
-          We couldn't find any articles matching your search query or selected category filter.
+          We couldn't find any articles matching your search query or selected
+          category filter.
         </p>
         {onResetFilters && (
           <button onClick={onResetFilters} className="BlogGrid-emptyBtn">

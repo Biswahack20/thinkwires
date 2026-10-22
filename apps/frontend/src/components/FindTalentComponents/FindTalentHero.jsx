@@ -20,7 +20,9 @@ const FindTalentHero = ({ data }) => {
           <div className="FindTalent-heroContent">
             <h1 className="FindTalent-heroTitle">
               Deploy Pre-Vetted Tech Talent &amp;{' '}
-              <span className="FindTalent-titleHighlight">High-Velocity Engineering Squads.</span>
+              <span className="FindTalent-titleHighlight">
+                High-Velocity Engineering Squads.
+              </span>
             </h1>
             <p className="FindTalent-heroDesc">{description}</p>
           </div>
@@ -28,15 +30,21 @@ const FindTalentHero = ({ data }) => {
           {/* Right SLA Box */}
           <div className="FindTalent-slaBox">
             <div className="sla-box-header">
-              <span className="sla-header-title">Enterprise Service Levels</span>
-              <span className="material-symbols-outlined icon">verified_user</span>
+              <span className="sla-header-title">
+                Enterprise Service Levels
+              </span>
+              <span className="material-symbols-outlined icon">
+                verified_user
+              </span>
             </div>
 
             <div className="sla-items-list">
               {slaCards.map((card, idx) => (
                 <div key={idx} className="sla-item">
                   <div className={`sla-item-icon color-${idx}`}>
-                    <span className="material-symbols-outlined">{card.icon}</span>
+                    <span className="material-symbols-outlined">
+                      {card.icon}
+                    </span>
                   </div>
                   <div className="sla-item-text">
                     <span className="sla-item-title">{card.title}</span>

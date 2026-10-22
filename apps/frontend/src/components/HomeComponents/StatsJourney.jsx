@@ -69,7 +69,10 @@ const StatsJourney = () => {
       const totalDistance = rect.height;
       const currentPos = startTrigger - rect.top;
 
-      const progress = Math.max(0, Math.min(1, currentPos / (totalDistance + (startTrigger - endTrigger))));
+      const progress = Math.max(
+        0,
+        Math.min(1, currentPos / (totalDistance + (startTrigger - endTrigger)))
+      );
       setScrollProgress(progress);
     };
 
@@ -99,7 +102,11 @@ const StatsJourney = () => {
               <span>LIVE TELEMETRY</span>
             </div>
             <div className="StatsJourney-statValue">
-              <AnimatedCounter value={stats?.jobsFilled || 130} suffix="+" duration={1800} />
+              <AnimatedCounter
+                value={stats?.jobsFilled || 130}
+                suffix="+"
+                duration={1800}
+              />
             </div>
             <h4 className="StatsJourney-statTitle">HOT TECH JOBS FILLED</h4>
             <p className="StatsJourney-statDesc">
@@ -113,7 +120,11 @@ const StatsJourney = () => {
               <span>LIVE TELEMETRY</span>
             </div>
             <div className="StatsJourney-statValue">
-              <AnimatedCounter value={stats?.corePlacements || 55} suffix="+" duration={1800} />
+              <AnimatedCounter
+                value={stats?.corePlacements || 55}
+                suffix="+"
+                duration={1800}
+              />
             </div>
             <h4 className="StatsJourney-statTitle">ON-ROLL CORE PLACEMENTS</h4>
             <p className="StatsJourney-statDesc">
@@ -127,7 +138,11 @@ const StatsJourney = () => {
               <span>LIVE TELEMETRY</span>
             </div>
             <div className="StatsJourney-statValue">
-              <AnimatedCounter value={stats?.contingentHired || 125} suffix="+" duration={1800} />
+              <AnimatedCounter
+                value={stats?.contingentHired || 125}
+                suffix="+"
+                duration={1800}
+              />
             </div>
             <h4 className="StatsJourney-statTitle">TOTAL CONTINGENT HIRED</h4>
             <p className="StatsJourney-statDesc">
@@ -141,7 +156,11 @@ const StatsJourney = () => {
               <span>LIVE TELEMETRY</span>
             </div>
             <div className="StatsJourney-statValue">
-              <AnimatedCounter value={stats?.clientRetention || 95} suffix="%" duration={1800} />
+              <AnimatedCounter
+                value={stats?.clientRetention || 95}
+                suffix="%"
+                duration={1800}
+              />
             </div>
             <h4 className="StatsJourney-statTitle">CLIENT RETENTION RATE</h4>
             <p className="StatsJourney-statDesc">
@@ -157,7 +176,8 @@ const StatsJourney = () => {
             Milestones of Exponential Growth
           </h2>
           <p className="StatsJourney-timelineDesc">
-            From visionary inception in Noida to an international tech workforce catalyst.
+            From visionary inception in Noida to an international tech workforce
+            catalyst.
           </p>
         </div>
 
@@ -188,13 +208,22 @@ const StatsJourney = () => {
                 className={`StatsJourney-spineRow ${isLeft ? 'is-left' : 'is-right'}`}
               >
                 {/* Milestone Node on the Spine */}
-                <div className={`StatsJourney-spineNode ${isReached ? 'is-active' : ''}`}>
+                <div
+                  className={`StatsJourney-spineNode ${isReached ? 'is-active' : ''}`}
+                >
                   <div className="StatsJourney-spineNodeDot" />
-                  {isReached && <span className="tw-radar-dot" style={{ position: 'absolute' }} />}
+                  {isReached && (
+                    <span
+                      className="tw-radar-dot"
+                      style={{ position: 'absolute' }}
+                    />
+                  )}
                 </div>
 
                 {/* Milestone Content Card */}
-                <div className={`StatsJourney-spineCard ${isReached ? 'is-active' : ''}`}>
+                <div
+                  className={`StatsJourney-spineCard ${isReached ? 'is-active' : ''}`}
+                >
                   <div className="StatsJourney-cardGlowCorner" />
 
                   {/* Header: Phase badge & Year */}
@@ -202,28 +231,30 @@ const StatsJourney = () => {
                     <span className="StatsJourney-phaseBadge">
                       {item.phase}
                     </span>
-                    <span className="StatsJourney-cardYear">
-                      {item.year}
-                    </span>
+                    <span className="StatsJourney-cardYear">{item.year}</span>
                   </div>
 
                   <h3 className="StatsJourney-timelineCardTitle">
                     {item.title}
                   </h3>
-                  <p className="StatsJourney-timelineCardDesc">
-                    {item.desc}
-                  </p>
+                  <p className="StatsJourney-timelineCardDesc">{item.desc}</p>
 
                   {/* Footer tags without emojis */}
                   <div className="StatsJourney-cardFooter">
                     <span className="StatsJourney-metricPill StatsJourney-metricPillPrimary">
-                      <span className="material-symbols-outlined" style={{ fontSize: '15px', color: '#38bdf8' }}>
+                      <span
+                        className="material-symbols-outlined"
+                        style={{ fontSize: '15px', color: '#38bdf8' }}
+                      >
                         bolt
                       </span>
                       <span>{item.tag}</span>
                     </span>
                     <span className="StatsJourney-metricPill StatsJourney-metricPillSuccess">
-                      <span className="material-symbols-outlined" style={{ fontSize: '15px', color: '#34d399' }}>
+                      <span
+                        className="material-symbols-outlined"
+                        style={{ fontSize: '15px', color: '#34d399' }}
+                      >
                         verified
                       </span>
                       <span>{item.metric}</span>

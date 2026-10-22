@@ -27,13 +27,22 @@ export const JobApplicationModalProvider = ({ children }) => {
       });
     } else if (job && typeof job === 'object') {
       const jobId = job.id || job._id || job.jobId || 'general-pool';
-      const title = job.title || job.jobTitle || job.roleTitle || 'Featured Technical Position';
+      const title =
+        job.title ||
+        job.jobTitle ||
+        job.roleTitle ||
+        'Featured Technical Position';
       const department = job.department || job.category || 'Engineering';
       const location = job.location || 'Remote';
-      const employmentType = job.jobMode || job.employmentType || job.type || 'Permanent';
+      const employmentType =
+        job.jobMode || job.employmentType || job.type || 'Permanent';
       const postingDate = job.postedDate
-        ? new Date(job.postedDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
-        : (job.postingDate || 'Active Mandate');
+        ? new Date(job.postedDate).toLocaleDateString('en-US', {
+            month: 'short',
+            day: 'numeric',
+            year: 'numeric',
+          })
+        : job.postingDate || 'Active Mandate';
 
       setJobData({
         jobId: String(jobId),

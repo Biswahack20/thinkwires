@@ -14,16 +14,22 @@ The ThinkWires frontend is a high-performance **React 19 Single-Page Application
 
 ### Tech Stack Inventory
 
-| Component | Library / Technology | Version | Purpose |
-| --- | --- | --- | --- |
-| **Core Framework** | React | `^19.2.8` | Declarative UI rendering & Concurrent features |
-| **Build & Bundler** | Vite | `^8.3.0` | Fast HMR and optimized Rolldown/ESBuild bundling |
-| **Routing** | React Router DOM | `^7.18.4` | Declarative client-side routing, nested routes, and lazy loading |
-| **State Management** | Redux Toolkit & React-Redux | `^2.13.0` / `^9.3.0` | Centralized global application state across 13 domain slices |
-| **Styling Engine** | Vanilla CSS + Design Tokens | Custom | Modular design system with zero CSS-in-JS runtime overhead |
-| **Visuals & 3D** | Three.js & Framer Motion | `^0.186.1` / `^14.2.0` | Interactive 3D hero animation and micro-interactions |
-| **Smooth Scrolling** | Lenis | `^1.3.26` | Momentum-based document scrolling |
-| **Data Visualization** | Recharts | `^3.10.1` | Financial analytics, placement quotas, and SLA performance charts |
+| Component                          | Library / Technology               | Version                | Purpose                                                                      |
+| ---------------------------------- | ---------------------------------- | ---------------------- | ---------------------------------------------------------------------------- |
+| **Core Framework**                 | React                              | `^19.2.8`              | Declarative UI rendering & Concurrent features                               |
+| **Build & Bundler**                | Vite                               | `^8.3.0`               | Fast HMR and optimized Rolldown/ESBuild bundling                             |
+| **Routing**                        | React Router DOM                   | `^7.18.4`              | Declarative client-side routing, nested routes, and lazy loading             |
+| **State Management**               | Redux Toolkit & React-Redux        | `^2.13.0` / `^9.3.0`   | Centralized global application state across 13 domain slices                 |
+| **Styling Engine**                 | Vanilla CSS + Design Tokens        | Custom                 | Modular design system with zero CSS-in-JS runtime overhead                   |
+| **Visuals & 3D**                   | Three.js & Framer Motion           | `^0.186.1` / `^14.2.0` | Interactive 3D hero animation and micro-interactions                         |
+| **Smooth Scrolling**               | Lenis                              | `^1.3.26`              | Momentum-based document scrolling                                            |
+| **Data Visualization**             | Recharts                           | `^3.10.1`              | Financial analytics, placement quotas, and SLA performance charts            |
+| **Unit & Integration Test Runner** | Vitest                             | `^5.0.5`               | High-speed ESM native test runner integrated with Vite                       |
+| **DOM Testing & User Interaction** | React Testing Library & user-event | `^16.3.3` / `^14.6.8`  | User-centric DOM rendering, query, and realistic browser event simulation    |
+| **DOM Simulation Environment**     | jsdom                              | `^29.1.1`              | Headless browser DOM environment for Node.js test execution                  |
+| **API Network Mocking**            | MSW (Mock Service Worker)          | `^2.12.9`              | Declarative HTTP request interception for backend-agnostic integration tests |
+| **End-to-End (E2E) Automation**    | Playwright                         | `^1.58.2`              | Multi-browser (Chromium, Mobile) headless/headed user journey testing        |
+| **Automated Accessibility Engine** | Axe-core Playwright                | `^4.11.1`              | Automated WCAG 2.1 A/AA accessibility scanning and compliance validation     |
 
 ---
 
@@ -36,6 +42,8 @@ apps/frontend/
 ├── .env / .env.example       # Vite client environment variables
 ├── index.html                # Single-page HTML container with Google Fonts
 ├── vite.config.js            # Vite configuration with /api reverse proxy
+├── vitest.config.js          # Vitest configuration with jsdom, coverage, and setupFiles
+├── playwright.config.js      # Playwright multi-browser & mobile viewport configuration
 ├── package.json              # Frontend scripts & dependencies
 └── src/
     ├── main.jsx              # React 19 root bootstrap & Redux Provider
@@ -94,8 +102,17 @@ apps/frontend/
     │   ├── index.js          # Store configuration & root reducer
     │   └── slices/           # 13 modular Redux domain slices
     │
+    ├── test/                 # Centralized Frontend Automation Test Suite
+    │   ├── unit/             # Redux slice state transitions & security utility tests
+    │   ├── components/       # UI component & custom hook tests (ProtectedRoute, ThemeProvider, Badges)
+    │   ├── integration/      # Multi-component user workflows with MSW (CandidateApplicationsPage)
+    │   ├── e2e/              # Playwright End-to-End tests (Smoke, a11y, Adversarial Security)
+    │   ├── mocks/            # MSW mock handlers & Node test server
+    │   ├── setup.js          # Global test environment, Three.js canvas mocks, and MSW lifecycle listeners
+    │   └── test-utils.jsx    # Custom renderWithProviders helper (Redux + Router + ThemeProvider + userEvent)
+    │
     ├── context/              # Context API providers & custom hooks
-    └── utils/                # Helper utilities (formatting, validators)
+    └── utils/                # Helper utilities (formatting, validators, redirect security)
 ```
 
 ---
@@ -115,42 +132,42 @@ const AdminDashboard = lazy(() => import('./admin/AdminDashboard'));
 
 ### Complete Route Inventory
 
-| Route Path | View / Component | Access Level | Description |
-| --- | --- | --- | --- |
-| `/` | `HomePage` | Public | Main landing page with 3D animation, services, stats |
-| `/about` | `AboutPage` | Public | Company philosophy, leadership, and mission |
-| `/industries` | `IndustriesPage` | Public | Verticals served (FinTech, HealthTech, SaaS, AI/ML) |
-| `/bench` or `/talent-cloud` | `BenchPage` | Public | Pre-vetted technical talent available for deployment |
-| `/jobs` or `/hot-jobs` | `JobPage` | Public | Career openings with filters and direct apply links |
-| `/blog` | `BlogPage` | Public | Engineering insights, industry research, articles |
-| `/contact` | `ContactPage` | Public | Enterprise contact form & global office locations |
-| `/find-talent` or `/hire-talent` | `FindTalentPage` | Public | Client lead intake for rapid workforce deployment |
-| `/staff-augmentation` | `StaffAugmentationPage` | Public | Dedicated staff augmentation service landing page |
-| `/permanent-staffing` | `PermanentStaffingPage` | Public | Executive search & permanent recruitment page |
-| `/payroll` | `PayrollPage` | Public | Payroll outsourcing & compliance overview |
-| `/eor` | `EorPage` | Public | Employer of Record global hiring solutions |
-| `/privacy`, `/terms`, `/terms-of-service`, `/privacy-policy` | `LegalPage` | Public | Legal compliance, cookie policies, and terms of service |
-| `/login` | `LoginPage` | Public / Guest | Candidate sign-in portal |
-| `/register` | `RegisterPage` | Public / Guest | New candidate profile registration |
-| `/forgot-password` | `ForgotPasswordPage` | Public / Guest | Password reset email requisition |
-| `/reset-password` | `ResetPasswordPage` | Public / Guest | Password change token submission |
-| `/candidate/dashboard` | `CandidateDashboardPage` | Protected | Candidate overview: active applications & profile score |
-| `/candidate/profile` | `CandidateProfilePage` | Protected | Editable candidate profile, skills, and resume link |
-| `/candidate/applications` | `CandidateApplicationsPage` | Protected | Application pipeline status, test results & withdrawal action |
-| `/jobs/:jobId/apply` | `JobApplyPage` | Protected | Multi-step job application submission with resume |
-| `/admin` | `AdminDashboard` | Admin Layout | Executive KPIs, revenue charts, and audit stream |
-| `/admin/employees` | `EmployeesView` | Admin Layout | Technical workforce directory (Bench vs Deployed) |
-| `/admin/candidates` | `CandidatesView` | Admin Layout | Candidate pipeline view, ATS scores & synchronized intake |
-| `/admin/clients` | `ClientsView` | Admin Layout | Corporate client account management |
-| `/admin/jobs` | `JobsView` | Admin Layout | Open staffing requisitions & headcount allocation |
-| `/admin/placements` | `PlacementsView` | Admin Layout | Billable client deployments & hourly/monthly rates |
-| `/admin/system-members` | `SystemMembersView` | Admin Layout | Platform team members and RBAC role assignments |
-| `/admin/cms` | `CmsDashboard` | Admin Layout | CMS overview metrics and module launcher |
-| `/admin/cms/pages` | `PagesManager` | Admin Layout | Website pages CMS with live preview modal |
-| `/admin/cms/blog` | `BlogManager` | Admin Layout | Full article editor, markdown, and authoring |
-| `/admin/cms/media` | `MediaLibrary` | Admin Layout | Asset library with copyable CDN/upload URLs |
-| `/admin/cms/seo` | `SeoManager` | Admin Layout | Page-by-page SEO meta directives & Google SERP preview |
-| `/admin/cms/announcements` | `AnnouncementsManager` | Admin Layout | Corporate broadcasts & topbar alert notifications |
+| Route Path                                                   | View / Component            | Access Level   | Description                                                   |
+| ------------------------------------------------------------ | --------------------------- | -------------- | ------------------------------------------------------------- |
+| `/`                                                          | `HomePage`                  | Public         | Main landing page with 3D animation, services, stats          |
+| `/about`                                                     | `AboutPage`                 | Public         | Company philosophy, leadership, and mission                   |
+| `/industries`                                                | `IndustriesPage`            | Public         | Verticals served (FinTech, HealthTech, SaaS, AI/ML)           |
+| `/bench` or `/talent-cloud`                                  | `BenchPage`                 | Public         | Pre-vetted technical talent available for deployment          |
+| `/jobs` or `/hot-jobs`                                       | `JobPage`                   | Public         | Career openings with filters and direct apply links           |
+| `/blog`                                                      | `BlogPage`                  | Public         | Engineering insights, industry research, articles             |
+| `/contact`                                                   | `ContactPage`               | Public         | Enterprise contact form & global office locations             |
+| `/find-talent` or `/hire-talent`                             | `FindTalentPage`            | Public         | Client lead intake for rapid workforce deployment             |
+| `/staff-augmentation`                                        | `StaffAugmentationPage`     | Public         | Dedicated staff augmentation service landing page             |
+| `/permanent-staffing`                                        | `PermanentStaffingPage`     | Public         | Executive search & permanent recruitment page                 |
+| `/payroll`                                                   | `PayrollPage`               | Public         | Payroll outsourcing & compliance overview                     |
+| `/eor`                                                       | `EorPage`                   | Public         | Employer of Record global hiring solutions                    |
+| `/privacy`, `/terms`, `/terms-of-service`, `/privacy-policy` | `LegalPage`                 | Public         | Legal compliance, cookie policies, and terms of service       |
+| `/login`                                                     | `LoginPage`                 | Public / Guest | Candidate sign-in portal                                      |
+| `/register`                                                  | `RegisterPage`              | Public / Guest | New candidate profile registration                            |
+| `/forgot-password`                                           | `ForgotPasswordPage`        | Public / Guest | Password reset email requisition                              |
+| `/reset-password`                                            | `ResetPasswordPage`         | Public / Guest | Password change token submission                              |
+| `/candidate/dashboard`                                       | `CandidateDashboardPage`    | Protected      | Candidate overview: active applications & profile score       |
+| `/candidate/profile`                                         | `CandidateProfilePage`      | Protected      | Editable candidate profile, skills, and resume link           |
+| `/candidate/applications`                                    | `CandidateApplicationsPage` | Protected      | Application pipeline status, test results & withdrawal action |
+| `/jobs/:jobId/apply`                                         | `JobApplyPage`              | Protected      | Multi-step job application submission with resume             |
+| `/admin`                                                     | `AdminDashboard`            | Admin Layout   | Executive KPIs, revenue charts, and audit stream              |
+| `/admin/employees`                                           | `EmployeesView`             | Admin Layout   | Technical workforce directory (Bench vs Deployed)             |
+| `/admin/candidates`                                          | `CandidatesView`            | Admin Layout   | Candidate pipeline view, ATS scores & synchronized intake     |
+| `/admin/clients`                                             | `ClientsView`               | Admin Layout   | Corporate client account management                           |
+| `/admin/jobs`                                                | `JobsView`                  | Admin Layout   | Open staffing requisitions & headcount allocation             |
+| `/admin/placements`                                          | `PlacementsView`            | Admin Layout   | Billable client deployments & hourly/monthly rates            |
+| `/admin/system-members`                                      | `SystemMembersView`         | Admin Layout   | Platform team members and RBAC role assignments               |
+| `/admin/cms`                                                 | `CmsDashboard`              | Admin Layout   | CMS overview metrics and module launcher                      |
+| `/admin/cms/pages`                                           | `PagesManager`              | Admin Layout   | Website pages CMS with live preview modal                     |
+| `/admin/cms/blog`                                            | `BlogManager`               | Admin Layout   | Full article editor, markdown, and authoring                  |
+| `/admin/cms/media`                                           | `MediaLibrary`              | Admin Layout   | Asset library with copyable CDN/upload URLs                   |
+| `/admin/cms/seo`                                             | `SeoManager`                | Admin Layout   | Page-by-page SEO meta directives & Google SERP preview        |
+| `/admin/cms/announcements`                                   | `AnnouncementsManager`      | Admin Layout   | Corporate broadcasts & topbar alert notifications             |
 
 ---
 
@@ -288,3 +305,51 @@ npm run preview
 ```
 
 Output directory: `apps/frontend/dist/`
+
+---
+
+## 9. Automation Testing Architecture & Quality Assurance
+
+ThinkWires frontend features a comprehensive, 5-tier automated testing architecture powered by **Vitest**, **React Testing Library**, **Mock Service Worker (MSW)**, and **Playwright**.
+
+### 9.1. The 5-Tier Testing Taxonomy
+
+All test files are organized in `apps/frontend/src/test/`:
+
+| Test Tier                     | Directory                  | Scope & Highlights                                                                                                 | Test Files                                                                                                                                            |
+| :---------------------------- | :------------------------- | :----------------------------------------------------------------------------------------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **1. Unit Testing**           | `src/test/unit/`           | Pure logic, Redux slice reducers, security utilities, and isolated components.                                     | `authSlice.test.js`, `redirectUtil.test.js`, `AnimatedCounter.test.jsx`, `SectionBadge.test.jsx`, `ThemeProvider.test.jsx`, `ProtectedRoute.test.jsx` |
+| **2. Integration Testing**    | `src/test/integration/`    | React views integrated with Redux and MSW network request interception.                                            | `LoginPage.test.jsx`, `CandidateApplicationsPage.test.jsx`                                                                                            |
+| **3. Functional Testing**     | `src/test/functional/`     | Multi-step candidate lifecycle flows (Login -> View Applications -> Withdraw Application).                         | `candidate-journey.functional.test.jsx`                                                                                                               |
+| **4. Non-Functional Testing** | `src/test/non-functional/` | Mount latency SLAs (<50ms), rapid mount/unmount memory stability, accessible roles, form input semantics.          | `performance.test.jsx`, `accessibility.test.jsx`                                                                                                      |
+| **5. Exploratory & Chaos**    | `src/test/exploratory/`    | Rapid button click storms, extreme input fuzzing (script tags/XSS), empty and corrupted API payload resilience.    | `ui-chaos-fuzzing.test.jsx`                                                                                                                           |
+| **Browser E2E Suite**         | `src/test/e2e/`            | Playwright real-browser cross-device tests (Chromium, Mobile Chrome), navigation, and Axe-core WCAG 2.1 AA audits. | `public-smoke.spec.js`, `accessibility.spec.js`, `security-adversarial.spec.js`                                                                       |
+
+### 9.2. Test Helper Infrastructure
+
+- **`renderWithProviders(ui, options)`** ([src/test/test-utils.jsx](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/frontend/src/test/test-utils.jsx)): Wraps tested components in an isolated Redux store, the application's `ThemeProvider`, and a React Router `MemoryRouter`. Returns initialized `userEvent` alongside standard Testing Library utilities.
+- **Global Environment Mocks** ([src/test/setup.js](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/frontend/src/test/setup.js)): Provides polyfills and mocks for `window.matchMedia`, `ResizeObserver`, `IntersectionObserver`, `scrollTo`, and `HTMLCanvasElement.getContext` (preventing DOM crashes from Three.js 3D canvas rendering).
+- **MSW Lifecycle Hooks**: Automatically intercepts network requests during integration testing, resets handlers after each test, and closes cleanly after execution.
+
+### 9.3. Test Execution Commands
+
+```bash
+# Workspace-Wide Testing (Turborepo executes all packages in parallel)
+npm test                                       # Runs Unit, Component, and MSW Integration tests (154 total tests)
+npm run test:e2e                               # Runs Playwright E2E suites across Desktop & Mobile
+
+# Frontend Package Direct Commands (All 5 Tiers)
+npm --prefix apps/frontend test                # Single execution of all Vitest suites (50 tests)
+npm --prefix apps/frontend run test:watch      # Interactive TDD watch mode with instant HMR
+npm --prefix apps/frontend run test:coverage   # V8 code coverage report generation
+npm --prefix apps/frontend run test:unit       # Run Unit tests (30 tests)
+npm --prefix apps/frontend run test:integration# Run Integration tests (10 tests)
+npm --prefix apps/frontend run test:functional # Run Functional tests (1 test)
+npm --prefix apps/frontend run test:non-functional # Run Performance & Accessibility tests (5 tests)
+npm --prefix apps/frontend run test:exploratory# Run UI Chaos & Fuzzing tests (4 tests)
+
+# Playwright Browser E2E Commands
+npm --prefix apps/frontend run test:e2e        # Run Playwright E2E tests headless
+npm --prefix apps/frontend run test:e2e:ui     # Interactive Playwright Test Runner UI
+npm --prefix apps/frontend run test:e2e:headed # Run Playwright tests with visible browser window
+```
