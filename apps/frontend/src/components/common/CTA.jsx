@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import ApplyModal from './ApplyModal';
 
-const API_BASE = import.meta.env.VITE_API_URL || import.meta.env.VITE_API_BASE_URL || '/api';
+const API_BASE =
+  import.meta.env.VITE_API_URL || import.meta.env.VITE_API_BASE_URL || '/api';
 
 const CTA = () => {
   const [email, setEmail] = useState('');
@@ -53,7 +54,9 @@ const CTA = () => {
         {/* Employer Card */}
         <div className="CTA-card CTA-employerCard">
           <span className="CTA-employerTag">
-            <span className="material-symbols-outlined text-[16px]">business_center</span>
+            <span className="material-symbols-outlined text-[16px]">
+              business_center
+            </span>
             <span>For Enterprise Employers</span>
           </span>
           <h2 className="CTA-employerTitle">
@@ -68,12 +71,11 @@ const CTA = () => {
           <form className="CTA-form" onSubmit={handleSubmit}>
             {status.success && (
               <div className="CTA-successMsg">
-                Callback requested successfully! A talent advisor will reach out shortly.
+                Callback requested successfully! A talent advisor will reach out
+                shortly.
               </div>
             )}
-            {status.error && (
-              <div className="CTA-errorMsg">{status.error}</div>
-            )}
+            {status.error && <div className="CTA-errorMsg">{status.error}</div>}
 
             <div className="CTA-inputGroup">
               <input
@@ -113,16 +115,18 @@ const CTA = () => {
         {/* Engineer Card */}
         <div className="CTA-card CTA-engineerCard">
           <span className="CTA-engineerTag">
-            <span className="material-symbols-outlined text-[16px]">person</span>
+            <span className="material-symbols-outlined text-[16px]">
+              person
+            </span>
             <span>For Software Engineers &amp; Leads</span>
           </span>
           <h2 className="CTA-engineerTitle">
             Accelerate Your Technical Career
           </h2>
           <p className="CTA-engineerDesc">
-            Get matched directly with funded US/India startups and
-            multinational enterprises. Transparent compensation, direct
-            feedback, and rapid onboarding.
+            Get matched directly with funded US/India startups and multinational
+            enterprises. Transparent compensation, direct feedback, and rapid
+            onboarding.
           </p>
 
           <div className="CTA-priorityBox">
@@ -143,13 +147,19 @@ const CTA = () => {
             onClick={() => setIsApplyModalOpen(true)}
             className="CTA-applyBtn"
           >
-            <span className="material-symbols-outlined text-[20px]">upload_file</span>
+            <span className="material-symbols-outlined text-[20px]">
+              upload_file
+            </span>
             <span>Drop Resume / Quick Apply</span>
           </button>
 
           <div className="CTA-engineerFooterNote">
-            <span className="material-symbols-outlined text-[16px]">verified</span>
-            <span>Direct client interviews • Zero recruiter commission cut</span>
+            <span className="material-symbols-outlined text-[16px]">
+              verified
+            </span>
+            <span>
+              Direct client interviews • Zero recruiter commission cut
+            </span>
           </div>
         </div>
       </div>

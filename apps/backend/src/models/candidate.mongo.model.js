@@ -71,7 +71,15 @@ const candidateSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ['Applied', 'Screening', 'Interview', 'Offered', 'Hired', 'Rejected', 'Withdrawn'],
+      enum: [
+        'Applied',
+        'Screening',
+        'Interview',
+        'Offered',
+        'Hired',
+        'Rejected',
+        'Withdrawn',
+      ],
       default: 'Applied',
     },
     workMode: {
@@ -110,6 +118,7 @@ const candidateSchema = new mongoose.Schema(
 );
 
 // Prevent re-compilation in development
-const Candidate = mongoose.models.Candidate || mongoose.model('Candidate', candidateSchema);
+const Candidate =
+  mongoose.models.Candidate || mongoose.model('Candidate', candidateSchema);
 
 export default Candidate;

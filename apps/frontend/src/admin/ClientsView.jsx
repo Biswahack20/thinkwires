@@ -95,7 +95,11 @@ const ClientsView = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!formData.companyName.trim() || !formData.contactPerson.trim() || !formData.email.trim()) {
+    if (
+      !formData.companyName.trim() ||
+      !formData.contactPerson.trim() ||
+      !formData.email.trim()
+    ) {
       setFormError('Please enter Company Name, Contact Person, and Email.');
       return;
     }
@@ -142,7 +146,8 @@ const ClientsView = () => {
         <div className="tw-view-title-group">
           <h1>Corporate Client Accounts</h1>
           <p className="tw-view-subtitle">
-            Enterprise partners sourcing engineering manpower, dedicated squads, and cross-border EOR solutions.
+            Enterprise partners sourcing engineering manpower, dedicated squads,
+            and cross-border EOR solutions.
           </p>
         </div>
 
@@ -198,13 +203,27 @@ const ClientsView = () => {
             <tbody>
               {loading ? (
                 <tr>
-                  <td colSpan="7" style={{ textAlign: 'center', padding: '2rem', color: '#64748B' }}>
+                  <td
+                    colSpan="7"
+                    style={{
+                      textAlign: 'center',
+                      padding: '2rem',
+                      color: '#64748B',
+                    }}
+                  >
                     Loading corporate accounts...
                   </td>
                 </tr>
               ) : clients.length === 0 ? (
                 <tr>
-                  <td colSpan="7" style={{ textAlign: 'center', padding: '2rem', color: '#64748B' }}>
+                  <td
+                    colSpan="7"
+                    style={{
+                      textAlign: 'center',
+                      padding: '2rem',
+                      color: '#64748B',
+                    }}
+                  >
                     No clients found matching the query.
                   </td>
                 </tr>
@@ -213,11 +232,15 @@ const ClientsView = () => {
                   <tr key={cli.id || cli._id}>
                     <td>
                       <div style={{ fontWeight: 600 }}>{cli.companyName}</div>
-                      <div style={{ fontSize: '0.73rem', color: '#64748B' }}>{cli.email}</div>
+                      <div style={{ fontSize: '0.73rem', color: '#64748B' }}>
+                        {cli.email}
+                      </div>
                     </td>
                     <td>
                       <div>{cli.contactPerson}</div>
-                      <div style={{ fontSize: '0.73rem', color: '#64748B' }}>{cli.phone}</div>
+                      <div style={{ fontSize: '0.73rem', color: '#64748B' }}>
+                        {cli.phone}
+                      </div>
                     </td>
                     <td>
                       <span
@@ -235,16 +258,25 @@ const ClientsView = () => {
                     </td>
                     <td>
                       <div style={{ fontSize: '0.8rem' }}>{cli.location}</div>
-                      <div style={{ fontSize: '0.72rem', color: '#64748B' }}>{cli.contractType}</div>
+                      <div style={{ fontSize: '0.72rem', color: '#64748B' }}>
+                        {cli.contractType}
+                      </div>
                     </td>
                     <td>
-                      <span className={`tw-badge ${cli.status.toLowerCase()}`}>{cli.status}</span>
+                      <span className={`tw-badge ${cli.status.toLowerCase()}`}>
+                        {cli.status}
+                      </span>
                     </td>
                     <td>
-                      <span className="tw-badge available">{cli.activeRequirementsCount || 0} active</span>
+                      <span className="tw-badge available">
+                        {cli.activeRequirementsCount || 0} active
+                      </span>
                     </td>
                     <td style={{ textAlign: 'right' }}>
-                      <div className="tw-action-btn-group" style={{ justifyContent: 'flex-end' }}>
+                      <div
+                        className="tw-action-btn-group"
+                        style={{ justifyContent: 'flex-end' }}
+                      >
                         <button
                           className="tw-action-icon-btn"
                           onClick={() => openEditModal(cli)}
@@ -275,9 +307,14 @@ const ClientsView = () => {
           <div className="tw-modal">
             <div className="tw-modal-header">
               <h2 className="tw-modal-title">
-                {editingClient ? `Edit ${editingClient.companyName}` : 'Register New Corporate Client'}
+                {editingClient
+                  ? `Edit ${editingClient.companyName}`
+                  : 'Register New Corporate Client'}
               </h2>
-              <button className="tw-modal-close-btn" onClick={() => setModalOpen(false)}>
+              <button
+                className="tw-modal-close-btn"
+                onClick={() => setModalOpen(false)}
+              >
                 <CloseIcon size={16} />
               </button>
             </div>
@@ -310,7 +347,12 @@ const ClientsView = () => {
                       type="text"
                       className="tw-form-input"
                       value={formData.companyName}
-                      onChange={(e) => setFormData({ ...formData, companyName: e.target.value })}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          companyName: e.target.value,
+                        })
+                      }
                       placeholder="e.g. Apex Health Systems"
                       required
                     />
@@ -321,7 +363,12 @@ const ClientsView = () => {
                       type="text"
                       className="tw-form-input"
                       value={formData.contactPerson}
-                      onChange={(e) => setFormData({ ...formData, contactPerson: e.target.value })}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          contactPerson: e.target.value,
+                        })
+                      }
                       placeholder="Dr. Eleanor Vance (CTO)"
                       required
                     />
@@ -335,7 +382,9 @@ const ClientsView = () => {
                       type="email"
                       className="tw-form-input"
                       value={formData.email}
-                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                      onChange={(e) =>
+                        setFormData({ ...formData, email: e.target.value })
+                      }
                       placeholder="contact@company.com"
                       required
                     />
@@ -346,7 +395,9 @@ const ClientsView = () => {
                       type="text"
                       className="tw-form-input"
                       value={formData.phone}
-                      onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                      onChange={(e) =>
+                        setFormData({ ...formData, phone: e.target.value })
+                      }
                       placeholder="+1 (415) 555-0199"
                     />
                   </div>
@@ -358,14 +409,26 @@ const ClientsView = () => {
                     <select
                       className="tw-form-select"
                       value={formData.industry}
-                      onChange={(e) => setFormData({ ...formData, industry: e.target.value })}
+                      onChange={(e) =>
+                        setFormData({ ...formData, industry: e.target.value })
+                      }
                     >
-                      <option value="Financial Services & Banking">Financial Services & Banking</option>
-                      <option value="Healthcare & MedTech">Healthcare & MedTech</option>
+                      <option value="Financial Services & Banking">
+                        Financial Services & Banking
+                      </option>
+                      <option value="Healthcare & MedTech">
+                        Healthcare & MedTech
+                      </option>
                       <option value="Enterprise SaaS">Enterprise SaaS</option>
-                      <option value="Supply Chain & Logistics">Supply Chain & Logistics</option>
-                      <option value="E-Commerce & Retail">E-Commerce & Retail</option>
-                      <option value="Information Technology">Information Technology</option>
+                      <option value="Supply Chain & Logistics">
+                        Supply Chain & Logistics
+                      </option>
+                      <option value="E-Commerce & Retail">
+                        E-Commerce & Retail
+                      </option>
+                      <option value="Information Technology">
+                        Information Technology
+                      </option>
                     </select>
                   </div>
                   <div className="tw-form-group">
@@ -373,7 +436,9 @@ const ClientsView = () => {
                     <select
                       className="tw-form-select"
                       value={formData.status}
-                      onChange={(e) => setFormData({ ...formData, status: e.target.value })}
+                      onChange={(e) =>
+                        setFormData({ ...formData, status: e.target.value })
+                      }
                     >
                       <option value="Active">Active</option>
                       <option value="Onboarding">Onboarding</option>
@@ -385,12 +450,16 @@ const ClientsView = () => {
 
                 <div className="tw-form-row">
                   <div className="tw-form-group">
-                    <label className="tw-form-label">Headquarters / Location</label>
+                    <label className="tw-form-label">
+                      Headquarters / Location
+                    </label>
                     <input
                       type="text"
                       className="tw-form-input"
                       value={formData.location}
-                      onChange={(e) => setFormData({ ...formData, location: e.target.value })}
+                      onChange={(e) =>
+                        setFormData({ ...formData, location: e.target.value })
+                      }
                       placeholder="Boston, MA / Remote"
                     />
                   </div>
@@ -400,7 +469,12 @@ const ClientsView = () => {
                       type="text"
                       className="tw-form-input"
                       value={formData.contractType}
-                      onChange={(e) => setFormData({ ...formData, contractType: e.target.value })}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          contractType: e.target.value,
+                        })
+                      }
                       placeholder="Staff Augmentation / EOR"
                     />
                   </div>
@@ -430,18 +504,28 @@ const ClientsView = () => {
           <div className="tw-modal" style={{ maxWidth: '440px' }}>
             <div className="tw-modal-header">
               <h2 className="tw-modal-title">Archive Client Account</h2>
-              <button className="tw-modal-close-btn" onClick={() => setDeleteConfirmId(null)}>
+              <button
+                className="tw-modal-close-btn"
+                onClick={() => setDeleteConfirmId(null)}
+              >
                 <CloseIcon size={16} />
               </button>
             </div>
             <div className="tw-modal-body">
-              Are you sure you want to remove this client account from active tracking?
+              Are you sure you want to remove this client account from active
+              tracking?
             </div>
             <div className="tw-modal-footer">
-              <button className="tw-btn-secondary" onClick={() => setDeleteConfirmId(null)}>
+              <button
+                className="tw-btn-secondary"
+                onClick={() => setDeleteConfirmId(null)}
+              >
                 Cancel
               </button>
-              <button className="tw-btn-danger" onClick={() => handleDelete(deleteConfirmId)}>
+              <button
+                className="tw-btn-danger"
+                onClick={() => handleDelete(deleteConfirmId)}
+              >
                 Confirm Archive
               </button>
             </div>

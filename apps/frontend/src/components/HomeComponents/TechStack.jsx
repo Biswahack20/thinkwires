@@ -61,7 +61,8 @@ const TechStack = () => {
     if (!track) return;
 
     const prefersReducedMotion =
-      window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      window.matchMedia &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     if (prefersReducedMotion) return;
 
     let rafId;
@@ -106,7 +107,11 @@ const TechStack = () => {
   }, [isHovered]);
 
   return (
-    <section className="TechStack-techStackSection" aria-label="Enterprise Tech Stacks" style={{ padding: '1.25rem 0 2rem 0' }}>
+    <section
+      className="TechStack-techStackSection"
+      aria-label="Enterprise Tech Stacks"
+      style={{ padding: '1.25rem 0 2rem 0' }}
+    >
       {/* Infinite Velocity-Reactive Scrolling Marquee - Authentic Downloaded Brand Logos Only */}
       <div
         className="TechStack-carouselWrapper"

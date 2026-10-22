@@ -15,11 +15,13 @@ const EorPage = () => {
   const dispatch = useDispatch();
   const { data: rawData, status } = useSelector((state) => state.eor || {});
 
-  const eorData = rawData && Object.keys(rawData).length > 0 ? rawData : fallbackEorData;
+  const eorData =
+    rawData && Object.keys(rawData).length > 0 ? rawData : fallbackEorData;
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    document.title = 'Employer of Record (EOR) Services | ThinkWires - Compliant Global Staffing';
+    document.title =
+      'Employer of Record (EOR) Services | ThinkWires - Compliant Global Staffing';
     if (status === 'idle') {
       dispatch(fetchEorData());
     }

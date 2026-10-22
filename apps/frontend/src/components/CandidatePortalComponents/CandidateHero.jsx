@@ -4,7 +4,9 @@ import { toggleIncognito } from '../../store/slices/candidatePortalSlice';
 
 const CandidateHero = ({ profile = {} }) => {
   const dispatch = useDispatch();
-  const { incognitoActive } = useSelector((state) => state.candidatePortal || {});
+  const { incognitoActive } = useSelector(
+    (state) => state.candidatePortal || {}
+  );
   const [downloadAlert, setDownloadAlert] = useState(false);
 
   const handleDownload = () => {
@@ -38,22 +40,31 @@ const CandidateHero = ({ profile = {} }) => {
             <div className="pill-tags">
               <span className="vetting-pill">
                 <span className="material-symbols-outlined icon">verified</span>
-                <span>{profile.vettingTag || 'Top 3.4% Pre-Vetted Talent • Active on Live Bench'}</span>
+                <span>
+                  {profile.vettingTag ||
+                    'Top 3.4% Pre-Vetted Talent • Active on Live Bench'}
+                </span>
               </span>
               <span className="dispatch-pill">
                 <span className="material-symbols-outlined icon">bolt</span>
-                <span>{profile.dispatchTag || 'Immediate 48-Hour Client Dispatch'}</span>
+                <span>
+                  {profile.dispatchTag || 'Immediate 48-Hour Client Dispatch'}
+                </span>
               </span>
             </div>
 
             <h1 className="candidate-name">
-              {incognitoActive ? 'Candidate TW-ARCH-902 (Incognito)' : profile.name}
+              {incognitoActive
+                ? 'Candidate TW-ARCH-902 (Incognito)'
+                : profile.name}
             </h1>
             <p className="candidate-role">{profile.headline}</p>
 
             <div className="identity-meta">
               <span className="meta-item">
-                <span className="material-symbols-outlined icon">location_on</span>
+                <span className="material-symbols-outlined icon">
+                  location_on
+                </span>
                 <span>{profile.location}</span>
               </span>
               <span className="meta-sep">•</span>
@@ -89,12 +100,18 @@ const CandidateHero = ({ profile = {} }) => {
             </div>
             <div className="health-text">
               <span className="health-title">Profile Health Dossier</span>
-              <span className="health-sub">{profile.healthStatus || 'All Background Checks Sealed'}</span>
+              <span className="health-sub">
+                {profile.healthStatus || 'All Background Checks Sealed'}
+              </span>
             </div>
           </div>
 
           <div className="action-buttons-row">
-            <button type="button" onClick={handleDownload} className="btn-dossier">
+            <button
+              type="button"
+              onClick={handleDownload}
+              className="btn-dossier"
+            >
               <span className="material-symbols-outlined">download</span>
               <span>Dossier PDF</span>
             </button>
@@ -111,13 +128,16 @@ const CandidateHero = ({ profile = {} }) => {
               <span className="material-symbols-outlined">
                 {incognitoActive ? 'visibility' : 'visibility_off'}
               </span>
-              <span className="btn-incognito-text">{incognitoActive ? 'Incognito ON' : 'Incognito'}</span>
+              <span className="btn-incognito-text">
+                {incognitoActive ? 'Incognito ON' : 'Incognito'}
+              </span>
             </button>
           </div>
 
           {downloadAlert && (
             <div className="dossier-download-alert">
-              ✓ Candidate technical dossier generated and encrypted. Downloading...
+              ✓ Candidate technical dossier generated and encrypted.
+              Downloading...
             </div>
           )}
         </div>

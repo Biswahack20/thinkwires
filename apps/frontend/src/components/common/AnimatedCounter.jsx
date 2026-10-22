@@ -19,11 +19,13 @@ const AnimatedCounter = ({
 
   // Extract pure numeric target and auto-resolve suffix if not explicitly given
   const stringVal = String(value ?? 0);
-  const numericTarget = typeof value === 'number'
-    ? value
-    : parseFloat(stringVal.replace(/[^0-9.-]+/g, '')) || 0;
+  const numericTarget =
+    typeof value === 'number'
+      ? value
+      : parseFloat(stringVal.replace(/[^0-9.-]+/g, '')) || 0;
 
-  const resolvedSuffix = suffix || stringVal.replace(/^[^\d]*[\d,.]+/, '').trim();
+  const resolvedSuffix =
+    suffix || stringVal.replace(/^[^\d]*[\d,.]+/, '').trim();
 
   useEffect(() => {
     const element = elementRef.current;
@@ -75,9 +77,10 @@ const AnimatedCounter = ({
     };
   }, [numericTarget, duration]);
 
-  const formattedNumber = decimals > 0
-    ? displayValue.toFixed(decimals)
-    : Math.round(displayValue).toLocaleString();
+  const formattedNumber =
+    decimals > 0
+      ? displayValue.toFixed(decimals)
+      : Math.round(displayValue).toLocaleString();
 
   return (
     <span ref={elementRef} className={`tw-kinetic-counter ${className}`}>

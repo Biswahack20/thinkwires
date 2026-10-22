@@ -16,7 +16,12 @@ export const getProfile = async (req, res) => {
     const userEmail = req.user?.email;
 
     if (!userId && !userEmail) {
-      return res.status(401).json({ success: false, error: 'Unauthorized: No active user session.' });
+      return res
+        .status(401)
+        .json({
+          success: false,
+          error: 'Unauthorized: No active user session.',
+        });
     }
 
     let user = null;
@@ -24,7 +29,9 @@ export const getProfile = async (req, res) => {
     if (isMongoActive()) {
       user = userId
         ? await UserMongo.findById(userId).select('-password').lean()
-        : await UserMongo.findOne({ email: userEmail.toLowerCase() }).select('-password').lean();
+        : await UserMongo.findOne({ email: userEmail.toLowerCase() })
+            .select('-password')
+            .lean();
     } else {
       user = userId
         ? await User.findByPk(userId)
@@ -32,7 +39,9 @@ export const getProfile = async (req, res) => {
     }
 
     if (!user) {
-      return res.status(404).json({ success: false, error: 'User profile not found.' });
+      return res
+        .status(404)
+        .json({ success: false, error: 'User profile not found.' });
     }
 
     res.json({ success: true, user });
@@ -56,8 +65,12 @@ export const updateProfile = async (req, res) => {
     let updatedUser = null;
 
     if (isMongoActive()) {
-      const query = userId ? { _id: userId } : { email: userEmail.toLowerCase() };
-      updatedUser = await UserMongo.findOneAndUpdate(query, updates, { new: true })
+      const query = userId
+        ? { _id: userId }
+        : { email: userEmail.toLowerCase() };
+      updatedUser = await UserMongo.findOneAndUpdate(query, updates, {
+        new: true,
+      })
         .select('-password')
         .lean();
     } else {
@@ -72,11 +85,17 @@ export const updateProfile = async (req, res) => {
     }
 
     if (!updatedUser) {
-      return res.status(404).json({ success: false, error: 'User record not found.' });
+      return res
+        .status(404)
+        .json({ success: false, error: 'User record not found.' });
     }
 
     logger.info(`Profile updated for user: ${updatedUser.email}`);
-    res.json({ success: true, message: 'Profile updated successfully.', user: updatedUser });
+    res.json({
+      success: true,
+      message: 'Profile updated successfully.',
+      user: updatedUser,
+    });
   } catch (err) {
     logger.error('Error updating user profile:', err);
     res.status(500).json({ success: false, error: err.message });

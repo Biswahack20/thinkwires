@@ -1,12 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import { adminApi } from './adminService';
-import {
-  BellIcon,
-  TrashIcon,
-  CloseIcon,
-  AlertCircleIcon,
-} from './AdminIcons';
+import { BellIcon, TrashIcon, CloseIcon, AlertCircleIcon } from './AdminIcons';
 
 const AnnouncementsManager = () => {
   const { showToast, activeRole } = useOutletContext();
@@ -96,7 +91,8 @@ const AnnouncementsManager = () => {
         <div className="tw-view-title-group">
           <h1>Corporate Announcements & Broadcasts</h1>
           <p className="tw-view-subtitle">
-            Publish operational notices to client portals, engineer benches, and the internal admin notification center.
+            Publish operational notices to client portals, engineer benches, and
+            the internal admin notification center.
           </p>
         </div>
 
@@ -125,7 +121,9 @@ const AnnouncementsManager = () => {
 
       <div className="tw-table-container">
         <div className="tw-table-toolbar">
-          <h2 className="tw-card-title">Live Broadcasts ({announcements.length})</h2>
+          <h2 className="tw-card-title">
+            Live Broadcasts ({announcements.length})
+          </h2>
           <span style={{ fontSize: '0.8rem', color: '#64748B' }}>
             Broadcasts appear in top navigation notification popups
           </span>
@@ -147,13 +145,27 @@ const AnnouncementsManager = () => {
             <tbody>
               {loading ? (
                 <tr>
-                  <td colSpan="7" style={{ textAlign: 'center', padding: '2rem', color: '#64748B' }}>
+                  <td
+                    colSpan="7"
+                    style={{
+                      textAlign: 'center',
+                      padding: '2rem',
+                      color: '#64748B',
+                    }}
+                  >
                     Loading announcements...
                   </td>
                 </tr>
               ) : announcements.length === 0 ? (
                 <tr>
-                  <td colSpan="7" style={{ textAlign: 'center', padding: '2rem', color: '#64748B' }}>
+                  <td
+                    colSpan="7"
+                    style={{
+                      textAlign: 'center',
+                      padding: '2rem',
+                      color: '#64748B',
+                    }}
+                  >
                     No announcements published.
                   </td>
                 </tr>
@@ -164,7 +176,13 @@ const AnnouncementsManager = () => {
                       <div style={{ fontWeight: 600 }}>{ann.title}</div>
                     </td>
                     <td>
-                      <div style={{ maxWidth: '300px', fontSize: '0.78rem', color: '#475569' }}>
+                      <div
+                        style={{
+                          maxWidth: '300px',
+                          fontSize: '0.78rem',
+                          color: '#475569',
+                        }}
+                      >
                         {ann.message}
                       </div>
                     </td>
@@ -172,7 +190,11 @@ const AnnouncementsManager = () => {
                       <span className="tw-badge available">{ann.audience}</span>
                     </td>
                     <td>
-                      <span className={`tw-badge ${String(ann.priority || 'normal').toLowerCase()}`}>{ann.priority}</span>
+                      <span
+                        className={`tw-badge ${String(ann.priority || 'normal').toLowerCase()}`}
+                      >
+                        {ann.priority}
+                      </span>
                     </td>
                     <td>
                       <button
@@ -209,7 +231,10 @@ const AnnouncementsManager = () => {
           <div className="tw-modal" style={{ maxWidth: '520px' }}>
             <div className="tw-modal-header">
               <h2 className="tw-modal-title">Broadcast Announcement</h2>
-              <button className="tw-modal-close-btn" onClick={() => setModalOpen(false)}>
+              <button
+                className="tw-modal-close-btn"
+                onClick={() => setModalOpen(false)}
+              >
                 <CloseIcon size={16} />
               </button>
             </div>
@@ -241,7 +266,9 @@ const AnnouncementsManager = () => {
                     type="text"
                     className="tw-form-input"
                     value={formData.title}
-                    onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, title: e.target.value })
+                    }
                     placeholder="e.g. Q4 Statutory Labor Audit Completed"
                     required
                   />
@@ -253,7 +280,9 @@ const AnnouncementsManager = () => {
                     className="tw-form-textarea"
                     rows="3"
                     value={formData.message}
-                    onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, message: e.target.value })
+                    }
                     placeholder="Details of the announcement broadcasted to users..."
                     required
                   ></textarea>
@@ -265,7 +294,9 @@ const AnnouncementsManager = () => {
                     <select
                       className="tw-form-select"
                       value={formData.audience}
-                      onChange={(e) => setFormData({ ...formData, audience: e.target.value })}
+                      onChange={(e) =>
+                        setFormData({ ...formData, audience: e.target.value })
+                      }
                     >
                       <option value="All">All Portals</option>
                       <option value="Clients">Clients Only</option>
@@ -278,7 +309,9 @@ const AnnouncementsManager = () => {
                     <select
                       className="tw-form-select"
                       value={formData.priority}
-                      onChange={(e) => setFormData({ ...formData, priority: e.target.value })}
+                      onChange={(e) =>
+                        setFormData({ ...formData, priority: e.target.value })
+                      }
                     >
                       <option value="Normal">Normal</option>
                       <option value="Important">Important</option>
@@ -292,7 +325,9 @@ const AnnouncementsManager = () => {
                   <select
                     className="tw-form-select"
                     value={formData.status}
-                    onChange={(e) => setFormData({ ...formData, status: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, status: e.target.value })
+                    }
                   >
                     <option value="published">Publish Immediately</option>
                     <option value="draft">Save as Draft</option>
@@ -323,7 +358,10 @@ const AnnouncementsManager = () => {
           <div className="tw-modal" style={{ maxWidth: '440px' }}>
             <div className="tw-modal-header">
               <h2 className="tw-modal-title">Delete Announcement</h2>
-              <button className="tw-modal-close-btn" onClick={() => setDeleteConfirmId(null)}>
+              <button
+                className="tw-modal-close-btn"
+                onClick={() => setDeleteConfirmId(null)}
+              >
                 <CloseIcon size={16} />
               </button>
             </div>
@@ -331,10 +369,16 @@ const AnnouncementsManager = () => {
               Are you sure you want to remove this announcement broadcast?
             </div>
             <div className="tw-modal-footer">
-              <button className="tw-btn-secondary" onClick={() => setDeleteConfirmId(null)}>
+              <button
+                className="tw-btn-secondary"
+                onClick={() => setDeleteConfirmId(null)}
+              >
                 Cancel
               </button>
-              <button className="tw-btn-danger" onClick={() => handleDelete(deleteConfirmId)}>
+              <button
+                className="tw-btn-danger"
+                onClick={() => handleDelete(deleteConfirmId)}
+              >
                 Confirm Delete
               </button>
             </div>

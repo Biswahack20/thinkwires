@@ -1,7 +1,12 @@
 import React, { useState } from 'react';
 
 const CandidateAssessments = ({ assessment = {} }) => {
-  const { scores = [], repository = {}, sponsoredTrack = {}, auditDate = 'Dec 2024 Audit' } = assessment;
+  const {
+    scores = [],
+    repository = {},
+    sponsoredTrack = {},
+    auditDate = 'Dec 2024 Audit',
+  } = assessment;
   const [claimed, setClaimed] = useState(false);
 
   return (
@@ -14,9 +19,12 @@ const CandidateAssessments = ({ assessment = {} }) => {
               <span className="eyebrow-accent">Verified Code Proofs</span>
               <span className="date-chip">{auditDate}</span>
             </div>
-            <h2 className="section-main-title">Technical Assessment Score Breakdown</h2>
+            <h2 className="section-main-title">
+              Technical Assessment Score Breakdown
+            </h2>
             <p className="section-subtext">
-              Validated through automated benchmarking and peer architectural cross-examination.
+              Validated through automated benchmarking and peer architectural
+              cross-examination.
             </p>
           </div>
         </div>
@@ -28,7 +36,10 @@ const CandidateAssessments = ({ assessment = {} }) => {
               <span className="score-name">{sc.name}</span>
               <span className="score-val">{sc.val}%</span>
               <div className="progress-track">
-                <div className={`progress-bar bar-${idx}`} style={{ width: `${sc.val}%` }}></div>
+                <div
+                  className={`progress-bar bar-${idx}`}
+                  style={{ width: `${sc.val}%` }}
+                ></div>
               </div>
             </div>
           ))}
@@ -44,11 +55,15 @@ const CandidateAssessments = ({ assessment = {} }) => {
               <div className="repo-title-row">
                 <span className="repo-url">{repository.url}</span>
                 <span className="star-badge">
-                  <span className="material-symbols-outlined star-icon">star</span>
+                  <span className="material-symbols-outlined star-icon">
+                    star
+                  </span>
                   <span>{repository.stars}</span>
                 </span>
               </div>
-              <span className="repo-subtext">Includes published Whitepaper: "{repository.whitepaper}"</span>
+              <span className="repo-subtext">
+                Includes published Whitepaper: "{repository.whitepaper}"
+              </span>
             </div>
           </div>
 
@@ -69,7 +84,9 @@ const CandidateAssessments = ({ assessment = {} }) => {
         <div className="card-top">
           <div className="badge-row">
             <span className="sponsored-chip">Sponsored Track</span>
-            <span className="material-symbols-outlined icon">card_membership</span>
+            <span className="material-symbols-outlined icon">
+              card_membership
+            </span>
           </div>
           <h3 className="track-title">{sponsoredTrack.title}</h3>
           <p className="track-desc">{sponsoredTrack.desc}</p>
@@ -89,9 +106,15 @@ const CandidateAssessments = ({ assessment = {} }) => {
             className={`btn-claim-voucher ${claimed ? 'claimed' : ''}`}
           >
             <span className="material-symbols-outlined">verified_user</span>
-            <span>{claimed ? 'Voucher Code Issued to Email' : 'Claim Sponsored Voucher'}</span>
+            <span>
+              {claimed
+                ? 'Voucher Code Issued to Email'
+                : 'Claim Sponsored Voucher'}
+            </span>
           </button>
-          <span className="footnote">No impact on active client bench availability</span>
+          <span className="footnote">
+            No impact on active client bench availability
+          </span>
         </div>
       </div>
     </div>

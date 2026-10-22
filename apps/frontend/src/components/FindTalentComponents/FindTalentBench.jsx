@@ -13,9 +13,12 @@ const FindTalentBench = ({ talents = [] }) => {
               <span className="live-dot"></span>
               <span className="live-text">Live Technical Inventory</span>
             </div>
-            <h2 className="FindTalent-sectionTitle">Active Talent Bench Ready For Immediate Deployment</h2>
+            <h2 className="FindTalent-sectionTitle">
+              Active Talent Bench Ready For Immediate Deployment
+            </h2>
             <p className="FindTalent-sectionSubtitle">
-              Pre-evaluated, code-screened senior engineers ready for initial round interviews within 24 to 48 hours.
+              Pre-evaluated, code-screened senior engineers ready for initial
+              round interviews within 24 to 48 hours.
             </p>
           </div>
 
@@ -39,7 +42,11 @@ const FindTalentBench = ({ talents = [] }) => {
                 </div>
 
                 <div className="avatar-row">
-                  <img src={engineer.avatar} alt={engineer.role} className="avatar-img" />
+                  <img
+                    src={engineer.avatar}
+                    alt={engineer.role}
+                    className="avatar-img"
+                  />
                   <div className="role-meta">
                     <h3 className="role-title">{engineer.role}</h3>
                     <span className="role-tech">{engineer.tech}</span>
@@ -48,15 +55,21 @@ const FindTalentBench = ({ talents = [] }) => {
 
                 <div className="details-list">
                   <div className="detail-row">
-                    <span className="material-symbols-outlined icon">work_history</span>
+                    <span className="material-symbols-outlined icon">
+                      work_history
+                    </span>
                     <span>{engineer.experience}</span>
                   </div>
                   <div className="detail-row">
-                    <span className="material-symbols-outlined icon">location_on</span>
+                    <span className="material-symbols-outlined icon">
+                      location_on
+                    </span>
                     <span>{engineer.location}</span>
                   </div>
                   <div className="detail-row">
-                    <span className="material-symbols-outlined icon">payments</span>
+                    <span className="material-symbols-outlined icon">
+                      payments
+                    </span>
                     <span>{engineer.rate}</span>
                   </div>
                 </div>

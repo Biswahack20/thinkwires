@@ -5,6 +5,12 @@
   "scripts": {
     "dev": ".\\venv\\Scripts\\uvicorn main:app --reload --host 0.0.0.0 --port 8000",
     "build": "echo 'FastAPI ready'",
-    "test": ".\\venv\\Scripts\\pytest tests"
+    "test": ".\\venv\\Scripts\\pytest tests",
+    "test:watch": ".\\venv\\Scripts\\pytest tests -f",
+    "test:unit": ".\\venv\\Scripts\\pytest tests/unit",
+    "test:integration": ".\\venv\\Scripts\\pytest tests/integration",
+    "test:functional": ".\\venv\\Scripts\\pytest tests/functional",
+    "test:non-functional": ".\\venv\\Scripts\\pytest tests/non-functional",
+    "test:exploratory": ".\\venv\\Scripts\\pytest tests/exploratory"
   }
 }

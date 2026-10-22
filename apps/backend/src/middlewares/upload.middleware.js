@@ -15,7 +15,10 @@ const storage = multer.diskStorage({
   },
   filename: (req, file, cb) => {
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
-    const sanitizedOriginalName = file.originalname.replace(/[^a-zA-Z0-9.-]/g, '_');
+    const sanitizedOriginalName = file.originalname.replace(
+      /[^a-zA-Z0-9.-]/g,
+      '_'
+    );
     const ext = path.extname(sanitizedOriginalName) || '.pdf';
     const baseName = path.basename(sanitizedOriginalName, ext);
     cb(null, `${baseName}-${uniqueSuffix}${ext}`);
@@ -34,10 +37,18 @@ const fileFilter = (req, file, cb) => {
     'application/octet-stream', // Often sent by browsers for docx
   ];
 
-  if (allowedExtensions.includes(ext) || allowedMimeTypes.includes(file.mimetype)) {
+  if (
+    allowedExtensions.includes(ext) ||
+    allowedMimeTypes.includes(file.mimetype)
+  ) {
     cb(null, true);
   } else {
-    cb(new Error('Invalid file type. Only PDF, DOC, and DOCX files are allowed.'), false);
+    cb(
+      new Error(
+        'Invalid file type. Only PDF, DOC, and DOCX files are allowed.'
+      ),
+      false
+    );
   }
 };
 

@@ -4,13 +4,14 @@ export const fallbackCandidatePortalData = {
   profile: {
     name: 'Arvind S. Nair',
     headline: 'Principal Cloud & Distributed Systems Architect',
-    avatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCXwtAT0f7p0VCdMlVo3MiUjwUJGp5af5ZjwGH57y-n1sKCl--3KmXzsBx_gTdCYVHYQhDAcJUAKy47e-0_F6Mu7jOBiodVqnG88O1HtQNQ8qEbYvZF41FdUOWNC9-pDHAEVY893vrP1on_tnyhnYbEUOzw-QT6BUM8DXsbVDwlLXdkgj9FblGxXHK-pAn2aLQ_l1sL9I1k9c8Rk2SSxGHttlDydbJDUexg6U6vrUFaeZyZ0LgWxEK2HA',
+    avatar:
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuCXwtAT0f7p0VCdMlVo3MiUjwUJGp5af5ZjwGH57y-n1sKCl--3KmXzsBx_gTdCYVHYQhDAcJUAKy47e-0_F6Mu7jOBiodVqnG88O1HtQNQ8qEbYvZF41FdUOWNC9-pDHAEVY893vrP1on_tnyhnYbEUOzw-QT6BUM8DXsbVDwlLXdkgj9FblGxXHK-pAn2aLQ_l1sL9I1k9c8Rk2SSxGHttlDydbJDUexg6U6vrUFaeZyZ0LgWxEK2HA',
     location: 'Bengaluru • Remote US & India Overlap (4h EST/PST)',
     compliance: 'SOC 2 & ISO 27001 Verified Identity',
     vettingTag: 'Top 3.4% Pre-Vetted Talent • Active on Live Bench',
     dispatchTag: 'Immediate 48-Hour Client Dispatch',
     healthScore: '96%',
-    healthStatus: 'All Background Checks Sealed'
+    healthStatus: 'All Background Checks Sealed',
   },
   metrics: [
     {
@@ -19,7 +20,7 @@ export const fallbackCandidatePortalData = {
       stat: '7',
       unit: 'Mandates',
       subtext: '+3 new this week (US & GCC clients)',
-      icon: 'hub'
+      icon: 'hub',
     },
     {
       id: 'ctc',
@@ -27,7 +28,7 @@ export const fallbackCandidatePortalData = {
       stat: '₹42 LPA',
       unit: 'Annual Retainer',
       subtext: 'Fixed Base + Milestone Escrow',
-      icon: 'payments'
+      icon: 'payments',
     },
     {
       id: 'vetting',
@@ -35,7 +36,7 @@ export const fallbackCandidatePortalData = {
       stat: '98.4th',
       unit: 'Percentile',
       subtext: 'System Arch & Distributed Ledgers',
-      icon: 'military_tech'
+      icon: 'military_tech',
     },
     {
       id: 'interview',
@@ -44,8 +45,8 @@ export const fallbackCandidatePortalData = {
       unit: 'TODAY',
       subtext: 'Series-C FinTech • San Francisco (CTO Round)',
       icon: 'alarm',
-      isHighlight: true
-    }
+      isHighlight: true,
+    },
   ],
   stages: [
     {
@@ -53,28 +54,28 @@ export const fallbackCandidatePortalData = {
       title: 'Identity & Stack Verification',
       desc: 'KYC, Global Criminal Background, and credential verification audited under SOC 2.',
       status: 'Completed & Sealed',
-      isDone: true
+      isDone: true,
     },
     {
       stage: 2,
       title: 'Architecture Peer Review',
       desc: 'Rigorous live system design panel with US tier-1 engineering directors.',
       status: 'Passed with 98.4%',
-      isDone: true
+      isDone: true,
     },
     {
       stage: 3,
       title: 'Live Bench Syndication',
       desc: 'Candidate profile syndicated to 740+ verified enterprise client accounts.',
       status: 'Visible to 740+ Enterprises',
-      isActive: true
+      isActive: true,
     },
     {
       stage: 4,
       title: 'Offer & EOR Onboarding',
       desc: 'Contract execution, multi-currency payroll escrow, and day-1 IP compliance.',
-      status: 'In Progress (2 Pending Offers)'
-    }
+      status: 'In Progress (2 Pending Offers)',
+    },
   ],
   pipelines: [
     {
@@ -86,7 +87,7 @@ export const fallbackCandidatePortalData = {
       company: 'Aura Payments • San Francisco, CA (Remote Pod)',
       sla: 'SLA: 48h Offer Turnaround',
       panel: 'Panel: VP of Infrastructure + CTO',
-      canJoin: true
+      canJoin: true,
     },
     {
       id: 'p2',
@@ -97,7 +98,7 @@ export const fallbackCandidatePortalData = {
       company: 'Nordic Logistics Cloud • Toronto, ON (Dual-Zone Remote)',
       sla: 'SLA: Next round scheduled in 2 days',
       panel: 'Interviewer rating: 4.9 / 5.0',
-      canJoin: false
+      canJoin: false,
     },
     {
       id: 'p3',
@@ -108,8 +109,8 @@ export const fallbackCandidatePortalData = {
       company: 'Apex Financial GCC • Hyderabad (Enterprise Hybrid)',
       sla: 'Decision Window: 4 business days remaining',
       panel: 'Includes US Equity Component',
-      isOffer: true
-    }
+      isOffer: true,
+    },
   ],
   technicalAssessment: {
     auditDate: 'Dec 2024 Audit',
@@ -117,48 +118,49 @@ export const fallbackCandidatePortalData = {
       { name: 'Clean Code', val: 99 },
       { name: 'Distributed Rel.', val: 98 },
       { name: 'Cloud Security', val: 97 },
-      { name: 'System Design', val: 98 }
+      { name: 'System Design', val: 98 },
     ],
     repository: {
       url: 'github.com/arvind-nair/distributed-ledger-core',
       stars: 840,
-      whitepaper: 'High-Throughput Zero-Copy Ring Buffers in Go'
+      whitepaper: 'High-Throughput Zero-Copy Ring Buffers in Go',
     },
     sponsoredTrack: {
       title: 'Kubernetes CKA Refresh Challenge',
       desc: 'ThinkWires sponsors 100% of exam fees for certified cloud architects refreshing their advanced container security credentials.',
       target: 'CNCF CKA 2025 v1.31 Release',
-      prepTime: 'Estimated prep time: 8-12 hours'
-    }
+      prepTime: 'Estimated prep time: 8-12 hours',
+    },
   },
   payoutAndCompliance: {
     activePlacement: {
       client: 'Vantage Cloud Systems',
       contract: 'On-demand Staff Augmentation Pod (Tier-1)',
       hours: '38.5 / 40.0 hrs',
-      status: 'Approved'
+      status: 'Approved',
     },
     escrow: {
       amountInr: '₹3,50,000',
       amountUsd: '/ Month Net',
       releaseDate: 'Automated Direct Transfer on 30th',
       bank: 'Primary Account: HDFC Bank •••• 8419',
-      verified: true
+      verified: true,
     },
     complianceVault: [
       { title: 'Form 16 Generated', meta: 'FY 2024-25' },
       { title: 'Form W-8BEN Signed', meta: 'US Tax Treaty' },
-      { title: 'IP Assignment Agreement', meta: 'Active' }
-    ]
+      { title: 'IP Assignment Agreement', meta: 'Active' },
+    ],
   },
   concierge: {
     name: 'Meera Iyer',
     role: 'Senior Director - Global Talent Operations & Candidate Advocate',
-    avatar: 'https://lh3.googleusercontent.com/aida-public/AB6AXuD3_fNrKZrdX7wzEga8HMg9HJC7tpO5ja7xmdZLSByZZLcsRwqFCX9iqpwXVfUXprZuj4U-KpNN7i88ZcFgooAN0vN0E5YD0e3ZJMYorLezjr2_RDjt2ASUe77cxWwCWLTGoIqRNlnS0Xw6RrPLZpBB6JBfv98XcTccVovBHjTGC5R8nDduq2iuoeSm6NAQlZT1kcrSdSrQxONMQ2PC7hB_n14aPTJenVxZkLhQCoOjyru4Ks7F-28uSA',
+    avatar:
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuD3_fNrKZrdX7wzEga8HMg9HJC7tpO5ja7xmdZLSByZZLcsRwqFCX9iqpwXVfUXprZuj4U-KpNN7i88ZcFgooAN0vN0E5YD0e3ZJMYorLezjr2_RDjt2ASUe77cxWwCWLTGoIqRNlnS0Xw6RrPLZpBB6JBfv98XcTccVovBHjTGC5R8nDduq2iuoeSm6NAQlZT1kcrSdSrQxONMQ2PC7hB_n14aPTJenVxZkLhQCoOjyru4Ks7F-28uSA',
     phone: '+91 89205 55626',
     whatsapp: 'https://wa.me/918920555626',
-    sla: 'Average response time: < 8 minutes'
-  }
+    sla: 'Average response time: < 8 minutes',
+  },
 };
 
 export const fetchCandidatePortalData = createAsyncThunk(
@@ -184,9 +186,9 @@ export const submitCandidateTimesheet = createAsyncThunk(
       const response = await fetch('/api/candidate-portal/timesheet', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify(timesheetData)
+        body: JSON.stringify(timesheetData),
       });
       const data = await response.json();
       if (!response.ok) {
@@ -207,7 +209,7 @@ const candidatePortalSlice = createSlice({
     error: null,
     timesheetStatus: 'idle',
     timesheetSuccess: false,
-    incognitoActive: false
+    incognitoActive: false,
   },
   reducers: {
     toggleIncognito: (state) => {
@@ -216,7 +218,7 @@ const candidatePortalSlice = createSlice({
     resetTimesheetState: (state) => {
       state.timesheetStatus = 'idle';
       state.timesheetSuccess = false;
-    }
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -242,8 +244,9 @@ const candidatePortalSlice = createSlice({
       .addCase(submitCandidateTimesheet.rejected, (state) => {
         state.timesheetStatus = 'failed';
       });
-  }
+  },
 });
 
-export const { toggleIncognito, resetTimesheetState } = candidatePortalSlice.actions;
+export const { toggleIncognito, resetTimesheetState } =
+  candidatePortalSlice.actions;
 export default candidatePortalSlice.reducer;

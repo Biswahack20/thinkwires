@@ -8,7 +8,11 @@ const PermStaffRoles = ({ data }) => {
   return (
     <section className="PermStaff-rolesSection" id="specialized-roles">
       <div className="PermStaff-container">
-        <ScrollReveal direction="up" distance={40} className="PermStaff-rolesHeaderRow">
+        <ScrollReveal
+          direction="up"
+          distance={40}
+          className="PermStaff-rolesHeaderRow"
+        >
           <div>
             <span className="PermStaff-eyebrow emerald">{eyebrow}</span>
             <h2 className="PermStaff-rolesTitle">{heading}</h2>
@@ -33,7 +37,9 @@ const PermStaffRoles = ({ data }) => {
                 <div className="card-top">
                   <div className="badge-row">
                     <span className="role-badge">{role.badge}</span>
-                    <span className="material-symbols-outlined icon-token">{role.icon}</span>
+                    <span className="material-symbols-outlined icon-token">
+                      {role.icon}
+                    </span>
                   </div>
                   <h3 className="role-heading">{role.title}</h3>
                   <p className="role-desc">{role.description}</p>

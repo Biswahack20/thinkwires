@@ -157,10 +157,22 @@ function App() {
 
           {/* Services Routes */}
           <Route path="/services" element={<StaffAugmentationPage />} />
-          <Route path="/services/staff-augmentation" element={<StaffAugmentationPage />} />
-          <Route path="/staff-augmentation" element={<StaffAugmentationPage />} />
-          <Route path="/services/permanent-staffing" element={<PermanentStaffingPage />} />
-          <Route path="/permanent-staffing" element={<PermanentStaffingPage />} />
+          <Route
+            path="/services/staff-augmentation"
+            element={<StaffAugmentationPage />}
+          />
+          <Route
+            path="/staff-augmentation"
+            element={<StaffAugmentationPage />}
+          />
+          <Route
+            path="/services/permanent-staffing"
+            element={<PermanentStaffingPage />}
+          />
+          <Route
+            path="/permanent-staffing"
+            element={<PermanentStaffingPage />}
+          />
           <Route
             path="/services/permanent-staffing-and-executive-search"
             element={<PermanentStaffingPage />}
@@ -169,7 +181,10 @@ function App() {
             path="/permanent-staffing-and-executive-search"
             element={<PermanentStaffingPage />}
           />
-          <Route path="/services/executive-search" element={<PermanentStaffingPage />} />
+          <Route
+            path="/services/executive-search"
+            element={<PermanentStaffingPage />}
+          />
           <Route path="/executive-search" element={<PermanentStaffingPage />} />
           <Route path="/services/payroll" element={<PayrollPage />} />
           <Route path="/payroll" element={<PayrollPage />} />
@@ -204,7 +219,10 @@ function App() {
             <Route path="cms/blog" element={<BlogManager />} />
             <Route path="cms/media" element={<MediaLibrary />} />
             <Route path="cms/seo" element={<SeoManager />} />
-            <Route path="cms/announcements" element={<AnnouncementsManager />} />
+            <Route
+              path="cms/announcements"
+              element={<AnnouncementsManager />}
+            />
           </Route>
 
           <Route path="*" element={<HomePage />} />

@@ -40,7 +40,9 @@ const StaffAugComparison = ({ data }) => {
                 <tr key={idx}>
                   <td className="feature-cell">{r.feature}</td>
                   <td className="primary-cell">
-                    <span className="material-symbols-outlined text-emerald-accent">check_circle</span>
+                    <span className="material-symbols-outlined text-emerald-accent">
+                      check_circle
+                    </span>
                     <span>{r.aug}</span>
                   </td>
                   <td className="regular-cell">{r.pods}</td>

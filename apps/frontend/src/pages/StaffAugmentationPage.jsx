@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   fetchStaffAugmentationData,
-  fallbackStaffAugmentationData
+  fallbackStaffAugmentationData,
 } from '../store/slices/staffAugmentationSlice';
 import Navbar from '../components/common/Navbar';
 import Footer from '../components/common/Footer';
@@ -16,13 +16,19 @@ import StaffAugConsultation from '../components/StaffAugmentationComponents/Staf
 
 const StaffAugmentationPage = () => {
   const dispatch = useDispatch();
-  const { data: rawData, status } = useSelector((state) => state.staffAugmentation || {});
+  const { data: rawData, status } = useSelector(
+    (state) => state.staffAugmentation || {}
+  );
 
-  const data = rawData && Object.keys(rawData).length > 0 ? rawData : fallbackStaffAugmentationData;
+  const data =
+    rawData && Object.keys(rawData).length > 0
+      ? rawData
+      : fallbackStaffAugmentationData;
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    document.title = 'Staff Augmentation & Dedicated Engineering Pods | ThinkWires';
+    document.title =
+      'Staff Augmentation & Dedicated Engineering Pods | ThinkWires';
     if (status === 'idle') {
       dispatch(fetchStaffAugmentationData());
     }

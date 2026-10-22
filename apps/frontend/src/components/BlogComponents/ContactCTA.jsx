@@ -7,7 +7,14 @@ const ContactCTA = () => {
       <div className="ContactCTA-figmaCard">
         <div className="ContactCTA-figmaLeft">
           <div className="ContactCTA-figmaIcon">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2563eb" strokeWidth="2">
+            <svg
+              width="22"
+              height="22"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="#2563eb"
+              strokeWidth="2"
+            >
               <rect x="4" y="2" width="16" height="20" rx="2" ry="2" />
               <line x1="9" y1="6" x2="9" y2="6.01" />
               <line x1="15" y1="6" x2="15" y2="6.01" />
@@ -19,19 +26,38 @@ const ContactCTA = () => {
             </svg>
           </div>
           <div>
-            <h4 className="ContactCTA-figmaTitle">Have an industry trend to report?</h4>
+            <h4 className="ContactCTA-figmaTitle">
+              Have an industry trend to report?
+            </h4>
             <p className="ContactCTA-figmaSubtext">
-              Connect directly with our Sector Research Team at Plot: 20, Block H-1/A, Sector 63, Noida.
+              Connect directly with our Sector Research Team at Plot: 20, Block
+              H-1/A, Sector 63, Noida.
             </p>
           </div>
         </div>
 
         <div className="ContactCTA-figmaRight">
-          <a href="tel:+918920555626" className="ContactCTA-figmaPhoneBtn" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}>
+          <a
+            href="tel:+918920555626"
+            className="ContactCTA-figmaPhoneBtn"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.4rem',
+            }}
+          >
             <PhoneIcon size={14} color="currentColor" />
             <span>+91 89205 55626</span>
           </a>
-          <a href="mailto:research@thinkwires.com" className="ContactCTA-figmaPitchBtn" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}>
+          <a
+            href="mailto:research@thinkwires.com"
+            className="ContactCTA-figmaPitchBtn"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.4rem',
+            }}
+          >
             <MailIcon size={14} color="currentColor" />
             <span>Pitch a Case Study</span>
           </a>

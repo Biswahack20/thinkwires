@@ -64,8 +64,8 @@ The **ThinkWires Admin Panel & CMS** is an enterprise-grade control suite integr
 - **Styling Architecture**: Modular CSS in `admin.css` utilizing ThinkWires brand custom properties.
 - **Backend Controller**: `admin.controller.js` providing unified REST endpoints.
 - **Dual-Mode Persistence**:
-  - *Live Mode*: Direct persistence through Mongoose schemas on MongoDB Atlas.
-  - *Fallback Mode*: In-memory cache loaded from `adminSeedData.json`. If MongoDB is temporarily offline or restricted by IP whitelisting, the admin panel remains completely responsive and interactive.
+  - _Live Mode_: Direct persistence through Mongoose schemas on MongoDB Atlas.
+  - _Fallback Mode_: In-memory cache loaded from `adminSeedData.json`. If MongoDB is temporarily offline or restricted by IP whitelisting, the admin panel remains completely responsive and interactive.
 
 ---
 
@@ -73,22 +73,22 @@ The **ThinkWires Admin Panel & CMS** is an enterprise-grade control suite integr
 
 The admin panel interface uses ThinkWires' emerald and slate design system:
 
-| Token Name | Value | Purpose |
-| --- | --- | --- |
-| `--tw-emerald` | `#008F68` | Primary brand emerald; active navigation, primary action buttons |
-| `--tw-emerald-hover` | `#007A58` | Interactive hover states |
-| `--tw-emerald-dark` | `#006548` | Dark emerald for headings, badges, and high-contrast borders |
-| `--tw-emerald-light` | `#E6F4F0` | Soft emerald background for active pills and table rows |
-| `--tw-blue` | `#3478D4` | Technical tags, DevOps indicators, secondary action accents |
-| `--tw-violet` | `#8064D8` | CMS indicators, AI/editorial tags, and candidate pipeline highlights |
-| `--tw-bg` | `#F4F7FB` | Main admin canvas surface background |
-| `--tw-card` | `#FFFFFF` | Cards, modals, slide-out drawers, and table backgrounds |
-| `--tw-text-primary` | `#172033` | Deep slate primary text for crisp readability |
-| `--tw-text-secondary` | `#64748B` | Subtitles, timestamps, and secondary metadata |
-| `--tw-border` | `#E2E8F0` | Structural card and divider borders |
-| `--tw-success` | `#16A34A` | Active deployments, hired candidates, published pages |
-| `--tw-warning` | `#D97706` | Bench status, in-review candidates, urgent mandates |
-| `--tw-error` | `#DC2626` | Destructive operations, rejected applicants, terminated contracts |
+| Token Name            | Value     | Purpose                                                              |
+| --------------------- | --------- | -------------------------------------------------------------------- |
+| `--tw-emerald`        | `#008F68` | Primary brand emerald; active navigation, primary action buttons     |
+| `--tw-emerald-hover`  | `#007A58` | Interactive hover states                                             |
+| `--tw-emerald-dark`   | `#006548` | Dark emerald for headings, badges, and high-contrast borders         |
+| `--tw-emerald-light`  | `#E6F4F0` | Soft emerald background for active pills and table rows              |
+| `--tw-blue`           | `#3478D4` | Technical tags, DevOps indicators, secondary action accents          |
+| `--tw-violet`         | `#8064D8` | CMS indicators, AI/editorial tags, and candidate pipeline highlights |
+| `--tw-bg`             | `#F4F7FB` | Main admin canvas surface background                                 |
+| `--tw-card`           | `#FFFFFF` | Cards, modals, slide-out drawers, and table backgrounds              |
+| `--tw-text-primary`   | `#172033` | Deep slate primary text for crisp readability                        |
+| `--tw-text-secondary` | `#64748B` | Subtitles, timestamps, and secondary metadata                        |
+| `--tw-border`         | `#E2E8F0` | Structural card and divider borders                                  |
+| `--tw-success`        | `#16A34A` | Active deployments, hired candidates, published pages                |
+| `--tw-warning`        | `#D97706` | Bench status, in-review candidates, urgent mandates                  |
+| `--tw-error`          | `#DC2626` | Destructive operations, rejected applicants, terminated contracts    |
 
 ---
 
@@ -206,18 +206,18 @@ thinkwires/
 
 Permissions are verified in `auth.middleware.js` using the `X-Demo-Role` header or session state:
 
-| Permission / Action | `superadmin` | `admin` | `cms_admin` | `editor` | `viewer` |
-| --- | :---: | :---: | :---: | :---: | :---: |
-| **View Dashboard & Metrics** | Allowed | Allowed | Allowed | Allowed | Allowed |
-| **Manage Employees & Bench** | Allowed | Allowed | Denied | Denied | Denied |
-| **Manage Candidates & ATS** | Allowed | Allowed | Denied | Read Only | Read Only |
-| **Manage Clients & Placements** | Allowed | Allowed | Denied | Denied | Denied |
-| **Manage Job Requisitions** | Allowed | Allowed | Denied | Allowed | Read Only |
-| **Manage System Members** | Allowed | Denied | Denied | Denied | Denied |
-| **Manage CMS Pages & Blog** | Allowed | Allowed | Allowed | Allowed | Read Only |
-| **Manage Media & Announcements** | Allowed | Allowed | Allowed | Allowed | Read Only |
-| **Manage SEO Settings** | Allowed | Allowed | Allowed | Read Only | Read Only |
-| **Data Mutations (POST/PUT/DELETE)** | Allowed | Allowed | Allowed (CMS) | Allowed (Content) | Denied (403 Forbidden) |
+| Permission / Action                  | `superadmin` | `admin` |  `cms_admin`  |     `editor`      |        `viewer`        |
+| ------------------------------------ | :----------: | :-----: | :-----------: | :---------------: | :--------------------: |
+| **View Dashboard & Metrics**         |   Allowed    | Allowed |    Allowed    |      Allowed      |        Allowed         |
+| **Manage Employees & Bench**         |   Allowed    | Allowed |    Denied     |      Denied       |         Denied         |
+| **Manage Candidates & ATS**          |   Allowed    | Allowed |    Denied     |     Read Only     |       Read Only        |
+| **Manage Clients & Placements**      |   Allowed    | Allowed |    Denied     |      Denied       |         Denied         |
+| **Manage Job Requisitions**          |   Allowed    | Allowed |    Denied     |      Allowed      |       Read Only        |
+| **Manage System Members**            |   Allowed    | Denied  |    Denied     |      Denied       |         Denied         |
+| **Manage CMS Pages & Blog**          |   Allowed    | Allowed |    Allowed    |      Allowed      |       Read Only        |
+| **Manage Media & Announcements**     |   Allowed    | Allowed |    Allowed    |      Allowed      |       Read Only        |
+| **Manage SEO Settings**              |   Allowed    | Allowed |    Allowed    |     Read Only     |       Read Only        |
+| **Data Mutations (POST/PUT/DELETE)** |   Allowed    | Allowed | Allowed (CMS) | Allowed (Content) | Denied (403 Forbidden) |
 
 ---
 
@@ -225,53 +225,53 @@ Permissions are verified in `auth.middleware.js` using the `X-Demo-Role` header 
 
 All admin routes are mounted under `/api/admin` in `admin.route.js`:
 
-| HTTP Method | Route | Description |
-| --- | --- | --- |
-| `GET` | `/api/admin/stats?period=month\|quarter\|year` | Dashboard KPIs, Recharts datasets, recent placements |
-| `GET` | `/api/admin/activities` | Audit trail stream |
-| `GET` | `/api/admin/auth/me` | Current persona information & database connection status |
-| `GET` / `POST` | `/api/admin/employees` | List / Create workforce employee |
-| `PUT` / `DELETE` | `/api/admin/employees/:id` | Update / Remove workforce employee |
-| `GET` / `POST` | `/api/admin/candidates` | List / Intake candidates into ATS pipeline |
-| `PATCH` | `/api/admin/candidates/:id/status` | Advance candidate ATS stage (`Applied` -> `Screening` -> etc.) |
-| `DELETE` | `/api/admin/candidates/:id` | Archive candidate |
-| `GET` / `POST` | `/api/admin/clients` | List / Register corporate client accounts |
-| `PUT` / `DELETE` | `/api/admin/clients/:id` | Update / Archive corporate client |
-| `GET` / `POST` | `/api/admin/jobs` | List / Post open staffing requisitions |
-| `PUT` / `DELETE` | `/api/admin/jobs/:id` | Update / Close staffing requisition |
-| `GET` / `POST` | `/api/admin/placements` | List / Deploy talent to client requirement |
-| `PUT` / `DELETE` | `/api/admin/placements/:id` | Update / Terminate placement |
-| `GET` / `POST` | `/api/admin/system-members` | List / Invite administrative system members |
-| `PUT` / `DELETE` | `/api/admin/system-members/:id` | Update role / Revoke member access |
-| `GET` | `/api/admin/cms/stats` | CMS overview statistics |
-| `GET` / `POST` | `/api/admin/cms/pages` | List / Create website pages |
-| `PUT` / `DELETE` | `/api/admin/cms/pages/:id` | Update content / Delete page |
-| `PATCH` | `/api/admin/cms/pages/:id/publish` | Toggle page draft vs published state |
-| `GET` / `POST` | `/api/admin/cms/articles` | List / Author blog articles |
-| `PUT` / `DELETE` | `/api/admin/cms/articles/:id` | Update / Delete article |
-| `PATCH` | `/api/admin/cms/articles/:id/publish` | Toggle article publication |
-| `GET` / `POST` | `/api/admin/cms/media` | List / Register media assets |
-| `DELETE` | `/api/admin/cms/media/:id` | Delete media asset |
-| `GET` / `PUT` | `/api/admin/cms/seo` | Get / Save global & page-level SEO directives |
-| `GET` / `POST` | `/api/admin/cms/announcements` | List / Broadcast corporate announcements |
-| `PATCH` / `DELETE` | `/api/admin/cms/announcements/:id/publish` | Toggle visibility / Remove announcement |
+| HTTP Method        | Route                                          | Description                                                    |
+| ------------------ | ---------------------------------------------- | -------------------------------------------------------------- |
+| `GET`              | `/api/admin/stats?period=month\|quarter\|year` | Dashboard KPIs, Recharts datasets, recent placements           |
+| `GET`              | `/api/admin/activities`                        | Audit trail stream                                             |
+| `GET`              | `/api/admin/auth/me`                           | Current persona information & database connection status       |
+| `GET` / `POST`     | `/api/admin/employees`                         | List / Create workforce employee                               |
+| `PUT` / `DELETE`   | `/api/admin/employees/:id`                     | Update / Remove workforce employee                             |
+| `GET` / `POST`     | `/api/admin/candidates`                        | List / Intake candidates into ATS pipeline                     |
+| `PATCH`            | `/api/admin/candidates/:id/status`             | Advance candidate ATS stage (`Applied` -> `Screening` -> etc.) |
+| `DELETE`           | `/api/admin/candidates/:id`                    | Archive candidate                                              |
+| `GET` / `POST`     | `/api/admin/clients`                           | List / Register corporate client accounts                      |
+| `PUT` / `DELETE`   | `/api/admin/clients/:id`                       | Update / Archive corporate client                              |
+| `GET` / `POST`     | `/api/admin/jobs`                              | List / Post open staffing requisitions                         |
+| `PUT` / `DELETE`   | `/api/admin/jobs/:id`                          | Update / Close staffing requisition                            |
+| `GET` / `POST`     | `/api/admin/placements`                        | List / Deploy talent to client requirement                     |
+| `PUT` / `DELETE`   | `/api/admin/placements/:id`                    | Update / Terminate placement                                   |
+| `GET` / `POST`     | `/api/admin/system-members`                    | List / Invite administrative system members                    |
+| `PUT` / `DELETE`   | `/api/admin/system-members/:id`                | Update role / Revoke member access                             |
+| `GET`              | `/api/admin/cms/stats`                         | CMS overview statistics                                        |
+| `GET` / `POST`     | `/api/admin/cms/pages`                         | List / Create website pages                                    |
+| `PUT` / `DELETE`   | `/api/admin/cms/pages/:id`                     | Update content / Delete page                                   |
+| `PATCH`            | `/api/admin/cms/pages/:id/publish`             | Toggle page draft vs published state                           |
+| `GET` / `POST`     | `/api/admin/cms/articles`                      | List / Author blog articles                                    |
+| `PUT` / `DELETE`   | `/api/admin/cms/articles/:id`                  | Update / Delete article                                        |
+| `PATCH`            | `/api/admin/cms/articles/:id/publish`          | Toggle article publication                                     |
+| `GET` / `POST`     | `/api/admin/cms/media`                         | List / Register media assets                                   |
+| `DELETE`           | `/api/admin/cms/media/:id`                     | Delete media asset                                             |
+| `GET` / `PUT`      | `/api/admin/cms/seo`                           | Get / Save global & page-level SEO directives                  |
+| `GET` / `POST`     | `/api/admin/cms/announcements`                 | List / Broadcast corporate announcements                       |
+| `PATCH` / `DELETE` | `/api/admin/cms/announcements/:id/publish`     | Toggle visibility / Remove announcement                        |
 
 ---
 
 ## 8. Direct Navigation URLs
 
-| Screen | URL |
-| --- | --- |
-| **Executive Dashboard** | `http://localhost:5173/admin` |
-| **Employees Directory** | `http://localhost:5173/admin/employees` |
-| **Candidates ATS Pipeline** | `http://localhost:5173/admin/candidates` |
-| **Corporate Clients** | `http://localhost:5173/admin/clients` |
-| **Job Requisitions** | `http://localhost:5173/admin/jobs` |
-| **Placements & Deployments** | `http://localhost:5173/admin/placements` |
-| **System Members (RBAC)** | `http://localhost:5173/admin/system-members` |
-| **CMS Workspace Dashboard** | `http://localhost:5173/admin/cms` |
-| **Website Pages Manager** | `http://localhost:5173/admin/cms/pages` |
-| **Blog & Articles Manager** | `http://localhost:5173/admin/cms/blog` |
-| **Digital Media Library** | `http://localhost:5173/admin/cms/media` |
-| **SEO Settings** | `http://localhost:5173/admin/cms/seo` |
-| **Announcements** | `http://localhost:5173/admin/cms/announcements` |
+| Screen                       | URL                                             |
+| ---------------------------- | ----------------------------------------------- |
+| **Executive Dashboard**      | `http://localhost:5173/admin`                   |
+| **Employees Directory**      | `http://localhost:5173/admin/employees`         |
+| **Candidates ATS Pipeline**  | `http://localhost:5173/admin/candidates`        |
+| **Corporate Clients**        | `http://localhost:5173/admin/clients`           |
+| **Job Requisitions**         | `http://localhost:5173/admin/jobs`              |
+| **Placements & Deployments** | `http://localhost:5173/admin/placements`        |
+| **System Members (RBAC)**    | `http://localhost:5173/admin/system-members`    |
+| **CMS Workspace Dashboard**  | `http://localhost:5173/admin/cms`               |
+| **Website Pages Manager**    | `http://localhost:5173/admin/cms/pages`         |
+| **Blog & Articles Manager**  | `http://localhost:5173/admin/cms/blog`          |
+| **Digital Media Library**    | `http://localhost:5173/admin/cms/media`         |
+| **SEO Settings**             | `http://localhost:5173/admin/cms/seo`           |
+| **Announcements**            | `http://localhost:5173/admin/cms/announcements` |

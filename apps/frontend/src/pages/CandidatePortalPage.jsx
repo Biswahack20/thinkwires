@@ -1,6 +1,9 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchCandidatePortalData, fallbackCandidatePortalData } from '../store/slices/candidatePortalSlice';
+import {
+  fetchCandidatePortalData,
+  fallbackCandidatePortalData,
+} from '../store/slices/candidatePortalSlice';
 import Navbar from '../components/common/Navbar';
 import Footer from '../components/common/Footer';
 import CandidateHero from '../components/CandidatePortalComponents/CandidateHero';
@@ -13,9 +16,14 @@ import CandidateConcierge from '../components/CandidatePortalComponents/Candidat
 
 const CandidatePortalPage = () => {
   const dispatch = useDispatch();
-  const { data: rawData, status } = useSelector((state) => state.candidatePortal || {});
+  const { data: rawData, status } = useSelector(
+    (state) => state.candidatePortal || {}
+  );
 
-  const data = rawData && Object.keys(rawData).length > 0 ? rawData : fallbackCandidatePortalData;
+  const data =
+    rawData && Object.keys(rawData).length > 0
+      ? rawData
+      : fallbackCandidatePortalData;
 
   useEffect(() => {
     window.scrollTo(0, 0);

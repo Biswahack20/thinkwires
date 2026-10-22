@@ -91,7 +91,8 @@ const BlogManager = () => {
       authorName: art.author?.name || 'ThinkWires Editorial',
       authorRole: art.author?.role || 'Staff Contributor',
       category: art.category || 'Industry Insights',
-      featuredImageUrl: art.featuredImageUrl || '/assets/blog_ai_gcc_dashboard.jpg',
+      featuredImageUrl:
+        art.featuredImageUrl || '/assets/blog_ai_gcc_dashboard.jpg',
       tags: Array.isArray(art.tags) ? art.tags.join(', ') : art.tags || '',
       status: art.status || 'published',
     });
@@ -115,7 +116,11 @@ const BlogManager = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!formData.title.trim() || !formData.summary.trim() || !formData.body.trim()) {
+    if (
+      !formData.title.trim() ||
+      !formData.summary.trim() ||
+      !formData.body.trim()
+    ) {
       setFormError('Please enter article Title, Summary, and Body content.');
       return;
     }
@@ -174,7 +179,8 @@ const BlogManager = () => {
         <div className="tw-view-title-group">
           <h1>Blog & Editorial Management</h1>
           <p className="tw-view-subtitle">
-            Publish thought leadership articles, research papers, GCC benchmarks, and manpower supply whitepapers.
+            Publish thought leadership articles, research papers, GCC
+            benchmarks, and manpower supply whitepapers.
           </p>
         </div>
 
@@ -229,7 +235,14 @@ const BlogManager = () => {
             <tbody>
               {loading ? (
                 <tr>
-                  <td colSpan="8" style={{ textAlign: 'center', padding: '2rem', color: '#64748B' }}>
+                  <td
+                    colSpan="8"
+                    style={{
+                      textAlign: 'center',
+                      padding: '2rem',
+                      color: '#64748B',
+                    }}
+                  >
                     Loading articles...
                   </td>
                 </tr>
@@ -238,17 +251,28 @@ const BlogManager = () => {
                   <tr key={art.id || art._id}>
                     <td>
                       <div style={{ fontWeight: 600 }}>{art.title}</div>
-                      <div style={{ fontSize: '0.72rem', color: '#64748B' }}>/{art.slug}</div>
+                      <div style={{ fontSize: '0.72rem', color: '#64748B' }}>
+                        /{art.slug}
+                      </div>
                     </td>
                     <td>
                       <div>{art.author?.name || 'Staff'}</div>
-                      <div style={{ fontSize: '0.7rem', color: '#64748B' }}>{art.author?.role}</div>
+                      <div style={{ fontSize: '0.7rem', color: '#64748B' }}>
+                        {art.author?.role}
+                      </div>
                     </td>
                     <td>
                       <span className="tw-badge available">{art.category}</span>
                     </td>
                     <td>
-                      <div style={{ display: 'flex', gap: '0.2rem', flexWrap: 'wrap', maxWidth: '160px' }}>
+                      <div
+                        style={{
+                          display: 'flex',
+                          gap: '0.2rem',
+                          flexWrap: 'wrap',
+                          maxWidth: '160px',
+                        }}
+                      >
                         {(art.tags || []).slice(0, 2).map((t, idx) => (
                           <span
                             key={idx}
@@ -278,9 +302,16 @@ const BlogManager = () => {
                     <td>
                       <strong>{(art.viewsCount || 0).toLocaleString()}</strong>
                     </td>
-                    <td>{art.publishedAt ? new Date(art.publishedAt).toLocaleDateString() : 'Unpublished'}</td>
+                    <td>
+                      {art.publishedAt
+                        ? new Date(art.publishedAt).toLocaleDateString()
+                        : 'Unpublished'}
+                    </td>
                     <td style={{ textAlign: 'right' }}>
-                      <div className="tw-action-btn-group" style={{ justifyContent: 'flex-end' }}>
+                      <div
+                        className="tw-action-btn-group"
+                        style={{ justifyContent: 'flex-end' }}
+                      >
                         <button
                           className="tw-action-icon-btn"
                           onClick={() => setPreviewArticle(art)}
@@ -318,19 +349,36 @@ const BlogManager = () => {
           <div className="tw-modal" style={{ maxWidth: '680px' }}>
             <div className="tw-modal-header">
               <div>
-                <span className="tw-badge deployed" style={{ marginBottom: '0.25rem' }}>
-                  {previewArticle.category} • {previewArticle.readTime || '4 min'}
+                <span
+                  className="tw-badge deployed"
+                  style={{ marginBottom: '0.25rem' }}
+                >
+                  {previewArticle.category} •{' '}
+                  {previewArticle.readTime || '4 min'}
                 </span>
                 <h2 className="tw-modal-title">{previewArticle.title}</h2>
               </div>
-              <button className="tw-modal-close-btn" onClick={() => setPreviewArticle(null)}>
+              <button
+                className="tw-modal-close-btn"
+                onClick={() => setPreviewArticle(null)}
+              >
                 <CloseIcon size={16} />
               </button>
             </div>
 
             <div className="tw-modal-body">
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1rem', fontSize: '0.8rem', color: '#64748B' }}>
-                <strong>By {previewArticle.author?.name}</strong> • {previewArticle.author?.role}
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                  marginBottom: '1rem',
+                  fontSize: '0.8rem',
+                  color: '#64748B',
+                }}
+              >
+                <strong>By {previewArticle.author?.name}</strong> •{' '}
+                {previewArticle.author?.role}
               </div>
 
               <div
@@ -348,13 +396,22 @@ const BlogManager = () => {
                 {previewArticle.summary}
               </div>
 
-              <div style={{ lineHeight: '1.7', fontSize: '0.9rem', color: '#172033' }}>
+              <div
+                style={{
+                  lineHeight: '1.7',
+                  fontSize: '0.9rem',
+                  color: '#172033',
+                }}
+              >
                 {previewArticle.body}
               </div>
             </div>
 
             <div className="tw-modal-footer">
-              <button className="tw-btn-secondary" onClick={() => setPreviewArticle(null)}>
+              <button
+                className="tw-btn-secondary"
+                onClick={() => setPreviewArticle(null)}
+              >
                 Close Preview
               </button>
             </div>
@@ -367,8 +424,13 @@ const BlogManager = () => {
         <div className="tw-modal-overlay">
           <div className="tw-modal" style={{ maxWidth: '640px' }}>
             <div className="tw-modal-header">
-              <h2 className="tw-modal-title">{editingArticle ? `Edit Article` : 'Author New Article'}</h2>
-              <button className="tw-modal-close-btn" onClick={() => setEditorOpen(false)}>
+              <h2 className="tw-modal-title">
+                {editingArticle ? `Edit Article` : 'Author New Article'}
+              </h2>
+              <button
+                className="tw-modal-close-btn"
+                onClick={() => setEditorOpen(false)}
+              >
                 <CloseIcon size={16} />
               </button>
             </div>
@@ -395,12 +457,16 @@ const BlogManager = () => {
                 )}
 
                 <div className="tw-form-group">
-                  <label className="tw-form-label">Article Headline / Title *</label>
+                  <label className="tw-form-label">
+                    Article Headline / Title *
+                  </label>
                   <input
                     type="text"
                     className="tw-form-input"
                     value={formData.title}
-                    onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, title: e.target.value })
+                    }
                     placeholder="e.g. GCC 2.0: Scaling Tech Delivery Centers in India"
                     required
                   />
@@ -413,7 +479,9 @@ const BlogManager = () => {
                       type="text"
                       className="tw-form-input"
                       value={formData.slug}
-                      onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
+                      onChange={(e) =>
+                        setFormData({ ...formData, slug: e.target.value })
+                      }
                       placeholder="gcc-2-scaling-tech-delivery"
                     />
                   </div>
@@ -423,7 +491,9 @@ const BlogManager = () => {
                       type="text"
                       className="tw-form-input"
                       value={formData.category}
-                      onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                      onChange={(e) =>
+                        setFormData({ ...formData, category: e.target.value })
+                      }
                       placeholder="Industry Insights / EOR"
                     />
                   </div>
@@ -436,7 +506,9 @@ const BlogManager = () => {
                       type="text"
                       className="tw-form-input"
                       value={formData.authorName}
-                      onChange={(e) => setFormData({ ...formData, authorName: e.target.value })}
+                      onChange={(e) =>
+                        setFormData({ ...formData, authorName: e.target.value })
+                      }
                     />
                   </div>
                   <div className="tw-form-group">
@@ -444,7 +516,9 @@ const BlogManager = () => {
                     <select
                       className="tw-form-select"
                       value={formData.status}
-                      onChange={(e) => setFormData({ ...formData, status: e.target.value })}
+                      onChange={(e) =>
+                        setFormData({ ...formData, status: e.target.value })
+                      }
                     >
                       <option value="published">Published</option>
                       <option value="draft">Draft</option>
@@ -453,12 +527,16 @@ const BlogManager = () => {
                 </div>
 
                 <div className="tw-form-group">
-                  <label className="tw-form-label">Executive Summary / Abstract *</label>
+                  <label className="tw-form-label">
+                    Executive Summary / Abstract *
+                  </label>
                   <textarea
                     className="tw-form-textarea"
                     rows="2"
                     value={formData.summary}
-                    onChange={(e) => setFormData({ ...formData, summary: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, summary: e.target.value })
+                    }
                     placeholder="Concise 2-sentence summary for preview cards..."
                     required
                   ></textarea>
@@ -470,7 +548,9 @@ const BlogManager = () => {
                     className="tw-form-textarea"
                     rows="6"
                     value={formData.body}
-                    onChange={(e) => setFormData({ ...formData, body: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, body: e.target.value })
+                    }
                     placeholder="Enter full article paragraphs, analysis, benchmarks..."
                     required
                   ></textarea>
@@ -483,17 +563,26 @@ const BlogManager = () => {
                       type="text"
                       className="tw-form-input"
                       value={formData.featuredImageUrl}
-                      onChange={(e) => setFormData({ ...formData, featuredImageUrl: e.target.value })}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          featuredImageUrl: e.target.value,
+                        })
+                      }
                       placeholder="/assets/blog_ai_gcc_dashboard.jpg"
                     />
                   </div>
                   <div className="tw-form-group">
-                    <label className="tw-form-label">Tags (comma separated)</label>
+                    <label className="tw-form-label">
+                      Tags (comma separated)
+                    </label>
                     <input
                       type="text"
                       className="tw-form-input"
                       value={formData.tags}
-                      onChange={(e) => setFormData({ ...formData, tags: e.target.value })}
+                      onChange={(e) =>
+                        setFormData({ ...formData, tags: e.target.value })
+                      }
                       placeholder="GCC, India Tech, Staffing"
                     />
                   </div>
@@ -523,18 +612,28 @@ const BlogManager = () => {
           <div className="tw-modal" style={{ maxWidth: '440px' }}>
             <div className="tw-modal-header">
               <h2 className="tw-modal-title">Delete Article</h2>
-              <button className="tw-modal-close-btn" onClick={() => setDeleteConfirmId(null)}>
+              <button
+                className="tw-modal-close-btn"
+                onClick={() => setDeleteConfirmId(null)}
+              >
                 <CloseIcon size={16} />
               </button>
             </div>
             <div className="tw-modal-body">
-              Are you sure you want to permanently delete this blog article from the CMS?
+              Are you sure you want to permanently delete this blog article from
+              the CMS?
             </div>
             <div className="tw-modal-footer">
-              <button className="tw-btn-secondary" onClick={() => setDeleteConfirmId(null)}>
+              <button
+                className="tw-btn-secondary"
+                onClick={() => setDeleteConfirmId(null)}
+              >
                 Cancel
               </button>
-              <button className="tw-btn-danger" onClick={() => handleDelete(deleteConfirmId)}>
+              <button
+                className="tw-btn-danger"
+                onClick={() => handleDelete(deleteConfirmId)}
+              >
                 Delete Article
               </button>
             </div>

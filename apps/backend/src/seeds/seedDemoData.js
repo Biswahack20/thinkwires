@@ -29,12 +29,16 @@ export const seedDatabase = async () => {
     ? JSON.parse(fs.readFileSync(mockSeedFilePath, 'utf8'))
     : {};
 
-  console.log('Seeding MongoDB collections from adminSeedData.json and mockData.json...');
+  console.log(
+    'Seeding MongoDB collections from adminSeedData.json and mockData.json...'
+  );
 
   const defaultHashedPassword = await hashPassword('demo_password_hash_secure');
 
   // 1. Users - Keep authentic administrative accounts only, do not seed mock users
-  console.log('Skipping fake demo users and employees seeding (live DB models active).');
+  console.log(
+    'Skipping fake demo users and employees seeding (live DB models active).'
+  );
 
   // 2. Employees - Clean directory; only real employees created by Superadmin
   /*
@@ -120,7 +124,10 @@ export const seedDatabase = async () => {
   // 6. Placements
   for (const plc of adminData.placements || []) {
     await Placement.findOneAndUpdate(
-      { candidateOrEmployeeName: plc.candidateOrEmployeeName, clientName: plc.clientName },
+      {
+        candidateOrEmployeeName: plc.candidateOrEmployeeName,
+        clientName: plc.clientName,
+      },
       { ...plc },
       { upsert: true, new: true }
     );
@@ -167,7 +174,12 @@ export const seedDatabase = async () => {
 
   if (Array.isArray(mockData.articlesData)) {
     for (const art of mockData.articlesData) {
-      const artSlug = art.slug || art.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+      const artSlug =
+        art.slug ||
+        art.title
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, '-')
+          .replace(/(^-|-$)/g, '');
       await Article.findOneAndUpdate(
         { slug: artSlug },
         {
@@ -200,9 +212,11 @@ export const seedDatabase = async () => {
       title: 'Home',
       slug: 'home',
       category: 'Core Website',
-      content: 'ThinkWires enterprise-grade IT manpower supply and workforce advisory.',
+      content:
+        'ThinkWires enterprise-grade IT manpower supply and workforce advisory.',
       metaTitle: 'ThinkWires — Tech Staffing & Borderless Engineering Squads',
-      metaDescription: 'Deploy top engineering talent and compliant global workforce infrastructure.',
+      metaDescription:
+        'Deploy top engineering talent and compliant global workforce infrastructure.',
       data: {
         techStack: mockData.initialTechStack || [],
         stats: mockData.statsData || {},
@@ -220,9 +234,11 @@ export const seedDatabase = async () => {
       title: 'About Us',
       slug: 'about',
       category: 'Core Website',
-      content: 'Founded in 2022 as a premier workforce advisor and staffing aggregator.',
+      content:
+        'Founded in 2022 as a premier workforce advisor and staffing aggregator.',
       metaTitle: 'About ThinkWires — Global Tech Talent Advisory',
-      metaDescription: 'Connecting high-growth enterprises with specialized engineering talent.',
+      metaDescription:
+        'Connecting high-growth enterprises with specialized engineering talent.',
       data: mockData.aboutData || {},
       status: 'published',
     },
@@ -230,9 +246,11 @@ export const seedDatabase = async () => {
       title: 'Contact Us',
       slug: 'contact',
       category: 'Core Website',
-      content: 'Connect with ThinkWires Staffing Directors across India, USA, and Canada.',
+      content:
+        'Connect with ThinkWires Staffing Directors across India, USA, and Canada.',
       metaTitle: 'Contact ThinkWires — Global Office Locations & Inquiries',
-      metaDescription: 'Get in touch for enterprise tech staffing and talent augmentation.',
+      metaDescription:
+        'Get in touch for enterprise tech staffing and talent augmentation.',
       data: mockData.contactData || {},
       status: 'published',
     },
@@ -240,9 +258,11 @@ export const seedDatabase = async () => {
       title: 'Talent Bench',
       slug: 'bench',
       category: 'Talent Services',
-      content: 'On-demand pre-vetted senior software engineers ready for immediate deployment.',
+      content:
+        'On-demand pre-vetted senior software engineers ready for immediate deployment.',
       metaTitle: 'Talent Bench — Pre-Vetted Immediate Deployment Engineers',
-      metaDescription: 'Access top 1% engineering talent across India ready for sub-48-hour onboarding.',
+      metaDescription:
+        'Access top 1% engineering talent across India ready for sub-48-hour onboarding.',
       data: mockData.benchData || {},
       status: 'published',
     },
@@ -250,7 +270,8 @@ export const seedDatabase = async () => {
       title: 'Global Payroll',
       slug: 'services-payroll',
       category: 'Workforce Services',
-      content: 'Compliant multi-currency payroll administration across borderless tech hubs.',
+      content:
+        'Compliant multi-currency payroll administration across borderless tech hubs.',
       metaTitle: 'Global Payroll Management — ThinkWires',
       metaDescription: 'Streamlined international tech payroll infrastructure.',
       data: mockData.payrollData || {},
@@ -260,9 +281,11 @@ export const seedDatabase = async () => {
       title: 'Employer of Record (EOR)',
       slug: 'services-eor',
       category: 'Workforce Services',
-      content: 'Compliant international employment without setting up local legal entities.',
+      content:
+        'Compliant international employment without setting up local legal entities.',
       metaTitle: 'Employer of Record (EOR) — ThinkWires',
-      metaDescription: 'Hire legally anywhere in India and North America without subsidiary overhead.',
+      metaDescription:
+        'Hire legally anywhere in India and North America without subsidiary overhead.',
       data: mockData.eorData || {},
       status: 'published',
     },
@@ -270,9 +293,11 @@ export const seedDatabase = async () => {
       title: 'IT Staff Augmentation',
       slug: 'services-staff-augmentation',
       category: 'Workforce Services',
-      content: 'Scale engineering squads rapidly with verified contract talent.',
+      content:
+        'Scale engineering squads rapidly with verified contract talent.',
       metaTitle: 'IT Staff Augmentation — ThinkWires',
-      metaDescription: 'High-velocity technical team extension with strict SLAs.',
+      metaDescription:
+        'High-velocity technical team extension with strict SLAs.',
       data: mockData.staffAugmentationData || {},
       status: 'published',
     },
@@ -280,9 +305,11 @@ export const seedDatabase = async () => {
       title: 'Permanent Staffing',
       slug: 'services-permanent-staffing',
       category: 'Workforce Services',
-      content: 'Direct-hire technical recruiting and executive leadership search.',
+      content:
+        'Direct-hire technical recruiting and executive leadership search.',
       metaTitle: 'Permanent Staffing & Executive Search — ThinkWires',
-      metaDescription: 'Targeted executive search for mission-critical engineering roles.',
+      metaDescription:
+        'Targeted executive search for mission-critical engineering roles.',
       data: mockData.permanentStaffingData || {},
       status: 'published',
     },
@@ -290,9 +317,11 @@ export const seedDatabase = async () => {
       title: 'Find Talent',
       slug: 'find-talent',
       category: 'Client Portal',
-      content: 'Submit specialized engineering requisitions with 5-hour SLA response.',
+      content:
+        'Submit specialized engineering requisitions with 5-hour SLA response.',
       metaTitle: 'Hire Top Tech Talent — ThinkWires',
-      metaDescription: 'Post engineering requisitions and get matching candidate profiles within hours.',
+      metaDescription:
+        'Post engineering requisitions and get matching candidate profiles within hours.',
       data: mockData.findTalentData || {},
       status: 'published',
     },
@@ -300,9 +329,11 @@ export const seedDatabase = async () => {
       title: 'Candidate Portal',
       slug: 'candidate-portal',
       category: 'Candidate Experience',
-      content: 'Manage applications, track interviews, and submit monthly timesheets.',
+      content:
+        'Manage applications, track interviews, and submit monthly timesheets.',
       metaTitle: 'Candidate Portal — ThinkWires',
-      metaDescription: 'Candidate dashboard for timesheets, career tracking, and onboarding.',
+      metaDescription:
+        'Candidate dashboard for timesheets, career tracking, and onboarding.',
       data: mockData.candidatePortalData || {},
       status: 'published',
     },
@@ -310,7 +341,8 @@ export const seedDatabase = async () => {
       title: 'Industries We Serve',
       slug: 'industries',
       category: 'Core Website',
-      content: 'Specialized talent delivery across Fintech, Healthtech, SaaS, and Enterprise AI.',
+      content:
+        'Specialized talent delivery across Fintech, Healthtech, SaaS, and Enterprise AI.',
       metaTitle: 'Industry Talent Corridors — ThinkWires',
       metaDescription: 'Domain-specialized tech recruitment pipelines.',
       data: mockData.industriesPageData || {},
@@ -362,7 +394,9 @@ export const seedDatabase = async () => {
     );
   }
 
-  console.log('MongoDB database successfully seeded with both Admin and mockData datasets!');
+  console.log(
+    'MongoDB database successfully seeded with both Admin and mockData datasets!'
+  );
 };
 
 // If run directly from terminal
@@ -377,8 +411,13 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
       process.exit(0);
     })
     .catch((err) => {
-      console.warn('⚠️ MongoDB connection failed during standalone seed execution:', err.message);
-      console.log('ℹ️ You can run MongoDB or rely on the dual-mode in-memory seed dataset.');
+      console.warn(
+        '⚠️ MongoDB connection failed during standalone seed execution:',
+        err.message
+      );
+      console.log(
+        'ℹ️ You can run MongoDB or rely on the dual-mode in-memory seed dataset.'
+      );
       process.exit(0);
     });
 }

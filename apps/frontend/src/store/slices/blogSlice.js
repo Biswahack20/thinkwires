@@ -9,12 +9,18 @@ export const fetchArticles = createAsyncThunk(
     try {
       const queryParams = new URLSearchParams();
       if (params.q) queryParams.append('q', params.q);
-      if (params.category && params.category !== 'All' && params.category !== 'All Insights (15)') {
+      if (
+        params.category &&
+        params.category !== 'All' &&
+        params.category !== 'All Insights (15)'
+      ) {
         queryParams.append('category', params.category);
       }
 
       const queryString = queryParams.toString();
-      const response = await fetch(`${API_BASE}/articles${queryString ? `?${queryString}` : ''}`);
+      const response = await fetch(
+        `${API_BASE}/articles${queryString ? `?${queryString}` : ''}`
+      );
       if (!response.ok) throw new Error('Network response was not ok');
       return await response.json();
     } catch (err) {
@@ -69,7 +75,8 @@ export const subscribeNewsletter = createAsyncThunk(
 const featuredFlagshipArticle = {
   id: 'featured-flagship-1',
   featured: true,
-  title: 'Beyond the Code: How Data Science and AI Are Engine-Building the New India',
+  title:
+    'Beyond the Code: How Data Science and AI Are Engine-Building the New India',
   excerpt:
     "India's tech story is undergoing a fundamental structural pivot. The nation is shifting from being the back-office support system for global tech to becoming the primary engine for global R&D and indigenous AI innovations. Over the next five years, data science will evolve from passive business intelligence into an infrastructure-level driver of governance, industry, and economic mobility.",
   primaryFinding:
@@ -100,7 +107,8 @@ const figmaArticlesGrid = [
     readTime: '8 min read',
     publishedAt: 'Aug 26, 2026',
     subCategory: 'Talent Benchmarks',
-    title: "India's IT Job Market in 2026: Hiring Is Recovering — So Why Are Candidates Getting Fewer Responses?",
+    title:
+      "India's IT Job Market in 2026: Hiring Is Recovering — So Why Are Candidates Getting Fewer Responses?",
     excerpt:
       'The latest available India IT hiring data and market signals as of August 2026. The important finding is that the market is not simply "low hiring" — it is a...',
     telemetry: {
@@ -114,7 +122,8 @@ const figmaArticlesGrid = [
     author: {
       initials: 'AN',
       name: 'Ananya Roy',
-      avatar: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&q=80&w=150',
+      avatar:
+        'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&q=80&w=150',
     },
     category: 'IT Job Market Reports',
   },
@@ -127,7 +136,8 @@ const figmaArticlesGrid = [
     readTime: '10 min read',
     publishedAt: 'Aug 01, 2026',
     subCategory: 'Recruitment Operations',
-    title: "AI Recruitment in Q1 2026: Smarter Hiring, Longer Wait Times—What's Really Happening?",
+    title:
+      "AI Recruitment in Q1 2026: Smarter Hiring, Longer Wait Times—What's Really Happening?",
     excerpt:
       'Organizations are leveraging AI to automate sourcing, resume screening, and scheduling. While efficiency has improved, a paradoxical...',
     telemetry: {
@@ -139,7 +149,8 @@ const figmaArticlesGrid = [
     author: {
       initials: 'KR',
       name: 'Karthik Ram',
-      avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=150',
+      avatar:
+        'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=150',
     },
     category: 'AI & Tech Trends',
   },
@@ -152,7 +163,8 @@ const figmaArticlesGrid = [
     readTime: '6 min read',
     publishedAt: 'Jun 23, 2026',
     subCategory: 'Cost Optimization',
-    title: 'Why Are GCCs Still Paying More for Talent Acquisition Than They Need To?',
+    title:
+      'Why Are GCCs Still Paying More for Talent Acquisition Than They Need To?',
     excerpt:
       'The GCC ecosystem in India has evolved dramatically over the last decade. Yet, when it comes to talent acquisition, many organizations...',
     telemetry: {
@@ -166,7 +178,8 @@ const figmaArticlesGrid = [
     author: {
       initials: 'VS',
       name: 'Vikramjit Singh',
-      avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=150',
+      avatar:
+        'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=150',
     },
     category: 'GCC Strategy',
   },
@@ -179,7 +192,8 @@ const figmaArticlesGrid = [
     readTime: '7 min read',
     publishedAt: 'May 23, 2026',
     subCategory: 'Enterprise Tech',
-    title: 'Why GCC Hiring Is Taking the Upper Hand in the Indian IT Market Over Traditional Service Providers',
+    title:
+      'Why GCC Hiring Is Taking the Upper Hand in the Indian IT Market Over Traditional Service Providers',
     excerpt:
       'Traditional IT service providers that once dominated the market are now facing strong competition from Global Capability Centers...',
     telemetry: {
@@ -193,7 +207,8 @@ const figmaArticlesGrid = [
     author: {
       initials: 'RM',
       name: 'Rohan Mathur',
-      avatar: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=150',
+      avatar:
+        'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=150',
     },
     category: 'Workforce Culture',
   },
@@ -206,7 +221,8 @@ const figmaArticlesGrid = [
     readTime: '11 min read',
     publishedAt: 'Apr 11, 2026',
     subCategory: 'Evolution Study',
-    title: 'Manual Recruitment in 2025 vs AI Recruitment in 2026: The Evolution of Hiring',
+    title:
+      'Manual Recruitment in 2025 vs AI Recruitment in 2026: The Evolution of Hiring',
     excerpt:
       'A comprehensive operational review comparing traditional resume parsing with generative skill matching, adaptive technical assessments, and...',
     telemetry: {
@@ -218,7 +234,8 @@ const figmaArticlesGrid = [
     author: {
       initials: 'SP',
       name: 'Shreya Patel',
-      avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=150',
+      avatar:
+        'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=150',
     },
     category: 'Recruitment Operations',
   },
@@ -245,7 +262,8 @@ const figmaArticlesGrid = [
     author: {
       initials: 'TW',
       name: 'Advisory Desk',
-      avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=150',
+      avatar:
+        'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&q=80&w=150',
     },
     category: 'GCC Strategy',
   },
@@ -256,22 +274,26 @@ const figmaResearchers = [
     id: 'res-1',
     name: 'Karthik Ram',
     role: 'Head of AI Advisory & Operations',
-    organization: 'Ex-Tier 1 Tech Architect, 14+ yrs in global talent pipelines',
-    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=200',
+    organization:
+      'Ex-Tier 1 Tech Architect, 14+ yrs in global talent pipelines',
+    avatar:
+      'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=200',
   },
   {
     id: 'res-2',
     name: 'Ananya Roy',
     role: 'Director of GCC Market Intelligence',
     organization: 'Specializing in cross-border tech wage indexes & EOR',
-    avatar: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&q=80&w=200',
+    avatar:
+      'https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&q=80&w=200',
   },
   {
     id: 'res-3',
     name: 'Vikramjit Singh',
     role: 'VP of Enterprise Solutions',
     organization: 'Advising North American and European Fortune 500 GCCs',
-    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=200',
+    avatar:
+      'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=200',
   },
 ];
 
@@ -309,7 +331,9 @@ const blogSlice = createSlice({
     toggleBookmark: (state, action) => {
       const articleId = action.payload;
       if (state.bookmarkedArticles.includes(articleId)) {
-        state.bookmarkedArticles = state.bookmarkedArticles.filter((id) => id !== articleId);
+        state.bookmarkedArticles = state.bookmarkedArticles.filter(
+          (id) => id !== articleId
+        );
       } else {
         state.bookmarkedArticles.push(articleId);
       }

@@ -22,7 +22,9 @@ const FindTalentProof = ({ metrics = [], testimonial = {}, hotline = {} }) => {
             <div className="testimonial-card">
               <div className="stars-row">
                 {[...Array(5)].map((_, i) => (
-                  <span key={i} className="material-symbols-outlined star-icon">star</span>
+                  <span key={i} className="material-symbols-outlined star-icon">
+                    star
+                  </span>
                 ))}
               </div>
               <p className="quote-text">“{testimonial.quote}”</p>
@@ -41,18 +43,28 @@ const FindTalentProof = ({ metrics = [], testimonial = {}, hotline = {} }) => {
             <div className="hotline-card">
               <div className="hotline-left">
                 <div className="hotline-icon-wrap">
-                  <span className="material-symbols-outlined">support_agent</span>
+                  <span className="material-symbols-outlined">
+                    support_agent
+                  </span>
                 </div>
                 <div>
-                  <h4 className="hotline-title">{hotline.title || 'Executive Direct Line'}</h4>
+                  <h4 className="hotline-title">
+                    {hotline.title || 'Executive Direct Line'}
+                  </h4>
                   <p className="hotline-desc">
-                    {hotline.desc || 'Immediate workforce briefing with our Senior Managing Director:'}
+                    {hotline.desc ||
+                      'Immediate workforce briefing with our Senior Managing Director:'}
                   </p>
                 </div>
               </div>
               <div className="hotline-right">
-                <a href={`tel:${hotline.phone || '+918920555626'}`} className="btn-hotline">
-                  <span className="material-symbols-outlined">phone_in_talk</span>
+                <a
+                  href={`tel:${hotline.phone || '+918920555626'}`}
+                  className="btn-hotline"
+                >
+                  <span className="material-symbols-outlined">
+                    phone_in_talk
+                  </span>
                   <span>{hotline.phone || '+91 89205 55626'}</span>
                 </a>
               </div>

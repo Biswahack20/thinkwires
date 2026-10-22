@@ -13,7 +13,7 @@ const DEFAULT_METRICS = [
     numericValue: 98.4,
     unit: '%',
     label: 'Contract Retention Rate',
-    color: 'emerald'
+    color: 'emerald',
   },
   {
     id: 'turnaround-time',
@@ -22,8 +22,8 @@ const DEFAULT_METRICS = [
     unit: 'hrs',
     prefix: '< ',
     label: 'Candidate Interview Turnaround',
-    color: 'cobalt'
-  }
+    color: 'cobalt',
+  },
 ];
 
 const Philosophy = ({ data }) => {
@@ -35,21 +35,31 @@ const Philosophy = ({ data }) => {
     description = 'At ThinkWires, we reject the legacy headhunter pattern of resume-dumping. We treat every client intake as an engineering brief. From understanding the nuances of microservices architectures to navigating localized tax laws in Ontario or California, our teams engineer frictionless, compliant talent conduits.',
     image = STITCH_PHILOSOPHY_IMG,
     imageAlt = 'ThinkWires executive technology meeting room and talent architecture planning',
-    metrics = []
+    metrics = [],
   } = data || {};
 
-  const resolvedImage = imgError ? fallbackPhilosophyImg : (image || fallbackPhilosophyImg);
-  const resolvedMetrics = (metrics && metrics.length > 0) ? metrics : DEFAULT_METRICS;
+  const resolvedImage = imgError
+    ? fallbackPhilosophyImg
+    : image || fallbackPhilosophyImg;
+  const resolvedMetrics =
+    metrics && metrics.length > 0 ? metrics : DEFAULT_METRICS;
 
   return (
-    <section className="Philosophy-section" aria-label="Corporate Philosophy and Thesis">
+    <section
+      className="Philosophy-section"
+      aria-label="Corporate Philosophy and Thesis"
+    >
       <div className="Philosophy-container">
         <div className="Philosophy-panel">
           {/* Ambient Glow in background */}
           <div className="Philosophy-ambientGlow" aria-hidden="true" />
 
           {/* Left Column: Philosophical Thesis & Metrics */}
-          <ScrollReveal direction="left" distance={50} className="Philosophy-content">
+          <ScrollReveal
+            direction="left"
+            distance={50}
+            className="Philosophy-content"
+          >
             <div className="Philosophy-badge">
               <span className="Philosophy-badgeDot" aria-hidden="true" />
               <span>{eyebrow}</span>
@@ -62,11 +72,19 @@ const Philosophy = ({ data }) => {
             <div className="Philosophy-metricsRow">
               {resolvedMetrics.map((metric) => (
                 <div key={metric.id} className="Philosophy-metricCard">
-                  <div className={`Philosophy-metricValue Philosophy-metric--${metric.color || 'emerald'}`}>
+                  <div
+                    className={`Philosophy-metricValue Philosophy-metric--${metric.color || 'emerald'}`}
+                  >
                     <AnimatedCounter
                       value={metric.numericValue || metric.value}
                       prefix={metric.prefix || ''}
-                      suffix={metric.unit ? ` ${metric.unit}` : (metric.value && metric.value.includes('%') ? '%' : '')}
+                      suffix={
+                        metric.unit
+                          ? ` ${metric.unit}`
+                          : metric.value && metric.value.includes('%')
+                            ? '%'
+                            : ''
+                      }
                       duration={1600}
                     />
                   </div>
@@ -77,7 +95,11 @@ const Philosophy = ({ data }) => {
           </ScrollReveal>
 
           {/* Right Column: Visual Frame */}
-          <ScrollReveal direction="right" distance={50} className="Philosophy-visual">
+          <ScrollReveal
+            direction="right"
+            distance={50}
+            className="Philosophy-visual"
+          >
             <div className="Philosophy-imageWrapper">
               <img
                 src={resolvedImage}
@@ -89,8 +111,21 @@ const Philosophy = ({ data }) => {
               <div className="Philosophy-imageOverlay" />
 
               {/* Verified Architecture Tag */}
-              <div className="Philosophy-imageTag" aria-label="Enterprise Workforce Architecture">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+              <div
+                className="Philosophy-imageTag"
+                aria-label="Enterprise Workforce Architecture"
+              >
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.5"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden="true"
+                >
                   <polyline points="20 6 9 17 4 12" />
                 </svg>
                 <span>Enterprise Workforce Architecture</span>

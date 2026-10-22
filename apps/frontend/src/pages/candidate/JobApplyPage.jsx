@@ -15,14 +15,17 @@ const JobApplyPage = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
 
-  const jobData = useMemo(() => ({
-    jobId: jobId || 'general-pool',
-    title: searchParams.get('title') || 'Featured Technical Position',
-    department: searchParams.get('department') || 'Engineering',
-    location: searchParams.get('location') || 'Remote',
-    employmentType: searchParams.get('employmentType') || 'Permanent',
-    postingDate: searchParams.get('postingDate') || 'Active Mandate',
-  }), [jobId, searchParams]);
+  const jobData = useMemo(
+    () => ({
+      jobId: jobId || 'general-pool',
+      title: searchParams.get('title') || 'Featured Technical Position',
+      department: searchParams.get('department') || 'Engineering',
+      location: searchParams.get('location') || 'Remote',
+      employmentType: searchParams.get('employmentType') || 'Permanent',
+      postingDate: searchParams.get('postingDate') || 'Active Mandate',
+    }),
+    [jobId, searchParams]
+  );
 
   const handleClose = () => {
     navigate('/jobs');

@@ -87,12 +87,13 @@ apps/ai_services/
 │       ├── test_generator.py     # 10-Question assessment suite generator (7 MCQs, 2 Scenarios, 1 Code)
 │       └── test_evaluator.py     # Automated test evaluation, scoring rubrics, and gatekeeper decisions
 │
-└── tests/                        # Automated Pytest Suite
-    ├── __init__.py
-    ├── test_api.py               # FastAPI TestClient endpoint integration tests
-    ├── test_resume_parser.py     # Resume extraction and heuristic parser unit tests
-    ├── test_match_scorer.py      # ATS match scoring algorithm tests
-    └── test_screening.py         # Test generation and rubric grading evaluation tests
+└── tests/                        # 5-Layer Automated Pytest Suite
+    ├── conftest.py               # Shared TestClient, synthetic PDF & candidate fixtures
+    ├── unit/                     # Unit Tests (Parser, Match Scorer, Test Generator, Evaluator)
+    ├── integration/              # FastAPI TestClient Integration Tests (Health, Resume, Screening)
+    ├── functional/               # End-to-End Candidate AI Assessment Journeys
+    ├── non-functional/           # Performance Latency SLAs & Prompt Injection Defenses
+    └── exploratory/              # Chaos Fuzzing & Malformed Payload Defenses
 ```
 
 ---
@@ -101,16 +102,18 @@ apps/ai_services/
 
 Settings are centralized in `app/config.py` and loaded via `python-dotenv`:
 
-| Environment Variable | Default Value | Description |
-| --- | --- | --- |
-| `HOST` | `0.0.0.0` | Network interface binding for Uvicorn |
-| `PORT` | `8000` | Port on which the AI microservice listens |
-| `DEBUG` | `false` | Enables verbose debug logging and auto-reloading |
-| `OPENAI_API_KEY` | `""` | OpenAI API Secret Key for GPT-4o-mini invocation |
-| `OPENAI_MODEL` | `gpt-4o-mini` | Targeted LLM model for structured parsing |
+| Environment Variable | Default Value | Description                                      |
+| -------------------- | ------------- | ------------------------------------------------ |
+| `HOST`               | `0.0.0.0`     | Network interface binding for Uvicorn            |
+| `PORT`               | `8000`        | Port on which the AI microservice listens        |
+| `DEBUG`              | `false`       | Enables verbose debug logging and auto-reloading |
+| `OPENAI_API_KEY`     | `""`          | OpenAI API Secret Key for GPT-4o-mini invocation |
+| `OPENAI_MODEL`       | `gpt-4o-mini` | Targeted LLM model for structured parsing        |
 
 ### CORS Configuration
+
 Cross-Origin Resource Sharing is enabled by default to allow communication between:
+
 - Express Backend Gateway: `http://localhost:5000`
 - React Frontend Dev Server: `http://localhost:5173`
 
@@ -126,7 +129,7 @@ Processes resumes submitted via raw PDF binary files, plain text snippets, or se
    - Utilizes `pypdf.PdfReader` to extract byte streams across all document pages into clean text buffers.
    - Inspects page `/Annots` objects to extract embedded hyperlink URIs (`/URI`) for LinkedIn profiles, GitHub accounts, and external personal portfolios.
 2. **Heuristic Rule Engine**:
-   - **Name Extraction**: Analyzes initial document lines, excluding keywords like *resume*, *curriculum*, or *email*.
+   - **Name Extraction**: Analyzes initial document lines, excluding keywords like _resume_, _curriculum_, or _email_.
    - **Contact Identification**: Regex patterns identify candidate emails and international telephone numbers.
    - **Skills Taxonomy**: Matches candidate text against 50+ enterprise technology keywords (e.g. `Kubernetes`, `Terraform`, `React`, `FastAPI`, `Go`, `PostgreSQL`, `Kafka`, `Docker`).
    - **Experience & Role Extraction**: Parses duration patterns (e.g., `8+ years`, `5 yrs experience`) and standard engineering seniority titles.
@@ -141,6 +144,7 @@ Calculates a weighted compatibility score between a candidate profile and a job 
 $$\text{FitScore} = (S_{\text{tech}} \times 0.40) + (S_{\text{exp}} \times 0.30) + (S_{\text{depth}} \times 0.20) + (S_{\text{role}} \times 0.10)$$
 
 Where:
+
 - $S_{\text{tech}}$: Ratio of candidate matched skills against mandatory job requirements (40%).
 - $S_{\text{exp}}$: Ratio of candidate verified years of experience against position threshold (30%).
 - $S_{\text{depth}}$: Seniority depth, staff/lead architectural tenure, and certifications (20%).
@@ -148,11 +152,11 @@ Where:
 
 #### Categorization and Badges:
 
-| Score Range | Category | Badge Label | Operational Action |
-| --- | --- | --- | --- |
-| **80% - 100%** | `green` | **Top Match** | Expedited fast-track to technical screening and bench profile highlight |
-| **60% - 79%** | `yellow` | **Moderate Match** | Recommended for screening with targeted deep-dive on missing skills |
-| **< 60%** | `gray` | **Below Threshold** | Flagged for recruiter review or candidate skill upskilling |
+| Score Range    | Category | Badge Label         | Operational Action                                                      |
+| -------------- | -------- | ------------------- | ----------------------------------------------------------------------- |
+| **80% - 100%** | `green`  | **Top Match**       | Expedited fast-track to technical screening and bench profile highlight |
+| **60% - 79%**  | `yellow` | **Moderate Match**  | Recommended for screening with targeted deep-dive on missing skills     |
+| **< 60%**      | `gray`   | **Below Threshold** | Flagged for recruiter review or candidate skill upskilling              |
 
 ---
 
@@ -170,6 +174,7 @@ Generates a proctored, 10-question technical evaluation dynamically crafted to e
 ### D. Automated Test Evaluator (`app/services/test_evaluator.py`)
 
 Grades candidate submissions and renders admission gatekeeper decisions:
+
 1. **MCQs**: Graded deterministically against pre-calculated answer keys. Includes comprehensive explanations for candidate feedback.
 2. **Scenarios**: Evaluated based on technical depth, trade-off analysis, and targeted architectural keywords.
 3. **Practical Code**: Evaluated against async resolution, promise handling, queue management, and closure state integrity.
@@ -184,9 +189,11 @@ Grades candidate submissions and renders admission gatekeeper decisions:
 ### 1. Health and Discovery Endpoints
 
 #### `GET /`
+
 Returns service status, operational mode, and endpoint directory.
 
 **Response (`200 OK`)**:
+
 ```json
 {
   "status": "online",
@@ -203,9 +210,11 @@ Returns service status, operational mode, and endpoint directory.
 ```
 
 #### `GET /health`
+
 Liveness probe for container orchestrators.
 
 **Response (`200 OK`)**:
+
 ```json
 {
   "status": "healthy"
@@ -219,11 +228,13 @@ Liveness probe for container orchestrators.
 Extracts candidate contact details, skills, experience, summary, and links. Accepts `multipart/form-data` file upload, raw text, or a server file path.
 
 **Request Parameters**:
+
 - `file`: (Optional) PDF, DOCX, or TXT file upload.
 - `raw_text`: (Optional) Plain text representation of resume.
 - `file_path`: (Optional) Path on server filesystem.
 
 **Response (`200 OK`)**:
+
 ```json
 {
   "success": true,
@@ -253,6 +264,7 @@ Extracts candidate contact details, skills, experience, summary, and links. Acce
 Computes candidate match score against a specific job requisition.
 
 **Request Body (`application/json`)**:
+
 ```json
 {
   "job_title": "Lead Cloud Infrastructure & Platform Architect",
@@ -265,6 +277,7 @@ Computes candidate match score against a specific job requisition.
 ```
 
 **Response (`200 OK`)**:
+
 ```json
 {
   "success": true,
@@ -313,32 +326,67 @@ const parsedResume = await aiService.parseResume(fileBuffer, 'resume.pdf');
 // 2. Calculate Fit Score on Submission
 const matchScore = await aiService.calculateMatchScore(
   { skills: parsedResume.skills, resumeText: parsedResume.summary },
-  { jobTitle: 'Lead Cloud Architect', department: 'Cloud & DevOps', requiredSkills: ['Kubernetes', 'AWS'] }
+  {
+    jobTitle: 'Lead Cloud Architect',
+    department: 'Cloud & DevOps',
+    requiredSkills: ['Kubernetes', 'AWS'],
+  }
 );
 
 // 3. Generate Screening Test
 const assessment = await aiService.generateAssessment(
-  { jobId: 'JOB-901', jobTitle: 'Lead Cloud Architect', requiredSkills: ['Kubernetes', 'AWS'] },
+  {
+    jobId: 'JOB-901',
+    jobTitle: 'Lead Cloud Architect',
+    requiredSkills: ['Kubernetes', 'AWS'],
+  },
   { name: 'Alex Rivera', skills: ['Kubernetes', 'AWS'] }
 );
 
 // 4. Evaluate Test Submission
-const evaluation = await aiService.evaluateAssessment(assessment, candidateAnswers);
+const evaluation = await aiService.evaluateAssessment(
+  assessment,
+  candidateAnswers
+);
 ```
 
 ---
 
 ## 7. Automated Testing & Quality Assurance
 
-The microservice includes automated unit and integration tests under `apps/ai_services/tests`:
+ThinkWires AI Microservice is covered by a **5-layer automated testing framework** powered by **Pytest** and FastAPI's **TestClient** (Starlette/HTTPX). All test fixtures, runners, and suites reside inside `apps/ai_services/tests/`.
+
+### 7.1 The 5-Layer Testing Taxonomy
+
+| Test Category                   | Directory               | Purpose                                                                                                                                                                                                                   | Key Test Files                                                                                                                    |
+| :------------------------------ | :---------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ | :-------------------------------------------------------------------------------------------------------------------------------- |
+| **Unit Testing**                | `tests/unit/`           | Tests isolated heuristic NLP extraction, contact normalization, ATS formula calculations, test generation, and rubric grading without external network dependencies.                                                      | `test_resume_parser_unit.py`, `test_match_scorer_unit.py`, `test_screening_generator_unit.py`, `test_screening_evaluator_unit.py` |
+| **Integration Testing**         | `tests/integration/`    | Tests FastAPI routes using `TestClient`, multipart PDF stream uploads, Pydantic DTO schema validation, and HTTP status codes.                                                                                             | `test_health_api.py`, `test_resume_api.py`, `test_screening_api.py`                                                               |
+| **Functional Testing**          | `tests/functional/`     | Tests the complete sequential end-to-end recruitment journey across the microservice: resume parsing -> fit scoring -> dynamic test generation -> response submission -> rubric grading -> gatekeeper admission decision. | `test_candidate_ai_journey.py`                                                                                                    |
+| **Non-Functional Testing**      | `tests/non-functional/` | Enforces sub-50ms execution latency SLAs, verifies concurrent burst throughput (25 concurrent evaluations), and tests adversarial prompt injection & payload tampering defenses.                                          | `test_ai_performance.py`, `test_ai_security.py`                                                                                   |
+| **Exploratory & Chaos Testing** | `tests/exploratory/`    | Subjects endpoints to unpredictable corrupted binary PDF streams, zero-byte uploads, Unicode RTL/zero-width spaces, and extreme skill vectors to guarantee zero server crashes.                                           | `test_ai_chaos_fuzzing.py`                                                                                                        |
+
+### 7.2 Execution Scripts
+
+All test suites can be executed via `npm` from the monorepo root or directly within `apps/ai_services`:
 
 ```bash
-# From the workspace root via npm
+# Run all AI microservice tests (all 5 layers)
 npm --prefix apps/ai_services test
 
-# Or directly using the virtual environment
+# Target specific testing layers
+npm --prefix apps/ai_services run test:unit
+npm --prefix apps/ai_services run test:integration
+npm --prefix apps/ai_services run test:functional
+npm --prefix apps/ai_services run test:non-functional
+npm --prefix apps/ai_services run test:exploratory
+
+# Run tests directly with Python venv
 cd apps/ai_services
-.\venv\Scripts\pytest -v tests
+.\venv\Scripts\pytest tests
+
+# Run workspace-wide test suite (Frontend + Backend + AI Services in parallel via Turborepo)
+npm test
 ```
 
 ---

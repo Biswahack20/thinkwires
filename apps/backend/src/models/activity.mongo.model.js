@@ -9,7 +9,15 @@ const activitySchema = new mongoose.Schema(
     },
     entityType: {
       type: String,
-      enum: ['Employee', 'Candidate', 'Client', 'Job', 'Placement', 'CMS', 'Security'],
+      enum: [
+        'Employee',
+        'Candidate',
+        'Client',
+        'Job',
+        'Placement',
+        'CMS',
+        'Security',
+      ],
       default: 'Employee',
     },
     entityId: {
@@ -34,6 +42,7 @@ const activitySchema = new mongoose.Schema(
   }
 );
 
-const Activity = mongoose.models.Activity || mongoose.model('Activity', activitySchema);
+const Activity =
+  mongoose.models.Activity || mongoose.model('Activity', activitySchema);
 
 export default Activity;

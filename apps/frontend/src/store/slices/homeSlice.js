@@ -14,7 +14,7 @@ const {
   benefits: staticBenefits = [],
   faqs: staticFaqs = [],
   industries: staticIndustries = [],
-  reports: staticReports = []
+  reports: staticReports = [],
 } = staticData;
 
 const API_BASE = import.meta.env.VITE_API_BASE_URL || '/api';
@@ -25,16 +25,41 @@ export const fetchOpenings = createAsyncThunk(
     try {
       const queryParams = new URLSearchParams();
       if (params.q) queryParams.append('q', params.q);
-      if (params.location && params.location !== 'All') queryParams.append('location', params.location);
-      if (params.experience && params.experience !== 'All') queryParams.append('experience', params.experience);
-      if (params.workMode && params.workMode !== 'All Modes' && params.workMode !== 'All') queryParams.append('workMode', params.workMode);
-      if (params.jobMode && params.jobMode !== 'All Modes' && params.jobMode !== 'All Types' && params.jobMode !== 'All') queryParams.append('jobMode', params.jobMode);
-      if (params.noticePeriod && params.noticePeriod !== 'All Notice' && params.noticePeriod !== 'All') queryParams.append('noticePeriod', params.noticePeriod);
-      if (params.department && params.department !== 'All Roles' && params.department !== 'All') queryParams.append('department', params.department);
+      if (params.location && params.location !== 'All')
+        queryParams.append('location', params.location);
+      if (params.experience && params.experience !== 'All')
+        queryParams.append('experience', params.experience);
+      if (
+        params.workMode &&
+        params.workMode !== 'All Modes' &&
+        params.workMode !== 'All'
+      )
+        queryParams.append('workMode', params.workMode);
+      if (
+        params.jobMode &&
+        params.jobMode !== 'All Modes' &&
+        params.jobMode !== 'All Types' &&
+        params.jobMode !== 'All'
+      )
+        queryParams.append('jobMode', params.jobMode);
+      if (
+        params.noticePeriod &&
+        params.noticePeriod !== 'All Notice' &&
+        params.noticePeriod !== 'All'
+      )
+        queryParams.append('noticePeriod', params.noticePeriod);
+      if (
+        params.department &&
+        params.department !== 'All Roles' &&
+        params.department !== 'All'
+      )
+        queryParams.append('department', params.department);
       if (params.sort) queryParams.append('sort', params.sort);
 
       const queryString = queryParams.toString();
-      const response = await fetch(`${API_BASE}/openings${queryString ? `?${queryString}` : ''}`);
+      const response = await fetch(
+        `${API_BASE}/openings${queryString ? `?${queryString}` : ''}`
+      );
       if (response.ok) {
         const data = await response.json();
         if (Array.isArray(data) && data.length > 0) return data;
@@ -53,16 +78,31 @@ export const fetchOpenings = createAsyncThunk(
           (j.skills && j.skills.some((s) => s.toLowerCase().includes(qLower)))
       );
     }
-    if (params.department && params.department !== 'All Roles' && params.department !== 'All') {
+    if (
+      params.department &&
+      params.department !== 'All Roles' &&
+      params.department !== 'All'
+    ) {
       filtered = filtered.filter((j) => j.department === params.department);
     }
     if (params.location && params.location !== 'All') {
-      filtered = filtered.filter((j) => j.location.toLowerCase().includes(params.location.toLowerCase()));
+      filtered = filtered.filter((j) =>
+        j.location.toLowerCase().includes(params.location.toLowerCase())
+      );
     }
-    if (params.workMode && params.workMode !== 'All Modes' && params.workMode !== 'All') {
+    if (
+      params.workMode &&
+      params.workMode !== 'All Modes' &&
+      params.workMode !== 'All'
+    ) {
       filtered = filtered.filter((j) => j.workMode === params.workMode);
     }
-    if (params.jobMode && params.jobMode !== 'All Types' && params.jobMode !== 'All Modes' && params.jobMode !== 'All') {
+    if (
+      params.jobMode &&
+      params.jobMode !== 'All Types' &&
+      params.jobMode !== 'All Modes' &&
+      params.jobMode !== 'All'
+    ) {
       filtered = filtered.filter((j) => j.jobMode === params.jobMode);
     }
     return filtered;
@@ -92,20 +132,26 @@ export const fetchProcess = createAsyncThunk('home/fetchProcess', async () => {
   return await response.json();
 });
 
-export const fetchCapabilities = createAsyncThunk('home/fetchCapabilities', async () => {
-  const response = await fetch(`${API_BASE}/capabilities`);
-  return await response.json();
-});
+export const fetchCapabilities = createAsyncThunk(
+  'home/fetchCapabilities',
+  async () => {
+    const response = await fetch(`${API_BASE}/capabilities`);
+    return await response.json();
+  }
+);
 
 export const fetchReports = createAsyncThunk('home/fetchReports', async () => {
   const response = await fetch(`${API_BASE}/reports`);
   return await response.json();
 });
 
-export const fetchBenefits = createAsyncThunk('home/fetchBenefits', async () => {
-  const response = await fetch(`${API_BASE}/benefits`);
-  return await response.json();
-});
+export const fetchBenefits = createAsyncThunk(
+  'home/fetchBenefits',
+  async () => {
+    const response = await fetch(`${API_BASE}/benefits`);
+    return await response.json();
+  }
+);
 
 export const fetchFaqs = createAsyncThunk('home/fetchFaqs', async () => {
   const response = await fetch(`${API_BASE}/faqs`);
@@ -201,25 +247,65 @@ const homeSlice = createSlice({
         state.errors.industries = action.error.message;
       })
       // Process
-      .addCase(fetchProcess.pending, (state) => { state.status.process = 'loading'; })
-      .addCase(fetchProcess.fulfilled, (state, action) => { state.status.process = 'succeeded'; state.process = action.payload; })
-      .addCase(fetchProcess.rejected, (state, action) => { state.status.process = 'failed'; state.errors.process = action.error.message; })
+      .addCase(fetchProcess.pending, (state) => {
+        state.status.process = 'loading';
+      })
+      .addCase(fetchProcess.fulfilled, (state, action) => {
+        state.status.process = 'succeeded';
+        state.process = action.payload;
+      })
+      .addCase(fetchProcess.rejected, (state, action) => {
+        state.status.process = 'failed';
+        state.errors.process = action.error.message;
+      })
       // Capabilities
-      .addCase(fetchCapabilities.pending, (state) => { state.status.capabilities = 'loading'; })
-      .addCase(fetchCapabilities.fulfilled, (state, action) => { state.status.capabilities = 'succeeded'; state.capabilities = action.payload; })
-      .addCase(fetchCapabilities.rejected, (state, action) => { state.status.capabilities = 'failed'; state.errors.capabilities = action.error.message; })
+      .addCase(fetchCapabilities.pending, (state) => {
+        state.status.capabilities = 'loading';
+      })
+      .addCase(fetchCapabilities.fulfilled, (state, action) => {
+        state.status.capabilities = 'succeeded';
+        state.capabilities = action.payload;
+      })
+      .addCase(fetchCapabilities.rejected, (state, action) => {
+        state.status.capabilities = 'failed';
+        state.errors.capabilities = action.error.message;
+      })
       // Reports
-      .addCase(fetchReports.pending, (state) => { state.status.reports = 'loading'; })
-      .addCase(fetchReports.fulfilled, (state, action) => { state.status.reports = 'succeeded'; state.reports = action.payload; })
-      .addCase(fetchReports.rejected, (state, action) => { state.status.reports = 'failed'; state.errors.reports = action.error.message; })
+      .addCase(fetchReports.pending, (state) => {
+        state.status.reports = 'loading';
+      })
+      .addCase(fetchReports.fulfilled, (state, action) => {
+        state.status.reports = 'succeeded';
+        state.reports = action.payload;
+      })
+      .addCase(fetchReports.rejected, (state, action) => {
+        state.status.reports = 'failed';
+        state.errors.reports = action.error.message;
+      })
       // Benefits
-      .addCase(fetchBenefits.pending, (state) => { state.status.benefits = 'loading'; })
-      .addCase(fetchBenefits.fulfilled, (state, action) => { state.status.benefits = 'succeeded'; state.benefits = action.payload; })
-      .addCase(fetchBenefits.rejected, (state, action) => { state.status.benefits = 'failed'; state.errors.benefits = action.error.message; })
+      .addCase(fetchBenefits.pending, (state) => {
+        state.status.benefits = 'loading';
+      })
+      .addCase(fetchBenefits.fulfilled, (state, action) => {
+        state.status.benefits = 'succeeded';
+        state.benefits = action.payload;
+      })
+      .addCase(fetchBenefits.rejected, (state, action) => {
+        state.status.benefits = 'failed';
+        state.errors.benefits = action.error.message;
+      })
       // FAQs
-      .addCase(fetchFaqs.pending, (state) => { state.status.faqs = 'loading'; })
-      .addCase(fetchFaqs.fulfilled, (state, action) => { state.status.faqs = 'succeeded'; state.faqs = action.payload; })
-      .addCase(fetchFaqs.rejected, (state, action) => { state.status.faqs = 'failed'; state.errors.faqs = action.error.message; });
+      .addCase(fetchFaqs.pending, (state) => {
+        state.status.faqs = 'loading';
+      })
+      .addCase(fetchFaqs.fulfilled, (state, action) => {
+        state.status.faqs = 'succeeded';
+        state.faqs = action.payload;
+      })
+      .addCase(fetchFaqs.rejected, (state, action) => {
+        state.status.faqs = 'failed';
+        state.errors.faqs = action.error.message;
+      });
   },
 });
 

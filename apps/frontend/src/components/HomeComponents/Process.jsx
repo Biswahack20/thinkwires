@@ -70,10 +70,15 @@ const Process = () => {
     }
   }, [dispatch, status.process]);
 
-  const steps = reduxSteps && reduxSteps.length > 0 ? reduxSteps : DEFAULT_STEPS;
+  const steps =
+    reduxSteps && reduxSteps.length > 0 ? reduxSteps : DEFAULT_STEPS;
 
   return (
-    <section className="Process-section" id="process" style={{ overflow: 'hidden' }}>
+    <section
+      className="Process-section"
+      id="process"
+      style={{ overflow: 'hidden' }}
+    >
       <div className="Process-container">
         <div className="Process-header">
           <span className="Process-tag">METHODOLOGY</span>

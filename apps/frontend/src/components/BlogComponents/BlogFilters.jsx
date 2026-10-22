@@ -23,7 +23,9 @@ const BlogFilters = ({
         {categories.map((cat) => {
           const isActive =
             selectedCategory === cat ||
-            (cat.startsWith('All Insights') && (selectedCategory === 'All' || selectedCategory === 'All Insights (15)'));
+            (cat.startsWith('All Insights') &&
+              (selectedCategory === 'All' ||
+                selectedCategory === 'All Insights (15)'));
 
           return (
             <button

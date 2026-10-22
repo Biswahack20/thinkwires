@@ -25,23 +25,47 @@ const JobSpecModal = ({ job, onClose, onApply }) => {
 
   const getBadgeStyle = (badgeColor = 'green') => {
     if (badgeColor === 'green') {
-      return { background: '#e6f4ea', color: '#137333', border: '1px solid #ceead6' };
+      return {
+        background: '#e6f4ea',
+        color: '#137333',
+        border: '1px solid #ceead6',
+      };
     }
     if (badgeColor === 'blue') {
-      return { background: '#e8f0fe', color: '#1a73e8', border: '1px solid #d2e3fc' };
+      return {
+        background: '#e8f0fe',
+        color: '#1a73e8',
+        border: '1px solid #d2e3fc',
+      };
     }
     if (badgeColor === 'purple') {
-      return { background: '#f3e8ff', color: '#7e22ce', border: '1px solid #e9d5ff' };
+      return {
+        background: '#f3e8ff',
+        color: '#7e22ce',
+        border: '1px solid #e9d5ff',
+      };
     }
     if (badgeColor === 'red') {
-      return { background: '#fce8e6', color: '#c5221f', border: '1px solid #fad2cf' };
+      return {
+        background: '#fce8e6',
+        color: '#c5221f',
+        border: '1px solid #fad2cf',
+      };
     }
-    return { background: '#f1f5f9', color: '#475569', border: '1px solid #e2e8f0' };
+    return {
+      background: '#f1f5f9',
+      color: '#475569',
+      border: '1px solid #e2e8f0',
+    };
   };
 
   // Parse requirements into clean bullet items
   const renderRequirements = () => {
-    if (job.requirements && typeof job.requirements === 'string' && job.requirements.trim()) {
+    if (
+      job.requirements &&
+      typeof job.requirements === 'string' &&
+      job.requirements.trim()
+    ) {
       const lines = job.requirements
         .split('\n')
         .map((l) => l.trim().replace(/^[-*•]\s*/, ''))
@@ -49,9 +73,19 @@ const JobSpecModal = ({ job, onClose, onApply }) => {
 
       if (lines.length > 0) {
         return (
-          <ul style={{ paddingLeft: '1.25rem', margin: '0.5rem 0', color: '#334155', lineHeight: 1.65 }}>
+          <ul
+            style={{
+              paddingLeft: '1.25rem',
+              margin: '0.5rem 0',
+              color: '#334155',
+              lineHeight: 1.65,
+            }}
+          >
             {lines.map((item, idx) => (
-              <li key={idx} style={{ marginBottom: '0.45rem', fontSize: '0.92rem' }}>
+              <li
+                key={idx}
+                style={{ marginBottom: '0.45rem', fontSize: '0.92rem' }}
+              >
                 {item}
               </li>
             ))}
@@ -62,9 +96,19 @@ const JobSpecModal = ({ job, onClose, onApply }) => {
 
     if (Array.isArray(job.requirements) && job.requirements.length > 0) {
       return (
-        <ul style={{ paddingLeft: '1.25rem', margin: '0.5rem 0', color: '#334155', lineHeight: 1.65 }}>
+        <ul
+          style={{
+            paddingLeft: '1.25rem',
+            margin: '0.5rem 0',
+            color: '#334155',
+            lineHeight: 1.65,
+          }}
+        >
           {job.requirements.map((item, idx) => (
-            <li key={idx} style={{ marginBottom: '0.45rem', fontSize: '0.92rem' }}>
+            <li
+              key={idx}
+              style={{ marginBottom: '0.45rem', fontSize: '0.92rem' }}
+            >
               {item}
             </li>
           ))}
@@ -74,18 +118,34 @@ const JobSpecModal = ({ job, onClose, onApply }) => {
 
     // Default professional qualifications aligned with position tier
     return (
-      <ul style={{ paddingLeft: '1.25rem', margin: '0.5rem 0', color: '#334155', lineHeight: 1.65 }}>
+      <ul
+        style={{
+          paddingLeft: '1.25rem',
+          margin: '0.5rem 0',
+          color: '#334155',
+          lineHeight: 1.65,
+        }}
+      >
         <li style={{ marginBottom: '0.45rem', fontSize: '0.92rem' }}>
-          Demonstrated track record of {job.experience || '3+ years'} professional experience delivering scalable solutions in {job.industry || 'enterprise environments'}.
+          Demonstrated track record of {job.experience || '3+ years'}{' '}
+          professional experience delivering scalable solutions in{' '}
+          {job.industry || 'enterprise environments'}.
         </li>
         <li style={{ marginBottom: '0.45rem', fontSize: '0.92rem' }}>
-          Deep proficiency across core technical competencies: {job.skills && job.skills.length > 0 ? job.skills.join(', ') : 'modern tech stacks'}.
+          Deep proficiency across core technical competencies:{' '}
+          {job.skills && job.skills.length > 0
+            ? job.skills.join(', ')
+            : 'modern tech stacks'}
+          .
         </li>
         <li style={{ marginBottom: '0.45rem', fontSize: '0.92rem' }}>
-          Strong software engineering fundamentals, including automated unit/integration testing, CI/CD pipelines, and clean architecture principles.
+          Strong software engineering fundamentals, including automated
+          unit/integration testing, CI/CD pipelines, and clean architecture
+          principles.
         </li>
         <li style={{ marginBottom: '0.45rem', fontSize: '0.92rem' }}>
-          High ownership, analytical problem solving, and effective cross-functional technical communication.
+          High ownership, analytical problem solving, and effective
+          cross-functional technical communication.
         </li>
       </ul>
     );
@@ -169,14 +229,31 @@ const JobSpecModal = ({ job, onClose, onApply }) => {
               e.currentTarget.style.color = '#64748B';
             }}
           >
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
               <line x1="18" y1="6" x2="6" y2="18"></line>
               <line x1="6" y1="6" x2="18" y2="18"></line>
             </svg>
           </button>
 
           {/* Badges Bar */}
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem', alignItems: 'center', marginBottom: '0.85rem' }}>
+          <div
+            style={{
+              display: 'flex',
+              flexWrap: 'wrap',
+              gap: '0.5rem',
+              alignItems: 'center',
+              marginBottom: '0.85rem',
+            }}
+          >
             <span
               style={{
                 fontSize: '0.72rem',
@@ -233,17 +310,40 @@ const JobSpecModal = ({ job, onClose, onApply }) => {
                 boxShadow: '0 4px 10px rgba(0, 0, 0, 0.1)',
               }}
             >
-              {job.logo || (job.title ? job.title.substring(0, 2).toUpperCase() : 'TW')}
+              {job.logo ||
+                (job.title ? job.title.substring(0, 2).toUpperCase() : 'TW')}
             </div>
             <div>
-              <h2 style={{ margin: 0, fontSize: '1.45rem', fontWeight: 800, color: '#0F172A', lineHeight: 1.25 }}>
+              <h2
+                style={{
+                  margin: 0,
+                  fontSize: '1.45rem',
+                  fontWeight: 800,
+                  color: '#0F172A',
+                  lineHeight: 1.25,
+                }}
+              >
                 {job.title}
               </h2>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginTop: '0.25rem', fontSize: '0.82rem', color: '#64748B' }}>
-                <span className="material-symbols-outlined" style={{ fontSize: '16px', color: '#10B981' }}>
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.5rem',
+                  marginTop: '0.25rem',
+                  fontSize: '0.82rem',
+                  color: '#64748B',
+                }}
+              >
+                <span
+                  className="material-symbols-outlined"
+                  style={{ fontSize: '16px', color: '#10B981' }}
+                >
                   verified_user
                 </span>
-                <span style={{ fontWeight: 600, color: '#334155' }}>Enterprise Client (Confidential)</span>
+                <span style={{ fontWeight: 600, color: '#334155' }}>
+                  Enterprise Client (Confidential)
+                </span>
                 <span>•</span>
                 <span>Requisition Ref: {job.id || job._id || 'REQ-TW'}</span>
                 <span>•</span>
@@ -282,11 +382,20 @@ const JobSpecModal = ({ job, onClose, onApply }) => {
               lineHeight: 1.5,
             }}
           >
-            <span className="material-symbols-outlined" style={{ fontSize: '18px', color: '#2563EB', marginTop: '1px' }}>
+            <span
+              className="material-symbols-outlined"
+              style={{ fontSize: '18px', color: '#2563EB', marginTop: '1px' }}
+            >
               lock
             </span>
             <div>
-              <strong style={{ color: '#0F172A' }}>Client Partner Confidentiality:</strong> ThinkWires exclusively represents verified Tier-1 enterprise organizations and global technology centers. Exact client legal entity names and project NDA specifics are shared during the direct technical round.
+              <strong style={{ color: '#0F172A' }}>
+                Client Partner Confidentiality:
+              </strong>{' '}
+              ThinkWires exclusively represents verified Tier-1 enterprise
+              organizations and global technology centers. Exact client legal
+              entity names and project NDA specifics are shared during the
+              direct technical round.
             </div>
           </div>
 
@@ -298,72 +407,239 @@ const JobSpecModal = ({ job, onClose, onApply }) => {
               gap: '0.75rem',
             }}
           >
-            <div style={{ background: '#F8FAFC', border: '1px solid #E2E8F0', borderRadius: '8px', padding: '0.75rem 0.9rem' }}>
-              <div style={{ fontSize: '0.7rem', color: '#64748B', fontWeight: 600, textTransform: 'uppercase', marginBottom: '0.2rem' }}>
+            <div
+              style={{
+                background: '#F8FAFC',
+                border: '1px solid #E2E8F0',
+                borderRadius: '8px',
+                padding: '0.75rem 0.9rem',
+              }}
+            >
+              <div
+                style={{
+                  fontSize: '0.7rem',
+                  color: '#64748B',
+                  fontWeight: 600,
+                  textTransform: 'uppercase',
+                  marginBottom: '0.2rem',
+                }}
+              >
                 Location & Work Mode
               </div>
-              <div style={{ fontSize: '0.88rem', fontWeight: 700, color: '#0F172A', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-                <span className="material-symbols-outlined" style={{ fontSize: '17px', color: '#2563EB' }}>
-                  {job.workMode === 'Work From Home' ? 'home' : job.workMode === 'Work From Office' ? 'domain' : 'location_on'}
+              <div
+                style={{
+                  fontSize: '0.88rem',
+                  fontWeight: 700,
+                  color: '#0F172A',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.35rem',
+                }}
+              >
+                <span
+                  className="material-symbols-outlined"
+                  style={{ fontSize: '17px', color: '#2563EB' }}
+                >
+                  {job.workMode === 'Work From Home'
+                    ? 'home'
+                    : job.workMode === 'Work From Office'
+                      ? 'domain'
+                      : 'location_on'}
                 </span>
                 {job.location || 'Remote'} ({job.workMode || 'Hybrid'})
               </div>
             </div>
 
-            <div style={{ background: '#F8FAFC', border: '1px solid #E2E8F0', borderRadius: '8px', padding: '0.75rem 0.9rem' }}>
-              <div style={{ fontSize: '0.7rem', color: '#64748B', fontWeight: 600, textTransform: 'uppercase', marginBottom: '0.2rem' }}>
+            <div
+              style={{
+                background: '#F8FAFC',
+                border: '1px solid #E2E8F0',
+                borderRadius: '8px',
+                padding: '0.75rem 0.9rem',
+              }}
+            >
+              <div
+                style={{
+                  fontSize: '0.7rem',
+                  color: '#64748B',
+                  fontWeight: 600,
+                  textTransform: 'uppercase',
+                  marginBottom: '0.2rem',
+                }}
+              >
                 Experience Tier
               </div>
-              <div style={{ fontSize: '0.88rem', fontWeight: 700, color: '#0F172A', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-                <span className="material-symbols-outlined" style={{ fontSize: '17px', color: '#2563EB' }}>
+              <div
+                style={{
+                  fontSize: '0.88rem',
+                  fontWeight: 700,
+                  color: '#0F172A',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.35rem',
+                }}
+              >
+                <span
+                  className="material-symbols-outlined"
+                  style={{ fontSize: '17px', color: '#2563EB' }}
+                >
                   work
                 </span>
-                {job.experience || `${job.experienceRequired || 3}+ Years`} {job.experienceTier ? `• ${job.experienceTier}` : ''}
+                {job.experience || `${job.experienceRequired || 3}+ Years`}{' '}
+                {job.experienceTier ? `• ${job.experienceTier}` : ''}
               </div>
             </div>
 
-            <div style={{ background: '#F8FAFC', border: '1px solid #E2E8F0', borderRadius: '8px', padding: '0.75rem 0.9rem' }}>
-              <div style={{ fontSize: '0.7rem', color: '#64748B', fontWeight: 600, textTransform: 'uppercase', marginBottom: '0.2rem' }}>
+            <div
+              style={{
+                background: '#F8FAFC',
+                border: '1px solid #E2E8F0',
+                borderRadius: '8px',
+                padding: '0.75rem 0.9rem',
+              }}
+            >
+              <div
+                style={{
+                  fontSize: '0.7rem',
+                  color: '#64748B',
+                  fontWeight: 600,
+                  textTransform: 'uppercase',
+                  marginBottom: '0.2rem',
+                }}
+              >
                 Compensation Band
               </div>
-              <div style={{ fontSize: '0.88rem', fontWeight: 700, color: '#16A34A', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-                <span className="material-symbols-outlined" style={{ fontSize: '17px', color: '#16A34A' }}>
+              <div
+                style={{
+                  fontSize: '0.88rem',
+                  fontWeight: 700,
+                  color: '#16A34A',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.35rem',
+                }}
+              >
+                <span
+                  className="material-symbols-outlined"
+                  style={{ fontSize: '17px', color: '#16A34A' }}
+                >
                   payments
                 </span>
                 {job.salary || job.budget || 'Competitive CTC'}
               </div>
             </div>
 
-            <div style={{ background: '#F8FAFC', border: '1px solid #E2E8F0', borderRadius: '8px', padding: '0.75rem 0.9rem' }}>
-              <div style={{ fontSize: '0.7rem', color: '#64748B', fontWeight: 600, textTransform: 'uppercase', marginBottom: '0.2rem' }}>
+            <div
+              style={{
+                background: '#F8FAFC',
+                border: '1px solid #E2E8F0',
+                borderRadius: '8px',
+                padding: '0.75rem 0.9rem',
+              }}
+            >
+              <div
+                style={{
+                  fontSize: '0.7rem',
+                  color: '#64748B',
+                  fontWeight: 600,
+                  textTransform: 'uppercase',
+                  marginBottom: '0.2rem',
+                }}
+              >
                 Notice Period Requirement
               </div>
-              <div style={{ fontSize: '0.88rem', fontWeight: 700, color: '#0F172A', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-                <span className="material-symbols-outlined" style={{ fontSize: '17px', color: '#2563EB' }}>
+              <div
+                style={{
+                  fontSize: '0.88rem',
+                  fontWeight: 700,
+                  color: '#0F172A',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.35rem',
+                }}
+              >
+                <span
+                  className="material-symbols-outlined"
+                  style={{ fontSize: '17px', color: '#2563EB' }}
+                >
                   timer
                 </span>
                 {job.noticePeriod || job.joining || 'Immediate'}
               </div>
             </div>
 
-            <div style={{ background: '#F8FAFC', border: '1px solid #E2E8F0', borderRadius: '8px', padding: '0.75rem 0.9rem' }}>
-              <div style={{ fontSize: '0.7rem', color: '#64748B', fontWeight: 600, textTransform: 'uppercase', marginBottom: '0.2rem' }}>
+            <div
+              style={{
+                background: '#F8FAFC',
+                border: '1px solid #E2E8F0',
+                borderRadius: '8px',
+                padding: '0.75rem 0.9rem',
+              }}
+            >
+              <div
+                style={{
+                  fontSize: '0.7rem',
+                  color: '#64748B',
+                  fontWeight: 600,
+                  textTransform: 'uppercase',
+                  marginBottom: '0.2rem',
+                }}
+              >
                 Engagement Mode
               </div>
-              <div style={{ fontSize: '0.88rem', fontWeight: 700, color: '#0F172A', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-                <span className="material-symbols-outlined" style={{ fontSize: '17px', color: '#2563EB' }}>
+              <div
+                style={{
+                  fontSize: '0.88rem',
+                  fontWeight: 700,
+                  color: '#0F172A',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.35rem',
+                }}
+              >
+                <span
+                  className="material-symbols-outlined"
+                  style={{ fontSize: '17px', color: '#2563EB' }}
+                >
                   badge
                 </span>
                 {job.jobMode || 'Permanent'}
               </div>
             </div>
 
-            <div style={{ background: '#F8FAFC', border: '1px solid #E2E8F0', borderRadius: '8px', padding: '0.75rem 0.9rem' }}>
-              <div style={{ fontSize: '0.7rem', color: '#64748B', fontWeight: 600, textTransform: 'uppercase', marginBottom: '0.2rem' }}>
+            <div
+              style={{
+                background: '#F8FAFC',
+                border: '1px solid #E2E8F0',
+                borderRadius: '8px',
+                padding: '0.75rem 0.9rem',
+              }}
+            >
+              <div
+                style={{
+                  fontSize: '0.7rem',
+                  color: '#64748B',
+                  fontWeight: 600,
+                  textTransform: 'uppercase',
+                  marginBottom: '0.2rem',
+                }}
+              >
                 Industry & Domain
               </div>
-              <div style={{ fontSize: '0.88rem', fontWeight: 700, color: '#0F172A', display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-                <span className="material-symbols-outlined" style={{ fontSize: '17px', color: '#2563EB' }}>
+              <div
+                style={{
+                  fontSize: '0.88rem',
+                  fontWeight: 700,
+                  color: '#0F172A',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '0.35rem',
+                }}
+              >
+                <span
+                  className="material-symbols-outlined"
+                  style={{ fontSize: '17px', color: '#2563EB' }}
+                >
                   domain_verification
                 </span>
                 {job.industry || job.department || 'Information Technology'}
@@ -384,7 +660,10 @@ const JobSpecModal = ({ job, onClose, onApply }) => {
                 gap: '0.4rem',
               }}
             >
-              <span className="material-symbols-outlined" style={{ fontSize: '18px', color: '#2563EB' }}>
+              <span
+                className="material-symbols-outlined"
+                style={{ fontSize: '18px', color: '#2563EB' }}
+              >
                 description
               </span>
               Role Overview & Architecture Scope
@@ -416,7 +695,10 @@ const JobSpecModal = ({ job, onClose, onApply }) => {
                 gap: '0.4rem',
               }}
             >
-              <span className="material-symbols-outlined" style={{ fontSize: '18px', color: '#2563EB' }}>
+              <span
+                className="material-symbols-outlined"
+                style={{ fontSize: '18px', color: '#2563EB' }}
+              >
                 checklist
               </span>
               Key Requirements & Qualifications
@@ -438,12 +720,17 @@ const JobSpecModal = ({ job, onClose, onApply }) => {
                   gap: '0.4rem',
                 }}
               >
-                <span className="material-symbols-outlined" style={{ fontSize: '18px', color: '#2563EB' }}>
+                <span
+                  className="material-symbols-outlined"
+                  style={{ fontSize: '18px', color: '#2563EB' }}
+                >
                   psychology
                 </span>
                 Required Technical Competencies
               </h4>
-              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.45rem' }}>
+              <div
+                style={{ display: 'flex', flexWrap: 'wrap', gap: '0.45rem' }}
+              >
                 {job.skills.map((skill, idx) => (
                   <span
                     key={idx}
@@ -476,14 +763,36 @@ const JobSpecModal = ({ job, onClose, onApply }) => {
               gap: '0.35rem',
             }}
           >
-            <div style={{ fontWeight: 700, fontSize: '0.85rem', color: '#1E40AF', display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
-              <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>
+            <div
+              style={{
+                fontWeight: 700,
+                fontSize: '0.85rem',
+                color: '#1E40AF',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.4rem',
+              }}
+            >
+              <span
+                className="material-symbols-outlined"
+                style={{ fontSize: '16px' }}
+              >
                 speed
               </span>
               ThinkWires Direct Intake Protocol
             </div>
-            <p style={{ margin: 0, fontSize: '0.8rem', color: '#1E3A8A', lineHeight: 1.5 }}>
-              Candidate profiles are evaluated within 24-48 business hours. Pre-screened candidates receive direct interview routing with client engineering directors. All advisory and placement services are 100% free of charge for candidates.
+            <p
+              style={{
+                margin: 0,
+                fontSize: '0.8rem',
+                color: '#1E3A8A',
+                lineHeight: 1.5,
+              }}
+            >
+              Candidate profiles are evaluated within 24-48 business hours.
+              Pre-screened candidates receive direct interview routing with
+              client engineering directors. All advisory and placement services
+              are 100% free of charge for candidates.
             </p>
           </div>
         </div>
@@ -546,15 +855,26 @@ const JobSpecModal = ({ job, onClose, onApply }) => {
             }}
             onMouseEnter={(e) => {
               e.currentTarget.style.background = '#1D4ED8';
-              e.currentTarget.style.boxShadow = '0 6px 16px rgba(37, 99, 235, 0.35)';
+              e.currentTarget.style.boxShadow =
+                '0 6px 16px rgba(37, 99, 235, 0.35)';
             }}
             onMouseLeave={(e) => {
               e.currentTarget.style.background = '#2563EB';
-              e.currentTarget.style.boxShadow = '0 4px 12px rgba(37, 99, 235, 0.25)';
+              e.currentTarget.style.boxShadow =
+                '0 4px 12px rgba(37, 99, 235, 0.25)';
             }}
           >
             <span>Apply for this Position</span>
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" strokeLinejoin="round">
+            <svg
+              width="15"
+              height="15"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.4"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
               <line x1="5" y1="12" x2="19" y2="12"></line>
               <polyline points="12 5 19 12 12 19"></polyline>
             </svg>

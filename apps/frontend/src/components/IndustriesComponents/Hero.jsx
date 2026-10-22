@@ -9,18 +9,31 @@ const Hero = () => {
   const badge3 = heroData?.badge3 || 'Cross-Border Regulatory Compliance';
   const title = heroData?.title || 'Domain Expertise & ';
   const titleHighlight = heroData?.titleHighlight || 'Industries We Empower';
-  const subtitle = heroData?.subtitle || "In today's competitive landscape, organizations require diverse hiring skills to identify and attract top talent across multiple sectors and industries.";
+  const subtitle =
+    heroData?.subtitle ||
+    "In today's competitive landscape, organizations require diverse hiring skills to identify and attract top talent across multiple sectors and industries.";
   const stats = heroData?.stats || [
     { value: '48', unit: 'h', label: 'Fast-Track SME Match', accent: 'green' },
     { value: '100', unit: '%', label: 'Audit Pass Rate', accent: 'blue' },
-    { value: '98.4', unit: '%', label: 'POD Retention (12mo)', accent: 'green' },
+    {
+      value: '98.4',
+      unit: '%',
+      label: 'POD Retention (12mo)',
+      accent: 'green',
+    },
     { value: '0', unit: '#', label: 'Statutory Violations', accent: 'green' },
   ];
 
   return (
     <section className="IndustriesHero-section">
-      <div className="IndustriesHero-bgGlow IndustriesHero-bgGlow--left" aria-hidden="true"></div>
-      <div className="IndustriesHero-bgGlow IndustriesHero-bgGlow--right" aria-hidden="true"></div>
+      <div
+        className="IndustriesHero-bgGlow IndustriesHero-bgGlow--left"
+        aria-hidden="true"
+      ></div>
+      <div
+        className="IndustriesHero-bgGlow IndustriesHero-bgGlow--right"
+        aria-hidden="true"
+      ></div>
 
       <div className="IndustriesHero-container">
         {/* Badges / Pill row */}
@@ -30,11 +43,15 @@ const Hero = () => {
             {badge1}
           </span>
           <span className="IndustriesHero-badge IndustriesHero-badge--subtle">
-            <span className="material-symbols-outlined IndustriesHero-icon">verified</span>
+            <span className="material-symbols-outlined IndustriesHero-icon">
+              verified
+            </span>
             {badge2}
           </span>
           <span className="IndustriesHero-badge IndustriesHero-badge--subtle">
-            <span className="material-symbols-outlined IndustriesHero-icon">policy</span>
+            <span className="material-symbols-outlined IndustriesHero-icon">
+              policy
+            </span>
             {badge3}
           </span>
         </div>
@@ -45,9 +62,7 @@ const Hero = () => {
           <span className="IndustriesHero-gradientText">{titleHighlight}</span>
         </h1>
 
-        <p className="IndustriesHero-subtitle">
-          {subtitle}
-        </p>
+        <p className="IndustriesHero-subtitle">{subtitle}</p>
 
         {/* Action Buttons */}
         <div className="IndustriesHero-actions">
@@ -55,7 +70,10 @@ const Hero = () => {
             Explore Sector Matrix
             <span className="material-symbols-outlined">arrow_downward</span>
           </a>
-          <a href="#capability-briefing" className="IndustriesHero-secondaryBtn">
+          <a
+            href="#capability-briefing"
+            className="IndustriesHero-secondaryBtn"
+          >
             Request Sector Capability Briefing
             <span className="material-symbols-outlined">article</span>
           </a>
@@ -69,7 +87,9 @@ const Hero = () => {
               <div className="IndustriesHero-statItem">
                 <div className="IndustriesHero-statValue">
                   {stat.value}
-                  <span className={`IndustriesHero-statAccent ${stat.accent === 'blue' ? 'IndustriesHero-statAccent--blue' : ''}`}>
+                  <span
+                    className={`IndustriesHero-statAccent ${stat.accent === 'blue' ? 'IndustriesHero-statAccent--blue' : ''}`}
+                  >
                     {stat.unit}
                   </span>
                 </div>

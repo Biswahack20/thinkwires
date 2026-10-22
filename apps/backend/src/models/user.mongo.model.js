@@ -56,7 +56,10 @@ userMongoSchema.pre('save', async function (next) {
     return next();
   }
   // Prevent double-hashing if password is already a bcrypt hash
-  if (typeof this.password === 'string' && /^\$2[aby]\$\d{2}\$[./A-Za-z0-9]{53}$/.test(this.password)) {
+  if (
+    typeof this.password === 'string' &&
+    /^\$2[aby]\$\d{2}\$[./A-Za-z0-9]{53}$/.test(this.password)
+  ) {
     return next();
   }
   try {
@@ -74,6 +77,7 @@ userMongoSchema.methods.comparePassword = async function (candidatePassword) {
   return bcrypt.compare(candidatePassword, this.password);
 };
 
-const UserMongo = mongoose.models.User || mongoose.model('User', userMongoSchema);
+const UserMongo =
+  mongoose.models.User || mongoose.model('User', userMongoSchema);
 
 export default UserMongo;

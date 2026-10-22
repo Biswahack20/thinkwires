@@ -6,9 +6,13 @@ const CandidateRoadmap = ({ stages = [] }) => {
       <div className="section-header-bar">
         <div>
           <span className="eyebrow-accent">ThinkWires Enterprise Protocol</span>
-          <h2 className="section-main-title">Candidate Syndication &amp; Vetting Roadmap</h2>
+          <h2 className="section-main-title">
+            Candidate Syndication &amp; Vetting Roadmap
+          </h2>
         </div>
-        <span className="status-tag">Current Position: Active Bench Phase (Stage 3)</span>
+        <span className="status-tag">
+          Current Position: Active Bench Phase (Stage 3)
+        </span>
       </div>
 
       {/* 4 Cards in a Row on Desktop */}
@@ -21,7 +25,9 @@ const CandidateRoadmap = ({ stages = [] }) => {
             <div className="card-top">
               <span className="stage-num-badge">
                 {st.isDone ? (
-                  <span className="material-symbols-outlined check-icon">check</span>
+                  <span className="material-symbols-outlined check-icon">
+                    check
+                  </span>
                 ) : (
                   st.stage
                 )}

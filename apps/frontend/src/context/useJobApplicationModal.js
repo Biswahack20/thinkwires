@@ -4,7 +4,9 @@ import JobApplicationModalContext from './JobApplicationModalContext';
 export const useJobApplicationModal = () => {
   const context = useContext(JobApplicationModalContext);
   if (!context) {
-    throw new Error('useJobApplicationModal must be used within a JobApplicationModalProvider');
+    throw new Error(
+      'useJobApplicationModal must be used within a JobApplicationModalProvider'
+    );
   }
   return context;
 };

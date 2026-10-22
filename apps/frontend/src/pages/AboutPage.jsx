@@ -16,11 +16,13 @@ const AboutPage = () => {
   const { data: rawData, status } = useSelector((state) => state.about || {});
 
   // Fallback to fallbackAboutData if redux state is empty or still initializing
-  const aboutData = rawData && Object.keys(rawData).length > 0 ? rawData : fallbackAboutData;
+  const aboutData =
+    rawData && Object.keys(rawData).length > 0 ? rawData : fallbackAboutData;
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    document.title = 'About Us | ThinkWires — Borderless Tech Talent & Workforce Advisory';
+    document.title =
+      'About Us | ThinkWires — Borderless Tech Talent & Workforce Advisory';
     if (status === 'idle') {
       dispatch(fetchAboutData());
     }
@@ -43,7 +45,9 @@ const AboutPage = () => {
         <Philosophy data={aboutData.philosophy} />
 
         {/* 4. Executive Leadership Team (3+2 Arrangement) */}
-        <LeadershipTeam data={aboutData.leadershipTeam || { members: aboutData.leadership }} />
+        <LeadershipTeam
+          data={aboutData.leadershipTeam || { members: aboutData.leadership }}
+        />
 
         {/* 5. Chronicle of Execution / Our Growth Evolution (4 Milestone Cards) */}
         <GrowthTimeline data={aboutData.growthTimeline} />

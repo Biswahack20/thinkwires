@@ -7,9 +7,12 @@ import ApplyModal from '../common/ApplyModal';
 
 const getCapabilityRoute = (cap) => {
   const title = (cap.title || '').toLowerCase();
-  if (title.includes('staff') || title.includes('augmentation')) return '/services/staff-augmentation';
-  if (title.includes('eor') || title.includes('employer')) return '/services/eor';
-  if (title.includes('permanent') || title.includes('search')) return '/services/permanent-staffing';
+  if (title.includes('staff') || title.includes('augmentation'))
+    return '/services/staff-augmentation';
+  if (title.includes('eor') || title.includes('employer'))
+    return '/services/eor';
+  if (title.includes('permanent') || title.includes('search'))
+    return '/services/permanent-staffing';
   if (title.includes('payroll')) return '/services/payroll';
   return '/services';
 };
@@ -78,7 +81,10 @@ const Capabilities = () => {
                 <div className="Capabilities-cardBody">
                   <div
                     className="Capabilities-iconWrapper"
-                    style={{ backgroundColor: cap.iconBg, color: cap.iconColor }}
+                    style={{
+                      backgroundColor: cap.iconBg,
+                      color: cap.iconColor,
+                    }}
                   >
                     <span className="material-symbols-outlined text-[26px]">
                       {getCapabilityMaterialIcon(cap.icon)}
@@ -105,11 +111,21 @@ const Capabilities = () => {
                     ))}
                   </ul>
                 </div>
-                <Link to={getCapabilityRoute(cap)} className="Capabilities-cardFooter" style={{ textDecoration: 'none' }}>
-                  <span className="Capabilities-footerLinkText" style={{ color: cap.linkColor }}>
+                <Link
+                  to={getCapabilityRoute(cap)}
+                  className="Capabilities-cardFooter"
+                  style={{ textDecoration: 'none' }}
+                >
+                  <span
+                    className="Capabilities-footerLinkText"
+                    style={{ color: cap.linkColor }}
+                  >
                     {cap.linkText}
                   </span>
-                  <span className="material-symbols-outlined text-[18px] Capabilities-footerArrow" style={{ color: cap.linkColor }}>
+                  <span
+                    className="material-symbols-outlined text-[18px] Capabilities-footerArrow"
+                    style={{ color: cap.linkColor }}
+                  >
                     arrow_forward
                   </span>
                 </Link>

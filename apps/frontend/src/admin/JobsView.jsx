@@ -206,7 +206,16 @@ const renderWorkModeBadge = (wm, officeLoc, loc) => {
           Work From Office
         </span>
         {displayLoc && (
-          <div style={{ fontSize: '0.72rem', color: '#475569', marginTop: '0.2rem', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+          <div
+            style={{
+              fontSize: '0.72rem',
+              color: '#475569',
+              marginTop: '0.2rem',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.25rem',
+            }}
+          >
             <LocationIcon size={12} color="#64748B" />
             <span>{displayLoc}</span>
           </div>
@@ -232,7 +241,16 @@ const renderWorkModeBadge = (wm, officeLoc, loc) => {
           Hybrid
         </span>
         {displayLoc && (
-          <div style={{ fontSize: '0.72rem', color: '#475569', marginTop: '0.2rem', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
+          <div
+            style={{
+              fontSize: '0.72rem',
+              color: '#475569',
+              marginTop: '0.2rem',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.25rem',
+            }}
+          >
             <LocationIcon size={12} color="#64748B" />
             <span>{displayLoc}</span>
           </div>
@@ -369,7 +387,9 @@ const JobsView = () => {
 
     let np = job.noticePeriod || job.joining || 'Immediate';
     let npOther = job.noticePeriodOther || '';
-    if (!['Immediate', 'On Notice Period', '< 30 Days', 'Others'].includes(np)) {
+    if (
+      !['Immediate', 'On Notice Period', '< 30 Days', 'Others'].includes(np)
+    ) {
       npOther = np;
       np = 'Others';
     }
@@ -380,14 +400,16 @@ const JobsView = () => {
       industry: job.industry || 'Information Technology & Cloud',
       jobMode: job.jobMode || 'Permanent',
       workMode: wm,
-      officeLocation: job.officeLocation || (wm === 'Work From Office' || wm === 'Hybrid' ? job.location : ''),
+      officeLocation:
+        job.officeLocation ||
+        (wm === 'Work From Office' || wm === 'Hybrid' ? job.location : ''),
       noticePeriod: np,
       noticePeriodOther: npOther,
       requiredSkills: Array.isArray(job.requiredSkills)
         ? job.requiredSkills.join(', ')
         : Array.isArray(job.skills)
-        ? job.skills.join(', ')
-        : job.requiredSkills || '',
+          ? job.skills.join(', ')
+          : job.requiredSkills || '',
       experienceRequired: job.experienceRequired || 3,
       openingsCount: job.openingsCount || job.openings || 1,
       priority: formatPriority(job.priority),
@@ -411,15 +433,23 @@ const JobsView = () => {
     }
 
     if (
-      (formData.workMode === 'Work From Office' || formData.workMode === 'Hybrid') &&
+      (formData.workMode === 'Work From Office' ||
+        formData.workMode === 'Hybrid') &&
       !formData.officeLocation.trim()
     ) {
-      setFormError(`Please specify the office location for ${formData.workMode}.`);
+      setFormError(
+        `Please specify the office location for ${formData.workMode}.`
+      );
       return;
     }
 
-    if (formData.noticePeriod === 'Others' && !formData.noticePeriodOther.trim()) {
-      setFormError('Please specify the notice period requirement (e.g. 60 Days, 90 Days).');
+    if (
+      formData.noticePeriod === 'Others' &&
+      !formData.noticePeriodOther.trim()
+    ) {
+      setFormError(
+        'Please specify the notice period requirement (e.g. 60 Days, 90 Days).'
+      );
       return;
     }
 
@@ -431,8 +461,8 @@ const JobsView = () => {
         formData.workMode === 'Work From Office'
           ? formData.officeLocation
           : formData.workMode === 'Hybrid'
-          ? `Hybrid (${formData.officeLocation})`
-          : 'Work From Home (Remote)',
+            ? `Hybrid (${formData.officeLocation})`
+            : 'Work From Home (Remote)',
       requiredSkills: formData.requiredSkills
         .split(',')
         .map((s) => s.trim())
@@ -481,19 +511,35 @@ const JobsView = () => {
         <div className="tw-view-title-group">
           <h1>Staffing Requisitions & Job Requirements</h1>
           <p className="tw-view-subtitle">
-            Manage client orders with industry classification, employment modes (Permanent, Contract, C2H), work locations, and notice period constraints.
+            Manage client orders with industry classification, employment modes
+            (Permanent, Contract, C2H), work locations, and notice period
+            constraints.
           </p>
         </div>
 
-        <button className="tw-btn-primary" onClick={openAddModal} style={{ display: 'inline-flex', alignItems: 'center', gap: '0.45rem' }}>
+        <button
+          className="tw-btn-primary"
+          onClick={openAddModal}
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '0.45rem',
+          }}
+        >
           <PlusIcon size={15} />
           <span>Post Requisition</span>
         </button>
       </div>
 
       <div className="tw-table-container">
-        <div className="tw-table-toolbar" style={{ flexWrap: 'wrap', gap: '0.65rem' }}>
-          <div className="tw-table-filters" style={{ flexWrap: 'wrap', gap: '0.5rem' }}>
+        <div
+          className="tw-table-toolbar"
+          style={{ flexWrap: 'wrap', gap: '0.65rem' }}
+        >
+          <div
+            className="tw-table-filters"
+            style={{ flexWrap: 'wrap', gap: '0.5rem' }}
+          >
             <input
               type="text"
               className="tw-filter-input"
@@ -555,7 +601,9 @@ const JobsView = () => {
             </select>
           </div>
 
-          <div style={{ fontSize: '0.8rem', color: '#64748B', marginLeft: 'auto' }}>
+          <div
+            style={{ fontSize: '0.8rem', color: '#64748B', marginLeft: 'auto' }}
+          >
             Active orders: <strong>{jobs.length}</strong>
           </div>
         </div>
@@ -573,19 +621,35 @@ const JobsView = () => {
                 <th style={{ minWidth: '110px' }}>Priority</th>
                 <th style={{ minWidth: '100px' }}>Status</th>
                 <th style={{ minWidth: '130px' }}>Budget / CTC</th>
-                <th style={{ textAlign: 'right', minWidth: '80px' }}>Actions</th>
+                <th style={{ textAlign: 'right', minWidth: '80px' }}>
+                  Actions
+                </th>
               </tr>
             </thead>
             <tbody>
               {loading ? (
                 <tr>
-                  <td colSpan="10" style={{ textAlign: 'center', padding: '2rem', color: '#64748B' }}>
+                  <td
+                    colSpan="10"
+                    style={{
+                      textAlign: 'center',
+                      padding: '2rem',
+                      color: '#64748B',
+                    }}
+                  >
                     Loading requisitions...
                   </td>
                 </tr>
               ) : jobs.length === 0 ? (
                 <tr>
-                  <td colSpan="10" style={{ textAlign: 'center', padding: '2rem', color: '#64748B' }}>
+                  <td
+                    colSpan="10"
+                    style={{
+                      textAlign: 'center',
+                      padding: '2rem',
+                      color: '#64748B',
+                    }}
+                  >
                     No job requirements found matching your criteria.
                   </td>
                 </tr>
@@ -594,11 +658,12 @@ const JobsView = () => {
                   const priorityStr = formatPriority(job.priority);
                   const statusStr = String(job.status || 'Open');
                   const skillsList =
-                    Array.isArray(job.requiredSkills) && job.requiredSkills.length > 0
+                    Array.isArray(job.requiredSkills) &&
+                    job.requiredSkills.length > 0
                       ? job.requiredSkills
                       : Array.isArray(job.skills)
-                      ? job.skills
-                      : [];
+                        ? job.skills
+                        : [];
                   const openings = job.openingsCount || job.openings || 1;
                   const fulfilled = job.fulfilledCount || 0;
                   const budgetText = job.budget || job.salary || 'Competitive';
@@ -606,10 +671,23 @@ const JobsView = () => {
                   return (
                     <tr key={job.id || job._id}>
                       <td>
-                        <div style={{ fontWeight: 600, color: '#0F172A', marginBottom: '0.25rem' }}>
+                        <div
+                          style={{
+                            fontWeight: 600,
+                            color: '#0F172A',
+                            marginBottom: '0.25rem',
+                          }}
+                        >
                           {job.title}
                         </div>
-                        <div style={{ display: 'flex', gap: '0.35rem', flexWrap: 'wrap', alignItems: 'center' }}>
+                        <div
+                          style={{
+                            display: 'flex',
+                            gap: '0.35rem',
+                            flexWrap: 'wrap',
+                            alignItems: 'center',
+                          }}
+                        >
                           <span
                             style={{
                               fontSize: '0.67rem',
@@ -628,7 +706,9 @@ const JobsView = () => {
                             <span>{job.industry || 'IT & Cloud'}</span>
                           </span>
                           {renderJobModeBadge(job.jobMode)}
-                          <span style={{ fontSize: '0.7rem', color: '#94A3B8' }}>
+                          <span
+                            style={{ fontSize: '0.7rem', color: '#94A3B8' }}
+                          >
                             {job.experienceRequired || 3}+ yrs
                           </span>
                         </div>
@@ -654,22 +734,44 @@ const JobsView = () => {
                       </td>
 
                       <td>
-                        <div style={{ fontWeight: 600, color: '#1E293B' }}>{job.client || 'Enterprise Client'}</div>
-                        <div style={{ fontSize: '0.72rem', color: '#64748B', marginTop: '0.15rem' }}>
+                        <div style={{ fontWeight: 600, color: '#1E293B' }}>
+                          {job.client || 'Enterprise Client'}
+                        </div>
+                        <div
+                          style={{
+                            fontSize: '0.72rem',
+                            color: '#64748B',
+                            marginTop: '0.15rem',
+                          }}
+                        >
                           Verified Client
                         </div>
                       </td>
 
                       <td>
-                        {renderWorkModeBadge(job.workMode, job.officeLocation, job.location)}
+                        {renderWorkModeBadge(
+                          job.workMode,
+                          job.officeLocation,
+                          job.location
+                        )}
                       </td>
 
                       <td>
-                        {renderNoticeBadge(job.noticePeriod, job.noticePeriodOther)}
+                        {renderNoticeBadge(
+                          job.noticePeriod,
+                          job.noticePeriodOther
+                        )}
                       </td>
 
                       <td>
-                        <div style={{ display: 'flex', gap: '0.2rem', flexWrap: 'wrap', maxWidth: '200px' }}>
+                        <div
+                          style={{
+                            display: 'flex',
+                            gap: '0.2rem',
+                            flexWrap: 'wrap',
+                            maxWidth: '200px',
+                          }}
+                        >
                           {skillsList.slice(0, 4).map((sk, idx) => (
                             <span
                               key={idx}
@@ -685,7 +787,13 @@ const JobsView = () => {
                             </span>
                           ))}
                           {skillsList.length > 4 && (
-                            <span style={{ fontSize: '0.65rem', color: '#64748B', padding: '0.1rem 0.2rem' }}>
+                            <span
+                              style={{
+                                fontSize: '0.65rem',
+                                color: '#64748B',
+                                padding: '0.1rem 0.2rem',
+                              }}
+                            >
                               +{skillsList.length - 4}
                             </span>
                           )}
@@ -699,21 +807,32 @@ const JobsView = () => {
                       </td>
 
                       <td>
-                        <span className={`tw-badge ${priorityStr.toLowerCase()}`}>{priorityStr}</span>
+                        <span
+                          className={`tw-badge ${priorityStr.toLowerCase()}`}
+                        >
+                          {priorityStr}
+                        </span>
                       </td>
 
                       <td>
-                        <span className={`tw-badge ${statusStr.toLowerCase().replace(/\s+/g, '-')}`}>
+                        <span
+                          className={`tw-badge ${statusStr.toLowerCase().replace(/\s+/g, '-')}`}
+                        >
                           {statusStr}
                         </span>
                       </td>
 
                       <td>
-                        <span style={{ fontSize: '0.78rem', fontWeight: 600 }}>{budgetText}</span>
+                        <span style={{ fontSize: '0.78rem', fontWeight: 600 }}>
+                          {budgetText}
+                        </span>
                       </td>
 
                       <td style={{ textAlign: 'right' }}>
-                        <div className="tw-action-btn-group" style={{ justifyContent: 'flex-end' }}>
+                        <div
+                          className="tw-action-btn-group"
+                          style={{ justifyContent: 'flex-end' }}
+                        >
                           <button
                             className="tw-action-icon-btn"
                             onClick={() => openEditModal(job)}
@@ -723,7 +842,9 @@ const JobsView = () => {
                           </button>
                           <button
                             className="tw-action-icon-btn delete"
-                            onClick={() => setDeleteConfirmId(job.id || job._id)}
+                            onClick={() =>
+                              setDeleteConfirmId(job.id || job._id)
+                            }
                             title="Close Requisition"
                           >
                             <TrashIcon size={14} />
@@ -745,9 +866,15 @@ const JobsView = () => {
           <div className="tw-modal" style={{ maxWidth: '720px' }}>
             <div className="tw-modal-header">
               <h2 className="tw-modal-title">
-                {editingJob ? `Edit Requisition: ${editingJob.title}` : 'Post New Staffing Requirement'}
+                {editingJob
+                  ? `Edit Requisition: ${editingJob.title}`
+                  : 'Post New Staffing Requirement'}
               </h2>
-              <button className="tw-modal-close-btn" onClick={() => setModalOpen(false)} title="Close">
+              <button
+                className="tw-modal-close-btn"
+                onClick={() => setModalOpen(false)}
+                title="Close"
+              >
                 <CloseIcon size={16} />
               </button>
             </div>
@@ -781,14 +908,28 @@ const JobsView = () => {
                       type="text"
                       className="tw-form-input"
                       value={formData.title}
-                      onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                      onChange={(e) =>
+                        setFormData({ ...formData, title: e.target.value })
+                      }
                       placeholder="e.g. Lead Full Stack & Cloud Architect"
                       required
                     />
                   </div>
                   <div className="tw-form-group">
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.35rem' }}>
-                      <label className="tw-form-label" style={{ marginBottom: 0 }}>Corporate Client *</label>
+                    <div
+                      style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        marginBottom: '0.35rem',
+                      }}
+                    >
+                      <label
+                        className="tw-form-label"
+                        style={{ marginBottom: 0 }}
+                      >
+                        Corporate Client *
+                      </label>
                       {clients.length > 0 && (
                         <button
                           type="button"
@@ -798,7 +939,10 @@ const JobsView = () => {
                               if (next) {
                                 setFormData((fd) => ({ ...fd, client: '' }));
                               } else {
-                                setFormData((fd) => ({ ...fd, client: clients[0]?.companyName || '' }));
+                                setFormData((fd) => ({
+                                  ...fd,
+                                  client: clients[0]?.companyName || '',
+                                }));
                               }
                               return next;
                             });
@@ -814,7 +958,9 @@ const JobsView = () => {
                             textDecoration: 'underline',
                           }}
                         >
-                          {isCustomClient ? 'Select from registered clients' : '+ Enter client manually'}
+                          {isCustomClient
+                            ? 'Select from registered clients'
+                            : '+ Enter client manually'}
                         </button>
                       )}
                     </div>
@@ -825,13 +971,22 @@ const JobsView = () => {
                           type="text"
                           className="tw-form-input"
                           value={formData.client}
-                          onChange={(e) => setFormData({ ...formData, client: e.target.value })}
+                          onChange={(e) =>
+                            setFormData({ ...formData, client: e.target.value })
+                          }
                           placeholder="Type client partner name manually (e.g. Acme Tech Global)"
                           required
                           autoFocus={isCustomClient}
                         />
-                        <div style={{ fontSize: '0.72rem', color: '#64748B', marginTop: '0.25rem' }}>
-                          Client details are strictly internal and will never be exposed on the public website.
+                        <div
+                          style={{
+                            fontSize: '0.72rem',
+                            color: '#64748B',
+                            marginTop: '0.25rem',
+                          }}
+                        >
+                          Client details are strictly internal and will never be
+                          exposed on the public website.
                         </div>
                       </div>
                     ) : (
@@ -843,7 +998,10 @@ const JobsView = () => {
                             setIsCustomClient(true);
                             setFormData({ ...formData, client: '' });
                           } else {
-                            setFormData({ ...formData, client: e.target.value });
+                            setFormData({
+                              ...formData,
+                              client: e.target.value,
+                            });
                           }
                         }}
                         required
@@ -854,7 +1012,9 @@ const JobsView = () => {
                             {c.companyName}
                           </option>
                         ))}
-                        <option value="__custom__">+ Enter Unlisted Client Name Manually...</option>
+                        <option value="__custom__">
+                          + Enter Unlisted Client Name Manually...
+                        </option>
                       </select>
                     )}
                   </div>
@@ -867,7 +1027,9 @@ const JobsView = () => {
                     <select
                       className="tw-form-select"
                       value={formData.industry}
-                      onChange={(e) => setFormData({ ...formData, industry: e.target.value })}
+                      onChange={(e) =>
+                        setFormData({ ...formData, industry: e.target.value })
+                      }
                       required
                     >
                       {INDUSTRY_SECTORS.map((ind) => (
@@ -883,7 +1045,9 @@ const JobsView = () => {
                     <select
                       className="tw-form-select"
                       value={formData.jobMode}
-                      onChange={(e) => setFormData({ ...formData, jobMode: e.target.value })}
+                      onChange={(e) =>
+                        setFormData({ ...formData, jobMode: e.target.value })
+                      }
                       required
                     >
                       {JOB_MODES.map((mode) => (
@@ -902,7 +1066,9 @@ const JobsView = () => {
                     <select
                       className="tw-form-select"
                       value={formData.workMode}
-                      onChange={(e) => setFormData({ ...formData, workMode: e.target.value })}
+                      onChange={(e) =>
+                        setFormData({ ...formData, workMode: e.target.value })
+                      }
                       required
                     >
                       {WORK_MODES.map((wm) => (
@@ -913,7 +1079,8 @@ const JobsView = () => {
                     </select>
                   </div>
 
-                  {(formData.workMode === 'Work From Office' || formData.workMode === 'Hybrid') ? (
+                  {formData.workMode === 'Work From Office' ||
+                  formData.workMode === 'Hybrid' ? (
                     <div className="tw-form-group">
                       <label className="tw-form-label">
                         {formData.workMode === 'Work From Office'
@@ -924,14 +1091,21 @@ const JobsView = () => {
                         type="text"
                         className="tw-form-input"
                         value={formData.officeLocation}
-                        onChange={(e) => setFormData({ ...formData, officeLocation: e.target.value })}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            officeLocation: e.target.value,
+                          })
+                        }
                         placeholder="e.g. Bangalore - Whitefield Tech Hub"
                         required
                       />
                     </div>
                   ) : (
                     <div className="tw-form-group">
-                      <label className="tw-form-label">Work Location Coverage</label>
+                      <label className="tw-form-label">
+                        Work Location Coverage
+                      </label>
                       <input
                         type="text"
                         className="tw-form-input"
@@ -946,11 +1120,18 @@ const JobsView = () => {
                 {/* Row 4: Notice Period and Conditional Other Specify */}
                 <div className="tw-form-row">
                   <div className="tw-form-group">
-                    <label className="tw-form-label">Notice Period Requirement *</label>
+                    <label className="tw-form-label">
+                      Notice Period Requirement *
+                    </label>
                     <select
                       className="tw-form-select"
                       value={formData.noticePeriod}
-                      onChange={(e) => setFormData({ ...formData, noticePeriod: e.target.value })}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          noticePeriod: e.target.value,
+                        })
+                      }
                       required
                     >
                       {NOTICE_PERIODS.map((np) => (
@@ -963,19 +1144,28 @@ const JobsView = () => {
 
                   {formData.noticePeriod === 'Others' ? (
                     <div className="tw-form-group">
-                      <label className="tw-form-label">Specify Notice Period *</label>
+                      <label className="tw-form-label">
+                        Specify Notice Period *
+                      </label>
                       <input
                         type="text"
                         className="tw-form-input"
                         value={formData.noticePeriodOther}
-                        onChange={(e) => setFormData({ ...formData, noticePeriodOther: e.target.value })}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            noticePeriodOther: e.target.value,
+                          })
+                        }
                         placeholder="e.g. 60 Days, 90 Days, or Buyout Negotiable"
                         required
                       />
                     </div>
                   ) : (
                     <div className="tw-form-group">
-                      <label className="tw-form-label">Expected Joining Timeline</label>
+                      <label className="tw-form-label">
+                        Expected Joining Timeline
+                      </label>
                       <input
                         type="text"
                         className="tw-form-input"
@@ -983,8 +1173,8 @@ const JobsView = () => {
                           formData.noticePeriod === 'Immediate'
                             ? 'Immediate joining (0 - 7 calendar days)'
                             : formData.noticePeriod === 'On Notice Period'
-                            ? 'Actively serving official notice'
-                            : 'Within 30 calendar days'
+                              ? 'Actively serving official notice'
+                              : 'Within 30 calendar days'
                         }
                         disabled
                         style={{ backgroundColor: '#F8FAFC', color: '#64748B' }}
@@ -995,12 +1185,19 @@ const JobsView = () => {
 
                 {/* Row 5: Skills */}
                 <div className="tw-form-group">
-                  <label className="tw-form-label">Required Technical Skills (comma separated) *</label>
+                  <label className="tw-form-label">
+                    Required Technical Skills (comma separated) *
+                  </label>
                   <input
                     type="text"
                     className="tw-form-input"
                     value={formData.requiredSkills}
-                    onChange={(e) => setFormData({ ...formData, requiredSkills: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        requiredSkills: e.target.value,
+                      })
+                    }
                     placeholder="React, TypeScript, Node.js, AWS, Docker"
                   />
                 </div>
@@ -1008,22 +1205,36 @@ const JobsView = () => {
                 {/* Row 6: Experience & Openings */}
                 <div className="tw-form-row">
                   <div className="tw-form-group">
-                    <label className="tw-form-label">Experience Required (Years)</label>
+                    <label className="tw-form-label">
+                      Experience Required (Years)
+                    </label>
                     <input
                       type="number"
                       className="tw-form-input"
                       value={formData.experienceRequired}
-                      onChange={(e) => setFormData({ ...formData, experienceRequired: Number(e.target.value) })}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          experienceRequired: Number(e.target.value),
+                        })
+                      }
                       min="0"
                     />
                   </div>
                   <div className="tw-form-group">
-                    <label className="tw-form-label">Open Headcount Positions</label>
+                    <label className="tw-form-label">
+                      Open Headcount Positions
+                    </label>
                     <input
                       type="number"
                       className="tw-form-input"
                       value={formData.openingsCount}
-                      onChange={(e) => setFormData({ ...formData, openingsCount: Number(e.target.value) })}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          openingsCount: Number(e.target.value),
+                        })
+                      }
                       min="1"
                     />
                   </div>
@@ -1036,7 +1247,9 @@ const JobsView = () => {
                     <select
                       className="tw-form-select"
                       value={formData.priority}
-                      onChange={(e) => setFormData({ ...formData, priority: e.target.value })}
+                      onChange={(e) =>
+                        setFormData({ ...formData, priority: e.target.value })
+                      }
                     >
                       <option value="Urgent">Urgent (48-hour SLA)</option>
                       <option value="High">High</option>
@@ -1049,7 +1262,9 @@ const JobsView = () => {
                     <select
                       className="tw-form-select"
                       value={formData.status}
-                      onChange={(e) => setFormData({ ...formData, status: e.target.value })}
+                      onChange={(e) =>
+                        setFormData({ ...formData, status: e.target.value })
+                      }
                     >
                       <option value="Open">Open</option>
                       <option value="In Progress">In Progress</option>
@@ -1061,12 +1276,16 @@ const JobsView = () => {
 
                 {/* Row 8: Budget */}
                 <div className="tw-form-group">
-                  <label className="tw-form-label">Budget / Compensation Band</label>
+                  <label className="tw-form-label">
+                    Budget / Compensation Band
+                  </label>
                   <input
                     type="text"
                     className="tw-form-input"
                     value={formData.budget}
-                    onChange={(e) => setFormData({ ...formData, budget: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, budget: e.target.value })
+                    }
                     placeholder="₹28-35 LPA ($45-55k)"
                   />
                 </div>
@@ -1078,27 +1297,49 @@ const JobsView = () => {
                     className="tw-form-textarea"
                     rows="4"
                     value={formData.description}
-                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, description: e.target.value })
+                    }
                     placeholder="Provide a comprehensive overview of the role, day-to-day engineering responsibilities, architectural scope, and project expectations..."
                     required
                   ></textarea>
-                  <span style={{ fontSize: '0.72rem', color: '#64748B', marginTop: '0.25rem', display: 'block' }}>
-                    Full job description displayed across public job boards, applicant intake, and client requisition cards.
+                  <span
+                    style={{
+                      fontSize: '0.72rem',
+                      color: '#64748B',
+                      marginTop: '0.25rem',
+                      display: 'block',
+                    }}
+                  >
+                    Full job description displayed across public job boards,
+                    applicant intake, and client requisition cards.
                   </span>
                 </div>
 
                 {/* Row 10: Requirements & Qualifications */}
                 <div className="tw-form-group">
-                  <label className="tw-form-label">Requirements &amp; Qualifications</label>
+                  <label className="tw-form-label">
+                    Requirements &amp; Qualifications
+                  </label>
                   <textarea
                     className="tw-form-textarea"
                     rows="4"
                     value={formData.requirements}
-                    onChange={(e) => setFormData({ ...formData, requirements: e.target.value })}
+                    onChange={(e) =>
+                      setFormData({ ...formData, requirements: e.target.value })
+                    }
                     placeholder="Enter candidate qualifications, prerequisites, and education (e.g.&#10;• Bachelor's/Master's degree in Computer Science or related technical discipline&#10;• 5+ years building and deploying scalable distributed systems&#10;• Proven experience with system architecture, CI/CD, and agile engineering&#10;• Strong problem-solving, communication, and client collaboration skills)"
                   ></textarea>
-                  <span style={{ fontSize: '0.72rem', color: '#64748B', marginTop: '0.25rem', display: 'block' }}>
-                    Key candidate qualifications, experience benchmarks, and domain prerequisites.
+                  <span
+                    style={{
+                      fontSize: '0.72rem',
+                      color: '#64748B',
+                      marginTop: '0.25rem',
+                      display: 'block',
+                    }}
+                  >
+                    Key candidate qualifications, experience benchmarks, and
+                    domain prerequisites.
                   </span>
                 </div>
               </div>
@@ -1126,18 +1367,29 @@ const JobsView = () => {
           <div className="tw-modal" style={{ maxWidth: '440px' }}>
             <div className="tw-modal-header">
               <h2 className="tw-modal-title">Close Requisition</h2>
-              <button className="tw-modal-close-btn" onClick={() => setDeleteConfirmId(null)} title="Close">
+              <button
+                className="tw-modal-close-btn"
+                onClick={() => setDeleteConfirmId(null)}
+                title="Close"
+              >
                 <CloseIcon size={16} />
               </button>
             </div>
             <div className="tw-modal-body">
-              Are you sure you want to close and archive this staffing requirement?
+              Are you sure you want to close and archive this staffing
+              requirement?
             </div>
             <div className="tw-modal-footer">
-              <button className="tw-btn-secondary" onClick={() => setDeleteConfirmId(null)}>
+              <button
+                className="tw-btn-secondary"
+                onClick={() => setDeleteConfirmId(null)}
+              >
                 Cancel
               </button>
-              <button className="tw-btn-danger" onClick={() => handleDelete(deleteConfirmId)}>
+              <button
+                className="tw-btn-danger"
+                onClick={() => handleDelete(deleteConfirmId)}
+              >
                 Confirm Close
               </button>
             </div>

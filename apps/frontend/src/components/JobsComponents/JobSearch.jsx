@@ -17,11 +17,22 @@ const JobSearch = ({
   sortBy,
   setSortBy,
   totalResults,
-  onSearchSubmit
+  onSearchSubmit,
 }) => {
-  const workModes = ['All Modes', 'Work From Home', 'Hybrid', 'Work From Office'];
+  const workModes = [
+    'All Modes',
+    'Work From Home',
+    'Hybrid',
+    'Work From Office',
+  ];
   const jobModes = ['All Types', 'Permanent', 'Contract', 'Contract to Hire'];
-  const noticePeriods = ['All Notice', 'Immediate', 'On Notice Period', '< 30 Days', '> 30 Days'];
+  const noticePeriods = [
+    'All Notice',
+    'Immediate',
+    'On Notice Period',
+    '< 30 Days',
+    '> 30 Days',
+  ];
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
@@ -35,7 +46,17 @@ const JobSearch = ({
         <div className="JobSearch-inputsRow">
           {/* Keyword Input */}
           <div className="JobSearch-fieldWithIcon JobSearch-keywordField">
-            <svg className="JobSearch-inputIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <svg
+              className="JobSearch-inputIcon"
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
               <circle cx="11" cy="11" r="8"></circle>
               <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
             </svg>
@@ -47,9 +68,9 @@ const JobSearch = ({
               onChange={(e) => setSearchQuery(e.target.value)}
             />
             {searchQuery && (
-              <button 
-                type="button" 
-                className="JobSearch-clearBtn" 
+              <button
+                type="button"
+                className="JobSearch-clearBtn"
                 onClick={() => setSearchQuery('')}
               >
                 <CloseIcon size={13} />
@@ -59,7 +80,17 @@ const JobSearch = ({
 
           {/* Location Selector */}
           <div className="JobSearch-fieldWithIcon JobSearch-selectField">
-            <svg className="JobSearch-inputIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <svg
+              className="JobSearch-inputIcon"
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
               <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
               <circle cx="12" cy="10" r="3"></circle>
             </svg>
@@ -78,7 +109,17 @@ const JobSearch = ({
 
           {/* Experience Selector */}
           <div className="JobSearch-fieldWithIcon JobSearch-selectField">
-            <svg className="JobSearch-inputIcon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <svg
+              className="JobSearch-inputIcon"
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
               <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
               <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
             </svg>
@@ -98,7 +139,16 @@ const JobSearch = ({
           {/* Search Submit Button */}
           <button type="submit" className="JobSearch-submitButton">
             <span>Search</span>
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
               <line x1="5" y1="12" x2="19" y2="12"></line>
               <polyline points="12 5 19 12 12 19"></polyline>
             </svg>
@@ -106,7 +156,10 @@ const JobSearch = ({
         </div>
 
         {/* Row 2: Secondary Filter Bars (Work Mode & Job Mode & Notice) */}
-        <div className="JobSearch-subFiltersRow" style={{ flexWrap: 'wrap', gap: '1rem', rowGap: '0.85rem' }}>
+        <div
+          className="JobSearch-subFiltersRow"
+          style={{ flexWrap: 'wrap', gap: '1rem', rowGap: '0.85rem' }}
+        >
           {/* Work Mode Filter Pills */}
           <div className="JobSearch-workModeGroup">
             <span className="JobSearch-workModeLabel">WORK MODE:</span>
@@ -145,7 +198,10 @@ const JobSearch = ({
 
           {/* Notice Period Filter Select */}
           {setNoticePeriod && (
-            <div className="JobSearch-workModeGroup" style={{ alignItems: 'center' }}>
+            <div
+              className="JobSearch-workModeGroup"
+              style={{ alignItems: 'center' }}
+            >
               <span className="JobSearch-workModeLabel">NOTICE:</span>
               <select
                 className="JobSearch-sortSelect"
@@ -154,16 +210,28 @@ const JobSearch = ({
                 onChange={(e) => setNoticePeriod(e.target.value)}
               >
                 {noticePeriods.map((np) => (
-                  <option key={np} value={np}>{np}</option>
+                  <option key={np} value={np}>
+                    {np}
+                  </option>
                 ))}
               </select>
             </div>
           )}
 
           {/* Right Status Indicator & Sorting */}
-          <div className="JobSearch-statusSortGroup" style={{ marginLeft: 'auto' }}>
+          <div
+            className="JobSearch-statusSortGroup"
+            style={{ marginLeft: 'auto' }}
+          >
             <div className="JobSearch-rolesCounter">
-              <span className="material-symbols-outlined" style={{ fontSize: '16px', color: '#16a34a', marginRight: '4px' }}>
+              <span
+                className="material-symbols-outlined"
+                style={{
+                  fontSize: '16px',
+                  color: '#16a34a',
+                  marginRight: '4px',
+                }}
+              >
                 bolt
               </span>
               <span className="JobSearch-rolesCountText">

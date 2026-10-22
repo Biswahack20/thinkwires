@@ -8,7 +8,7 @@ const PermStaffHero = ({ data }) => {
     description,
     ctaSearchText,
     ctaRolesText,
-    proofStats = []
+    proofStats = [],
   } = data;
 
   return (

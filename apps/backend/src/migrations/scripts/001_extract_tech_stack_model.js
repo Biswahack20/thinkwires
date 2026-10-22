@@ -5,20 +5,90 @@
 
 const DEFAULT_STACKS = [
   { name: 'SAP', category: 'ERP & Enterprise Core', icon: 'hub', order: 1 },
-  { name: 'Amazon Web Services (AWS)', category: 'Cloud & Infrastructure', icon: 'cloud', order: 2 },
-  { name: 'Microsoft Azure', category: 'Cloud & Infrastructure', icon: 'cloud_queue', order: 3 },
-  { name: 'Google Cloud Platform (GCP)', category: 'Cloud & Infrastructure', icon: 'cloud_done', order: 4 },
-  { name: 'Salesforce', category: 'ERP & Enterprise Core', icon: 'corporate_fare', order: 5 },
-  { name: 'Oracle Cloud', category: 'Cloud & Infrastructure', icon: 'database', order: 6 },
-  { name: 'Snowflake', category: 'Data & Analytics', icon: 'ac_unit', order: 7 },
-  { name: 'Kubernetes', category: 'DevOps & Cloud Native', icon: 'view_in_ar', order: 8 },
-  { name: 'Docker', category: 'DevOps & Cloud Native', icon: 'deployed_code', order: 9 },
-  { name: 'React.js', category: 'Modern Fullstack & AI', icon: 'code', order: 10 },
-  { name: 'Node.js', category: 'Modern Fullstack & AI', icon: 'terminal', order: 11 },
-  { name: 'Python / AI', category: 'Modern Fullstack & AI', icon: 'psychology', order: 12 },
-  { name: 'Java Spring Boot', category: 'Modern Fullstack & AI', icon: 'developer_mode', order: 13 },
-  { name: 'PostgreSQL', category: 'Data & Analytics', icon: 'storage', order: 14 },
-  { name: 'Terraform', category: 'DevOps & Cloud Native', icon: 'construction', order: 15 },
+  {
+    name: 'Amazon Web Services (AWS)',
+    category: 'Cloud & Infrastructure',
+    icon: 'cloud',
+    order: 2,
+  },
+  {
+    name: 'Microsoft Azure',
+    category: 'Cloud & Infrastructure',
+    icon: 'cloud_queue',
+    order: 3,
+  },
+  {
+    name: 'Google Cloud Platform (GCP)',
+    category: 'Cloud & Infrastructure',
+    icon: 'cloud_done',
+    order: 4,
+  },
+  {
+    name: 'Salesforce',
+    category: 'ERP & Enterprise Core',
+    icon: 'corporate_fare',
+    order: 5,
+  },
+  {
+    name: 'Oracle Cloud',
+    category: 'Cloud & Infrastructure',
+    icon: 'database',
+    order: 6,
+  },
+  {
+    name: 'Snowflake',
+    category: 'Data & Analytics',
+    icon: 'ac_unit',
+    order: 7,
+  },
+  {
+    name: 'Kubernetes',
+    category: 'DevOps & Cloud Native',
+    icon: 'view_in_ar',
+    order: 8,
+  },
+  {
+    name: 'Docker',
+    category: 'DevOps & Cloud Native',
+    icon: 'deployed_code',
+    order: 9,
+  },
+  {
+    name: 'React.js',
+    category: 'Modern Fullstack & AI',
+    icon: 'code',
+    order: 10,
+  },
+  {
+    name: 'Node.js',
+    category: 'Modern Fullstack & AI',
+    icon: 'terminal',
+    order: 11,
+  },
+  {
+    name: 'Python / AI',
+    category: 'Modern Fullstack & AI',
+    icon: 'psychology',
+    order: 12,
+  },
+  {
+    name: 'Java Spring Boot',
+    category: 'Modern Fullstack & AI',
+    icon: 'developer_mode',
+    order: 13,
+  },
+  {
+    name: 'PostgreSQL',
+    category: 'Data & Analytics',
+    icon: 'storage',
+    order: 14,
+  },
+  {
+    name: 'Terraform',
+    category: 'DevOps & Cloud Native',
+    icon: 'construction',
+    order: 15,
+  },
 ];
 
 const slugify = (text) =>
@@ -82,7 +152,9 @@ export const up = async ({ db }) => {
     );
   }
 
-  console.log(`   Migrated ${itemsToInsert.length} tech stack records to 'techstacks' collection.`);
+  console.log(
+    `   Migrated ${itemsToInsert.length} tech stack records to 'techstacks' collection.`
+  );
 };
 
 export const down = async ({ db }) => {

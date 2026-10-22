@@ -9,7 +9,11 @@ const PermStaffPillars = ({ data }) => {
     <section className="PermStaff-pillarsSection">
       <div className="PermStaff-container">
         {/* Section Header Row */}
-        <ScrollReveal direction="up" distance={40} className="PermStaff-pillarsHeaderRow">
+        <ScrollReveal
+          direction="up"
+          distance={40}
+          className="PermStaff-pillarsHeaderRow"
+        >
           <div className="header-text">
             <span className="PermStaff-eyebrow primary">{eyebrow}</span>
             <h2 className="PermStaff-title">{heading}</h2>
@@ -36,8 +40,12 @@ const PermStaffPillars = ({ data }) => {
               <div className="PermStaff-pillarCard" style={{ width: '100%' }}>
                 <div className="pillar-top">
                   <div className="pillar-header-row">
-                    <div className={`pillar-icon-box ${pillar.accent || 'primary'}`}>
-                      <span className="material-symbols-outlined">{pillar.icon}</span>
+                    <div
+                      className={`pillar-icon-box ${pillar.accent || 'primary'}`}
+                    >
+                      <span className="material-symbols-outlined">
+                        {pillar.icon}
+                      </span>
                     </div>
                     <span className="pillar-step-tag">{pillar.step}</span>
                   </div>
@@ -48,7 +56,9 @@ const PermStaffPillars = ({ data }) => {
                 <ul className="pillar-points">
                   {(pillar.points || []).map((pt, pIdx) => (
                     <li key={pIdx}>
-                      <span className="material-symbols-outlined">check_circle</span>
+                      <span className="material-symbols-outlined">
+                        check_circle
+                      </span>
                       <span>{pt}</span>
                     </li>
                   ))}

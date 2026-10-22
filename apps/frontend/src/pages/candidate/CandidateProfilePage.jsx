@@ -8,7 +8,9 @@ import '../auth/auth.css';
 
 const CandidateProfilePage = () => {
   const dispatch = useDispatch();
-  const { user, loading, error, successMessage } = useSelector((state) => state.auth);
+  const { user, loading, error, successMessage } = useSelector(
+    (state) => state.auth
+  );
 
   const [formData, setFormData] = useState({
     name: '',
@@ -65,7 +67,9 @@ const CandidateProfilePage = () => {
         const data = await res.json();
         if (res.ok && data.parsed) {
           const p = data.parsed;
-          const parsedFullName = [p.firstName, p.lastName].filter(Boolean).join(' ');
+          const parsedFullName = [p.firstName, p.lastName]
+            .filter(Boolean)
+            .join(' ');
 
           setFormData((prev) => ({
             ...prev,
@@ -74,11 +78,18 @@ const CandidateProfilePage = () => {
             currentRole: p.currentRole || prev.currentRole,
             headline: p.headline || p.currentRole || prev.headline,
             location: p.location || prev.location,
-            experience: p.totalExperienceYears ? Number(p.totalExperienceYears) || prev.experience : prev.experience,
-            technicalSkills: p.skillSet || (Array.isArray(p.skills) ? p.skills.join(', ') : prev.technicalSkills),
+            experience: p.totalExperienceYears
+              ? Number(p.totalExperienceYears) || prev.experience
+              : prev.experience,
+            technicalSkills:
+              p.skillSet ||
+              (Array.isArray(p.skills)
+                ? p.skills.join(', ')
+                : prev.technicalSkills),
             linkedinUrl: p.linkedInLink || prev.linkedinUrl,
             githubUrl: p.githubLink || prev.githubUrl,
-            portfolioUrl: p.portfolioUrl || p.portfolioLink || prev.portfolioUrl,
+            portfolioUrl:
+              p.portfolioUrl || p.portfolioLink || prev.portfolioUrl,
             bio: p.candidateNote || prev.bio,
           }));
           setResumeNotice('Resume parsed. Fields pre-filled.');
@@ -151,7 +162,14 @@ const CandidateProfilePage = () => {
         {/* Navigation Tabs */}
         <div className="tw-portal-navtabs">
           <Link to="/candidate/dashboard" className="tw-portal-tab">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
               <rect x="3" y="3" width="7" height="7"></rect>
               <rect x="14" y="3" width="7" height="7"></rect>
               <rect x="14" y="14" width="7" height="7"></rect>
@@ -160,14 +178,28 @@ const CandidateProfilePage = () => {
             Dashboard
           </Link>
           <Link to="/candidate/profile" className="tw-portal-tab active">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
               <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
               <circle cx="12" cy="7" r="4"></circle>
             </svg>
             Candidate Profile
           </Link>
           <Link to="/candidate/applications" className="tw-portal-tab">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <svg
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
               <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
               <polyline points="14 2 14 8 20 8"></polyline>
               <line x1="16" y1="13" x2="8" y2="13"></line>
@@ -178,12 +210,24 @@ const CandidateProfilePage = () => {
           </Link>
         </div>
 
-        <div className="tw-portal-card" style={{ maxWidth: '800px', margin: '0 auto' }}>
+        <div
+          className="tw-portal-card"
+          style={{ maxWidth: '800px', margin: '0 auto' }}
+        >
           <div className="tw-portal-card-header">
             <div>
-              <h1 className="tw-portal-card-title">Candidate Profile &amp; Preferences</h1>
-              <p style={{ color: '#64748B', margin: '0.25rem 0 0 0', fontSize: '0.9rem' }}>
-                Keep your technical information up to date so recruitment partners can match you with enterprise openings.
+              <h1 className="tw-portal-card-title">
+                Candidate Profile &amp; Preferences
+              </h1>
+              <p
+                style={{
+                  color: '#64748B',
+                  margin: '0.25rem 0 0 0',
+                  fontSize: '0.9rem',
+                }}
+              >
+                Keep your technical information up to date so recruitment
+                partners can match you with enterprise openings.
               </p>
             </div>
           </div>
@@ -201,34 +245,88 @@ const CandidateProfilePage = () => {
           )}
 
           {/* AI Assessment & ATS Scoring Verified Badges */}
-          <div style={{ background: '#F8FAFC', border: '1px solid #E2E8F0', borderRadius: '8px', padding: '1rem', marginBottom: '1.25rem' }}>
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem' }}>
+          <div
+            style={{
+              background: '#F8FAFC',
+              border: '1px solid #E2E8F0',
+              borderRadius: '8px',
+              padding: '1rem',
+              marginBottom: '1.25rem',
+            }}
+          >
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+                gap: '1rem',
+              }}
+            >
               <div>
-                <span style={{ fontSize: '0.74rem', color: '#64748B', fontWeight: 600, textTransform: 'uppercase' }}>
+                <span
+                  style={{
+                    fontSize: '0.74rem',
+                    color: '#64748B',
+                    fontWeight: 600,
+                    textTransform: 'uppercase',
+                  }}
+                >
                   AI Assessment Score
                 </span>
-                <div style={{ fontSize: '1.15rem', fontWeight: 700, color: '#166534', marginTop: '0.2rem' }}>
+                <div
+                  style={{
+                    fontSize: '1.15rem',
+                    fontWeight: 700,
+                    color: '#166534',
+                    marginTop: '0.2rem',
+                  }}
+                >
                   {user?.assessmentScore != null
                     ? `${user.assessmentScore}%`
                     : user?.vettingScore
-                    ? `${user.vettingScore}% (Calibrated)`
-                    : 'Pending Test'}
+                      ? `${user.vettingScore}% (Calibrated)`
+                      : 'Pending Test'}
                 </div>
               </div>
               <div>
-                <span style={{ fontSize: '0.74rem', color: '#64748B', fontWeight: 600, textTransform: 'uppercase' }}>
+                <span
+                  style={{
+                    fontSize: '0.74rem',
+                    color: '#64748B',
+                    fontWeight: 600,
+                    textTransform: 'uppercase',
+                  }}
+                >
                   ATS Resume Match
                 </span>
-                <div style={{ fontSize: '1.15rem', fontWeight: 700, color: '#2563EB', marginTop: '0.2rem' }}>
-                  {user?.fitScore != null ? `${user.fitScore}% Match` : 'Calculated on Submission'}
+                <div
+                  style={{
+                    fontSize: '1.15rem',
+                    fontWeight: 700,
+                    color: '#2563EB',
+                    marginTop: '0.2rem',
+                  }}
+                >
+                  {user?.fitScore != null
+                    ? `${user.fitScore}% Match`
+                    : 'Calculated on Submission'}
                 </div>
               </div>
               <div>
-                <span style={{ fontSize: '0.74rem', color: '#64748B', fontWeight: 600, textTransform: 'uppercase' }}>
+                <span
+                  style={{
+                    fontSize: '0.74rem',
+                    color: '#64748B',
+                    fontWeight: 600,
+                    textTransform: 'uppercase',
+                  }}
+                >
                   Bench Availability
                 </span>
                 <div style={{ marginTop: '0.2rem' }}>
-                  <span className="tw-badge-status tw-badge-applied" style={{ fontSize: '0.8rem' }}>
+                  <span
+                    className="tw-badge-status tw-badge-applied"
+                    style={{ fontSize: '0.8rem' }}
+                  >
                     {formData.workMode || user?.workMode || 'Full-Time Looking'}
                   </span>
                 </div>
@@ -265,17 +363,43 @@ const CandidateProfilePage = () => {
               aria-label="Upload Resume for Auto-Fill"
             />
             <div style={{ pointerEvents: 'none' }}>
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#2563EB" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={{ margin: '0 auto 0.35rem auto', display: 'block' }}>
+              <svg
+                width="24"
+                height="24"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="#2563EB"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                style={{ margin: '0 auto 0.35rem auto', display: 'block' }}
+              >
                 <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
                 <polyline points="14 2 14 8 20 8"></polyline>
                 <line x1="16" y1="13" x2="8" y2="13"></line>
                 <line x1="16" y1="17" x2="8" y2="17"></line>
               </svg>
-              <strong style={{ fontSize: '0.95rem', color: '#0F172A', display: 'block' }}>
-                {resumeFile ? resumeFile.name : 'Upload Resume to Auto-Fill Profile Details'}
+              <strong
+                style={{
+                  fontSize: '0.95rem',
+                  color: '#0F172A',
+                  display: 'block',
+                }}
+              >
+                {resumeFile
+                  ? resumeFile.name
+                  : 'Upload Resume to Auto-Fill Profile Details'}
               </strong>
-              <p style={{ color: '#64748B', fontSize: '0.82rem', margin: '0.25rem 0 0 0' }}>
-                PDF, DOC, DOCX up to 10MB. Uploading automatically extracts your experience, skills, and contact details into the editable fields below.
+              <p
+                style={{
+                  color: '#64748B',
+                  fontSize: '0.82rem',
+                  margin: '0.25rem 0 0 0',
+                }}
+              >
+                PDF, DOC, DOCX up to 10MB. Uploading automatically extracts your
+                experience, skills, and contact details into the editable fields
+                below.
               </p>
             </div>
 
@@ -337,7 +461,13 @@ const CandidateProfilePage = () => {
           </div>
 
           <form onSubmit={handleSubmit} className="tw-auth-form">
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1rem' }}>
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+                gap: '1rem',
+              }}
+            >
               <div className="tw-form-group">
                 <label className="tw-form-label">Full Name</label>
                 <input
@@ -362,7 +492,13 @@ const CandidateProfilePage = () => {
               </div>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '1rem' }}>
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+                gap: '1rem',
+              }}
+            >
               <div className="tw-form-group">
                 <label className="tw-form-label">Current Role / Title</label>
                 <input
@@ -388,9 +524,17 @@ const CandidateProfilePage = () => {
               </div>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1rem' }}>
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+                gap: '1rem',
+              }}
+            >
               <div className="tw-form-group">
-                <label className="tw-form-label">Total Experience (Years)</label>
+                <label className="tw-form-label">
+                  Total Experience (Years)
+                </label>
                 <input
                   type="number"
                   min="0"
@@ -415,7 +559,9 @@ const CandidateProfilePage = () => {
               </div>
 
               <div className="tw-form-group">
-                <label className="tw-form-label">Talent Availability / Bench Mode</label>
+                <label className="tw-form-label">
+                  Talent Availability / Bench Mode
+                </label>
                 <select
                   name="workMode"
                   className="tw-form-input"
@@ -424,7 +570,9 @@ const CandidateProfilePage = () => {
                 >
                   <option value="Full-Time Looking">Full-Time Looking</option>
                   <option value="Freelancer">Freelancer / Contractor</option>
-                  <option value="On-Bench">On-Bench (Immediate 48h Deployment)</option>
+                  <option value="On-Bench">
+                    On-Bench (Immediate 48h Deployment)
+                  </option>
                 </select>
               </div>
             </div>
@@ -442,11 +590,18 @@ const CandidateProfilePage = () => {
                 onChange={handleChange}
               />
               <span className="tw-form-help">
-                Separate skills with commas. These are indexed by enterprise hiring managers.
+                Separate skills with commas. These are indexed by enterprise
+                hiring managers.
               </span>
             </div>
 
-            <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '1rem' }}>
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+                gap: '1rem',
+              }}
+            >
               <div className="tw-form-group">
                 <label className="tw-form-label">LinkedIn Profile URL</label>
                 <input
@@ -485,7 +640,9 @@ const CandidateProfilePage = () => {
             </div>
 
             <div className="tw-form-group">
-              <label className="tw-form-label">Professional Summary &amp; Specialization</label>
+              <label className="tw-form-label">
+                Professional Summary &amp; Specialization
+              </label>
               <textarea
                 name="bio"
                 rows="4"
@@ -497,7 +654,12 @@ const CandidateProfilePage = () => {
               />
             </div>
 
-            <button type="submit" className="tw-btn-submit" disabled={loading} style={{ maxWidth: '240px' }}>
+            <button
+              type="submit"
+              className="tw-btn-submit"
+              disabled={loading}
+              style={{ maxWidth: '240px' }}
+            >
               {loading ? 'Saving Profile...' : 'Save Profile Changes'}
             </button>
           </form>

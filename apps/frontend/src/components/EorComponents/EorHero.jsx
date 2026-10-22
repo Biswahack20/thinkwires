@@ -26,14 +26,19 @@ const EorHero = ({ data }) => {
               <span className="Payroll-badgeText">{badge}</span>
             </div>
 
-            <h1 className="Payroll-heroHeadline">
-              {heading}
-            </h1>
+            <h1 className="Payroll-heroHeadline">{heading}</h1>
 
             <p className="Payroll-heroDesc">{description}</p>
 
             {/* Badges strip */}
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.75rem', paddingTop: '0.25rem' }}>
+            <div
+              style={{
+                display: 'flex',
+                flexWrap: 'wrap',
+                gap: '0.75rem',
+                paddingTop: '0.25rem',
+              }}
+            >
               {badges.map((b, i) => (
                 <div
                   key={i}
@@ -47,10 +52,16 @@ const EorHero = ({ data }) => {
                     fontSize: '0.75rem',
                     fontWeight: 600,
                     color: '#ffffff',
-                    border: '1px solid rgba(255, 255, 255, 0.12)'
+                    border: '1px solid rgba(255, 255, 255, 0.12)',
                   }}
                 >
-                  <span className="material-symbols-outlined" style={{ fontSize: '16px', color: 'var(--color-emerald-accent, #22c55e)' }}>
+                  <span
+                    className="material-symbols-outlined"
+                    style={{
+                      fontSize: '16px',
+                      color: 'var(--color-emerald-accent, #22c55e)',
+                    }}
+                  >
                     {b.icon}
                   </span>
                   <span>{b.text}</span>
@@ -61,14 +72,20 @@ const EorHero = ({ data }) => {
             <div className="Payroll-heroActions">
               <a href="#consultation-form" className="Payroll-btnPrimary">
                 <span>{ctaScheduleText}</span>
-                <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>
+                <span
+                  className="material-symbols-outlined"
+                  style={{ fontSize: '18px' }}
+                >
                   arrow_forward
                 </span>
               </a>
 
               <a href="#comparison" className="Payroll-btnSecondary">
                 <span>{ctaExploreText}</span>
-                <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>
+                <span
+                  className="material-symbols-outlined"
+                  style={{ fontSize: '18px' }}
+                >
                   public
                 </span>
               </a>
@@ -80,36 +97,97 @@ const EorHero = ({ data }) => {
             <div className="Payroll-telemetryHeader">
               <div className="Payroll-telemetryTitleWrap">
                 <span className="Payroll-telemetryLiveDot"></span>
-                <span className="Payroll-telemetryTitle">{complianceDeck.title}</span>
+                <span className="Payroll-telemetryTitle">
+                  {complianceDeck.title}
+                </span>
               </div>
-              <span style={{ fontSize: '0.75rem', color: 'rgba(255, 255, 255, 0.6)' }}>
+              <span
+                style={{
+                  fontSize: '0.75rem',
+                  color: 'rgba(255, 255, 255, 0.6)',
+                }}
+              >
                 {complianceDeck.subtitle}
               </span>
             </div>
 
             {/* Mini ribbon */}
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.75rem' }}>
-              <div style={{ padding: '0.75rem 1rem', borderRadius: '0.5rem', background: 'rgba(15, 23, 42, 0.7)', border: '1px solid rgba(255, 255, 255, 0.08)' }}>
-                <span style={{ fontSize: '0.6875rem', color: 'rgba(255, 255, 255, 0.6)', display: 'block', textTransform: 'uppercase', fontWeight: 700 }}>
+            <div
+              style={{
+                display: 'grid',
+                gridTemplateColumns: '1fr 1fr',
+                gap: '0.75rem',
+              }}
+            >
+              <div
+                style={{
+                  padding: '0.75rem 1rem',
+                  borderRadius: '0.5rem',
+                  background: 'rgba(15, 23, 42, 0.7)',
+                  border: '1px solid rgba(255, 255, 255, 0.08)',
+                }}
+              >
+                <span
+                  style={{
+                    fontSize: '0.6875rem',
+                    color: 'rgba(255, 255, 255, 0.6)',
+                    display: 'block',
+                    textTransform: 'uppercase',
+                    fontWeight: 700,
+                  }}
+                >
                   Target Coverage
                 </span>
-                <span style={{ fontSize: '1rem', fontWeight: 800, color: '#ffffff' }}>
+                <span
+                  style={{
+                    fontSize: '1rem',
+                    fontWeight: 800,
+                    color: '#ffffff',
+                  }}
+                >
                   {complianceDeck.targetCoverage}
                 </span>
               </div>
 
-              <div style={{ padding: '0.75rem 1rem', borderRadius: '0.5rem', background: 'rgba(15, 23, 42, 0.7)', border: '1px solid rgba(255, 255, 255, 0.08)' }}>
-                <span style={{ fontSize: '0.6875rem', color: 'rgba(255, 255, 255, 0.6)', display: 'block', textTransform: 'uppercase', fontWeight: 700 }}>
+              <div
+                style={{
+                  padding: '0.75rem 1rem',
+                  borderRadius: '0.5rem',
+                  background: 'rgba(15, 23, 42, 0.7)',
+                  border: '1px solid rgba(255, 255, 255, 0.08)',
+                }}
+              >
+                <span
+                  style={{
+                    fontSize: '0.6875rem',
+                    color: 'rgba(255, 255, 255, 0.6)',
+                    display: 'block',
+                    textTransform: 'uppercase',
+                    fontWeight: 700,
+                  }}
+                >
                   Avg. Provisioning
                 </span>
-                <span style={{ fontSize: '1rem', fontWeight: 800, color: 'var(--color-emerald-accent, #22c55e)' }}>
+                <span
+                  style={{
+                    fontSize: '1rem',
+                    fontWeight: 800,
+                    color: 'var(--color-emerald-accent, #22c55e)',
+                  }}
+                >
                   {complianceDeck.avgProvisioning}
                 </span>
               </div>
             </div>
 
             {/* Status rows */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '0.65rem',
+              }}
+            >
               {(complianceDeck.statusRows || []).map((row, i) => (
                 <div
                   key={i}
@@ -120,24 +198,44 @@ const EorHero = ({ data }) => {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'space-between',
-                    border: '1px solid rgba(255, 255, 255, 0.06)'
+                    border: '1px solid rgba(255, 255, 255, 0.06)',
                   }}
                 >
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.75rem',
+                    }}
+                  >
                     <span
                       className="material-symbols-outlined"
                       style={{
                         fontSize: '20px',
-                        color: row.statusType === 'emerald' ? 'var(--color-emerald-accent, #22c55e)' : '#60a5fa'
+                        color:
+                          row.statusType === 'emerald'
+                            ? 'var(--color-emerald-accent, #22c55e)'
+                            : '#60a5fa',
                       }}
                     >
                       {row.icon}
                     </span>
                     <div>
-                      <div style={{ fontSize: '0.875rem', fontWeight: 700, color: '#ffffff' }}>
+                      <div
+                        style={{
+                          fontSize: '0.875rem',
+                          fontWeight: 700,
+                          color: '#ffffff',
+                        }}
+                      >
                         {row.title}
                       </div>
-                      <div style={{ fontSize: '0.75rem', color: 'rgba(255, 255, 255, 0.6)' }}>
+                      <div
+                        style={{
+                          fontSize: '0.75rem',
+                          color: 'rgba(255, 255, 255, 0.6)',
+                        }}
+                      >
                         {row.desc}
                       </div>
                     </div>
@@ -149,8 +247,14 @@ const EorHero = ({ data }) => {
                       fontWeight: 700,
                       padding: '0.2rem 0.5rem',
                       borderRadius: '0.25rem',
-                      backgroundColor: row.statusType === 'emerald' ? 'rgba(34, 197, 94, 0.2)' : 'rgba(59, 130, 246, 0.2)',
-                      color: row.statusType === 'emerald' ? 'var(--color-emerald-accent, #22c55e)' : '#60a5fa'
+                      backgroundColor:
+                        row.statusType === 'emerald'
+                          ? 'rgba(34, 197, 94, 0.2)'
+                          : 'rgba(59, 130, 246, 0.2)',
+                      color:
+                        row.statusType === 'emerald'
+                          ? 'var(--color-emerald-accent, #22c55e)'
+                          : '#60a5fa',
                     }}
                   >
                     {row.status}
@@ -159,14 +263,40 @@ const EorHero = ({ data }) => {
               ))}
             </div>
 
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.8125rem', color: 'rgba(255, 255, 255, 0.7)', paddingTop: '0.25rem' }}>
-              <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.35rem' }}>
-                <span className="material-symbols-outlined" style={{ fontSize: '16px', color: 'var(--color-emerald-accent, #22c55e)' }}>
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                fontSize: '0.8125rem',
+                color: 'rgba(255, 255, 255, 0.7)',
+                paddingTop: '0.25rem',
+              }}
+            >
+              <span
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '0.35rem',
+                }}
+              >
+                <span
+                  className="material-symbols-outlined"
+                  style={{
+                    fontSize: '16px',
+                    color: 'var(--color-emerald-accent, #22c55e)',
+                  }}
+                >
                   call
                 </span>
                 Direct line: {complianceDeck.hotline}
               </span>
-              <span style={{ color: 'var(--color-emerald-accent, #22c55e)', fontWeight: 700 }}>
+              <span
+                style={{
+                  color: 'var(--color-emerald-accent, #22c55e)',
+                  fontWeight: 700,
+                }}
+              >
                 {complianceDeck.slaText}
               </span>
             </div>

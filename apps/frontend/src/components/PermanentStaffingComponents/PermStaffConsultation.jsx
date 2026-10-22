@@ -2,14 +2,13 @@ import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   submitPermanentStaffingConsultation,
-  resetPermConsultationState
+  resetPermConsultationState,
 } from '../../store/slices/permanentStaffingSlice';
 
 const PermStaffConsultation = ({ data }) => {
   const dispatch = useDispatch();
-  const { consultationStatus, consultationMessage, consultationError } = useSelector(
-    (state) => state.permanentStaffing || {}
-  );
+  const { consultationStatus, consultationMessage, consultationError } =
+    useSelector((state) => state.permanentStaffing || {});
 
   const [formData, setFormData] = useState({
     fullName: '',
@@ -19,14 +18,14 @@ const PermStaffConsultation = ({ data }) => {
     mandateHierarchy: 'C-Suite (CTO / CIO / CDO)',
     targetTimeline: 'Immediate (Under 30 Days)',
     mandateScope: '',
-    isConfidential: true
+    isConfidential: true,
   });
 
   const handleChange = (e) => {
     const { id, value, type, checked } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [id]: type === 'checkbox' ? checked : value
+      [id]: type === 'checkbox' ? checked : value,
     }));
   };
 
@@ -43,11 +42,14 @@ const PermStaffConsultation = ({ data }) => {
     hotline,
     hotlineAvailability,
     hubs = [],
-    confidentialityNote
+    confidentialityNote,
   } = data;
 
   return (
-    <section className="PermStaff-consultationSection" id="consultation-booking">
+    <section
+      className="PermStaff-consultationSection"
+      id="consultation-booking"
+    >
       <div className="PermStaff-container">
         <div className="PermStaff-consultationCard">
           <div className="glow-effect"></div>
@@ -59,19 +61,29 @@ const PermStaffConsultation = ({ data }) => {
                   <span className="material-symbols-outlined">lock</span>
                   <span>{eyebrow || 'Confidential Mandate Desk'}</span>
                 </div>
-                <h2 className="consultation-title">{heading || 'Initiate Executive Search Mandate'}</h2>
+                <h2 className="consultation-title">
+                  {heading || 'Initiate Executive Search Mandate'}
+                </h2>
                 <p className="consultation-desc">{description}</p>
 
                 {/* Direct Partner Line Card */}
                 <div className="hotline-card">
                   <div className="hl-top">
-                    <span className="material-symbols-outlined">phone_in_talk</span>
+                    <span className="material-symbols-outlined">
+                      phone_in_talk
+                    </span>
                     <span>Direct Executive Partner Line</span>
                   </div>
-                  <a href={`tel:${(hotline || '').replace(/[^0-9+]/g, '')}`} className="hl-phone">
+                  <a
+                    href={`tel:${(hotline || '').replace(/[^0-9+]/g, '')}`}
+                    className="hl-phone"
+                  >
                     {hotline || '+91 89205 55626'}
                   </a>
-                  <p className="hl-note">{hotlineAvailability || 'Available 09:00 AM – 19:00 PM IST • Mon – Fri'}</p>
+                  <p className="hl-note">
+                    {hotlineAvailability ||
+                      'Available 09:00 AM – 19:00 PM IST • Mon – Fri'}
+                  </p>
                 </div>
 
                 {/* Hubs */}
@@ -92,7 +104,9 @@ const PermStaffConsultation = ({ data }) => {
 
               {confidentialityNote && (
                 <div className="confidentiality-notice">
-                  <span className="notice-label">Confidentiality Guarantee</span>
+                  <span className="notice-label">
+                    Confidentiality Guarantee
+                  </span>
                   <p>{confidentialityNote}</p>
                 </div>
               )}
@@ -101,14 +115,20 @@ const PermStaffConsultation = ({ data }) => {
             {/* Right: Booking Form */}
             <div className="consultation-right">
               <h3 className="form-head">Book an Executive Consultation</h3>
-              <p className="form-sub">Complete the brief below to receive a curated market comp analysis.</p>
+              <p className="form-sub">
+                Complete the brief below to receive a curated market comp
+                analysis.
+              </p>
 
               {consultationStatus === 'succeeded' ? (
                 <div className="PermStaff-successCard">
                   <span className="material-symbols-outlined">verified</span>
                   <div>
                     <h4>Search Mandate Logged Confidentially</h4>
-                    <p>{consultationMessage || 'A Managing Partner will reach out via secure channel within 2 business hours.'}</p>
+                    <p>
+                      {consultationMessage ||
+                        'A Managing Partner will reach out via secure channel within 2 business hours.'}
+                    </p>
                     <button
                       type="button"
                       className="reset-btn"
@@ -122,7 +142,7 @@ const PermStaffConsultation = ({ data }) => {
                           mandateHierarchy: 'C-Suite (CTO / CIO / CDO)',
                           targetTimeline: 'Immediate (Under 30 Days)',
                           mandateScope: '',
-                          isConfidential: true
+                          isConfidential: true,
                         });
                       }}
                     >
@@ -159,7 +179,9 @@ const PermStaffConsultation = ({ data }) => {
 
                   <div className="form-row-2">
                     <div className="form-group">
-                      <label htmlFor="companyName">Company / Enterprise *</label>
+                      <label htmlFor="companyName">
+                        Company / Enterprise *
+                      </label>
                       <input
                         type="text"
                         id="companyName"
@@ -184,7 +206,9 @@ const PermStaffConsultation = ({ data }) => {
 
                   <div className="form-row-2">
                     <div className="form-group">
-                      <label htmlFor="mandateHierarchy">Mandate Hierarchy *</label>
+                      <label htmlFor="mandateHierarchy">
+                        Mandate Hierarchy *
+                      </label>
                       <select
                         id="mandateHierarchy"
                         value={formData.mandateHierarchy}
@@ -213,7 +237,9 @@ const PermStaffConsultation = ({ data }) => {
                   </div>
 
                   <div className="form-group">
-                    <label htmlFor="mandateScope">Mandate Scope &amp; Tech Stack Objectives</label>
+                    <label htmlFor="mandateScope">
+                      Mandate Scope &amp; Tech Stack Objectives
+                    </label>
                     <textarea
                       id="mandateScope"
                       rows="3"
@@ -231,12 +257,16 @@ const PermStaffConsultation = ({ data }) => {
                       onChange={handleChange}
                     />
                     <label htmlFor="isConfidential">
-                      <strong>Strict NDA Confidential Mandate:</strong> Do not publish this search requirement publicly. Require candidate pre-screening NDA before identity disclosure.
+                      <strong>Strict NDA Confidential Mandate:</strong> Do not
+                      publish this search requirement publicly. Require
+                      candidate pre-screening NDA before identity disclosure.
                     </label>
                   </div>
 
                   {consultationError && (
-                    <div className="PermStaff-errorMsg">{consultationError}</div>
+                    <div className="PermStaff-errorMsg">
+                      {consultationError}
+                    </div>
                   )}
 
                   <button

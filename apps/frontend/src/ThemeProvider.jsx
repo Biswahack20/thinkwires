@@ -55,8 +55,6 @@ export function ThemeProvider({ children, defaultTheme }) {
     }
   }, [theme]);
 
-
-
   /**
    * Toggles the active theme between 'light' and 'dark'.
    */

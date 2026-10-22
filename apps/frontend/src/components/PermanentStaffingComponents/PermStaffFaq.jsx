@@ -15,10 +15,16 @@ const PermStaffFaq = ({ faqs = [] }) => {
         <div className="PermStaff-faqGrid">
           {/* Left: Context and Protection Box */}
           <div className="faq-context-col">
-            <span className="PermStaff-eyebrow primary">Transparency &amp; Governance</span>
-            <h2 className="faq-title">Common Questions About Permanent Staffing &amp; Executive Search</h2>
+            <span className="PermStaff-eyebrow primary">
+              Transparency &amp; Governance
+            </span>
+            <h2 className="faq-title">
+              Common Questions About Permanent Staffing &amp; Executive Search
+            </h2>
             <p className="faq-desc">
-              Permanent appointments require operational clarity and mutual trust. Review our standard engagement parameters, placement protections, and selection frameworks.
+              Permanent appointments require operational clarity and mutual
+              trust. Review our standard engagement parameters, placement
+              protections, and selection frameworks.
             </p>
 
             <div className="protection-card">
@@ -27,7 +33,9 @@ const PermStaffFaq = ({ faqs = [] }) => {
                 <h4>Guaranteed Protection</h4>
               </div>
               <p>
-                Every permanent mandate executed by ThinkWires includes our comprehensive 90-day replacement commitment backed by formal corporate SLA.
+                Every permanent mandate executed by ThinkWires includes our
+                comprehensive 90-day replacement commitment backed by formal
+                corporate SLA.
               </p>
               <a href="#consultation-booking" className="prot-link">
                 <span>Initiate Mandate Consultation</span>
@@ -49,7 +57,9 @@ const PermStaffFaq = ({ faqs = [] }) => {
                     aria-expanded={isOpen}
                   >
                     <span>{faq.question}</span>
-                    <span className={`material-symbols-outlined toggle-icon ${isOpen ? 'rotated' : ''}`}>
+                    <span
+                      className={`material-symbols-outlined toggle-icon ${isOpen ? 'rotated' : ''}`}
+                    >
                       expand_more
                     </span>
                   </button>

@@ -22,7 +22,14 @@ const FieldRenderer = ({ path, label, value, onChange, onRemove }) => {
   if (typeof value === 'string') {
     return (
       <div className="tw-form-group" style={{ marginBottom: '0.85rem' }}>
-        <label className="tw-form-label" style={{ fontSize: '0.78rem', marginBottom: '0.25rem', color: '#334155' }}>
+        <label
+          className="tw-form-label"
+          style={{
+            fontSize: '0.78rem',
+            marginBottom: '0.25rem',
+            color: '#334155',
+          }}
+        >
           {label}
         </label>
         {isLongText ? (
@@ -50,7 +57,14 @@ const FieldRenderer = ({ path, label, value, onChange, onRemove }) => {
   if (typeof value === 'number') {
     return (
       <div className="tw-form-group" style={{ marginBottom: '0.85rem' }}>
-        <label className="tw-form-label" style={{ fontSize: '0.78rem', marginBottom: '0.25rem', color: '#334155' }}>
+        <label
+          className="tw-form-label"
+          style={{
+            fontSize: '0.78rem',
+            marginBottom: '0.25rem',
+            color: '#334155',
+          }}
+        >
           {label}
         </label>
         <input
@@ -67,17 +81,35 @@ const FieldRenderer = ({ path, label, value, onChange, onRemove }) => {
   // 3. Primitive: Boolean
   if (typeof value === 'boolean') {
     return (
-      <div style={{ marginBottom: '0.85rem', display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+      <div
+        style={{
+          marginBottom: '0.85rem',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '0.6rem',
+        }}
+      >
         <input
           type="checkbox"
           id={path.join('.')}
           checked={value}
           onChange={(e) => onChange(e.target.checked)}
-          style={{ width: '16px', height: '16px', accentColor: '#008F68', cursor: 'pointer' }}
+          style={{
+            width: '16px',
+            height: '16px',
+            accentColor: '#008F68',
+            cursor: 'pointer',
+          }}
         />
         <label
           htmlFor={path.join('.')}
-          style={{ fontSize: '0.82rem', color: '#334155', fontWeight: 600, cursor: 'pointer', margin: 0 }}
+          style={{
+            fontSize: '0.82rem',
+            color: '#334155',
+            fontWeight: 600,
+            cursor: 'pointer',
+            margin: 0,
+          }}
         >
           {label}
         </label>
@@ -86,7 +118,10 @@ const FieldRenderer = ({ path, label, value, onChange, onRemove }) => {
   }
 
   // 4. Array of Primitives (e.g. string tags, bullet items)
-  if (Array.isArray(value) && (value.length === 0 || typeof value[0] !== 'object')) {
+  if (
+    Array.isArray(value) &&
+    (value.length === 0 || typeof value[0] !== 'object')
+  ) {
     const handleItemChange = (idx, newVal) => {
       const copy = [...value];
       copy[idx] = newVal;
@@ -102,9 +137,31 @@ const FieldRenderer = ({ path, label, value, onChange, onRemove }) => {
     };
 
     return (
-      <div style={{ marginBottom: '1rem', backgroundColor: '#F8FAFC', padding: '0.75rem', borderRadius: '8px', border: '1px solid #E2E8F0' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-          <label style={{ fontSize: '0.78rem', fontWeight: 600, color: '#334155', margin: 0 }}>
+      <div
+        style={{
+          marginBottom: '1rem',
+          backgroundColor: '#F8FAFC',
+          padding: '0.75rem',
+          borderRadius: '8px',
+          border: '1px solid #E2E8F0',
+        }}
+      >
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            marginBottom: '0.5rem',
+          }}
+        >
+          <label
+            style={{
+              fontSize: '0.78rem',
+              fontWeight: 600,
+              color: '#334155',
+              margin: 0,
+            }}
+          >
             {label} ({value.length} items)
           </label>
           <button
@@ -126,7 +183,10 @@ const FieldRenderer = ({ path, label, value, onChange, onRemove }) => {
         </div>
 
         {value.map((item, idx) => (
-          <div key={idx} style={{ display: 'flex', gap: '0.4rem', marginBottom: '0.4rem' }}>
+          <div
+            key={idx}
+            style={{ display: 'flex', gap: '0.4rem', marginBottom: '0.4rem' }}
+          >
             <input
               type="text"
               className="tw-form-input"
@@ -183,9 +243,26 @@ const FieldRenderer = ({ path, label, value, onChange, onRemove }) => {
     };
 
     return (
-      <div style={{ marginBottom: '1.25rem', padding: '0.75rem', backgroundColor: '#F8FAFC', borderRadius: '8px', border: '1px solid #E2E8F0' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
-          <span style={{ fontSize: '0.82rem', fontWeight: 700, color: '#1E293B' }}>
+      <div
+        style={{
+          marginBottom: '1.25rem',
+          padding: '0.75rem',
+          backgroundColor: '#F8FAFC',
+          borderRadius: '8px',
+          border: '1px solid #E2E8F0',
+        }}
+      >
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            marginBottom: '0.75rem',
+          }}
+        >
+          <span
+            style={{ fontSize: '0.82rem', fontWeight: 700, color: '#1E293B' }}
+          >
             {label} ({value.length} entries)
           </span>
           <button
@@ -206,7 +283,9 @@ const FieldRenderer = ({ path, label, value, onChange, onRemove }) => {
           </button>
         </div>
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
+        <div
+          style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}
+        >
           {value.map((item, idx) => (
             <div
               key={idx}
@@ -218,9 +297,29 @@ const FieldRenderer = ({ path, label, value, onChange, onRemove }) => {
                 position: 'relative',
               }}
             >
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem', borderBottom: '1px dashed #E2E8F0', paddingBottom: '0.35rem' }}>
-                <span style={{ fontSize: '0.72rem', fontWeight: 600, color: '#64748B' }}>
-                  #{idx + 1} {item.title || item.name || item.year || item.question || `Card`}
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  marginBottom: '0.5rem',
+                  borderBottom: '1px dashed #E2E8F0',
+                  paddingBottom: '0.35rem',
+                }}
+              >
+                <span
+                  style={{
+                    fontSize: '0.72rem',
+                    fontWeight: 600,
+                    color: '#64748B',
+                  }}
+                >
+                  #{idx + 1}{' '}
+                  {item.title ||
+                    item.name ||
+                    item.year ||
+                    item.question ||
+                    `Card`}
                 </span>
                 <button
                   type="button"
@@ -277,7 +376,16 @@ const FieldRenderer = ({ path, label, value, onChange, onRemove }) => {
           border: '1px solid #E2E8F0',
         }}
       >
-        <div style={{ fontSize: '0.82rem', fontWeight: 700, color: '#0F172A', marginBottom: '0.65rem', borderBottom: '1px solid #F1F5F9', paddingBottom: '0.35rem' }}>
+        <div
+          style={{
+            fontSize: '0.82rem',
+            fontWeight: 700,
+            color: '#0F172A',
+            marginBottom: '0.65rem',
+            borderBottom: '1px solid #F1F5F9',
+            paddingBottom: '0.35rem',
+          }}
+        >
           {label}
         </div>
         {Object.keys(value).map((subKey) => (
@@ -317,22 +425,37 @@ const VisualSectionEditor = ({ data = {}, onChange }) => {
     });
   };
 
-  const filteredKeys = keys.filter((k) =>
-    k.toLowerCase().includes(filterQuery.toLowerCase()) ||
-    formatKeyName(k).toLowerCase().includes(filterQuery.toLowerCase())
+  const filteredKeys = keys.filter(
+    (k) =>
+      k.toLowerCase().includes(filterQuery.toLowerCase()) ||
+      formatKeyName(k).toLowerCase().includes(filterQuery.toLowerCase())
   );
 
   if (keys.length === 0) {
     return (
-      <div style={{ padding: '2rem', textAlign: 'center', color: '#64748B', backgroundColor: '#F8FAFC', borderRadius: '8px', border: '1px dashed #CBD5E1' }}>
+      <div
+        style={{
+          padding: '2rem',
+          textAlign: 'center',
+          color: '#64748B',
+          backgroundColor: '#F8FAFC',
+          borderRadius: '8px',
+          border: '1px dashed #CBD5E1',
+        }}
+      >
         <p style={{ margin: 0, fontSize: '0.85rem' }}>
-          This page currently has no structured section payload. Click below to add a common layout section.
+          This page currently has no structured section payload. Click below to
+          add a common layout section.
         </p>
         <button
           type="button"
           onClick={() =>
             onChange({
-              hero: { title: 'Welcome', subtitle: 'Leading Tech Workforce Solutions', badge: 'Enterprise Tier' },
+              hero: {
+                title: 'Welcome',
+                subtitle: 'Leading Tech Workforce Solutions',
+                badge: 'Enterprise Tier',
+              },
               stats: { metric1: '98%', metric2: '500+ Engineers' },
             })
           }
@@ -402,14 +525,26 @@ const VisualSectionEditor = ({ data = {}, onChange }) => {
                 transition: 'background-color 0.15s ease',
               }}
             >
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+              <div
+                style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}
+              >
                 <FolderIcon size={16} open={isOpen} color="#008F68" />
-                <strong style={{ fontSize: '0.86rem', color: '#0F172A' }}>{label}</strong>
-                <span style={{ fontSize: '0.72rem', color: '#64748B', fontFamily: 'monospace' }}>
+                <strong style={{ fontSize: '0.86rem', color: '#0F172A' }}>
+                  {label}
+                </strong>
+                <span
+                  style={{
+                    fontSize: '0.72rem',
+                    color: '#64748B',
+                    fontFamily: 'monospace',
+                  }}
+                >
                   ({secKey})
                 </span>
               </div>
-              <span style={{ fontSize: '0.75rem', color: '#64748B' }}>{isOpen ? '▲ Collapse' : '▼ Edit Section'}</span>
+              <span style={{ fontSize: '0.75rem', color: '#64748B' }}>
+                {isOpen ? '▲ Collapse' : '▼ Edit Section'}
+              </span>
             </div>
 
             {/* Section Content Form */}

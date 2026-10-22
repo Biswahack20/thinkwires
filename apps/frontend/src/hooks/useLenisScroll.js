@@ -13,7 +13,8 @@ export const useLenisScroll = (enabled = true) => {
 
     // Check for reduced motion preference
     const prefersReducedMotion =
-      window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      window.matchMedia &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     if (prefersReducedMotion) return;
 

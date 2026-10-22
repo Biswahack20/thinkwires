@@ -34,13 +34,7 @@
       "workMode": "Work From Home",
       "noticePeriod": "Immediate",
       "description": "Architect and deploy production agentic workflows, multi-modal LLM reasoning pipelines, LangGraph/AutoGPT orchestrators, and enterprise RAG clusters with sub-second latency.",
-      "skills": [
-        "Agentic AI",
-        "LangGraph",
-        "PyTorch",
-        "vLLM",
-        "Vector DB"
-      ],
+      "skills": ["Agentic AI", "LangGraph", "PyTorch", "vLLM", "Vector DB"],
       "department": "AI & Data Engineering",
       "postedDate": "2026-10-13",
       "priority": 1
@@ -90,13 +84,7 @@
       "workMode": "Hybrid",
       "noticePeriod": "< 30 Days",
       "description": "Build high-concurrency event-driven microservices handling 50k+ transactions per second. Optimize low-latency gRPC services, Apache Kafka pipelines, and PostgreSQL sharding.",
-      "skills": [
-        "Golang",
-        "Apache Kafka",
-        "gRPC",
-        "PostgreSQL",
-        "Docker"
-      ],
+      "skills": ["Golang", "Apache Kafka", "gRPC", "PostgreSQL", "Docker"],
       "department": "FinTech & Systems",
       "postedDate": "2026-10-12",
       "priority": 3
@@ -143,13 +131,7 @@
       "salary": "₹10 - 15 LPA",
       "joining": "< 15 Days",
       "description": "Professionals with hands-on experience in ABAP development and HANA-based solutions, along with strong expertise in form development, CDS Views, AMDP...",
-      "skills": [
-        "SAP ABAP",
-        "HANA Database",
-        "CDS views",
-        "RICEF",
-        "AMDP"
-      ],
+      "skills": ["SAP ABAP", "HANA Database", "CDS views", "RICEF", "AMDP"],
       "workMode": "Work From Office",
       "department": "SAP & Enterprise",
       "postedDate": "2026-10-04",
@@ -255,13 +237,7 @@
       "salary": "Premium CTC",
       "joining": "Multi-Cloud",
       "description": "Hands-on Cloud Architect passionate about building the next generation of enterprise AI/ML platforms. Focus on high scalability, multi-region Kubernetes...",
-      "skills": [
-        "AWS & Azure",
-        "MLOps",
-        "Kubernetes",
-        "Terraform",
-        "CI/CD"
-      ],
+      "skills": ["AWS & Azure", "MLOps", "Kubernetes", "Terraform", "CI/CD"],
       "workMode": "Work From Office",
       "department": "Cloud & DevOps",
       "postedDate": "2026-09-30",
@@ -1813,11 +1789,7 @@
           "icon": "gavel",
           "title": "Taxation & Statutory Audit Readiness",
           "description": "We manage monthly computation of Tax Deducted at Source (TDS), quarterly e-TDS returns (Form 24Q), automated distribution of digitally signed Form 16s, and full adherence to Employee Provident Fund (PF) and State Insurance (ESI) laws.",
-          "tags": [
-            "PF Challan ECR",
-            "Form 24Q Returns",
-            "Form 16 Generation"
-          ],
+          "tags": ["PF Challan ECR", "Form 24Q Returns", "Form 16 Generation"],
           "accent": "primary"
         },
         {
@@ -1865,11 +1837,7 @@
         "hotline": "+91 89205 55626",
         "email": "contact@thinkwires.com",
         "hours": "09:00 AM – 19:00 PM IST (Mon–Sat)",
-        "regions": [
-          "United States",
-          "Canada Hub",
-          "India Central"
-        ]
+        "regions": ["United States", "Canada Hub", "India Central"]
       }
     }
   },
@@ -2305,12 +2273,7 @@
           "sla": "48h SLA",
           "experience": "9+ Years",
           "overlap": "US EST (6h)",
-          "skills": [
-            "Kubernetes",
-            "Go",
-            "Kafka",
-            "FinOps"
-          ]
+          "skills": ["Kubernetes", "Go", "Kafka", "FinOps"]
         },
         {
           "initials": "RK",
@@ -2319,12 +2282,7 @@
           "sla": "48h SLA",
           "experience": "7+ Years",
           "overlap": "US PST (5h)",
-          "skills": [
-            "React",
-            "GraphQL",
-            "PostgreSQL",
-            "Tailwind"
-          ]
+          "skills": ["React", "GraphQL", "PostgreSQL", "Tailwind"]
         },
         {
           "initials": "MS",
@@ -2333,12 +2291,7 @@
           "sla": "48h SLA",
           "experience": "8+ Years",
           "overlap": "US EST (5h)",
-          "skills": [
-            "PySpark",
-            "LangChain",
-            "Snowflake",
-            "Vector DBs"
-          ]
+          "skills": ["PySpark", "LangChain", "Snowflake", "Vector DBs"]
         }
       ]
     },
@@ -2567,11 +2520,7 @@
               "sla": "Avg. 25d SLA"
             }
           ],
-          "tags": [
-            "P&L Ownership",
-            "Scale: 500+ Eng",
-            "Board Governance"
-          ]
+          "tags": ["P&L Ownership", "Scale: 500+ Eng", "Board Governance"]
         },
         {
           "badge": "Infrastructure",
@@ -2592,11 +2541,7 @@
               "sla": "Avg. 19d SLA"
             }
           ],
-          "tags": [
-            "AWS / GCP / Azure",
-            "Kubernetes",
-            "Multi-Cloud"
-          ]
+          "tags": ["AWS / GCP / Azure", "Kubernetes", "Multi-Cloud"]
         },
         {
           "badge": "Applied Intelligence",
@@ -2617,11 +2562,7 @@
               "sla": "Avg. 15d SLA"
             }
           ],
-          "tags": [
-            "LLM Orchestration",
-            "PyTorch",
-            "Snowflake"
-          ]
+          "tags": ["LLM Orchestration", "PyTorch", "Snowflake"]
         },
         {
           "badge": "Core ERP Systems",
@@ -2642,11 +2583,7 @@
               "sla": "Avg. 11d SLA"
             }
           ],
-          "tags": [
-            "S/4HANA",
-            "SAP BTP",
-            "Supply Chain"
-          ]
+          "tags": ["S/4HANA", "SAP BTP", "Supply Chain"]
         },
         {
           "badge": "Governance & Strategy",
@@ -2667,11 +2604,7 @@
               "sla": "Avg. 15d SLA"
             }
           ],
-          "tags": [
-            "SOC 2 / ISO",
-            "Zero Trust",
-            "Threat Intel"
-          ]
+          "tags": ["SOC 2 / ISO", "Zero Trust", "Threat Intel"]
         },
         {
           "badge": "Core Software",
@@ -2692,11 +2625,7 @@
               "sla": "Avg. 16d SLA"
             }
           ],
-          "tags": [
-            "Go / Rust / Java",
-            "React / Node.js",
-            "gRPC / Kafka"
-          ]
+          "tags": ["Go / Rust / Java", "React / Node.js", "gRPC / Kafka"]
         }
       ]
     },
@@ -2820,11 +2749,7 @@
         "experience": "11+ Years • Ex-Tier 1 Systems",
         "location": "Bengaluru / Remote Global",
         "rate": "Indicative: 32 - 38 LPA",
-        "tags": [
-          "Kubernetes",
-          "FinOps",
-          "Microservices"
-        ],
+        "tags": ["Kubernetes", "FinOps", "Microservices"],
         "statusBadge": "Ready in 48h",
         "avatar": "https://lh3.googleusercontent.com/aida-public/AB6AXuB4Zs3G1sn5HxRqwy9LxG_k4KO8aW0BzmClBxO3xG3TIFqJD31QWSMJRz1l9pa7yEW_Cr6QcsH3HOnFEDQmNwVyyAMPYInomSdMRJYOrZhyjxMbVaWhwTUD4uBEmS3X96W6BSel_IpjrVFCEswa0Hv5M1RkuLgSsbc3hjRCQG_6_b6VQtylaY-lJ4UCDf7nCR7jLRYBKLp1Igo5R66iICgsPkBke-PFKrfoWqkPtn59d64AqjMbeLQdZQ"
       },
@@ -2835,11 +2760,7 @@
         "experience": "6+ Years Handled 3 Migrations",
         "location": "Noida / Pune / Hybrid",
         "rate": "Indicative: 14 - 18 LPA",
-        "tags": [
-          "RICEF",
-          "CDS Views",
-          "AMDP"
-        ],
+        "tags": ["RICEF", "CDS Views", "AMDP"],
         "statusBadge": "Immediate Joining",
         "avatar": "https://lh3.googleusercontent.com/aida-public/AB6AXuCkOo8MdEgXwruODLZZnt4vdp2fujk743Sn1QZmrFkva_p168bK0298ZVKFBRuaVBfZH9Ty3TRT5QJXoDQgYbg0qESP511XN8pQN0yibpIZDvtQJMOS9mszI5bwe6v-De7EmTS1ZH5a7NeoEPiwS7PkNGQKHEBYwaNoumMTSoPTxqs5pxacbBl26VdCWJuArwVM4ZLkDyunLdf-D-J5AT19mGXVrWK3JkmO_BRAv9dMVy0VD1fKoJ5PxA"
       },
@@ -2850,11 +2771,7 @@
         "experience": "9+ Years • 4 LLM Enterprise Deploys",
         "location": "Hyderabad / US Overlap",
         "rate": "Indicative: 36 - 44 LPA",
-        "tags": [
-          "vLLM",
-          "Vector DBs",
-          "Fine-Tuning"
-        ],
+        "tags": ["vLLM", "Vector DBs", "Fine-Tuning"],
         "statusBadge": "Available in 7d",
         "avatar": "https://lh3.googleusercontent.com/aida-public/AB6AXuAW2Dptbbqui0eWev6Z91SFe-WEuNxCJ0kv9bHWvltYXOeBV_4s-H2TGFLxKSH9MEuHWlgPUwlE833cMip4WHOgKNNpL_FXtlC5qKjLXb9bBGP55I6FLGw6RGowHoov62hF38QcR1yOHL-6MZdcTRAuJ_2GifMgJRPcc63oMbga08uA-ufqs4mH0Q4Ykeb-DFqTfw4p8E3d-SvEhPNIp2Kon1cj52jTf15gsX65mdGBjxYDyOvLCTDdlw"
       },
@@ -2865,11 +2782,7 @@
         "experience": "8+ Years Multi-Brand Omnichannel",
         "location": "Chennai / Bangalore / Remote",
         "rate": "Indicative: 22 - 26 LPA",
-        "tags": [
-          "Web SDK",
-          "HTL/Sling",
-          "Adobe Target"
-        ],
+        "tags": ["Web SDK", "HTL/Sling", "Adobe Target"],
         "statusBadge": "Immediate Joining",
         "avatar": "https://lh3.googleusercontent.com/aida-public/AB6AXuDoHAaEEHoITXETBHS02hbJnJZkrfoAYKjMiLZ9szdc9OuQLHTVd7yroGkSkbMRzZ2pa2hvKxiK1IgboRqJlztBX86HjA920UEMJPXfyNm9wTwc6CxH0BgfXca0CkJtntBzWSBECGL83yTFlHDAndKdPlXtAY9CexWTwAmiLccG1I64gp44mJckaGy71yD6qJQzpvqvrwnxUa6qSFKxSLrb0Y69GSzGqFBUeFfBns9bqOSmp18htUDIHw"
       }
@@ -3343,12 +3256,7 @@
             "bgColor": "#22C55E",
             "textColor": "#FFFFFF"
           },
-          "companies": [
-            "BlackRock",
-            "Microsoft",
-            "IBM",
-            "Infosys"
-          ],
+          "companies": ["BlackRock", "Microsoft", "IBM", "Infosys"],
           "footerTag": "Global Delivery Operations & Risk Governance",
           "linkedinUrl": "https://linkedin.com",
           "layout": "wide"
@@ -3430,10 +3338,7 @@
         "title": "ThinkWires Global Headquarters",
         "line": "Plot No. 20, Block H-1/A, Sector 63, Noida, Uttar Pradesh 201301"
       },
-      "phones": [
-        "+91 (120) 450-8800",
-        "+91 89205 55626"
-      ],
+      "phones": ["+91 (120) 450-8800", "+91 89205 55626"],
       "email": "connect@thinkwires.com",
       "form": {
         "title": "Request a 20-Min Strategy Call",
@@ -3510,10 +3415,7 @@
         "city": "Noida, India",
         "address": "Plot No. 20, Block H-1/A, Sector 63",
         "cityLine": "Noida, Uttar Pradesh 201301",
-        "phones": [
-          "+91 (120) 450-8800",
-          "+91 89205 55626"
-        ],
+        "phones": ["+91 (120) 450-8800", "+91 89205 55626"],
         "email": "connect@thinkwires.com",
         "hours": "Mon – Fri, 9:00 AM – 7:00 PM IST",
         "coverageTag": "India Talent Operations",
@@ -3525,9 +3427,7 @@
         "city": "United States",
         "address": "Remote-First Operations",
         "cityLine": "EST / PST Coverage",
-        "phones": [
-          "+1 (800) 555-0120"
-        ],
+        "phones": ["+1 (800) 555-0120"],
         "email": "us@thinkwires.com",
         "hours": "Mon – Fri, 8:00 AM – 6:00 PM EST",
         "coverageTag": "US & Canada EOR Corridor",

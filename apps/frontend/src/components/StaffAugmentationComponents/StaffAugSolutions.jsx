@@ -10,7 +10,11 @@ const StaffAugSolutions = ({ data }) => {
     <section className="StaffAug-solutionsSection">
       <div className="StaffAug-container">
         {/* Header */}
-        <ScrollReveal direction="up" distance={40} className="StaffAug-sectionHeader">
+        <ScrollReveal
+          direction="up"
+          distance={40}
+          className="StaffAug-sectionHeader"
+        >
           <span className="StaffAug-eyebrow primary">{eyebrow}</span>
           <h2 className="StaffAug-title">{heading}</h2>
           <p className="StaffAug-desc">{description}</p>
@@ -29,7 +33,9 @@ const StaffAugSolutions = ({ data }) => {
               <div className="StaffAug-pillarCard" style={{ width: '100%' }}>
                 <div className="pillar-body">
                   <div className="pillar-icon">
-                    <span className="material-symbols-outlined">{pillar.icon}</span>
+                    <span className="material-symbols-outlined">
+                      {pillar.icon}
+                    </span>
                   </div>
                   <h3 className="pillar-title">{pillar.title}</h3>
                   <p className="pillar-desc">{pillar.description}</p>
@@ -55,12 +61,16 @@ const StaffAugSolutions = ({ data }) => {
                     <span>{spotlight.badge}</span>
                   </div>
                   <h3 className="StaffAug-spotlightTitle">{spotlight.title}</h3>
-                  <p className="StaffAug-spotlightDesc">{spotlight.description}</p>
+                  <p className="StaffAug-spotlightDesc">
+                    {spotlight.description}
+                  </p>
 
                   <div className="StaffAug-spotlightBullets">
                     {(spotlight.bullets || []).map((bullet, i) => (
                       <div key={i} className="bullet-item">
-                        <span className="material-symbols-outlined">check_circle</span>
+                        <span className="material-symbols-outlined">
+                          check_circle
+                        </span>
                         <span>{bullet}</span>
                       </div>
                     ))}
@@ -75,7 +85,10 @@ const StaffAugSolutions = ({ data }) => {
                         <div key={i} className="metric-row">
                           <span>{metric.label}</span>
                           <span className="val">
-                            <AnimatedCounter value={metric.value} duration={1600} />
+                            <AnimatedCounter
+                              value={metric.value}
+                              duration={1600}
+                            />
                           </span>
                         </div>
                       ))}

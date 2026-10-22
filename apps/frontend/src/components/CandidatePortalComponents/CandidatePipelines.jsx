@@ -10,18 +10,27 @@ const CandidatePipelines = ({ pipelines = [] }) => {
         <div>
           <div className="title-with-dot">
             <span className="live-dot pulse"></span>
-            <h2 className="section-main-title">Active Applications &amp; Dispatch Pipeline</h2>
+            <h2 className="section-main-title">
+              Active Applications &amp; Dispatch Pipeline
+            </h2>
           </div>
-          <p className="section-subtext">Live interview dispatches coordinated through ThinkWires Priority SLA.</p>
+          <p className="section-subtext">
+            Live interview dispatches coordinated through ThinkWires Priority
+            SLA.
+          </p>
         </div>
-        <span className="pipeline-count-pill">{pipelines.length} Active Pipelines</span>
+        <span className="pipeline-count-pill">
+          {pipelines.length} Active Pipelines
+        </span>
       </div>
 
       <div className="CandidatePortal-pipelineList">
         {pipelines.map((pipe) => (
           <div key={pipe.id} className="pipeline-row-card">
             <div className="pipeline-left">
-              <div className={`pipeline-avatar-badge type-${pipe.badge.toLowerCase()}`}>
+              <div
+                className={`pipeline-avatar-badge type-${pipe.badge.toLowerCase()}`}
+              >
                 {pipe.badge}
               </div>
 
@@ -29,7 +38,9 @@ const CandidatePipelines = ({ pipelines = [] }) => {
                 <div className="title-tag-row">
                   <h3 className="pipe-role">{pipe.role}</h3>
                   <span className={`pipe-status-tag tag-${pipe.statusType}`}>
-                    {pipe.statusType === 'urgent' && <span className="urgent-dot"></span>}
+                    {pipe.statusType === 'urgent' && (
+                      <span className="urgent-dot"></span>
+                    )}
                     {pipe.status}
                   </span>
                 </div>
@@ -41,7 +52,9 @@ const CandidatePipelines = ({ pipelines = [] }) => {
 
                 <div className="pipe-meta-row">
                   <span className="meta-item">
-                    <span className="material-symbols-outlined icon">speed</span>
+                    <span className="material-symbols-outlined icon">
+                      speed
+                    </span>
                     <span>{pipe.sla}</span>
                   </span>
                   <span className="meta-sep">•</span>
@@ -86,15 +99,27 @@ const CandidatePipelines = ({ pipelines = [] }) => {
 
       {/* Modal Dialog */}
       {activeModal && (
-        <div className="CandidatePortal-modalOverlay" onClick={() => setActiveModal(null)}>
-          <div className="CandidatePortal-modalCard" onClick={(e) => e.stopPropagation()}>
+        <div
+          className="CandidatePortal-modalOverlay"
+          onClick={() => setActiveModal(null)}
+        >
+          <div
+            className="CandidatePortal-modalCard"
+            onClick={(e) => e.stopPropagation()}
+          >
             <div className="modal-header">
               <h3 className="modal-title">
                 {activeModal.type === 'zoom' && 'Joining Interview Session'}
-                {activeModal.type === 'offer' && 'Enterprise Offer Letter Overview'}
-                {activeModal.type === 'dossier' && 'Client Mandate Specification'}
+                {activeModal.type === 'offer' &&
+                  'Enterprise Offer Letter Overview'}
+                {activeModal.type === 'dossier' &&
+                  'Client Mandate Specification'}
               </h3>
-              <button type="button" onClick={() => setActiveModal(null)} className="modal-close-btn">
+              <button
+                type="button"
+                onClick={() => setActiveModal(null)}
+                className="modal-close-btn"
+              >
                 <CloseIcon size={16} />
               </button>
             </div>
@@ -102,9 +127,17 @@ const CandidatePipelines = ({ pipelines = [] }) => {
             <div className="modal-body">
               {activeModal.type === 'zoom' && (
                 <div>
-                  <p><strong>Session:</strong> Final CTO Technical Architecture Round</p>
-                  <p><strong>Client:</strong> {activeModal.data.company}</p>
-                  <p><strong>Security:</strong> SOC 2 Audited Session recording enabled.</p>
+                  <p>
+                    <strong>Session:</strong> Final CTO Technical Architecture
+                    Round
+                  </p>
+                  <p>
+                    <strong>Client:</strong> {activeModal.data.company}
+                  </p>
+                  <p>
+                    <strong>Security:</strong> SOC 2 Audited Session recording
+                    enabled.
+                  </p>
                   <div className="modal-actions-bar">
                     <a
                       href="https://zoom.us"
@@ -119,12 +152,25 @@ const CandidatePipelines = ({ pipelines = [] }) => {
               )}
               {activeModal.type === 'offer' && (
                 <div>
-                  <p><strong>Position:</strong> {activeModal.data.role}</p>
-                  <p><strong>Entity:</strong> {activeModal.data.company}</p>
-                  <p><strong>Compensation:</strong> ₹44 LPA Base + Milestone Escrow + US Equity Component</p>
-                  <p><strong>Decision Window:</strong> 4 Business Days remaining.</p>
+                  <p>
+                    <strong>Position:</strong> {activeModal.data.role}
+                  </p>
+                  <p>
+                    <strong>Entity:</strong> {activeModal.data.company}
+                  </p>
+                  <p>
+                    <strong>Compensation:</strong> ₹44 LPA Base + Milestone
+                    Escrow + US Equity Component
+                  </p>
+                  <p>
+                    <strong>Decision Window:</strong> 4 Business Days remaining.
+                  </p>
                   <div className="modal-actions-bar">
-                    <button type="button" onClick={() => setActiveModal(null)} className="btn-confirm-action">
+                    <button
+                      type="button"
+                      onClick={() => setActiveModal(null)}
+                      className="btn-confirm-action"
+                    >
                       Download Signed Offer Letter PDF
                     </button>
                   </div>
@@ -132,12 +178,24 @@ const CandidatePipelines = ({ pipelines = [] }) => {
               )}
               {activeModal.type === 'dossier' && (
                 <div>
-                  <p><strong>Mandate:</strong> {activeModal.data.role}</p>
-                  <p><strong>Client:</strong> {activeModal.data.company}</p>
-                  <p><strong>SLA:</strong> {activeModal.data.sla}</p>
-                  <p><strong>Panel:</strong> {activeModal.data.panel}</p>
+                  <p>
+                    <strong>Mandate:</strong> {activeModal.data.role}
+                  </p>
+                  <p>
+                    <strong>Client:</strong> {activeModal.data.company}
+                  </p>
+                  <p>
+                    <strong>SLA:</strong> {activeModal.data.sla}
+                  </p>
+                  <p>
+                    <strong>Panel:</strong> {activeModal.data.panel}
+                  </p>
                   <div className="modal-actions-bar">
-                    <button type="button" onClick={() => setActiveModal(null)} className="btn-confirm-action">
+                    <button
+                      type="button"
+                      onClick={() => setActiveModal(null)}
+                      className="btn-confirm-action"
+                    >
                       Close Specification
                     </button>
                   </div>

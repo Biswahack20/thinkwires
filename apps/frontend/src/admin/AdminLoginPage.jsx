@@ -46,7 +46,10 @@ const AdminLoginPage = () => {
 
       navigate(targetPath, { replace: true });
     } catch (err) {
-      setError(err.message || 'Authentication failed. Please verify your email and password.');
+      setError(
+        err.message ||
+          'Authentication failed. Please verify your email and password.'
+      );
     } finally {
       setLoading(false);
     }
@@ -59,9 +62,11 @@ const AdminLoginPage = () => {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        background: 'linear-gradient(135deg, #0B132B 0%, #1C2541 50%, #1E293B 100%)',
+        background:
+          'linear-gradient(135deg, #0B132B 0%, #1C2541 50%, #1E293B 100%)',
         padding: '1.5rem',
-        fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+        fontFamily:
+          "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
       }}
     >
       <div
@@ -110,7 +115,14 @@ const AdminLoginPage = () => {
               />
             </div>
           </div>
-          <h1 style={{ fontSize: '1.4rem', fontWeight: 700, margin: '0 0 0.35rem', letterSpacing: '-0.02em' }}>
+          <h1
+            style={{
+              fontSize: '1.4rem',
+              fontWeight: 700,
+              margin: '0 0 0.35rem',
+              letterSpacing: '-0.02em',
+            }}
+          >
             Admin Portal
           </h1>
           <p style={{ margin: 0, fontSize: '0.85rem', color: '#94A3B8' }}>
@@ -140,11 +152,20 @@ const AdminLoginPage = () => {
             </div>
           )}
 
-          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+          <form
+            onSubmit={handleSubmit}
+            style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}
+          >
             <div>
               <label
                 htmlFor="admin-email"
-                style={{ display: 'block', fontSize: '0.82rem', fontWeight: 600, color: '#334155', marginBottom: '0.4rem' }}
+                style={{
+                  display: 'block',
+                  fontSize: '0.82rem',
+                  fontWeight: 600,
+                  color: '#334155',
+                  marginBottom: '0.4rem',
+                }}
               >
                 Official Email Address
               </label>
@@ -172,10 +193,21 @@ const AdminLoginPage = () => {
             </div>
 
             <div>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.4rem' }}>
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  marginBottom: '0.4rem',
+                }}
+              >
                 <label
                   htmlFor="admin-password"
-                  style={{ fontSize: '0.82rem', fontWeight: 600, color: '#334155' }}
+                  style={{
+                    fontSize: '0.82rem',
+                    fontWeight: 600,
+                    color: '#334155',
+                  }}
                 >
                   Password
                 </label>
@@ -266,7 +298,14 @@ const AdminLoginPage = () => {
           </form>
 
           <div style={{ marginTop: '1.5rem', textAlign: 'center' }}>
-            <Link to="/" style={{ color: '#64748B', fontSize: '0.8rem', textDecoration: 'none' }}>
+            <Link
+              to="/"
+              style={{
+                color: '#64748B',
+                fontSize: '0.8rem',
+                textDecoration: 'none',
+              }}
+            >
               &larr; Return to Public Website
             </Link>
           </div>

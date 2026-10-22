@@ -15,27 +15,45 @@ const JobsHero = ({ children }) => {
         {/* Main Title */}
         <h1 className="JobsHero-mainTitle">
           Available Jobs & High-Growth <br />
-          <span className="JobsHero-gradientText">Tech Careers at ThinkWires</span>
+          <span className="JobsHero-gradientText">
+            Tech Careers at ThinkWires
+          </span>
         </h1>
 
         {/* Subtitle */}
         <p className="JobsHero-subHeading">
-          Connecting premier engineers and enterprise leaders across India, US, and Canada. 
-          125+ Active Openings across Tier-1 Tech Stacks with top product enterprises and global unicorns.
+          Connecting premier engineers and enterprise leaders across India, US,
+          and Canada. 125+ Active Openings across Tier-1 Tech Stacks with top
+          product enterprises and global unicorns.
         </p>
 
         {/* Value Pills Bar */}
         <div className="JobsHero-valuePillsRow">
           <div className="JobsHero-valuePill">
-            <span className="material-symbols-outlined" style={{ fontSize: '16px', color: '#16a34a' }}>check_circle</span>
+            <span
+              className="material-symbols-outlined"
+              style={{ fontSize: '16px', color: '#16a34a' }}
+            >
+              check_circle
+            </span>
             <span>Direct Client Hiring</span>
           </div>
           <div className="JobsHero-valuePill">
-            <span className="material-symbols-outlined" style={{ fontSize: '16px', color: '#2563eb' }}>work</span>
+            <span
+              className="material-symbols-outlined"
+              style={{ fontSize: '16px', color: '#2563eb' }}
+            >
+              work
+            </span>
             <span>Zero Placement Cut</span>
           </div>
           <div className="JobsHero-valuePill">
-            <span className="material-symbols-outlined" style={{ fontSize: '16px', color: '#eab308' }}>bolt</span>
+            <span
+              className="material-symbols-outlined"
+              style={{ fontSize: '16px', color: '#eab308' }}
+            >
+              bolt
+            </span>
             <span>Fast 48-Hour Interview Turnaround</span>
           </div>
         </div>

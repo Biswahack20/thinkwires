@@ -7,12 +7,12 @@ export const fallbackContactData = {
     badge: 'Contact ThinkWires • We Respond Within 5 Hours',
     breadcrumbs: [
       { label: 'Home', href: '/' },
-      { label: 'Contact Us', href: '/contact' }
+      { label: 'Contact Us', href: '/contact' },
     ],
     heading: "Let's Build Your",
     headingHighlight: 'Next Engineering Squad.',
     description:
-      'Whether you need specialized SAP talent, cross-border EOR solutions, or a dedicated DevOps squad — our staffing directors are ready. Reach out and receive pre-vetted profiles in under 5 hours.'
+      'Whether you need specialized SAP talent, cross-border EOR solutions, or a dedicated DevOps squad — our staffing directors are ready. Reach out and receive pre-vetted profiles in under 5 hours.',
   },
   officeLocations: [
     {
@@ -25,7 +25,7 @@ export const fallbackContactData = {
       email: 'connect@thinkwires.com',
       hours: 'Mon – Fri, 9:00 AM – 7:00 PM IST',
       coverageTag: 'India Talent Operations',
-      mapEmbedUrl: ''
+      mapEmbedUrl: '',
     },
     {
       id: 'office-usa',
@@ -37,8 +37,8 @@ export const fallbackContactData = {
       email: 'us@thinkwires.com',
       hours: 'Mon – Fri, 8:00 AM – 6:00 PM EST',
       coverageTag: 'US & Canada EOR Corridor',
-      mapEmbedUrl: ''
-    }
+      mapEmbedUrl: '',
+    },
   ],
   channels: [
     {
@@ -47,7 +47,7 @@ export const fallbackContactData = {
       title: 'Email Us',
       detail: 'connect@thinkwires.com',
       sublabel: 'General inquiries & partnerships',
-      href: 'mailto:connect@thinkwires.com'
+      href: 'mailto:connect@thinkwires.com',
     },
     {
       id: 'ch-2',
@@ -55,7 +55,7 @@ export const fallbackContactData = {
       title: 'Call Direct',
       detail: '+91 (120) 450-8800',
       sublabel: 'Mon-Fri 9AM–7PM IST',
-      href: 'tel:+911204508800'
+      href: 'tel:+911204508800',
     },
     {
       id: 'ch-3',
@@ -63,7 +63,7 @@ export const fallbackContactData = {
       title: 'LinkedIn',
       detail: 'ThinkWires',
       sublabel: 'Follow for talent insights',
-      href: 'https://linkedin.com/company/thinkwires'
+      href: 'https://linkedin.com/company/thinkwires',
     },
     {
       id: 'ch-4',
@@ -71,12 +71,13 @@ export const fallbackContactData = {
       title: 'Response SLA',
       detail: 'Under 5 Hours',
       sublabel: 'For enterprise enquiries',
-      href: null
-    }
+      href: null,
+    },
   ],
   form: {
     title: 'Send Us a Message',
-    subtitle: "Tell us about your hiring challenge and we'll respond with a tailored plan.",
+    subtitle:
+      "Tell us about your hiring challenge and we'll respond with a tailored plan.",
     inquiryTypes: [
       'Staff Augmentation',
       'Permanent Hiring',
@@ -84,92 +85,137 @@ export const fallbackContactData = {
       'Executive Search',
       'Talent Advisory',
       'Partnership / Vendor Registration',
-      'General Inquiry'
+      'General Inquiry',
     ],
     fields: [
-      { name: 'fullName', label: 'Full Name', type: 'text', placeholder: 'e.g. James Mitchell', required: true },
-      { name: 'workEmail', label: 'Work Email', type: 'email', placeholder: 'james@company.com', required: true },
-      { name: 'phone', label: 'Phone Number', type: 'tel', placeholder: '+1 (555) 019-2834', required: false },
-      { name: 'company', label: 'Company / Organisation', type: 'text', placeholder: 'e.g. Accenture, TCS, Startup Inc.', required: false },
-      { name: 'inquiryType', label: 'Inquiry Type', type: 'select', placeholder: 'Select inquiry type', required: true },
+      {
+        name: 'fullName',
+        label: 'Full Name',
+        type: 'text',
+        placeholder: 'e.g. James Mitchell',
+        required: true,
+      },
+      {
+        name: 'workEmail',
+        label: 'Work Email',
+        type: 'email',
+        placeholder: 'james@company.com',
+        required: true,
+      },
+      {
+        name: 'phone',
+        label: 'Phone Number',
+        type: 'tel',
+        placeholder: '+1 (555) 019-2834',
+        required: false,
+      },
+      {
+        name: 'company',
+        label: 'Company / Organisation',
+        type: 'text',
+        placeholder: 'e.g. Accenture, TCS, Startup Inc.',
+        required: false,
+      },
+      {
+        name: 'inquiryType',
+        label: 'Inquiry Type',
+        type: 'select',
+        placeholder: 'Select inquiry type',
+        required: true,
+      },
       {
         name: 'message',
         label: 'Describe Your Requirement',
         type: 'textarea',
-        placeholder: 'e.g. We need 4x SAP ABAP consultants for a 6-month engagement starting November.',
-        required: false
-      }
+        placeholder:
+          'e.g. We need 4x SAP ABAP consultants for a 6-month engagement starting November.',
+        required: false,
+      },
     ],
     submitLabel: 'Send Message',
-    footerNote: 'No spam. We respond to every message within 5 business hours.'
+    footerNote: 'No spam. We respond to every message within 5 business hours.',
   },
   faq: [
     {
       id: 'faq-1',
       question: 'How quickly can you source profiles?',
       answer:
-        'Our proprietary aggregator engine delivers pre-screened, job-fit candidate dossiers within 5 working hours of receiving your intake brief.'
+        'Our proprietary aggregator engine delivers pre-screened, job-fit candidate dossiers within 5 working hours of receiving your intake brief.',
     },
     {
       id: 'faq-2',
       question: 'Do you handle cross-border compliance?',
       answer:
-        'Yes. We offer full Employer of Record (EOR) infrastructure across India, the US, and Canada — including statutory payroll, NDA assignments, and multi-jurisdiction tax withholding.'
+        'Yes. We offer full Employer of Record (EOR) infrastructure across India, the US, and Canada — including statutory payroll, NDA assignments, and multi-jurisdiction tax withholding.',
     },
     {
       id: 'faq-3',
       question: 'What tech domains do you specialize in?',
       answer:
-        'We have deep benches in SAP ABAP/HANA, Adobe Experience Manager (AEM), Teamcenter PLM, Kubernetes/DevOps, Generative AI, and Enterprise Salesforce.'
+        'We have deep benches in SAP ABAP/HANA, Adobe Experience Manager (AEM), Teamcenter PLM, Kubernetes/DevOps, Generative AI, and Enterprise Salesforce.',
     },
     {
       id: 'faq-4',
       question: 'Is there a minimum team size for engagement?',
       answer:
-        'No. We support single-resource placements all the way up to full squad builds of 50+ engineers. Our model scales to your velocity.'
+        'No. We support single-resource placements all the way up to full squad builds of 50+ engineers. Our model scales to your velocity.',
     },
     {
       id: 'faq-5',
       question: 'Do you offer permanent and contract hiring?',
       answer:
-        'Absolutely. We support contract/staff augmentation, permanent placement, executive search, and hybrid engagement models based on your business requirement.'
-    }
-  ]
+        'Absolutely. We support contract/staff augmentation, permanent placement, executive search, and hybrid engagement models based on your business requirement.',
+    },
+  ],
 };
 
 // ─── Async Thunks ──────────────────────────────────────────────────────────────
 
-export const fetchContactData = createAsyncThunk('contact/fetchContactData', async (_, { rejectWithValue }) => {
-  try {
-    const response = await fetch(`${API_BASE}/contact`);
-    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-    return await response.json();
-  } catch (err) {
-    console.warn('Contact API unavailable, using fallback data:', err.message);
-    return fallbackContactData;
-  }
-});
-
-export const submitContactMessage = createAsyncThunk('contact/submitContactMessage', async (formData, { rejectWithValue }) => {
-  try {
-    const response = await fetch(`${API_BASE}/contact/message`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(formData)
-    });
-    if (!response.ok) {
-      const errData = await response.json();
-      throw new Error(errData.error || 'Submission failed');
+export const fetchContactData = createAsyncThunk(
+  'contact/fetchContactData',
+  async (_, { rejectWithValue }) => {
+    try {
+      const response = await fetch(`${API_BASE}/contact`);
+      if (!response.ok)
+        throw new Error(`HTTP error! status: ${response.status}`);
+      return await response.json();
+    } catch (err) {
+      console.warn(
+        'Contact API unavailable, using fallback data:',
+        err.message
+      );
+      return fallbackContactData;
     }
-    return await response.json();
-  } catch (err) {
-    console.warn('Contact submit API unavailable, simulating success:', err.message);
-    return {
-      success: true,
-      message: 'Thank you for reaching out! A ThinkWires staffing director will respond within 5 business hours.'
-    };
   }
-});
+);
+
+export const submitContactMessage = createAsyncThunk(
+  'contact/submitContactMessage',
+  async (formData, { rejectWithValue }) => {
+    try {
+      const response = await fetch(`${API_BASE}/contact/message`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData),
+      });
+      if (!response.ok) {
+        const errData = await response.json();
+        throw new Error(errData.error || 'Submission failed');
+      }
+      return await response.json();
+    } catch (err) {
+      console.warn(
+        'Contact submit API unavailable, simulating success:',
+        err.message
+      );
+      return {
+        success: true,
+        message:
+          'Thank you for reaching out! A ThinkWires staffing director will respond within 5 business hours.',
+      };
+    }
+  }
+);
 
 // ─── Slice ─────────────────────────────────────────────────────────────────────
 
@@ -180,13 +226,13 @@ const contactSlice = createSlice({
     status: 'idle', // 'idle' | 'loading' | 'succeeded' | 'failed'
     error: null,
     submitStatus: 'idle', // 'idle' | 'submitting' | 'succeeded' | 'failed'
-    submitMessage: null
+    submitMessage: null,
   },
   reducers: {
     resetSubmitStatus: (state) => {
       state.submitStatus = 'idle';
       state.submitMessage = null;
-    }
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -211,9 +257,10 @@ const contactSlice = createSlice({
       })
       .addCase(submitContactMessage.rejected, (state, action) => {
         state.submitStatus = 'failed';
-        state.submitMessage = action.error.message || 'Something went wrong. Please try again.';
+        state.submitMessage =
+          action.error.message || 'Something went wrong. Please try again.';
       });
-  }
+  },
 });
 
 export const { resetSubmitStatus } = contactSlice.actions;

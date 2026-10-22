@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { submitPayrollConsultation, resetSubmitStatus } from '../../store/slices/payrollSlice';
+import {
+  submitPayrollConsultation,
+  resetSubmitStatus,
+} from '../../store/slices/payrollSlice';
 
 const PayrollHero = ({ data }) => {
   const [formData, setFormData] = useState({
@@ -13,7 +16,9 @@ const PayrollHero = ({ data }) => {
   });
 
   const dispatch = useDispatch();
-  const { submitStatus, submitMessage } = useSelector((state) => state.payroll || {});
+  const { submitStatus, submitMessage } = useSelector(
+    (state) => state.payroll || {}
+  );
 
   if (!data) return null;
 
@@ -54,21 +59,29 @@ const PayrollHero = ({ data }) => {
 
             <h1 className="Payroll-heroHeadline">
               {heading}{' '}
-              <span className="Payroll-highlightGradient">{headingHighlight}</span>
+              <span className="Payroll-highlightGradient">
+                {headingHighlight}
+              </span>
             </h1>
 
             <p className="Payroll-heroDesc">{description}</p>
 
             <div className="Payroll-heroActions">
               <a href="#consultation-form" className="Payroll-btnPrimary">
-                <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>
+                <span
+                  className="material-symbols-outlined"
+                  style={{ fontSize: '18px' }}
+                >
                   verified
                 </span>
                 <span>{ctaConsultationText}</span>
               </a>
 
               <a href="#compliance-suite" className="Payroll-btnSecondary">
-                <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>
+                <span
+                  className="material-symbols-outlined"
+                  style={{ fontSize: '18px' }}
+                >
                   cloud_download
                 </span>
                 <span>{ctaComplianceText}</span>
@@ -78,11 +91,15 @@ const PayrollHero = ({ data }) => {
             {/* Trust Metrics Bar */}
             <div className="Payroll-trustBadgesRow">
               {trustMetrics.map((metric, idx) => {
-                const colorClass = idx === 0 ? 'emerald' : idx === 1 ? 'cobalt' : 'secondary';
+                const colorClass =
+                  idx === 0 ? 'emerald' : idx === 1 ? 'cobalt' : 'secondary';
                 return (
                   <div key={idx} className="Payroll-trustBadgeCard">
                     <div className={`Payroll-trustIconWrapper ${colorClass}`}>
-                      <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>
+                      <span
+                        className="material-symbols-outlined"
+                        style={{ fontSize: '20px' }}
+                      >
                         {metric.icon}
                       </span>
                     </div>
@@ -101,17 +118,25 @@ const PayrollHero = ({ data }) => {
             <div className="Payroll-telemetryHeader">
               <div className="Payroll-telemetryTitleWrap">
                 <span className="Payroll-telemetryLiveDot"></span>
-                <span className="Payroll-telemetryTitle">{telemetryCard.title}</span>
+                <span className="Payroll-telemetryTitle">
+                  {telemetryCard.title}
+                </span>
               </div>
-              <span className="Payroll-telemetryBadge">{telemetryCard.statusBadge}</span>
+              <span className="Payroll-telemetryBadge">
+                {telemetryCard.statusBadge}
+              </span>
             </div>
 
             <div className="Payroll-metricDisplayBlock">
               <div className="Payroll-metricTopRow">
                 <span>{telemetryCard.batchMonth}</span>
-                <span className="Payroll-reconciledTag">{telemetryCard.reconciledText}</span>
+                <span className="Payroll-reconciledTag">
+                  {telemetryCard.reconciledText}
+                </span>
               </div>
-              <div className="Payroll-amountValue">{telemetryCard.totalAmount}</div>
+              <div className="Payroll-amountValue">
+                {telemetryCard.totalAmount}
+              </div>
 
               <div className="Payroll-progressBars">
                 {(telemetryCard.breakdown || []).map((b, i) => (
@@ -143,7 +168,9 @@ const PayrollHero = ({ data }) => {
                     </span>
                     <span>{log.title}</span>
                   </div>
-                  <span className={`Payroll-auditLogStatus ${log.color}`}>{log.status}</span>
+                  <span className={`Payroll-auditLogStatus ${log.color}`}>
+                    {log.status}
+                  </span>
                 </div>
               ))}
             </div>

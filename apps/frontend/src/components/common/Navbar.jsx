@@ -36,7 +36,8 @@ const Navbar = () => {
     setIsApplyModalOpen(true);
   };
 
-  const isActive = (path) => location.pathname === path ? 'Navbar-active' : '';
+  const isActive = (path) =>
+    location.pathname === path ? 'Navbar-active' : '';
 
   return (
     <>
@@ -55,18 +56,12 @@ const Navbar = () => {
           </div>
 
           <div className="Navbar-topBarRight">
-            <a
-              href="mailto:info@thinkwires.com"
-              className="Navbar-topBarItem"
-            >
+            <a href="mailto:info@thinkwires.com" className="Navbar-topBarItem">
               <MailIcon size={13} color="currentColor" />
               <span>info@thinkwires.com</span>
             </a>
 
-            <a
-              href="tel:+918722555828"
-              className="Navbar-topBarItem"
-            >
+            <a href="tel:+918722555828" className="Navbar-topBarItem">
               <PhoneIcon size={13} color="currentColor" />
               <span>+91 87225 55828</span>
             </a>
@@ -89,10 +84,7 @@ const Navbar = () => {
                 aria-hidden="true"
               >
                 <circle cx="12" cy="12" r="10" />
-                <path
-                  d="M12 2a10 10 0 0 0 0 20V2z"
-                  fill="currentColor"
-                />
+                <path d="M12 2a10 10 0 0 0 0 20V2z" fill="currentColor" />
               </svg>
             </button>
           </div>
@@ -102,11 +94,7 @@ const Navbar = () => {
         <nav className="Navbar-mainNav" aria-label="Main navigation">
           <div className="Navbar-logoContainer">
             <Link to="/" onClick={closeMobileMenu} aria-label="ThinkWires Home">
-              <img
-                src={logo}
-                alt="ThinkWires Logo"
-                className="Navbar-logo"
-              />
+              <img src={logo} alt="ThinkWires Logo" className="Navbar-logo" />
             </Link>
           </div>
 
@@ -327,8 +315,16 @@ const Navbar = () => {
                 type="button"
                 onClick={handlePortalClick}
                 className="Navbar-userIconBtn"
-                aria-label={isAuthenticated ? `Candidate Portal (${user?.name || 'Account'})` : 'Candidate Portal (Sign In)'}
-                title={isAuthenticated ? `Candidate Portal (${user?.name || 'Account'})` : 'Candidate Portal (Sign In)'}
+                aria-label={
+                  isAuthenticated
+                    ? `Candidate Portal (${user?.name || 'Account'})`
+                    : 'Candidate Portal (Sign In)'
+                }
+                title={
+                  isAuthenticated
+                    ? `Candidate Portal (${user?.name || 'Account'})`
+                    : 'Candidate Portal (Sign In)'
+                }
                 style={{
                   background: isAuthenticated ? '#0037B0' : undefined,
                   color: isAuthenticated ? '#FFFFFF' : undefined,

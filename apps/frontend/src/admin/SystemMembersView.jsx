@@ -22,7 +22,8 @@ const ROLE_SCOPES = {
     color: '#047857',
     bgColor: '#ECFDF5',
     borderColor: '#A7F3D0',
-    description: 'Complete unrestricted control across Overview, Manpower, Candidates, Clients, CMS, and System Members.',
+    description:
+      'Complete unrestricted control across Overview, Manpower, Candidates, Clients, CMS, and System Members.',
   },
   admin: {
     label: 'Admin',
@@ -30,7 +31,8 @@ const ROLE_SCOPES = {
     color: '#1D4ED8',
     bgColor: '#EFF6FF',
     borderColor: '#BFDBFE',
-    description: 'Operational control over Manpower, Employees, Candidates, Clients, Job Requisitions, and Placements.',
+    description:
+      'Operational control over Manpower, Employees, Candidates, Clients, Job Requisitions, and Placements.',
   },
   cms_admin: {
     label: 'CMS Admin',
@@ -38,7 +40,8 @@ const ROLE_SCOPES = {
     color: '#4F46E5',
     bgColor: '#EEF2FF',
     borderColor: '#C7D2FE',
-    description: 'Dedicated authority over Website Pages, Blog & Thought Leadership, Media Assets, Announcements, and Tech Stack.',
+    description:
+      'Dedicated authority over Website Pages, Blog & Thought Leadership, Media Assets, Announcements, and Tech Stack.',
   },
 };
 
@@ -93,7 +96,9 @@ const SystemMembersView = () => {
 
   const openAddModal = () => {
     if (!isSuperAdmin) {
-      showToast('Security Alert: Only Superadmin can provision System Members.');
+      showToast(
+        'Security Alert: Only Superadmin can provision System Members.'
+      );
       return;
     }
     setEditingMember(null);
@@ -140,12 +145,21 @@ const SystemMembersView = () => {
       return;
     }
 
-    if (!editingMember && (!formData.password || formData.password.trim().length < 6)) {
-      setFormError('Please provide an initial password of at least 6 characters for this member.');
+    if (
+      !editingMember &&
+      (!formData.password || formData.password.trim().length < 6)
+    ) {
+      setFormError(
+        'Please provide an initial password of at least 6 characters for this member.'
+      );
       return;
     }
 
-    if (editingMember && formData.password && formData.password.trim().length < 6) {
+    if (
+      editingMember &&
+      formData.password &&
+      formData.password.trim().length < 6
+    ) {
       setFormError('New password must be at least 6 characters long.');
       return;
     }
@@ -165,7 +179,10 @@ const SystemMembersView = () => {
 
     if (editingMember) {
       adminApi
-        .updateSystemMember(editingMember._id || editingMember.id || editingMember.email, payload)
+        .updateSystemMember(
+          editingMember._id || editingMember.id || editingMember.email,
+          payload
+        )
         .then(() => {
           showToast(`System member credentials updated for ${formData.name}.`);
           setModalOpen(false);
@@ -176,7 +193,9 @@ const SystemMembersView = () => {
       adminApi
         .createSystemMember(payload)
         .then(() => {
-          showToast(`System member ${formData.name} provisioned with role ${formData.role.toUpperCase()}.`);
+          showToast(
+            `System member ${formData.name} provisioned with role ${formData.role.toUpperCase()}.`
+          );
           setModalOpen(false);
           fetchMembers();
         })
@@ -214,7 +233,9 @@ const SystemMembersView = () => {
   // Access check fallback UI for non-superadmins
   if (!isSuperAdmin) {
     return (
-      <div style={{ padding: '2rem 1rem', maxWidth: '720px', margin: '0 auto' }}>
+      <div
+        style={{ padding: '2rem 1rem', maxWidth: '720px', margin: '0 auto' }}
+      >
         <div
           style={{
             backgroundColor: '#FFFFFF',
@@ -240,11 +261,28 @@ const SystemMembersView = () => {
           >
             <ShieldIcon size={28} />
           </div>
-          <h2 style={{ fontSize: '1.35rem', color: '#0F172A', marginBottom: '0.75rem', fontWeight: 700 }}>
+          <h2
+            style={{
+              fontSize: '1.35rem',
+              color: '#0F172A',
+              marginBottom: '0.75rem',
+              fontWeight: 700,
+            }}
+          >
             Superadmin Privileges Required
           </h2>
-          <p style={{ color: '#475569', fontSize: '0.9rem', lineHeight: 1.6, maxWidth: '520px', margin: '0 auto 1.5rem' }}>
-            System Member accounts, official emails, role assignments, and authentication passwords can only be added and edited by the <strong>Superadmin</strong>.
+          <p
+            style={{
+              color: '#475569',
+              fontSize: '0.9rem',
+              lineHeight: 1.6,
+              maxWidth: '520px',
+              margin: '0 auto 1.5rem',
+            }}
+          >
+            System Member accounts, official emails, role assignments, and
+            authentication passwords can only be added and edited by the{' '}
+            <strong>Superadmin</strong>.
           </p>
           <div
             style={{
@@ -259,7 +297,9 @@ const SystemMembersView = () => {
             }}
           >
             <span>Your Active Role:</span>
-            <strong style={{ color: '#0F172A', textTransform: 'uppercase' }}>{activeRole}</strong>
+            <strong style={{ color: '#0F172A', textTransform: 'uppercase' }}>
+              {activeRole}
+            </strong>
           </div>
         </div>
       </div>
@@ -273,7 +313,8 @@ const SystemMembersView = () => {
         <div className="tw-view-title-group">
           <h1>System Members &amp; Access Control</h1>
           <p className="tw-view-subtitle">
-            Superadmin exclusive directory. Provision secure corporate accounts, assign modular RBAC privileges, and manage access credentials.
+            Superadmin exclusive directory. Provision secure corporate accounts,
+            assign modular RBAC privileges, and manage access credentials.
           </p>
         </div>
 
@@ -300,7 +341,9 @@ const SystemMembersView = () => {
       >
         <ShieldIcon size={18} color="#047857" />
         <div>
-          <strong>Superadmin Exclusive Authority:</strong> Only you have authority to create new corporate mail accounts, assign administrative roles, and reset member passwords.
+          <strong>Superadmin Exclusive Authority:</strong> Only you have
+          authority to create new corporate mail accounts, assign administrative
+          roles, and reset member passwords.
         </div>
       </div>
 
@@ -313,34 +356,140 @@ const SystemMembersView = () => {
           marginBottom: '1.5rem',
         }}
       >
-        <div style={{ backgroundColor: '#FFFFFF', padding: '1rem', borderRadius: '10px', border: '1px solid #E2E8F0' }}>
-          <div style={{ fontSize: '0.75rem', color: '#64748B', fontWeight: 600 }}>TOTAL SYSTEM USERS</div>
-          <div style={{ fontSize: '1.6rem', fontWeight: 700, color: '#0F172A', marginTop: '0.25rem' }}>{members.length}</div>
-          <div style={{ fontSize: '0.72rem', color: '#10B981', marginTop: '0.25rem' }}>Active portal credentials</div>
+        <div
+          style={{
+            backgroundColor: '#FFFFFF',
+            padding: '1rem',
+            borderRadius: '10px',
+            border: '1px solid #E2E8F0',
+          }}
+        >
+          <div
+            style={{ fontSize: '0.75rem', color: '#64748B', fontWeight: 600 }}
+          >
+            TOTAL SYSTEM USERS
+          </div>
+          <div
+            style={{
+              fontSize: '1.6rem',
+              fontWeight: 700,
+              color: '#0F172A',
+              marginTop: '0.25rem',
+            }}
+          >
+            {members.length}
+          </div>
+          <div
+            style={{
+              fontSize: '0.72rem',
+              color: '#10B981',
+              marginTop: '0.25rem',
+            }}
+          >
+            Active portal credentials
+          </div>
         </div>
 
-        <div style={{ backgroundColor: '#FFFFFF', padding: '1rem', borderRadius: '10px', border: '1px solid #E2E8F0' }}>
-          <div style={{ fontSize: '0.75rem', color: '#047857', fontWeight: 600 }}>SUPERADMINS</div>
-          <div style={{ fontSize: '1.6rem', fontWeight: 700, color: '#047857', marginTop: '0.25rem' }}>
+        <div
+          style={{
+            backgroundColor: '#FFFFFF',
+            padding: '1rem',
+            borderRadius: '10px',
+            border: '1px solid #E2E8F0',
+          }}
+        >
+          <div
+            style={{ fontSize: '0.75rem', color: '#047857', fontWeight: 600 }}
+          >
+            SUPERADMINS
+          </div>
+          <div
+            style={{
+              fontSize: '1.6rem',
+              fontWeight: 700,
+              color: '#047857',
+              marginTop: '0.25rem',
+            }}
+          >
             {members.filter((m) => m.role === 'superadmin').length}
           </div>
-          <div style={{ fontSize: '0.72rem', color: '#64748B', marginTop: '0.25rem' }}>Unrestricted root power</div>
+          <div
+            style={{
+              fontSize: '0.72rem',
+              color: '#64748B',
+              marginTop: '0.25rem',
+            }}
+          >
+            Unrestricted root power
+          </div>
         </div>
 
-        <div style={{ backgroundColor: '#FFFFFF', padding: '1rem', borderRadius: '10px', border: '1px solid #E2E8F0' }}>
-          <div style={{ fontSize: '0.75rem', color: '#4F46E5', fontWeight: 600 }}>CMS ADMINISTRATORS</div>
-          <div style={{ fontSize: '1.6rem', fontWeight: 700, color: '#4F46E5', marginTop: '0.25rem' }}>
+        <div
+          style={{
+            backgroundColor: '#FFFFFF',
+            padding: '1rem',
+            borderRadius: '10px',
+            border: '1px solid #E2E8F0',
+          }}
+        >
+          <div
+            style={{ fontSize: '0.75rem', color: '#4F46E5', fontWeight: 600 }}
+          >
+            CMS ADMINISTRATORS
+          </div>
+          <div
+            style={{
+              fontSize: '1.6rem',
+              fontWeight: 700,
+              color: '#4F46E5',
+              marginTop: '0.25rem',
+            }}
+          >
             {members.filter((m) => m.role === 'cms_admin').length}
           </div>
-          <div style={{ fontSize: '0.72rem', color: '#64748B', marginTop: '0.25rem' }}>Content management only</div>
+          <div
+            style={{
+              fontSize: '0.72rem',
+              color: '#64748B',
+              marginTop: '0.25rem',
+            }}
+          >
+            Content management only
+          </div>
         </div>
 
-        <div style={{ backgroundColor: '#FFFFFF', padding: '1rem', borderRadius: '10px', border: '1px solid #E2E8F0' }}>
-          <div style={{ fontSize: '0.75rem', color: '#1D4ED8', fontWeight: 600 }}>MANPOWER &amp; STAFFING</div>
-          <div style={{ fontSize: '1.6rem', fontWeight: 700, color: '#1D4ED8', marginTop: '0.25rem' }}>
+        <div
+          style={{
+            backgroundColor: '#FFFFFF',
+            padding: '1rem',
+            borderRadius: '10px',
+            border: '1px solid #E2E8F0',
+          }}
+        >
+          <div
+            style={{ fontSize: '0.75rem', color: '#1D4ED8', fontWeight: 600 }}
+          >
+            MANPOWER &amp; STAFFING
+          </div>
+          <div
+            style={{
+              fontSize: '1.6rem',
+              fontWeight: 700,
+              color: '#1D4ED8',
+              marginTop: '0.25rem',
+            }}
+          >
             {members.filter((m) => m.role === 'admin').length}
           </div>
-          <div style={{ fontSize: '0.72rem', color: '#64748B', marginTop: '0.25rem' }}>Workforce operations</div>
+          <div
+            style={{
+              fontSize: '0.72rem',
+              color: '#64748B',
+              marginTop: '0.25rem',
+            }}
+          >
+            Workforce operations
+          </div>
         </div>
       </div>
 
@@ -348,7 +497,13 @@ const SystemMembersView = () => {
       <div className="tw-table-container">
         <div className="tw-table-toolbar">
           <div className="tw-table-filters">
-            <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+            <div
+              style={{
+                position: 'relative',
+                display: 'flex',
+                alignItems: 'center',
+              }}
+            >
               <input
                 type="text"
                 className="tw-filter-input"
@@ -357,7 +512,13 @@ const SystemMembersView = () => {
                 onChange={(e) => setSearch(e.target.value)}
                 style={{ paddingLeft: '2.1rem' }}
               />
-              <span style={{ position: 'absolute', left: '0.75rem', color: '#94A3B8' }}>
+              <span
+                style={{
+                  position: 'absolute',
+                  left: '0.75rem',
+                  color: '#94A3B8',
+                }}
+              >
                 <SearchIcon size={14} />
               </span>
             </div>
@@ -394,13 +555,27 @@ const SystemMembersView = () => {
             <tbody>
               {loading ? (
                 <tr>
-                  <td colSpan="6" style={{ textAlign: 'center', padding: '2.5rem', color: '#64748B' }}>
+                  <td
+                    colSpan="6"
+                    style={{
+                      textAlign: 'center',
+                      padding: '2.5rem',
+                      color: '#64748B',
+                    }}
+                  >
                     Loading system member directory...
                   </td>
                 </tr>
               ) : filteredMembers.length === 0 ? (
                 <tr>
-                  <td colSpan="6" style={{ textAlign: 'center', padding: '2.5rem', color: '#64748B' }}>
+                  <td
+                    colSpan="6"
+                    style={{
+                      textAlign: 'center',
+                      padding: '2.5rem',
+                      color: '#64748B',
+                    }}
+                  >
                     No system members matching the selected filters.
                   </td>
                 </tr>
@@ -419,7 +594,13 @@ const SystemMembersView = () => {
                   return (
                     <tr key={mem._id || mem.id || mem.email}>
                       <td>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+                        <div
+                          style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '0.75rem',
+                          }}
+                        >
                           <div
                             style={{
                               width: '36px',
@@ -438,10 +619,18 @@ const SystemMembersView = () => {
                             {initials}
                           </div>
                           <div>
-                            <strong style={{ color: '#0F172A', fontSize: '0.86rem', display: 'block' }}>
+                            <strong
+                              style={{
+                                color: '#0F172A',
+                                fontSize: '0.86rem',
+                                display: 'block',
+                              }}
+                            >
                               {mem.name}
                             </strong>
-                            <span style={{ fontSize: '0.74rem', color: '#64748B' }}>
+                            <span
+                              style={{ fontSize: '0.74rem', color: '#64748B' }}
+                            >
                               {mem.designation || 'Corporate Member'}
                             </span>
                           </div>
@@ -449,7 +638,14 @@ const SystemMembersView = () => {
                       </td>
 
                       <td>
-                        <span style={{ fontFamily: 'monospace', fontSize: '0.8rem', color: '#008F68', fontWeight: 600 }}>
+                        <span
+                          style={{
+                            fontFamily: 'monospace',
+                            fontSize: '0.8rem',
+                            color: '#008F68',
+                            fontWeight: 600,
+                          }}
+                        >
                           {mem.email}
                         </span>
                       </td>
@@ -475,7 +671,14 @@ const SystemMembersView = () => {
                       </td>
 
                       <td>
-                        <span style={{ fontSize: '0.76rem', color: '#475569', maxWidth: '280px', display: 'block' }}>
+                        <span
+                          style={{
+                            fontSize: '0.76rem',
+                            color: '#475569',
+                            maxWidth: '280px',
+                            display: 'block',
+                          }}
+                        >
                           {scope.description}
                         </span>
                       </td>
@@ -490,7 +693,10 @@ const SystemMembersView = () => {
                       </td>
 
                       <td style={{ textAlign: 'right' }}>
-                        <div className="tw-action-btn-group" style={{ justifyContent: 'flex-end' }}>
+                        <div
+                          className="tw-action-btn-group"
+                          style={{ justifyContent: 'flex-end' }}
+                        >
                           <button
                             className="tw-action-icon-btn"
                             onClick={() => openEditModal(mem)}
@@ -502,7 +708,11 @@ const SystemMembersView = () => {
                           {mem.email !== 'superadmin@thinkwires.com' && (
                             <button
                               className="tw-action-icon-btn delete"
-                              onClick={() => setDeleteConfirmId(mem._id || mem.id || mem.email)}
+                              onClick={() =>
+                                setDeleteConfirmId(
+                                  mem._id || mem.id || mem.email
+                                )
+                              }
                               title="Revoke Credentials"
                             >
                               <TrashIcon size={14} />
@@ -526,13 +736,18 @@ const SystemMembersView = () => {
             <div className="tw-modal-header">
               <div>
                 <h2 className="tw-modal-title" style={{ margin: 0 }}>
-                  {editingMember ? `Edit Credentials: ${editingMember.name}` : 'Provision New System Member'}
+                  {editingMember
+                    ? `Edit Credentials: ${editingMember.name}`
+                    : 'Provision New System Member'}
                 </h2>
                 <span style={{ fontSize: '0.75rem', color: '#64748B' }}>
                   Superadmin Credential Provisioning Engine
                 </span>
               </div>
-              <button className="tw-modal-close-btn" onClick={() => setModalOpen(false)}>
+              <button
+                className="tw-modal-close-btn"
+                onClick={() => setModalOpen(false)}
+              >
                 <CloseIcon size={16} />
               </button>
             </div>
@@ -566,19 +781,25 @@ const SystemMembersView = () => {
                       type="text"
                       className="tw-form-input"
                       value={formData.name}
-                      onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                      onChange={(e) =>
+                        setFormData({ ...formData, name: e.target.value })
+                      }
                       placeholder="e.g. Elena Rostova"
                       required
                     />
                   </div>
 
                   <div className="tw-form-group">
-                    <label className="tw-form-label">Official System Email (Mail) *</label>
+                    <label className="tw-form-label">
+                      Official System Email (Mail) *
+                    </label>
                     <input
                       type="email"
                       className="tw-form-input"
                       value={formData.email}
-                      onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                      onChange={(e) =>
+                        setFormData({ ...formData, email: e.target.value })
+                      }
                       placeholder="elena.cms@thinkwires.com"
                       required
                     />
@@ -588,27 +809,44 @@ const SystemMembersView = () => {
                 {/* Designation & Role */}
                 <div className="tw-form-row">
                   <div className="tw-form-group">
-                    <label className="tw-form-label">Designation / Corporate Title *</label>
+                    <label className="tw-form-label">
+                      Designation / Corporate Title *
+                    </label>
                     <input
                       type="text"
                       className="tw-form-input"
                       value={formData.designation}
-                      onChange={(e) => setFormData({ ...formData, designation: e.target.value })}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          designation: e.target.value,
+                        })
+                      }
                       placeholder="e.g. Chief Content Officer"
                       required
                     />
                   </div>
 
                   <div className="tw-form-group">
-                    <label className="tw-form-label">System Role &amp; Privileges *</label>
+                    <label className="tw-form-label">
+                      System Role &amp; Privileges *
+                    </label>
                     <select
                       className="tw-form-select"
                       value={formData.role}
-                      onChange={(e) => setFormData({ ...formData, role: e.target.value })}
+                      onChange={(e) =>
+                        setFormData({ ...formData, role: e.target.value })
+                      }
                     >
-                      <option value="superadmin">Superadmin (Complete Full Platform Control)</option>
-                      <option value="admin">Admin (Manpower &amp; Staffing Operations)</option>
-                      <option value="cms_admin">CMS Admin (Content Management System Only)</option>
+                      <option value="superadmin">
+                        Superadmin (Complete Full Platform Control)
+                      </option>
+                      <option value="admin">
+                        Admin (Manpower &amp; Staffing Operations)
+                      </option>
+                      <option value="cms_admin">
+                        CMS Admin (Content Management System Only)
+                      </option>
                     </select>
                   </div>
                 </div>
@@ -617,7 +855,8 @@ const SystemMembersView = () => {
                 <div
                   style={{
                     padding: '0.75rem 1rem',
-                    backgroundColor: ROLE_SCOPES[formData.role]?.bgColor || '#F8FAFC',
+                    backgroundColor:
+                      ROLE_SCOPES[formData.role]?.bgColor || '#F8FAFC',
                     border: `1px solid ${ROLE_SCOPES[formData.role]?.borderColor || '#E2E8F0'}`,
                     borderRadius: '8px',
                     marginBottom: '1rem',
@@ -628,7 +867,11 @@ const SystemMembersView = () => {
                     gap: '0.5rem',
                   }}
                 >
-                  <ShieldIcon size={16} color={ROLE_SCOPES[formData.role]?.color} style={{ marginTop: '2px', flexShrink: 0 }} />
+                  <ShieldIcon
+                    size={16}
+                    color={ROLE_SCOPES[formData.role]?.color}
+                    style={{ marginTop: '2px', flexShrink: 0 }}
+                  />
                   <div>
                     <strong>Assigned Permission Scope:</strong>{' '}
                     <span>{ROLE_SCOPES[formData.role]?.description}</span>
@@ -637,9 +880,18 @@ const SystemMembersView = () => {
 
                 {/* Password Setting */}
                 <div className="tw-form-group">
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.35rem' }}>
+                  <div
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      marginBottom: '0.35rem',
+                    }}
+                  >
                     <label className="tw-form-label" style={{ margin: 0 }}>
-                      {editingMember ? 'Update / Reset Password' : 'Initial Password *'}
+                      {editingMember
+                        ? 'Update / Reset Password'
+                        : 'Initial Password *'}
                     </label>
                     {editingMember && (
                       <span style={{ fontSize: '0.72rem', color: '#64748B' }}>
@@ -648,13 +900,25 @@ const SystemMembersView = () => {
                     )}
                   </div>
 
-                  <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+                  <div
+                    style={{
+                      position: 'relative',
+                      display: 'flex',
+                      alignItems: 'center',
+                    }}
+                  >
                     <input
                       type={showPassword ? 'text' : 'password'}
                       className="tw-form-input"
                       value={formData.password}
-                      onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                      placeholder={editingMember ? 'Enter new password to change...' : 'Minimum 6 characters (e.g. Pass@123)'}
+                      onChange={(e) =>
+                        setFormData({ ...formData, password: e.target.value })
+                      }
+                      placeholder={
+                        editingMember
+                          ? 'Enter new password to change...'
+                          : 'Minimum 6 characters (e.g. Pass@123)'
+                      }
                       required={!editingMember}
                       minLength={6}
                       style={{ paddingRight: '2.5rem' }}
@@ -676,8 +940,16 @@ const SystemMembersView = () => {
                       <EyeIcon size={16} />
                     </button>
                   </div>
-                  <span style={{ fontSize: '0.72rem', color: '#64748B', marginTop: '0.25rem', display: 'block' }}>
-                    Configured by Superadmin. The member will use this password alongside their official email to sign in.
+                  <span
+                    style={{
+                      fontSize: '0.72rem',
+                      color: '#64748B',
+                      marginTop: '0.25rem',
+                      display: 'block',
+                    }}
+                  >
+                    Configured by Superadmin. The member will use this password
+                    alongside their official email to sign in.
                   </span>
                 </div>
 
@@ -689,19 +961,30 @@ const SystemMembersView = () => {
                       type="text"
                       className="tw-form-input"
                       value={formData.phone}
-                      onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                      onChange={(e) =>
+                        setFormData({ ...formData, phone: e.target.value })
+                      }
                       placeholder="+91 98765 43210"
                     />
                   </div>
 
                   <div className="tw-form-group">
-                    <label className="tw-form-label">Account Login Status</label>
+                    <label className="tw-form-label">
+                      Account Login Status
+                    </label>
                     <select
                       className="tw-form-select"
                       value={formData.isActive ? 'true' : 'false'}
-                      onChange={(e) => setFormData({ ...formData, isActive: e.target.value === 'true' })}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          isActive: e.target.value === 'true',
+                        })
+                      }
                     >
-                      <option value="true">Active (Permitted to Sign In)</option>
+                      <option value="true">
+                        Active (Permitted to Sign In)
+                      </option>
                       <option value="false">Suspended (Access Revoked)</option>
                     </select>
                   </div>
@@ -709,7 +992,11 @@ const SystemMembersView = () => {
               </div>
 
               <div className="tw-modal-footer">
-                <button type="button" className="tw-btn-secondary" onClick={() => setModalOpen(false)}>
+                <button
+                  type="button"
+                  className="tw-btn-secondary"
+                  onClick={() => setModalOpen(false)}
+                >
                   Cancel
                 </button>
                 <button type="submit" className="tw-btn-primary">
@@ -727,18 +1014,29 @@ const SystemMembersView = () => {
           <div className="tw-modal" style={{ maxWidth: '440px' }}>
             <div className="tw-modal-header">
               <h2 className="tw-modal-title">Revoke System Access</h2>
-              <button className="tw-modal-close-btn" onClick={() => setDeleteConfirmId(null)}>
+              <button
+                className="tw-modal-close-btn"
+                onClick={() => setDeleteConfirmId(null)}
+              >
                 <CloseIcon size={16} />
               </button>
             </div>
             <div className="tw-modal-body">
-              Are you sure you want to revoke platform credentials for this system member? They will immediately lose access to all modules and administrative routes.
+              Are you sure you want to revoke platform credentials for this
+              system member? They will immediately lose access to all modules
+              and administrative routes.
             </div>
             <div className="tw-modal-footer">
-              <button className="tw-btn-secondary" onClick={() => setDeleteConfirmId(null)}>
+              <button
+                className="tw-btn-secondary"
+                onClick={() => setDeleteConfirmId(null)}
+              >
                 Cancel
               </button>
-              <button className="tw-btn-danger" onClick={() => handleDelete(deleteConfirmId)}>
+              <button
+                className="tw-btn-danger"
+                onClick={() => handleDelete(deleteConfirmId)}
+              >
                 Confirm Revocation
               </button>
             </div>

@@ -60,11 +60,29 @@ const RegisterPage = () => {
     if (/[^A-Za-z0-9]/.test(pwd)) score += 1;
 
     if (pwd.length < 12) {
-      return { score: 1, label: 'Requires 12+ chars', colorClass: 'active-weak' };
+      return {
+        score: 1,
+        label: 'Requires 12+ chars',
+        colorClass: 'active-weak',
+      };
     }
-    if (score <= 2) return { score: 2, label: 'Fair (add symbols/numbers)', colorClass: 'active-fair' };
-    if (score <= 4) return { score: 3, label: 'Good (strong protection)', colorClass: 'active-good' };
-    return { score: 4, label: 'Enterprise Strong', colorClass: 'active-strong' };
+    if (score <= 2)
+      return {
+        score: 2,
+        label: 'Fair (add symbols/numbers)',
+        colorClass: 'active-fair',
+      };
+    if (score <= 4)
+      return {
+        score: 3,
+        label: 'Good (strong protection)',
+        colorClass: 'active-good',
+      };
+    return {
+      score: 4,
+      label: 'Enterprise Strong',
+      colorClass: 'active-strong',
+    };
   };
 
   const pwdStrength = evaluatePassword(formData.password);
@@ -116,13 +134,17 @@ const RegisterPage = () => {
     );
 
     if (registerUser.fulfilled.match(resultAction)) {
-      const destination = getSafeRedirectUrl(searchParams, '/candidate/dashboard');
+      const destination = getSafeRedirectUrl(
+        searchParams,
+        '/candidate/dashboard'
+      );
       navigate(destination, { replace: true });
     }
   };
 
   // Helper to determine if an error message should render
-  const showError = (field) => (touched[field] || submitted) && fieldErrors[field];
+  const showError = (field) =>
+    (touched[field] || submitted) && fieldErrors[field];
 
   return (
     <div className="tw-split-auth-page">
@@ -136,7 +158,14 @@ const RegisterPage = () => {
 
             <div className="tw-brand-top">
               <div className="tw-brand-logo-badge">
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                <svg
+                  width="12"
+                  height="12"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.5"
+                >
                   <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
                 </svg>
                 Thinkwires Talent Network
@@ -146,7 +175,9 @@ const RegisterPage = () => {
                 Deploy with premier <span>global tech</span> leaders.
               </h2>
               <p className="tw-brand-hero-desc">
-                Join our vetted engineering network. Access verified high-impact contracts and full-time mandates across North America, India, and GCC hubs.
+                Join our vetted engineering network. Access verified high-impact
+                contracts and full-time mandates across North America, India,
+                and GCC hubs.
               </p>
             </div>
 
@@ -154,39 +185,76 @@ const RegisterPage = () => {
             <div className="tw-brand-features">
               <div className="tw-feature-item">
                 <div className="tw-feature-icon">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                  >
                     <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
                     <polyline points="22 4 12 14.01 9 11.01"></polyline>
                   </svg>
                 </div>
                 <div className="tw-feature-text">
                   <h4>Pre-Vetted Expedited Intake</h4>
-                  <p>Direct hiring manager interviews without redundant screening loops.</p>
+                  <p>
+                    Direct hiring manager interviews without redundant screening
+                    loops.
+                  </p>
                 </div>
               </div>
 
               <div className="tw-feature-item">
                 <div className="tw-feature-icon">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                  >
+                    <rect
+                      x="2"
+                      y="7"
+                      width="20"
+                      height="14"
+                      rx="2"
+                      ry="2"
+                    ></rect>
                     <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
                   </svg>
                 </div>
                 <div className="tw-feature-text">
                   <h4>Transparent Enterprise Retainers</h4>
-                  <p>Guaranteed escrow disbursement, competitive CTCs, and dual-zone remote options.</p>
+                  <p>
+                    Guaranteed escrow disbursement, competitive CTCs, and
+                    dual-zone remote options.
+                  </p>
                 </div>
               </div>
 
               <div className="tw-feature-item">
                 <div className="tw-feature-icon">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <svg
+                    width="16"
+                    height="16"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                  >
                     <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
                   </svg>
                 </div>
                 <div className="tw-feature-text">
                   <h4>IP &amp; Compliance Verification</h4>
-                  <p>SOC 2 audited talent identity, seamless EOR contracts, and tax treaties.</p>
+                  <p>
+                    SOC 2 audited talent identity, seamless EOR contracts, and
+                    tax treaties.
+                  </p>
                 </div>
               </div>
             </div>
@@ -202,13 +270,22 @@ const RegisterPage = () => {
             <div className="tw-form-panel-header">
               <h1 className="tw-form-panel-title">Create Candidate Profile</h1>
               <p className="tw-form-panel-desc">
-                Register once to apply for curated openings and track your interview stages.
+                Register once to apply for curated openings and track your
+                interview stages.
               </p>
             </div>
 
             {error && (
               <div className="tw-alert-banner tw-alert-error" role="alert">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" style={{ flexShrink: 0, marginTop: '2px' }}>
+                <svg
+                  width="18"
+                  height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  style={{ flexShrink: 0, marginTop: '2px' }}
+                >
                   <circle cx="12" cy="12" r="10"></circle>
                   <line x1="12" y1="8" x2="12" y2="12"></line>
                   <line x1="12" y1="16" x2="12.01" y2="16"></line>
@@ -217,7 +294,11 @@ const RegisterPage = () => {
               </div>
             )}
 
-            <form onSubmit={handleSubmit} className="tw-enterprise-form" noValidate>
+            <form
+              onSubmit={handleSubmit}
+              className="tw-enterprise-form"
+              noValidate
+            >
               <div className="tw-field-group">
                 <label className="tw-field-label" htmlFor="register-name">
                   Full Legal Name *
@@ -235,7 +316,14 @@ const RegisterPage = () => {
                 />
                 {showError('name') && (
                   <span className="tw-field-err-msg">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                    <svg
+                      width="12"
+                      height="12"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2.5"
+                    >
                       <circle cx="12" cy="12" r="10"></circle>
                       <line x1="12" y1="8" x2="12" y2="12"></line>
                       <line x1="12" y1="16" x2="12" y2="16"></line>
@@ -263,7 +351,14 @@ const RegisterPage = () => {
                   />
                   {showError('email') && (
                     <span className="tw-field-err-msg">
-                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                      <svg
+                        width="12"
+                        height="12"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2.5"
+                      >
                         <circle cx="12" cy="12" r="10"></circle>
                         <line x1="12" y1="8" x2="12" y2="12"></line>
                         <line x1="12" y1="16" x2="12" y2="16"></line>
@@ -294,7 +389,13 @@ const RegisterPage = () => {
               <div className="tw-field-group">
                 <label className="tw-field-label" htmlFor="register-password">
                   <span>Password *</span>
-                  <span style={{ fontSize: '0.74rem', color: '#64748B', fontWeight: 500 }}>
+                  <span
+                    style={{
+                      fontSize: '0.74rem',
+                      color: '#64748B',
+                      fontWeight: 500,
+                    }}
+                  >
                     Minimum 12 characters
                   </span>
                 </label>
@@ -314,15 +415,31 @@ const RegisterPage = () => {
                     type="button"
                     className="tw-pwd-toggle-btn"
                     onClick={() => setShowPassword(!showPassword)}
-                    aria-label={showPassword ? 'Hide password' : 'Show password'}
+                    aria-label={
+                      showPassword ? 'Hide password' : 'Show password'
+                    }
                   >
                     {showPassword ? (
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <svg
+                        width="18"
+                        height="18"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                      >
                         <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
                         <line x1="1" y1="1" x2="23" y2="23"></line>
                       </svg>
                     ) : (
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <svg
+                        width="18"
+                        height="18"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                      >
                         <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
                         <circle cx="12" cy="12" r="3"></circle>
                       </svg>
@@ -334,14 +451,33 @@ const RegisterPage = () => {
                 {formData.password && (
                   <div className="tw-pwd-strength-container">
                     <div className="tw-pwd-strength-bars">
-                      <div className={`tw-pwd-strength-segment ${pwdStrength.score >= 1 ? pwdStrength.colorClass : ''}`} />
-                      <div className={`tw-pwd-strength-segment ${pwdStrength.score >= 2 ? pwdStrength.colorClass : ''}`} />
-                      <div className={`tw-pwd-strength-segment ${pwdStrength.score >= 3 ? pwdStrength.colorClass : ''}`} />
-                      <div className={`tw-pwd-strength-segment ${pwdStrength.score >= 4 ? pwdStrength.colorClass : ''}`} />
+                      <div
+                        className={`tw-pwd-strength-segment ${pwdStrength.score >= 1 ? pwdStrength.colorClass : ''}`}
+                      />
+                      <div
+                        className={`tw-pwd-strength-segment ${pwdStrength.score >= 2 ? pwdStrength.colorClass : ''}`}
+                      />
+                      <div
+                        className={`tw-pwd-strength-segment ${pwdStrength.score >= 3 ? pwdStrength.colorClass : ''}`}
+                      />
+                      <div
+                        className={`tw-pwd-strength-segment ${pwdStrength.score >= 4 ? pwdStrength.colorClass : ''}`}
+                      />
                     </div>
                     <div className="tw-pwd-strength-label">
-                      <span style={{ color: '#64748B' }}>Password Strength:</span>
-                      <span style={{ color: pwdStrength.score >= 3 ? '#008F68' : pwdStrength.score === 2 ? '#D97706' : '#DC2626' }}>
+                      <span style={{ color: '#64748B' }}>
+                        Password Strength:
+                      </span>
+                      <span
+                        style={{
+                          color:
+                            pwdStrength.score >= 3
+                              ? '#008F68'
+                              : pwdStrength.score === 2
+                                ? '#D97706'
+                                : '#DC2626',
+                        }}
+                      >
                         {pwdStrength.label}
                       </span>
                     </div>
@@ -350,7 +486,14 @@ const RegisterPage = () => {
 
                 {showError('password') && (
                   <span className="tw-field-err-msg">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                    <svg
+                      width="12"
+                      height="12"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2.5"
+                    >
                       <circle cx="12" cy="12" r="10"></circle>
                       <line x1="12" y1="8" x2="12" y2="12"></line>
                       <line x1="12" y1="16" x2="12" y2="16"></line>
@@ -380,15 +523,31 @@ const RegisterPage = () => {
                     type="button"
                     className="tw-pwd-toggle-btn"
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    aria-label={showConfirmPassword ? 'Hide password' : 'Show password'}
+                    aria-label={
+                      showConfirmPassword ? 'Hide password' : 'Show password'
+                    }
                   >
                     {showConfirmPassword ? (
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <svg
+                        width="18"
+                        height="18"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                      >
                         <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
                         <line x1="1" y1="1" x2="23" y2="23"></line>
                       </svg>
                     ) : (
-                      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                      <svg
+                        width="18"
+                        height="18"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2"
+                      >
                         <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
                         <circle cx="12" cy="12" r="3"></circle>
                       </svg>
@@ -397,7 +556,14 @@ const RegisterPage = () => {
                 </div>
                 {showError('confirmPassword') && (
                   <span className="tw-field-err-msg">
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
+                    <svg
+                      width="12"
+                      height="12"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2.5"
+                    >
                       <circle cx="12" cy="12" r="10"></circle>
                       <line x1="12" y1="8" x2="12" y2="12"></line>
                       <line x1="12" y1="16" x2="12" y2="16"></line>
@@ -407,7 +573,11 @@ const RegisterPage = () => {
                 )}
               </div>
 
-              <button type="submit" className="tw-enterprise-btn" disabled={loading}>
+              <button
+                type="submit"
+                className="tw-enterprise-btn"
+                disabled={loading}
+              >
                 {loading ? (
                   <>
                     <span className="tw-inline-spinner" />
@@ -421,8 +591,10 @@ const RegisterPage = () => {
               {/* Data Privacy Statement */}
               <p className="tw-privacy-statement">
                 By creating an account, you agree to Thinkwires'{' '}
-                <Link to="/terms-of-service">Terms of Service</Link> and acknowledge our{' '}
-                <Link to="/privacy-policy">Candidate Data Privacy Policy</Link>. Your information is never sold.
+                <Link to="/terms-of-service">Terms of Service</Link> and
+                acknowledge our{' '}
+                <Link to="/privacy-policy">Candidate Data Privacy Policy</Link>.
+                Your information is never sold.
               </p>
             </form>
 

@@ -8,7 +8,9 @@ export const up = async ({ db }) => {
 
   // Job Requirements
   try {
-    await db.collection('jobrequirements').createIndex({ department: 1, location: 1, workMode: 1 });
+    await db
+      .collection('jobrequirements')
+      .createIndex({ department: 1, location: 1, workMode: 1 });
     await db.collection('jobrequirements').createIndex({ status: 1 });
     await db.collection('jobrequirements').createIndex({ requiredSkills: 1 });
   } catch (e) {
@@ -44,7 +46,9 @@ export const up = async ({ db }) => {
 export const down = async ({ db }) => {
   console.log('   Reverting performance indexes...');
   try {
-    await db.collection('jobrequirements').dropIndex('department_1_location_1_workMode_1');
+    await db
+      .collection('jobrequirements')
+      .dropIndex('department_1_location_1_workMode_1');
     await db.collection('jobrequirements').dropIndex('status_1');
     await db.collection('jobrequirements').dropIndex('requiredSkills_1');
   } catch {}

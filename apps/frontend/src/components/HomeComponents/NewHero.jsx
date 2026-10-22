@@ -1,8 +1,20 @@
-import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  useCallback,
+  useMemo,
+} from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchOpenings } from '../../store/slices/homeSlice';
-import { motion, AnimatePresence, useMotionValue, useSpring, useMotionTemplate } from 'framer-motion';
+import {
+  motion,
+  AnimatePresence,
+  useMotionValue,
+  useSpring,
+  useMotionTemplate,
+} from 'framer-motion';
 import ApplyModal from '../common/ApplyModal';
 
 const SLIDE_IMAGES = [
@@ -14,11 +26,45 @@ const SLIDE_IMAGES = [
 
 const getCategoryIcon = (category = '', title = '') => {
   const text = `${category} ${title}`.toLowerCase();
-  if (text.includes('ai') || text.includes('genai') || text.includes('data') || text.includes('vision') || text.includes('ml')) return 'smart_toy';
-  if (text.includes('cloud') || text.includes('devops') || text.includes('k8s') || text.includes('aws') || text.includes('azure')) return 'cloud_sync';
-  if (text.includes('sap') || text.includes('enterprise') || text.includes('ledger') || text.includes('crm') || text.includes('abap')) return 'terminal';
-  if (text.includes('plm') || text.includes('teamcenter') || text.includes('embedded') || text.includes('cad')) return 'precision_manufacturing';
-  if (text.includes('stack') || text.includes('web') || text.includes('aem') || text.includes('frontend') || text.includes('developer')) return 'code';
+  if (
+    text.includes('ai') ||
+    text.includes('genai') ||
+    text.includes('data') ||
+    text.includes('vision') ||
+    text.includes('ml')
+  )
+    return 'smart_toy';
+  if (
+    text.includes('cloud') ||
+    text.includes('devops') ||
+    text.includes('k8s') ||
+    text.includes('aws') ||
+    text.includes('azure')
+  )
+    return 'cloud_sync';
+  if (
+    text.includes('sap') ||
+    text.includes('enterprise') ||
+    text.includes('ledger') ||
+    text.includes('crm') ||
+    text.includes('abap')
+  )
+    return 'terminal';
+  if (
+    text.includes('plm') ||
+    text.includes('teamcenter') ||
+    text.includes('embedded') ||
+    text.includes('cad')
+  )
+    return 'precision_manufacturing';
+  if (
+    text.includes('stack') ||
+    text.includes('web') ||
+    text.includes('aem') ||
+    text.includes('frontend') ||
+    text.includes('developer')
+  )
+    return 'code';
   return 'work';
 };
 
@@ -26,7 +72,8 @@ const getBadgeTheme = (badgeColor = '', idx = 0) => {
   const c = (badgeColor || '').toLowerCase();
   if (c.includes('green') || c.includes('emerald')) return 'emerald';
   if (c.includes('blue') || c.includes('cobalt')) return 'cobalt';
-  if (c.includes('purple') || c.includes('cyan') || c.includes('teal')) return 'cyan';
+  if (c.includes('purple') || c.includes('cyan') || c.includes('teal'))
+    return 'cyan';
   return idx % 3 === 0 ? 'emerald' : idx % 3 === 1 ? 'cobalt' : 'cyan';
 };
 
@@ -93,7 +140,8 @@ const NewHero = ({ onOpenModal }) => {
     if (openings && openings.length > 0) {
       // Sort by priority and newest posted date
       const sorted = [...openings].sort((a, b) => {
-        if (a.priority !== b.priority) return (a.priority || 99) - (b.priority || 99);
+        if (a.priority !== b.priority)
+          return (a.priority || 99) - (b.priority || 99);
         return new Date(b.postedDate || 0) - new Date(a.postedDate || 0);
       });
 
@@ -111,7 +159,11 @@ const NewHero = ({ onOpenModal }) => {
           job.salary || 'Market Premium',
           job.jobMode || 'Permanent',
           job.workMode || 'Hybrid',
-          job.noticePeriod ? `Notice: ${job.noticePeriod}` : (job.joining ? `Joining: ${job.joining}` : 'Immediate'),
+          job.noticePeriod
+            ? `Notice: ${job.noticePeriod}`
+            : job.joining
+              ? `Joining: ${job.joining}`
+              : 'Immediate',
         ],
         deployRole: job.title,
       }));
@@ -164,7 +216,9 @@ const NewHero = ({ onOpenModal }) => {
   }, [heroSlides.length]);
 
   const prevSlide = useCallback(() => {
-    setCurrentSlideIndex((prev) => (prev - 1 + heroSlides.length) % heroSlides.length);
+    setCurrentSlideIndex(
+      (prev) => (prev - 1 + heroSlides.length) % heroSlides.length
+    );
   }, [heroSlides.length]);
 
   const goToSlide = (index) => {
@@ -203,7 +257,9 @@ const NewHero = ({ onOpenModal }) => {
     if (locationInput) params.append('location', locationInput);
     if (experienceInput) params.append('experience', experienceInput);
 
-    const openingsSection = document.getElementById('openings') || document.getElementById('hot-jobs');
+    const openingsSection =
+      document.getElementById('openings') ||
+      document.getElementById('hot-jobs');
     if (openingsSection) {
       openingsSection.scrollIntoView({ behavior: 'smooth' });
     } else {
@@ -216,7 +272,9 @@ const NewHero = ({ onOpenModal }) => {
 
   const handleExploreJobs = (e) => {
     e.preventDefault();
-    const openingsSection = document.getElementById('openings') || document.getElementById('hot-jobs');
+    const openingsSection =
+      document.getElementById('openings') ||
+      document.getElementById('hot-jobs');
     if (openingsSection) {
       openingsSection.scrollIntoView({ behavior: 'smooth' });
     } else {
@@ -249,7 +307,10 @@ const NewHero = ({ onOpenModal }) => {
         />
 
         {/* Ambient Glows */}
-        <div className="NewHero-glowOrb NewHero-glowPrimary" aria-hidden="true" />
+        <div
+          className="NewHero-glowOrb NewHero-glowPrimary"
+          aria-hidden="true"
+        />
         <div className="NewHero-glowOrb NewHero-glowTeal" aria-hidden="true" />
 
         <div className="NewHero-container">
@@ -263,38 +324,55 @@ const NewHero = ({ onOpenModal }) => {
               animate="visible"
             >
               {/* Top Trust Micro-Badge with Glowing Pulse */}
-              <motion.div variants={itemVariants} className="NewHero-trustBadge group cursor-default">
+              <motion.div
+                variants={itemVariants}
+                className="NewHero-trustBadge group cursor-default"
+              >
                 <span className="NewHero-pingWrapper">
                   <span className="NewHero-pingCircle" />
                   <span className="NewHero-pingDot" />
                 </span>
-                <span className="NewHero-badgeTitle">BORDERLESS TALENT ENGINE</span>
+                <span className="NewHero-badgeTitle">
+                  BORDERLESS TALENT ENGINE
+                </span>
                 <span className="NewHero-badgeDivider">•</span>
-                <span className="NewHero-badgeSubtitle">India • USA • Canada Tech Corridors</span>
+                <span className="NewHero-badgeSubtitle">
+                  India • USA • Canada Tech Corridors
+                </span>
               </motion.div>
 
               <motion.h1 variants={itemVariants} className="NewHero-headline">
                 Your Trusted Partner For{' '}
-                <span className="NewHero-gradientText">High-Quality IT Recruitment</span> &amp; Talent
-                Augmentation
+                <span className="NewHero-gradientText">
+                  High-Quality IT Recruitment
+                </span>{' '}
+                &amp; Talent Augmentation
               </motion.h1>
 
               <motion.p variants={itemVariants} className="NewHero-description">
-                Connecting enterprise engineering leaders with high-caliber technical specialists, SAP
-                functional consultants, Cloud architects, and mission-critical tech leads within 48 to 72
+                Connecting enterprise engineering leaders with high-caliber
+                technical specialists, SAP functional consultants, Cloud
+                architects, and mission-critical tech leads within 48 to 72
                 hours.
               </motion.p>
 
               {/* Dual Action CTAs with Motion Physics */}
-              <motion.div variants={itemVariants} className="NewHero-actionGroup">
+              <motion.div
+                variants={itemVariants}
+                className="NewHero-actionGroup"
+              >
                 <motion.button
                   type="button"
                   className="NewHero-btnPrimary"
-                  onClick={() => handleOpenModal('Hire Top Tech Talent - Enterprise Inquiry')}
+                  onClick={() =>
+                    handleOpenModal('Hire Top Tech Talent - Enterprise Inquiry')
+                  }
                   whileHover={{ scale: 1.025, y: -2 }}
                   whileTap={{ scale: 0.975 }}
                 >
-                  <span className="material-symbols-outlined NewHero-btnIcon">person_add</span>
+                  <span className="material-symbols-outlined NewHero-btnIcon">
+                    person_add
+                  </span>
                   <span>Hire Top Tech Talent</span>
                 </motion.button>
 
@@ -306,7 +384,9 @@ const NewHero = ({ onOpenModal }) => {
                   whileTap={{ scale: 0.98 }}
                 >
                   <span>Explore Hot Jobs</span>
-                  <span className="material-symbols-outlined NewHero-btnIcon">arrow_downward</span>
+                  <span className="material-symbols-outlined NewHero-btnIcon">
+                    arrow_downward
+                  </span>
                 </motion.a>
               </motion.div>
 
@@ -316,21 +396,27 @@ const NewHero = ({ onOpenModal }) => {
                   <span className="material-symbols-outlined NewHero-trustIcon NewHero-trustIconEmerald">
                     verified
                   </span>
-                  <span className="NewHero-trustText">3+ Years Industry Excellence</span>
+                  <span className="NewHero-trustText">
+                    3+ Years Industry Excellence
+                  </span>
                 </div>
 
                 <div className="NewHero-trustItem">
                   <span className="material-symbols-outlined NewHero-trustIcon NewHero-trustIconCobalt">
                     bolt
                   </span>
-                  <span className="NewHero-trustText">48-Hr Fast Match SLA</span>
+                  <span className="NewHero-trustText">
+                    48-Hr Fast Match SLA
+                  </span>
                 </div>
 
                 <div className="NewHero-trustItem">
                   <span className="material-symbols-outlined NewHero-trustIcon NewHero-trustIconPrimary">
                     star
                   </span>
-                  <span className="NewHero-trustText">93% Enterprise Retention</span>
+                  <span className="NewHero-trustText">
+                    93% Enterprise Retention
+                  </span>
                 </div>
               </motion.div>
             </motion.div>
@@ -340,7 +426,11 @@ const NewHero = ({ onOpenModal }) => {
               className="NewHero-visualCol"
               initial={{ opacity: 0, scale: 0.96 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.7, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
+              transition={{
+                duration: 0.7,
+                delay: 0.2,
+                ease: [0.16, 1, 0.3, 1],
+              }}
             >
               <motion.div
                 className="NewHero-imageWrapper"
@@ -393,7 +483,9 @@ const NewHero = ({ onOpenModal }) => {
                       whileHover={{ scale: 1.08 }}
                       whileTap={{ scale: 0.92 }}
                     >
-                      <span className="material-symbols-outlined">chevron_left</span>
+                      <span className="material-symbols-outlined">
+                        chevron_left
+                      </span>
                     </motion.button>
                     <motion.button
                       type="button"
@@ -404,7 +496,9 @@ const NewHero = ({ onOpenModal }) => {
                       whileHover={{ scale: 1.08 }}
                       whileTap={{ scale: 0.92 }}
                     >
-                      <span className="material-symbols-outlined">chevron_right</span>
+                      <span className="material-symbols-outlined">
+                        chevron_right
+                      </span>
                     </motion.button>
                   </div>
                 </div>
@@ -413,7 +507,11 @@ const NewHero = ({ onOpenModal }) => {
                 <motion.div
                   className="NewHero-floatingCard"
                   animate={{ y: [0, -6, 0] }}
-                  transition={{ duration: 4.5, repeat: Infinity, ease: 'easeInOut' }}
+                  transition={{
+                    duration: 4.5,
+                    repeat: Infinity,
+                    ease: 'easeInOut',
+                  }}
                 >
                   <AnimatePresence mode="wait">
                     <motion.div
@@ -424,8 +522,12 @@ const NewHero = ({ onOpenModal }) => {
                       transition={{ duration: 0.4 }}
                     >
                       <div className="NewHero-floatingHeader">
-                        <span className="NewHero-floatingTag">{currentSlide.tag}</span>
-                        <span className={`NewHero-floatingLiveBadge NewHero-badge-${currentSlide.badgeTheme}`}>
+                        <span className="NewHero-floatingTag">
+                          {currentSlide.tag}
+                        </span>
+                        <span
+                          className={`NewHero-floatingLiveBadge NewHero-badge-${currentSlide.badgeTheme}`}
+                        >
                           <span className="NewHero-floatingPulseDot" />
                           {currentSlide.liveBadgeText}
                         </span>
@@ -433,21 +535,31 @@ const NewHero = ({ onOpenModal }) => {
 
                       <div className="NewHero-floatingBody">
                         <div className="NewHero-floatingIconSquircle">
-                          <span className="material-symbols-outlined">{currentSlide.icon}</span>
+                          <span className="material-symbols-outlined">
+                            {currentSlide.icon}
+                          </span>
                         </div>
                         <div className="NewHero-floatingText">
-                          <p className="NewHero-floatingTitle">{currentSlide.title}</p>
-                          <p className="NewHero-floatingSubtitle">{currentSlide.subtitle}</p>
+                          <p className="NewHero-floatingTitle">
+                            {currentSlide.title}
+                          </p>
+                          <p className="NewHero-floatingSubtitle">
+                            {currentSlide.subtitle}
+                          </p>
                           <div className="NewHero-floatingPillRow">
                             {currentSlide.metrics.map((m, mIdx) => (
-                              <span key={mIdx} className="NewHero-floatingPill">{m}</span>
+                              <span key={mIdx} className="NewHero-floatingPill">
+                                {m}
+                              </span>
                             ))}
                           </div>
                         </div>
                         <motion.button
                           type="button"
                           className="NewHero-deployBtn"
-                          onClick={() => handleOpenModal(currentSlide.deployRole)}
+                          onClick={() =>
+                            handleOpenModal(currentSlide.deployRole)
+                          }
                           whileHover={{ scale: 1.05 }}
                           whileTap={{ scale: 0.95 }}
                         >
@@ -477,7 +589,10 @@ const NewHero = ({ onOpenModal }) => {
                           className="NewHero-progressBarFill"
                           initial={{ width: '0%' }}
                           animate={{ width: '100%' }}
-                          transition={{ duration: SLIDE_DURATION / 1000, ease: 'linear' }}
+                          transition={{
+                            duration: SLIDE_DURATION / 1000,
+                            ease: 'linear',
+                          }}
                         />
                       </div>
                     )}
@@ -492,14 +607,23 @@ const NewHero = ({ onOpenModal }) => {
             className="NewHero-searchContainer"
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.65, delay: 0.35, ease: [0.16, 1, 0.3, 1] }}
+            transition={{
+              duration: 0.65,
+              delay: 0.35,
+              ease: [0.16, 1, 0.3, 1],
+            }}
           >
             <form className="NewHero-searchForm" onSubmit={handleSearchSubmit}>
               {/* Keyword / Role Field */}
               <div className="NewHero-searchField NewHero-searchFieldRole">
-                <span className="material-symbols-outlined NewHero-searchIcon">search</span>
+                <span className="material-symbols-outlined NewHero-searchIcon">
+                  search
+                </span>
                 <div className="NewHero-inputBlock">
-                  <label htmlFor="hero-role-input" className="NewHero-fieldLabel">
+                  <label
+                    htmlFor="hero-role-input"
+                    className="NewHero-fieldLabel"
+                  >
                     Role or Skill
                   </label>
                   <input
@@ -515,9 +639,14 @@ const NewHero = ({ onOpenModal }) => {
 
               {/* Location Selector */}
               <div className="NewHero-searchField NewHero-searchFieldLocation">
-                <span className="material-symbols-outlined NewHero-searchIcon">location_on</span>
+                <span className="material-symbols-outlined NewHero-searchIcon">
+                  location_on
+                </span>
                 <div className="NewHero-inputBlock">
-                  <label htmlFor="hero-location-select" className="NewHero-fieldLabel">
+                  <label
+                    htmlFor="hero-location-select"
+                    className="NewHero-fieldLabel"
+                  >
                     Location
                   </label>
                   <select
@@ -526,7 +655,9 @@ const NewHero = ({ onOpenModal }) => {
                     value={locationInput}
                     onChange={(e) => setLocationInput(e.target.value)}
                   >
-                    <option value="">All Locations (India / US / Remote)</option>
+                    <option value="">
+                      All Locations (India / US / Remote)
+                    </option>
                     <option value="bangalore">Bangalore Hub</option>
                     <option value="remote">Remote / Borderless</option>
                     <option value="hyderabad">Hyderabad</option>
@@ -538,9 +669,14 @@ const NewHero = ({ onOpenModal }) => {
 
               {/* Experience Selector */}
               <div className="NewHero-searchField NewHero-searchFieldExp">
-                <span className="material-symbols-outlined NewHero-searchIcon">layers</span>
+                <span className="material-symbols-outlined NewHero-searchIcon">
+                  layers
+                </span>
                 <div className="NewHero-inputBlock">
-                  <label htmlFor="hero-experience-select" className="NewHero-fieldLabel">
+                  <label
+                    htmlFor="hero-experience-select"
+                    className="NewHero-fieldLabel"
+                  >
                     Experience
                   </label>
                   <select
@@ -551,8 +687,12 @@ const NewHero = ({ onOpenModal }) => {
                   >
                     <option value="">Any Seniority</option>
                     <option value="3-5">Mid-Senior (3 - 5 Years)</option>
-                    <option value="8-12">Lead / Specialist (8 - 12 Years)</option>
-                    <option value="15">Staff / Principal Architect (15+ Years)</option>
+                    <option value="8-12">
+                      Lead / Specialist (8 - 12 Years)
+                    </option>
+                    <option value="15">
+                      Staff / Principal Architect (15+ Years)
+                    </option>
                   </select>
                 </div>
               </div>

@@ -30,16 +30,27 @@ export const registerCandidate = async (req, res) => {
 
     // 1. Validation
     if (!name || !name.trim()) {
-      return res.status(400).json({ success: false, error: 'Full name is required.' });
+      return res
+        .status(400)
+        .json({ success: false, error: 'Full name is required.' });
     }
     if (!email || !isValidEmail(email)) {
-      return res.status(400).json({ success: false, error: 'A valid email address is required.' });
+      return res
+        .status(400)
+        .json({ success: false, error: 'A valid email address is required.' });
     }
     if (!password || password.length < 12) {
-      return res.status(400).json({ success: false, error: 'Password must be at least 12 characters long.' });
+      return res
+        .status(400)
+        .json({
+          success: false,
+          error: 'Password must be at least 12 characters long.',
+        });
     }
     if (confirmPassword && password !== confirmPassword) {
-      return res.status(400).json({ success: false, error: 'Passwords do not match.' });
+      return res
+        .status(400)
+        .json({ success: false, error: 'Passwords do not match.' });
     }
 
     const cleanEmail = email.toLowerCase().trim();
@@ -50,20 +61,23 @@ export const registerCandidate = async (req, res) => {
       if (existingCandidate) {
         return res.status(409).json({
           success: false,
-          error: 'An account with this email address already exists. Please log in instead.',
+          error:
+            'An account with this email address already exists. Please log in instead.',
         });
       }
     } else {
       if (process.env.NODE_ENV === 'production') {
         return res.status(503).json({
           success: false,
-          error: 'Database connection unavailable. Cannot register candidates in production.',
+          error:
+            'Database connection unavailable. Cannot register candidates in production.',
         });
       }
       if (localDevCandidates.has(cleanEmail)) {
         return res.status(409).json({
           success: false,
-          error: 'An account with this email address already exists in local storage.',
+          error:
+            'An account with this email address already exists in local storage.',
         });
       }
     }
@@ -116,7 +130,9 @@ export const registerCandidate = async (req, res) => {
     console.error('Candidate registration error:', error);
     return res.status(500).json({
       success: false,
-      error: error.message || 'An error occurred during registration. Please try again.',
+      error:
+        error.message ||
+        'An error occurred during registration. Please try again.',
     });
   }
 };
@@ -189,7 +205,8 @@ export const loginCandidate = async (req, res) => {
     console.error('Candidate login error:', error);
     return res.status(500).json({
       success: false,
-      error: error.message || 'An error occurred during login. Please try again.',
+      error:
+        error.message || 'An error occurred during login. Please try again.',
     });
   }
 };
@@ -278,7 +295,8 @@ export const forgotPassword = async (req, res) => {
     if (!candidate) {
       return res.status(200).json({
         success: true,
-        message: 'If an account exists with that email, a password reset link has been dispatched.',
+        message:
+          'If an account exists with that email, a password reset link has been dispatched.',
       });
     }
 
@@ -296,13 +314,16 @@ export const forgotPassword = async (req, res) => {
 
     const responsePayload = {
       success: true,
-      message: 'If an account exists with that email, a password reset link has been dispatched.',
+      message:
+        'If an account exists with that email, a password reset link has been dispatched.',
     };
 
     // In local development mode ONLY (never in production), provide the reset url for easy developer testing
     if (process.env.NODE_ENV !== 'production') {
       responsePayload.devResetUrl = `/reset-password?token=${rawToken}&email=${encodeURIComponent(cleanEmail)}`;
-      console.log(`[DEV ONLY] Reset Password Link: /reset-password?token=${rawToken}&email=${encodeURIComponent(cleanEmail)}`);
+      console.log(
+        `[DEV ONLY] Reset Password Link: /reset-password?token=${rawToken}&email=${encodeURIComponent(cleanEmail)}`
+      );
     }
 
     return res.status(200).json(responsePayload);
@@ -368,7 +389,8 @@ export const resetPassword = async (req, res) => {
     if (!candidate) {
       return res.status(400).json({
         success: false,
-        error: 'Password reset token is invalid or has expired. Please request a new one.',
+        error:
+          'Password reset token is invalid or has expired. Please request a new one.',
       });
     }
 
@@ -384,7 +406,8 @@ export const resetPassword = async (req, res) => {
 
     return res.status(200).json({
       success: true,
-      message: 'Password reset successful! You may now log in with your new password.',
+      message:
+        'Password reset successful! You may now log in with your new password.',
     });
   } catch (error) {
     console.error('Reset password error:', error);

@@ -6,7 +6,9 @@ import mongoose from 'mongoose';
 
 // ================= ADMIN ROLE-BASED AUTHENTICATION & RBAC =================
 // Strictly verifies the administrator's JWT cookie or Authorization Bearer header
-export const requireAuth = (allowedRoles = ['superadmin', 'admin', 'cms_admin']) => {
+export const requireAuth = (
+  allowedRoles = ['superadmin', 'admin', 'cms_admin']
+) => {
   return async (req, res, next) => {
     try {
       let token = null;
@@ -14,7 +16,10 @@ export const requireAuth = (allowedRoles = ['superadmin', 'admin', 'cms_admin'])
       // 1. Check HttpOnly cookie, Authorization header, or x-admin-token header
       if (req.cookies && req.cookies.thinkwires_admin_jwt) {
         token = req.cookies.thinkwires_admin_jwt;
-      } else if (req.headers.authorization && req.headers.authorization.startsWith('Bearer ')) {
+      } else if (
+        req.headers.authorization &&
+        req.headers.authorization.startsWith('Bearer ')
+      ) {
         token = req.headers.authorization.split(' ')[1];
       } else if (req.headers['x-admin-token']) {
         token = req.headers['x-admin-token'];
@@ -24,7 +29,8 @@ export const requireAuth = (allowedRoles = ['superadmin', 'admin', 'cms_admin'])
         return res.status(401).json({
           success: false,
           authenticated: false,
-          error: 'Authentication required. Please log in with your official credentials to access the admin portal.',
+          error:
+            'Authentication required. Please log in with your official credentials to access the admin portal.',
         });
       }
 
@@ -43,7 +49,8 @@ export const requireAuth = (allowedRoles = ['superadmin', 'admin', 'cms_admin'])
         return res.status(401).json({
           success: false,
           authenticated: false,
-          error: 'Invalid or forged admin authentication session. Please log in again.',
+          error:
+            'Invalid or forged admin authentication session. Please log in again.',
         });
       }
 
@@ -68,13 +75,16 @@ export const requireAuth = (allowedRoles = ['superadmin', 'admin', 'cms_admin'])
         try {
           const dbUser = mongoose.Types.ObjectId.isValid(decoded.id)
             ? await UserMongo.findById(decoded.id).select('-password').lean()
-            : await UserMongo.findOne({ email: decoded.email.toLowerCase() }).select('-password').lean();
+            : await UserMongo.findOne({ email: decoded.email.toLowerCase() })
+                .select('-password')
+                .lean();
 
           if (dbUser) {
             if (dbUser.isActive === false) {
               return res.status(403).json({
                 success: false,
-                error: 'Your administrative account has been deactivated. Please contact your Superadmin.',
+                error:
+                  'Your administrative account has been deactivated. Please contact your Superadmin.',
               });
             }
             userObj = {
@@ -95,7 +105,11 @@ export const requireAuth = (allowedRoles = ['superadmin', 'admin', 'cms_admin'])
       const role = (userObj.role || 'admin').toLowerCase();
 
       // 4. Role check (superadmin always passes)
-      if (role !== 'superadmin' && allowedRoles.length > 0 && !allowedRoles.includes(role)) {
+      if (
+        role !== 'superadmin' &&
+        allowedRoles.length > 0 &&
+        !allowedRoles.includes(role)
+      ) {
         return res.status(403).json({
           success: false,
           error: `Permission Denied: Your assigned role (${role.toUpperCase()}) is not authorized for this operation. Requires ${allowedRoles.join(' or ')}.`,
@@ -129,17 +143,20 @@ export const requireRole = (...allowedRoles) => {
     }
 
     if (rolesList.length > 0 && !rolesList.includes(role)) {
-      const isManpowerRestricted = role === 'cms_admin' && !rolesList.includes('cms_admin');
+      const isManpowerRestricted =
+        role === 'cms_admin' && !rolesList.includes('cms_admin');
       const isCmsRestricted = role === 'admin' && !rolesList.includes('admin');
 
       let errorMsg = `Access Denied: ${role.toUpperCase()} role is not authorized for this module. Requires ${rolesList.join(' or ')}.`;
       let code = 'RBAC_ACCESS_DENIED';
 
       if (isManpowerRestricted) {
-        errorMsg = 'Access Denied: Your account role is CMS Admin. CMS Admins have access restricted exclusively to the Content Management System (CMS). Manpower, Candidate, and Placement records are inaccessible.';
+        errorMsg =
+          'Access Denied: Your account role is CMS Admin. CMS Admins have access restricted exclusively to the Content Management System (CMS). Manpower, Candidate, and Placement records are inaccessible.';
         code = 'RBAC_CMS_ADMIN_RESTRICTED';
       } else if (isCmsRestricted) {
-        errorMsg = 'Access Denied: Your account role is Admin. Admins have access restricted exclusively to Manpower, Workforce, and Recruitment operations. Content Management System (CMS) is inaccessible.';
+        errorMsg =
+          'Access Denied: Your account role is Admin. Admins have access restricted exclusively to Manpower, Workforce, and Recruitment operations. Content Management System (CMS) is inaccessible.';
         code = 'RBAC_ADMIN_CMS_RESTRICTED';
       }
 
@@ -165,7 +182,10 @@ export const requireCandidateAuth = async (req, res, next) => {
 
     if (req.cookies && req.cookies.thinkwires_candidate_jwt) {
       token = req.cookies.thinkwires_candidate_jwt;
-    } else if (req.headers.authorization && req.headers.authorization.startsWith('Bearer ')) {
+    } else if (
+      req.headers.authorization &&
+      req.headers.authorization.startsWith('Bearer ')
+    ) {
       token = req.headers.authorization.split(' ')[1];
     }
 
@@ -173,7 +193,8 @@ export const requireCandidateAuth = async (req, res, next) => {
       return res.status(401).json({
         success: false,
         authenticated: false,
-        error: 'Authentication required. Please log in to access this candidate resource.',
+        error:
+          'Authentication required. Please log in to access this candidate resource.',
       });
     }
 
@@ -191,7 +212,9 @@ export const requireCandidateAuth = async (req, res, next) => {
     // 3. Database verification to ensure candidate still exists and is active
     let candidate = null;
     if (mongoose.connection.readyState === 1) {
-      candidate = await Candidate.findById(decoded.id).select('-password -resetPasswordToken -resetPasswordExpire');
+      candidate = await Candidate.findById(decoded.id).select(
+        '-password -resetPasswordToken -resetPasswordExpire'
+      );
       if (!candidate) {
         return res.status(401).json({
           success: false,
@@ -248,7 +271,10 @@ export const authenticateCandidateOrAdmin = async (req, res, next) => {
       token = req.cookies.thinkwires_admin_jwt;
     } else if (req.cookies && req.cookies.thinkwires_candidate_jwt) {
       token = req.cookies.thinkwires_candidate_jwt;
-    } else if (req.headers.authorization && req.headers.authorization.startsWith('Bearer ')) {
+    } else if (
+      req.headers.authorization &&
+      req.headers.authorization.startsWith('Bearer ')
+    ) {
       token = req.headers.authorization.split(' ')[1];
     } else if (req.headers['x-admin-token']) {
       token = req.headers['x-admin-token'];
@@ -275,7 +301,10 @@ export const authenticateCandidateOrAdmin = async (req, res, next) => {
         return res.status(401).json({
           success: false,
           authenticated: false,
-          error: candErr.name === 'TokenExpiredError' ? 'Session expired.' : 'Invalid token.',
+          error:
+            candErr.name === 'TokenExpiredError'
+              ? 'Session expired.'
+              : 'Invalid token.',
         });
       }
     }
@@ -307,7 +336,10 @@ export const optionalCandidateAuth = async (req, res, next) => {
 
     if (req.cookies && req.cookies.thinkwires_candidate_jwt) {
       token = req.cookies.thinkwires_candidate_jwt;
-    } else if (req.headers.authorization && req.headers.authorization.startsWith('Bearer ')) {
+    } else if (
+      req.headers.authorization &&
+      req.headers.authorization.startsWith('Bearer ')
+    ) {
       token = req.headers.authorization.split(' ')[1];
     }
 
@@ -320,7 +352,9 @@ export const optionalCandidateAuth = async (req, res, next) => {
       const decoded = verifyCandidateToken(token);
       if (decoded && decoded.id) {
         if (mongoose.connection.readyState === 1) {
-          const candidate = await Candidate.findById(decoded.id).select('-password');
+          const candidate = await Candidate.findById(decoded.id).select(
+            '-password'
+          );
           if (candidate) {
             req.candidate = candidate;
           }

@@ -13,15 +13,32 @@ import JobsHero from '../components/JobsComponents/JobsHero';
 import JobSearch from '../components/JobsComponents/JobSearch';
 
 // Below-the-fold components lazy loaded for optimal bundle splitting
-const FeaturedPositions = lazy(() => import('../components/JobsComponents/FeaturedPositions'));
-const TalentBench = lazy(() => import('../components/JobsComponents/TalentBench'));
+const FeaturedPositions = lazy(
+  () => import('../components/JobsComponents/FeaturedPositions')
+);
+const TalentBench = lazy(
+  () => import('../components/JobsComponents/TalentBench')
+);
 const JobsStats = lazy(() => import('../components/JobsComponents/JobsStats'));
-const CareerBenefits = lazy(() => import('../components/JobsComponents/CareerBenefits'));
-const CareerInsights = lazy(() => import('../components/JobsComponents/CareerInsights'));
-const CandidateFAQs = lazy(() => import('../components/JobsComponents/CandidateFAQs'));
+const CareerBenefits = lazy(
+  () => import('../components/JobsComponents/CareerBenefits')
+);
+const CareerInsights = lazy(
+  () => import('../components/JobsComponents/CareerInsights')
+);
+const CandidateFAQs = lazy(
+  () => import('../components/JobsComponents/CandidateFAQs')
+);
 
 const ComponentLoader = () => (
-  <div style={{ textAlign: 'center', padding: '3rem 1.5rem', color: '#64748b', fontSize: '0.95rem' }}>
+  <div
+    style={{
+      textAlign: 'center',
+      padding: '3rem 1.5rem',
+      color: '#64748b',
+      fontSize: '0.95rem',
+    }}
+  >
     Loading section...
   </div>
 );
@@ -57,12 +74,29 @@ const JobPage = () => {
         sort: sortBy,
       })
     );
-  }, [dispatch, searchQuery, locationFilter, experienceFilter, workMode, jobMode, noticePeriod, departmentFilter, sortBy]);
+  }, [
+    dispatch,
+    searchQuery,
+    locationFilter,
+    experienceFilter,
+    workMode,
+    jobMode,
+    noticePeriod,
+    departmentFilter,
+    sortBy,
+  ]);
 
   // Trigger search on filter changes or initial load
   useEffect(() => {
     loadJobsFromBackend();
-  }, [departmentFilter, workMode, jobMode, noticePeriod, sortBy, loadJobsFromBackend]);
+  }, [
+    departmentFilter,
+    workMode,
+    jobMode,
+    noticePeriod,
+    sortBy,
+    loadJobsFromBackend,
+  ]);
 
   // Handle Search button submit
   const handleSearchSubmit = () => {
@@ -76,11 +110,20 @@ const JobPage = () => {
   const { isAuthenticated } = useSelector((state) => state.auth);
 
   const handleApplyJob = (job) => {
-    const jobIdentifier = job.id || job._id || 'job-' + encodeURIComponent(job.title.toLowerCase().replace(/[^a-z0-9]+/g, '-'));
-    const empType = job.jobMode || job.employmentType || job.type || 'Permanent';
+    const jobIdentifier =
+      job.id ||
+      job._id ||
+      'job-' +
+        encodeURIComponent(job.title.toLowerCase().replace(/[^a-z0-9]+/g, '-'));
+    const empType =
+      job.jobMode || job.employmentType || job.type || 'Permanent';
     const postDate = job.postedDate
-      ? new Date(job.postedDate).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
-      : (job.postingDate || 'Active Mandate');
+      ? new Date(job.postedDate).toLocaleDateString('en-US', {
+          month: 'short',
+          day: 'numeric',
+          year: 'numeric',
+        })
+      : job.postingDate || 'Active Mandate';
     const targetApplyUrl = `/jobs/${jobIdentifier}/apply?title=${encodeURIComponent(job.title)}&department=${encodeURIComponent(job.department || 'Engineering')}&location=${encodeURIComponent(job.location || 'Remote')}&employmentType=${encodeURIComponent(empType)}&postingDate=${encodeURIComponent(postDate)}`;
 
     if (isAuthenticated) {
@@ -124,15 +167,32 @@ const JobPage = () => {
         <Suspense fallback={<ComponentLoader />}>
           {/* Featured Positions Grid (Dynamic from Redux Store & Backend) */}
           {isLoading && openings.length === 0 ? (
-            <div style={{ textAlign: 'center', padding: '4rem', color: '#64748b' }}>
-              <div style={{ fontSize: '1.2rem', fontWeight: 600 }}>Loading dynamic job listings from backend...</div>
+            <div
+              style={{ textAlign: 'center', padding: '4rem', color: '#64748b' }}
+            >
+              <div style={{ fontSize: '1.2rem', fontWeight: 600 }}>
+                Loading dynamic job listings from backend...
+              </div>
             </div>
           ) : isError && openings.length === 0 ? (
-            <div style={{ textAlign: 'center', padding: '4rem', color: '#ef4444' }}>
-              <div>{errors.openings || 'Unable to load live jobs from backend server.'}</div>
-              <button 
+            <div
+              style={{ textAlign: 'center', padding: '4rem', color: '#ef4444' }}
+            >
+              <div>
+                {errors.openings ||
+                  'Unable to load live jobs from backend server.'}
+              </div>
+              <button
                 onClick={loadJobsFromBackend}
-                style={{ marginTop: '1rem', padding: '0.5rem 1rem', borderRadius: '6px', background: '#2563eb', color: '#fff', border: 'none', cursor: 'pointer' }}
+                style={{
+                  marginTop: '1rem',
+                  padding: '0.5rem 1rem',
+                  borderRadius: '6px',
+                  background: '#2563eb',
+                  color: '#fff',
+                  border: 'none',
+                  cursor: 'pointer',
+                }}
               >
                 Retry
               </button>
@@ -193,7 +253,11 @@ const JobPage = () => {
         isOpen={!!selectedJobForModal}
         onClose={() => setSelectedJobForModal(null)}
         jobData={selectedJobForModal}
-        roleTitle={typeof selectedJobForModal === 'string' ? selectedJobForModal : selectedJobForModal?.title || ''}
+        roleTitle={
+          typeof selectedJobForModal === 'string'
+            ? selectedJobForModal
+            : selectedJobForModal?.title || ''
+        }
       />
     </div>
   );

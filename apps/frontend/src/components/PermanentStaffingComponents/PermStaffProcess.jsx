@@ -19,7 +19,9 @@ const PermStaffProcess = ({ data }) => {
           {steps.map((st, idx) => (
             <div key={idx} className="PermStaff-processCard">
               <div className="step-body">
-                <div className={`step-circle ${idx === 3 ? 'emerald' : 'primary'}`}>
+                <div
+                  className={`step-circle ${idx === 3 ? 'emerald' : 'primary'}`}
+                >
                   {st.step}
                 </div>
                 <div className="step-phase">{st.phase}</div>
@@ -43,7 +45,9 @@ const PermStaffProcess = ({ data }) => {
                 <span className="material-symbols-outlined">verified</span>
               </div>
               <div>
-                <h4 className="metric-title">{metricsStrip.retention} {metricsStrip.retentionLabel}</h4>
+                <h4 className="metric-title">
+                  {metricsStrip.retention} {metricsStrip.retentionLabel}
+                </h4>
                 <p className="metric-desc">{metricsStrip.retentionDesc}</p>
               </div>
             </div>
