@@ -633,6 +633,7 @@ export const applyForJob = async (req, res) => {
  * POST /api/candidate/parse-resume
  */
 export const parseResumeForAutoFill = async (req, res) => {
+  const uploadedFilePath = req.file?.path;
   try {
     let parsed;
     if (req.file) {
@@ -692,6 +693,17 @@ export const parseResumeForAutoFill = async (req, res) => {
       success: false,
       error: 'Failed to extract resume details for auto-fill.',
     });
+  } finally {
+    if (uploadedFilePath && fs.existsSync(uploadedFilePath)) {
+      try {
+        fs.unlinkSync(uploadedFilePath);
+      } catch (cleanupErr) {
+        console.warn(
+          'Failed to clean up temporary auto-fill resume file:',
+          cleanupErr.message
+        );
+      }
+    }
   }
 };
 

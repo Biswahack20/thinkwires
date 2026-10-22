@@ -25,8 +25,22 @@ const authRateLimiter = rateLimit({
   },
 });
 
+// Rate limiter for candidate registration to mitigate spam account creation
+const registerRateLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000, // 1 hour
+  max: 15, // limit each IP to 15 registrations per hour
+  skip: () => process.env.NODE_ENV === 'test',
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: {
+    success: false,
+    error:
+      'Too many registration requests from this IP. Please try again after an hour.',
+  },
+});
+
 // Candidate Registration & Login
-router.post('/register', registerCandidate);
+router.post('/register', registerRateLimiter, registerCandidate);
 router.post('/login', authRateLimiter, loginCandidate);
 router.post('/logout', logoutCandidate);
 

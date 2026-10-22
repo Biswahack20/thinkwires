@@ -19,37 +19,46 @@ const storage = multer.diskStorage({
       /[^a-zA-Z0-9.-]/g,
       '_'
     );
-    const ext = path.extname(sanitizedOriginalName) || '.pdf';
-    const baseName = path.basename(sanitizedOriginalName, ext);
+    const ext = path.extname(sanitizedOriginalName).toLowerCase() || '.pdf';
+    const baseName = path.basename(sanitizedOriginalName, ext).substring(0, 50);
     cb(null, `${baseName}-${uniqueSuffix}${ext}`);
   },
 });
 
-// File filter accepting PDF, DOC, DOCX
-const fileFilter = (req, file, cb) => {
-  const allowedExtensions = ['.pdf', '.doc', '.docx'];
-  const ext = path.extname(file.originalname).toLowerCase();
-
-  const allowedMimeTypes = [
-    'application/pdf',
-    'application/msword',
+// Strict Extension-to-MIME mapping
+const ALLOWED_EXT_MIME_MAP = {
+  '.pdf': ['application/pdf'],
+  '.doc': ['application/msword'],
+  '.docx': [
     'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-    'application/octet-stream', // Often sent by browsers for docx
-  ];
+    'application/zip',
+    'application/x-zip-compressed',
+    'application/octet-stream', // Permitted only for .docx where browsers send generic octet-stream
+  ],
+};
 
-  if (
-    allowedExtensions.includes(ext) ||
-    allowedMimeTypes.includes(file.mimetype)
-  ) {
-    cb(null, true);
-  } else {
-    cb(
-      new Error(
-        'Invalid file type. Only PDF, DOC, and DOCX files are allowed.'
-      ),
+// File filter strictly requiring extension AND corresponding MIME type match
+const fileFilter = (req, file, cb) => {
+  const ext = path.extname(file.originalname).toLowerCase();
+  const validMimes = ALLOWED_EXT_MIME_MAP[ext];
+
+  // Disallow any extension not explicitly mapped (e.g. .html, .svg, .exe, .js, .php)
+  if (!validMimes) {
+    return cb(
+      new Error('Invalid file type. Only PDF, DOC, and DOCX files are allowed.'),
       false
     );
   }
+
+  // Strictly require MIME type to be valid for this specific extension
+  if (!validMimes.includes(file.mimetype.toLowerCase())) {
+    return cb(
+      new Error(`MIME type '${file.mimetype}' is not permitted for extension '${ext}'.`),
+      false
+    );
+  }
+
+  cb(null, true);
 };
 
 export const resumeUpload = multer({

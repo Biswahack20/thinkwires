@@ -3,6 +3,7 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import mongoose from 'mongoose';
+import rateLimit from 'express-rate-limit';
 
 import JobRequirement from '../models/job.mongo.model.js';
 import Article from '../models/article.mongo.model.js';
@@ -10,6 +11,20 @@ import Page from '../models/page.mongo.model.js';
 import Candidate from '../models/candidate.mongo.model.js';
 import Activity from '../models/activity.mongo.model.js';
 import { logger } from '../utils/logger.js';
+import { adminAuth } from '../middlewares/auth.middleware.js';
+
+// Rate limiter for public inquiries, contact forms, and lead submissions
+const publicInquiryRateLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 30, // 30 submissions per window per IP
+  skip: () => process.env.NODE_ENV === 'test',
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: {
+    success: false,
+    error: 'Too many submissions from this IP. Please try again after 15 minutes.',
+  },
+});
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -402,7 +417,7 @@ router.get('/openings', async (req, res) => {
   res.json(filtered);
 });
 
-router.post('/openings', async (req, res) => {
+router.post('/openings', adminAuth, async (req, res) => {
   if (Array.isArray(req.body.openings)) {
     openings = req.body.openings;
     if (isMongoActive()) {
@@ -429,7 +444,7 @@ router.get('/stats', async (req, res) => {
   const result = await getHomeSection('stats', stats);
   res.json(result);
 });
-router.post('/stats', async (req, res) => {
+router.post('/stats', adminAuth, async (req, res) => {
   if (req.body.stats) {
     stats = { ...stats, ...req.body.stats };
     if (isMongoActive()) {
@@ -454,7 +469,7 @@ router.get('/industries', async (req, res) => {
   const result = await getHomeSection('industries', industries);
   res.json(result);
 });
-router.post('/industries', async (req, res) => {
+router.post('/industries', adminAuth, async (req, res) => {
   if (Array.isArray(req.body.industries)) {
     industries = req.body.industries;
     if (isMongoActive()) {
@@ -506,7 +521,7 @@ router.get('/sector-catalog', async (req, res) => {
   res.json(data.sectors || []);
 });
 
-router.post('/industries-page', async (req, res) => {
+router.post('/industries-page', adminAuth, async (req, res) => {
   if (req.body.industriesPageData) {
     currentIndustriesPageData = {
       ...currentIndustriesPageData,
@@ -542,7 +557,7 @@ router.get('/process', async (req, res) => {
   const result = await getHomeSection('process', processSteps);
   res.json(result);
 });
-router.post('/process', async (req, res) => {
+router.post('/process', adminAuth, async (req, res) => {
   if (Array.isArray(req.body.processSteps)) {
     processSteps = req.body.processSteps;
     if (isMongoActive()) {
@@ -570,7 +585,7 @@ router.get('/capabilities', async (req, res) => {
   const result = await getHomeSection('capabilities', capabilities);
   res.json(result);
 });
-router.post('/capabilities', async (req, res) => {
+router.post('/capabilities', adminAuth, async (req, res) => {
   if (Array.isArray(req.body.capabilities)) {
     capabilities = req.body.capabilities;
     if (isMongoActive()) {
@@ -595,7 +610,7 @@ router.get('/reports', async (req, res) => {
   const result = await getHomeSection('reports', reports);
   res.json(result);
 });
-router.post('/reports', async (req, res) => {
+router.post('/reports', adminAuth, async (req, res) => {
   if (Array.isArray(req.body.reports)) {
     reports = req.body.reports;
     if (isMongoActive()) {
@@ -616,7 +631,7 @@ router.post('/reports', async (req, res) => {
 });
 
 // --- Old Contact Form (kept for backward compat) ---
-router.post('/contact', async (req, res) => {
+router.post('/contact', publicInquiryRateLimiter, async (req, res) => {
   const { email, phone } = req.body;
   if (!email || !phone) {
     return res.status(400).json({ error: 'Email and Phone are required' });
@@ -760,7 +775,7 @@ router.get('/articles/:id', async (req, res) => {
   }
 });
 
-router.post('/articles/newsletter', (req, res) => {
+router.post('/articles/newsletter', publicInquiryRateLimiter, (req, res) => {
   const { email, role } = req.body;
   if (email && email.includes('@')) {
     console.log('New Benchmark Dispatch Newsletter Subscription:', {
@@ -794,7 +809,7 @@ router.get('/contact', async (req, res) => {
 });
 
 // Update office locations dynamically
-router.post('/contact/offices', async (req, res) => {
+router.post('/contact/offices', adminAuth, async (req, res) => {
   if (Array.isArray(req.body.officeLocations)) {
     contactPageData.officeLocations = req.body.officeLocations;
     if (isMongoActive()) {
@@ -823,7 +838,7 @@ router.post('/contact/offices', async (req, res) => {
 });
 
 // Update contact channels dynamically
-router.post('/contact/channels', async (req, res) => {
+router.post('/contact/channels', adminAuth, async (req, res) => {
   if (Array.isArray(req.body.channels)) {
     contactPageData.channels = req.body.channels;
     if (isMongoActive()) {
@@ -847,7 +862,7 @@ router.post('/contact/channels', async (req, res) => {
 });
 
 // Update FAQ dynamically
-router.post('/contact/faq', async (req, res) => {
+router.post('/contact/faq', adminAuth, async (req, res) => {
   if (Array.isArray(req.body.faq)) {
     contactPageData.faq = req.body.faq;
     if (isMongoActive()) {
@@ -868,7 +883,7 @@ router.post('/contact/faq', async (req, res) => {
 });
 
 // Handle contact form submission
-router.post('/contact/message', (req, res) => {
+router.post('/contact/message', publicInquiryRateLimiter, (req, res) => {
   const { fullName, workEmail, inquiryType } = req.body;
   if (!fullName || !workEmail || !inquiryType) {
     return res
@@ -1696,8 +1711,8 @@ const handleConsultationSubmission = async (req, res) => {
 };
 
 // POST /api/about/consultation and POST /api/consultations
-router.post('/about/consultation', handleConsultationSubmission);
-router.post('/consultations', handleConsultationSubmission);
+router.post('/about/consultation', publicInquiryRateLimiter, handleConsultationSubmission);
+router.post('/consultations', publicInquiryRateLimiter, handleConsultationSubmission);
 // --- Payroll Outsourcing Endpoints ---
 router.get('/payroll', async (req, res) => {
   const result = await getPageDataBySlug(
@@ -1707,7 +1722,7 @@ router.get('/payroll', async (req, res) => {
   res.json(result);
 });
 
-router.post('/payroll', async (req, res) => {
+router.post('/payroll', adminAuth, async (req, res) => {
   if (req.body.payrollData) {
     currentPayrollData = { ...currentPayrollData, ...req.body.payrollData };
     if (isMongoActive()) {
@@ -1730,7 +1745,7 @@ router.post('/payroll', async (req, res) => {
   }
 });
 
-router.post('/payroll/consultation', (req, res) => {
+router.post('/payroll/consultation', publicInquiryRateLimiter, (req, res) => {
   const {
     companyName,
     fullName,
@@ -1765,7 +1780,7 @@ router.get('/eor', async (req, res) => {
   res.json(result);
 });
 
-router.post('/eor', async (req, res) => {
+router.post('/eor', adminAuth, async (req, res) => {
   if (req.body.eorData) {
     currentEorData = { ...currentEorData, ...req.body.eorData };
     if (isMongoActive()) {
@@ -1788,7 +1803,7 @@ router.post('/eor', async (req, res) => {
   }
 });
 
-router.post('/eor/consultation', (req, res) => {
+router.post('/eor/consultation', publicInquiryRateLimiter, (req, res) => {
   const {
     fullName,
     workEmail,
@@ -1826,7 +1841,7 @@ router.get('/staff-augmentation', async (req, res) => {
   res.json(result);
 });
 
-router.post('/staff-augmentation', async (req, res) => {
+router.post('/staff-augmentation', adminAuth, async (req, res) => {
   if (req.body.staffAugmentationData) {
     currentStaffAugmentationData = {
       ...currentStaffAugmentationData,
@@ -1857,7 +1872,7 @@ router.post('/staff-augmentation', async (req, res) => {
   }
 });
 
-router.post('/staff-augmentation/consultation', (req, res) => {
+router.post('/staff-augmentation/consultation', publicInquiryRateLimiter, (req, res) => {
   const { name, email, phone, company, roleNeeded, preferredTime, details } =
     req.body;
   if (!name || !email || !company) {
@@ -1898,7 +1913,7 @@ router.get('/executive-search', async (req, res) => {
   res.json(result);
 });
 
-router.post('/permanent-staffing', async (req, res) => {
+router.post('/permanent-staffing', adminAuth, async (req, res) => {
   if (req.body.permanentStaffingData) {
     currentPermanentStaffingData = {
       ...currentPermanentStaffingData,
@@ -1929,7 +1944,7 @@ router.post('/permanent-staffing', async (req, res) => {
   }
 });
 
-router.post('/permanent-staffing/consultation', (req, res) => {
+router.post('/permanent-staffing/consultation', publicInquiryRateLimiter, (req, res) => {
   const {
     fullName,
     workEmail,
@@ -1962,7 +1977,7 @@ router.post('/permanent-staffing/consultation', (req, res) => {
   });
 });
 
-router.post('/executive-search/consultation', (req, res) => {
+router.post('/executive-search/consultation', publicInquiryRateLimiter, (req, res) => {
   const {
     fullName,
     workEmail,
@@ -2001,7 +2016,7 @@ router.get('/find-talent', async (req, res) => {
   res.json(result);
 });
 
-router.post('/find-talent/requisition', async (req, res) => {
+router.post('/find-talent/requisition', publicInquiryRateLimiter, async (req, res) => {
   const {
     engagementModel,
     targetRole,

@@ -1,4 +1,5 @@
 import express from 'express';
+import rateLimit from 'express-rate-limit';
 import {
   getCandidateDashboard,
   updateCandidateProfile,
@@ -17,9 +18,24 @@ import { resumeUpload } from '../middlewares/upload.middleware.js';
 
 const router = express.Router();
 
+// Rate limiter for resume parsing to prevent resource and compute exhaustion
+const parseResumeRateLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 20, // 20 parsing attempts per window per IP
+  skip: () => process.env.NODE_ENV === 'test',
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: {
+    success: false,
+    error:
+      'Too many resume parse requests from this IP. Please try again after 15 minutes.',
+  },
+});
+
 // Resume Auto-fill (accessible for application form auto-population)
 router.post(
   '/parse-resume',
+  parseResumeRateLimiter,
   resumeUpload.single('resume'),
   parseResumeForAutoFill
 );

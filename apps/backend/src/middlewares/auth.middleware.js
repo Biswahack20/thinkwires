@@ -448,4 +448,7 @@ export const optionalCandidateAuth = async (req, res, next) => {
   }
 };
 
+// Convenient pre-configured admin authentication middleware
+export const adminAuth = requireAuth(['superadmin', 'admin', 'cms_admin']);
+
 export default requireAuth;

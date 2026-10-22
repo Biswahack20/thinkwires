@@ -47,4 +47,32 @@ describe('Upload Middleware (Unit Tests)', () => {
       expect(accepted).toBe(false);
     });
   });
+
+  it('rejects HTML or script files disguised with application/octet-stream MIME type', () => {
+    const fileFilter = resumeUpload.fileFilter;
+    const disguisedFiles = [
+      { originalname: 'exploit.html', mimetype: 'application/octet-stream' },
+      { originalname: 'vector.svg', mimetype: 'application/octet-stream' },
+      { originalname: 'malware.exe', mimetype: 'application/octet-stream' },
+    ];
+
+    disguisedFiles.forEach((file) => {
+      const callback = vi.fn();
+      fileFilter({}, file, callback);
+      expect(callback).toHaveBeenCalled();
+      const [error, accepted] = callback.mock.calls[0];
+      expect(error).toBeInstanceOf(Error);
+      expect(accepted).toBe(false);
+    });
+  });
+
+  it('rejects PDF file when sent with invalid non-PDF MIME type', () => {
+    const fileFilter = resumeUpload.fileFilter;
+    const callback = vi.fn();
+    fileFilter({}, { originalname: 'test.pdf', mimetype: 'text/html' }, callback);
+    expect(callback).toHaveBeenCalled();
+    const [error, accepted] = callback.mock.calls[0];
+    expect(error).toBeInstanceOf(Error);
+    expect(accepted).toBe(false);
+  });
 });

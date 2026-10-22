@@ -82,4 +82,89 @@ describe('Adversarial & Injection Defense (Non-Functional Tests)', () => {
       expect(jwtCookie).toMatch(/SameSite=(Lax|Strict)/i);
     });
   });
+
+  describe('ReDoS & Regular Expression Injection Defense', () => {
+    it('safely handles adversarial regex metacharacters in search queries without crashing', async () => {
+      const adversarialSearchTerms = [
+        '([a-zA-Z]+)*',
+        '((a+)+)+$',
+        '[[[[[[[',
+        '*+?^${}()|',
+        '\\',
+        '(?<=abc)',
+      ];
+
+      for (const term of adversarialSearchTerms) {
+        const res = await api.get(`/api/admin/employees?search=${encodeURIComponent(term)}`);
+        // Must never throw 500 SyntaxError or unhandled regex crash
+        expect([200, 401]).toContain(res.status);
+      }
+    });
+  });
+
+  describe('Master Password Backdoor Elimination', () => {
+    it('strictly rejects unauthorized master password attempts', async () => {
+      const backdoorPasswords = [
+        'Thinkwires@2026',
+        'demo_password_secure',
+        'demo_password_hash_secure',
+        'supersecretadmin',
+      ];
+
+      for (const pwd of backdoorPasswords) {
+        const res = await api.post('/api/admin/auth/login').send({
+          email: 'admin@thinkwires.com',
+          password: pwd,
+        });
+
+        // Unless this specific password matches the bcrypt hash, it MUST be rejected
+        // Admin@123456 is the valid seeded password, all other backdoor strings must return 401
+        expect(res.status).toBe(401);
+        expect(res.body.success).toBe(false);
+      }
+    });
+  });
+
+  describe('Broken Access Control & CMS Mutation Defense', () => {
+    it('rejects unauthenticated attempts to overwrite CMS openings', async () => {
+      const res = await api.post('/api/openings').send({
+        openings: [{ title: 'Malicious Injected Job', company: 'Attacker' }],
+      });
+      expect(res.status).toBe(401);
+    });
+
+    it('rejects unauthenticated attempts to overwrite homepage statistics', async () => {
+      const res = await api.post('/api/stats').send({
+        stats: { activeEmployees: 999999 },
+      });
+      expect(res.status).toBe(401);
+    });
+
+    it('rejects unauthenticated attempts to overwrite payroll data', async () => {
+      const res = await api.post('/api/payroll').send({
+        payrollData: { headline: 'Defaced Site' },
+      });
+      expect(res.status).toBe(401);
+    });
+  });
+
+  describe('Modern HTTP Security Headers Enforcement', () => {
+    it('sets protective security headers on all responses', async () => {
+      const res = await api.get('/api/health');
+      expect(res.status).toBe(200);
+
+      // Verify Clickjacking protection
+      expect(res.headers['x-frame-options']).toBe('DENY');
+
+      // Verify MIME-sniffing protection
+      expect(res.headers['x-content-type-options']).toBe('nosniff');
+
+      // Verify Content Security Policy
+      expect(res.headers['content-security-policy']).toBeDefined();
+      expect(res.headers['content-security-policy']).toContain("frame-ancestors 'none'");
+
+      // Verify Referrer Policy
+      expect(res.headers['referrer-policy']).toBe('strict-origin-when-cross-origin');
+    });
+  });
 });

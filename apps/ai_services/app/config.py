@@ -23,8 +23,10 @@ class Settings:
         "http://localhost:5000",
         "http://127.0.0.1:5173",
         "http://127.0.0.1:5000",
-        "*",
     ]
+
+    # Internal microservice authentication key
+    INTERNAL_SERVICE_KEY: str = os.getenv("INTERNAL_SERVICE_KEY", "tw_internal_service_secret_dev")
 
     # OpenAI LLM integration
     OPENAI_API_KEY: str = os.getenv("OPENAI_API_KEY", "").strip()
