@@ -159,6 +159,24 @@ export const generateAdminToken = (user) => {
   });
 };
 
+// Token Revocation Store (Server-side revocation for logout)
+const revokedTokens = new Set();
+
+export const revokeToken = (token) => {
+  if (token && typeof token === 'string') {
+    revokedTokens.add(token);
+  }
+};
+
+export const isTokenRevoked = (token) => {
+  if (!token || typeof token !== 'string') return false;
+  return revokedTokens.has(token);
+};
+
+export const clearRevocationStore = () => {
+  revokedTokens.clear();
+};
+
 /**
  * Verify Admin JWT token string
  */
@@ -167,17 +185,21 @@ export const verifyAdminToken = (token) => {
   return jwt.verify(token, secret);
 };
 
+export const ADMIN_COOKIE_NAME = 'thinkwires_admin_jwt';
+export const ADMIN_COOKIE_PATH = '/api/admin';
+export const ADMIN_COOKIE_MAX_AGE = 7 * 24 * 60 * 60 * 1000; // 7 days, matching token expiresIn
+
 /**
  * Helper to set HttpOnly Admin auth cookie
  */
 export const setAdminAuthCookie = (res, token) => {
   const isProduction = process.env.NODE_ENV === 'production';
-  res.cookie('thinkwires_admin_jwt', token, {
+  res.cookie(ADMIN_COOKIE_NAME, token, {
     httpOnly: true,
     secure: isProduction,
     sameSite: isProduction ? 'strict' : 'lax',
-    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-    path: '/',
+    maxAge: ADMIN_COOKIE_MAX_AGE,
+    path: ADMIN_COOKIE_PATH,
   });
 };
 
@@ -186,7 +208,16 @@ export const setAdminAuthCookie = (res, token) => {
  */
 export const clearAdminAuthCookie = (res) => {
   const isProduction = process.env.NODE_ENV === 'production';
-  res.cookie('thinkwires_admin_jwt', '', {
+  // Clear the scoped cookie
+  res.cookie(ADMIN_COOKIE_NAME, '', {
+    httpOnly: true,
+    secure: isProduction,
+    sameSite: isProduction ? 'strict' : 'lax',
+    expires: new Date(0),
+    path: ADMIN_COOKIE_PATH,
+  });
+  // Also clear legacy root path if present
+  res.cookie(ADMIN_COOKIE_NAME, '', {
     httpOnly: true,
     secure: isProduction,
     sameSite: isProduction ? 'strict' : 'lax',

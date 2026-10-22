@@ -21,7 +21,14 @@ import {
   generateAdminToken,
   setAdminAuthCookie,
   clearAdminAuthCookie,
+  revokeToken,
 } from '../utils/auth.util.js';
+import {
+  generateCsrfToken,
+  setCsrfCookie,
+  clearCsrfCookie,
+  CSRF_COOKIE_NAME,
+} from '../middlewares/csrf.middleware.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -2705,9 +2712,13 @@ export const loginAdmin = async (req, res) => {
       await UserMongo.findByIdAndUpdate(user._id, { lastLogin: new Date() });
     }
 
-    // Generate secure Admin JWT
+    // Generate secure Admin JWT and set in HttpOnly cookie
     const token = generateAdminToken(user);
     setAdminAuthCookie(res, token);
+
+    // Issue anti-CSRF token
+    const csrfToken = generateCsrfToken();
+    setCsrfCookie(res, csrfToken);
 
     await logActivity(
       'Admin Logged In',
@@ -2721,7 +2732,7 @@ export const loginAdmin = async (req, res) => {
     return res.json({
       success: true,
       message: `Welcome back, ${user.name}!`,
-      token,
+      csrfToken,
       user: {
         id: user._id ? user._id.toString() : user.id,
         name: user.name,
@@ -2741,7 +2752,25 @@ export const loginAdmin = async (req, res) => {
 
 export const logoutAdmin = async (req, res) => {
   try {
+    let token = null;
+    if (req.cookies && req.cookies.thinkwires_admin_jwt) {
+      token = req.cookies.thinkwires_admin_jwt;
+    } else if (
+      req.headers.authorization &&
+      req.headers.authorization.startsWith('Bearer ')
+    ) {
+      token = req.headers.authorization.split(' ')[1];
+    } else if (req.headers['x-admin-token']) {
+      token = req.headers['x-admin-token'];
+    }
+
+    if (token) {
+      revokeToken(token);
+    }
+
     clearAdminAuthCookie(res);
+    clearCsrfCookie(res);
+
     return res.json({
       success: true,
       message: 'Logged out successfully.',
@@ -2756,9 +2785,16 @@ export const logoutAdmin = async (req, res) => {
 };
 
 export const getCurrentUser = async (req, res) => {
+  let csrfToken = req.cookies?.[CSRF_COOKIE_NAME];
+  if (!csrfToken) {
+    csrfToken = generateCsrfToken();
+    setCsrfCookie(res, csrfToken);
+  }
+
   res.json({
     success: true,
     user: req.user,
+    csrfToken,
     availableRoles: [
       {
         role: 'superadmin',
