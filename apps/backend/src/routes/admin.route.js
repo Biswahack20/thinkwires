@@ -1,4 +1,5 @@
 import express from 'express';
+import rateLimit from 'express-rate-limit';
 import requireAuth, { requireRole, requireCsrf } from '../middlewares/auth.middleware.js';
 import {
   getDashboardOverview,
@@ -57,8 +58,22 @@ import {
 
 const router = express.Router();
 
+// Rate limiter for admin portal login to mitigate brute-force and credential stuffing
+const adminLoginRateLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 20, // 20 attempts per window per IP
+  skip: () => process.env.NODE_ENV === 'test',
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: {
+    success: false,
+    error:
+      'Too many admin login attempts from this IP. Please try again after 15 minutes.',
+  },
+});
+
 // ================= PUBLIC AUTHENTICATION ENDPOINTS =================
-router.post('/auth/login', loginAdmin);
+router.post('/auth/login', adminLoginRateLimiter, loginAdmin);
 router.post('/auth/logout', logoutAdmin);
 router.get('/auth/csrf', getCsrfToken);
 

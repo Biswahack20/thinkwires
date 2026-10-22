@@ -85,6 +85,15 @@ class AIServiceClient {
     this.baseUrl = AI_SERVICE_URL;
   }
 
+  getInternalHeaders(extraHeaders = {}) {
+    const internalKey =
+      process.env.INTERNAL_SERVICE_KEY || 'tw_internal_service_secret_dev';
+    return {
+      'X-Internal-Service-Key': internalKey,
+      ...extraHeaders,
+    };
+  }
+
   /**
    * Parse resume file or text into structured candidate fields
    * @param {Buffer|null} fileBuffer - Binary buffer of uploaded resume file
@@ -106,6 +115,7 @@ class AIServiceClient {
 
         const response = await fetch(`${this.baseUrl}/api/resume/parse`, {
           method: 'POST',
+          headers: this.getInternalHeaders(),
           body: formData,
           signal: AbortSignal.timeout(10000),
         });
@@ -124,6 +134,7 @@ class AIServiceClient {
 
         const response = await fetch(`${this.baseUrl}/api/resume/parse`, {
           method: 'POST',
+          headers: this.getInternalHeaders(),
           body: formData,
           signal: AbortSignal.timeout(10000),
         });
@@ -169,7 +180,7 @@ class AIServiceClient {
     try {
       const response = await fetch(`${this.baseUrl}/api/resume/match-score`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: this.getInternalHeaders({ 'Content-Type': 'application/json' }),
         body: JSON.stringify(payload),
         signal: AbortSignal.timeout(8000),
       });
@@ -214,7 +225,7 @@ class AIServiceClient {
         `${this.baseUrl}/api/screening/generate-test`,
         {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: this.getInternalHeaders({ 'Content-Type': 'application/json' }),
           body: JSON.stringify(payload),
           signal: AbortSignal.timeout(8000),
         }
@@ -249,7 +260,7 @@ class AIServiceClient {
         `${this.baseUrl}/api/screening/evaluate-test`,
         {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: this.getInternalHeaders({ 'Content-Type': 'application/json' }),
           body: JSON.stringify(payload),
           signal: AbortSignal.timeout(8000),
         }

@@ -45,10 +45,24 @@ let inMemoryData = {
   activities: [],
 };
 
+// Helper to escape user input before using in regular expressions to prevent ReDoS / SyntaxError crashes
+const escapeRegex = (str) => {
+  if (typeof str !== 'string') return '';
+  return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+};
+
 try {
   if (fs.existsSync(seedFilePath)) {
     const raw = fs.readFileSync(seedFilePath, 'utf8');
     inMemoryData = JSON.parse(raw);
+    // Ensure all seeded admin accounts have a secure bcrypt password hash initialized
+    const defaultSeedHash = '$2b$10$Z4qr0ir3pw4qwTabW4jCTOmKkbe37oZKNzqWPdRx.InXABOTrnOqW'; // Bcrypt hash for 'Admin@123456'
+    if (Array.isArray(inMemoryData.users)) {
+      inMemoryData.users = inMemoryData.users.map((u) => ({
+        ...u,
+        password: u.password || defaultSeedHash,
+      }));
+    }
   }
 } catch (e) {
   console.warn(
@@ -320,11 +334,12 @@ export const getEmployees = async (req, res) => {
     if (isMongoActive()) {
       let query = {};
       if (search) {
+        const safeSearch = escapeRegex(search.trim());
         query.$or = [
-          { name: { $regex: search, $options: 'i' } },
-          { email: { $regex: search, $options: 'i' } },
-          { designation: { $regex: search, $options: 'i' } },
-          { technicalSkills: { $in: [new RegExp(search, 'i')] } },
+          { name: { $regex: safeSearch, $options: 'i' } },
+          { email: { $regex: safeSearch, $options: 'i' } },
+          { designation: { $regex: safeSearch, $options: 'i' } },
+          { technicalSkills: { $in: [new RegExp(safeSearch, 'i')] } },
         ];
       }
       if (availability && availability !== 'All')
@@ -1070,10 +1085,11 @@ export const getClients = async (req, res) => {
     if (isMongoActive()) {
       let query = {};
       if (search) {
+        const safeSearch = escapeRegex(search.trim());
         query.$or = [
-          { companyName: { $regex: search, $options: 'i' } },
-          { contactPerson: { $regex: search, $options: 'i' } },
-          { email: { $regex: search, $options: 'i' } },
+          { companyName: { $regex: safeSearch, $options: 'i' } },
+          { contactPerson: { $regex: safeSearch, $options: 'i' } },
+          { email: { $regex: safeSearch, $options: 'i' } },
         ];
       }
       if (industry && industry !== 'All') query.industry = industry;
@@ -1251,17 +1267,18 @@ export const getJobs = async (req, res) => {
     if (isMongoActive()) {
       let query = {};
       if (search) {
+        const safeSearch = escapeRegex(search.trim());
         query.$or = [
-          { title: { $regex: search, $options: 'i' } },
-          { client: { $regex: search, $options: 'i' } },
-          { description: { $regex: search, $options: 'i' } },
-          { requirements: { $regex: search, $options: 'i' } },
-          { requiredSkills: { $in: [new RegExp(search, 'i')] } },
-          { industry: { $regex: search, $options: 'i' } },
-          { jobMode: { $regex: search, $options: 'i' } },
-          { workMode: { $regex: search, $options: 'i' } },
-          { officeLocation: { $regex: search, $options: 'i' } },
-          { location: { $regex: search, $options: 'i' } },
+          { title: { $regex: safeSearch, $options: 'i' } },
+          { client: { $regex: safeSearch, $options: 'i' } },
+          { description: { $regex: safeSearch, $options: 'i' } },
+          { requirements: { $regex: safeSearch, $options: 'i' } },
+          { requiredSkills: { $in: [new RegExp(safeSearch, 'i')] } },
+          { industry: { $regex: safeSearch, $options: 'i' } },
+          { jobMode: { $regex: safeSearch, $options: 'i' } },
+          { workMode: { $regex: safeSearch, $options: 'i' } },
+          { officeLocation: { $regex: safeSearch, $options: 'i' } },
+          { location: { $regex: safeSearch, $options: 'i' } },
         ];
       }
       if (priority && priority !== 'All') query.priority = priority;
@@ -1946,10 +1963,11 @@ export const getCmsArticles = async (req, res) => {
     if (isMongoActive()) {
       let query = {};
       if (search) {
+        const safeSearch = escapeRegex(search.trim());
         query.$or = [
-          { title: { $regex: search, $options: 'i' } },
-          { summary: { $regex: search, $options: 'i' } },
-          { tags: { $in: [new RegExp(search, 'i')] } },
+          { title: { $regex: safeSearch, $options: 'i' } },
+          { summary: { $regex: safeSearch, $options: 'i' } },
+          { tags: { $in: [new RegExp(safeSearch, 'i')] } },
         ];
       }
       if (category && category !== 'All') query.category = category;
@@ -2676,23 +2694,10 @@ export const loginAdmin = async (req, res) => {
       });
     }
 
-    // Verify Password:
+    // Verify Password securely using bcrypt:
     let isMatch = false;
     if (user.password) {
       isMatch = await comparePassword(password, user.password);
-    }
-
-    // Support default initial seed passwords for demo resilience:
-    if (!isMatch) {
-      const allowedDefaultPasswords = [
-        'Thinkwires@2026',
-        'Admin@123456',
-        'demo_password_secure',
-        'demo_password_hash_secure',
-      ];
-      if (allowedDefaultPasswords.includes(password)) {
-        isMatch = true;
-      }
     }
 
     if (!isMatch) {

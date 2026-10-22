@@ -1,15 +1,19 @@
 import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
+import path from 'path';
+
+import { securityHeaders } from './middlewares/securityHeaders.middleware.js';
 import apiRoutes from './routes/api.route.js';
 import adminRoutes from './routes/admin.route.js';
 import authRoutes from './routes/auth.route.js';
 import candidateRoutes from './routes/candidate.route.js';
 import userRoutes from './routes/user.route.js';
 
-import path from 'path';
-
 const app = express();
+
+// Modern HTTP security headers (CSP, HSTS, X-Frame-Options, X-Content-Type-Options)
+app.use(securityHeaders);
 
 const allowedOrigins = [
   'http://localhost:5173',
@@ -45,11 +49,28 @@ app.use(
     exposedHeaders: ['Set-Cookie'],
   })
 );
-app.use(express.json());
+// Enforce reasonable JSON body limit (1MB) to protect against memory exhaustion attacks
+app.use(express.json({ limit: '1mb' }));
 app.use(cookieParser());
 
-// Static uploads serving (e.g. resumes)
-app.use('/uploads', express.static(path.resolve(process.cwd(), 'uploads')));
+// Static uploads serving (e.g. resumes) with sandbox and nosniff protection
+app.use(
+  '/uploads',
+  express.static(path.resolve(process.cwd(), 'uploads'), {
+    setHeaders: (res, filePath) => {
+      res.setHeader('X-Content-Type-Options', 'nosniff');
+      res.setHeader('Content-Security-Policy', "default-src 'none'; sandbox");
+      if (
+        filePath.endsWith('.html') ||
+        filePath.endsWith('.svg') ||
+        filePath.endsWith('.htm') ||
+        filePath.endsWith('.exe')
+      ) {
+        res.setHeader('Content-Disposition', 'attachment');
+      }
+    },
+  })
+);
 
 // ================= HEALTH CHECK =================
 app.get('/', (req, res) => {
