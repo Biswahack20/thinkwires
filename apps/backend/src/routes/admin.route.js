@@ -1,5 +1,5 @@
 import express from 'express';
-import requireAuth, { requireRole } from '../middlewares/auth.middleware.js';
+import requireAuth, { requireRole, requireCsrf } from '../middlewares/auth.middleware.js';
 import {
   getDashboardOverview,
   getEmployees,
@@ -46,6 +46,7 @@ import {
   getCmsStats,
   getActivities,
   getCurrentUser,
+  getCsrfToken,
   loginAdmin,
   logoutAdmin,
   getSystemMembers,
@@ -59,10 +60,13 @@ const router = express.Router();
 // ================= PUBLIC AUTHENTICATION ENDPOINTS =================
 router.post('/auth/login', loginAdmin);
 router.post('/auth/logout', logoutAdmin);
+router.get('/auth/csrf', getCsrfToken);
 
 // ================= PROTECTED ADMIN ENDPOINTS =================
 // Strictly requires valid Admin JWT session
 router.use(requireAuth());
+// Strictly requires CSRF verification for state-changing requests
+router.use(requireCsrf());
 
 // Current User & Active Role
 router.get('/auth/me', getCurrentUser);

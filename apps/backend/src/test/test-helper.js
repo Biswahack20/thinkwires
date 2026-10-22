@@ -3,6 +3,7 @@ import app from '../app.js';
 import {
   generateCandidateToken,
   generateAdminToken,
+  generateCsrfToken,
 } from '../utils/auth.util.js';
 
 /**
@@ -37,4 +38,15 @@ export function getAdminAuthCookie(
 ) {
   const token = generateAdminToken(admin);
   return `thinkwires_admin_jwt=${token}`;
+}
+
+/**
+ * Generates matching CSRF cookie and header values for authenticated state-changing tests
+ */
+export function getAdminCsrfPair() {
+  const token = generateCsrfToken();
+  return {
+    cookie: `tw_admin_csrf=${token}`,
+    token,
+  };
 }

@@ -168,6 +168,58 @@ export const verifyAdminToken = (token) => {
 };
 
 /**
+ * Generate cryptographically secure CSRF token
+ */
+export const generateCsrfToken = () => {
+  return crypto.randomBytes(32).toString('hex');
+};
+
+/**
+ * Timing-safe CSRF token comparison
+ */
+export const verifyCsrfToken = (cookieToken, headerToken) => {
+  if (!cookieToken || !headerToken) return false;
+  if (typeof cookieToken !== 'string' || typeof headerToken !== 'string') return false;
+  if (cookieToken.length !== headerToken.length) return false;
+  try {
+    return crypto.timingSafeEqual(
+      Buffer.from(cookieToken, 'utf-8'),
+      Buffer.from(headerToken, 'utf-8')
+    );
+  } catch {
+    return false;
+  }
+};
+
+/**
+ * Helper to set readable CSRF cookie for client-side synchronizer/double-submit validation
+ */
+export const setCsrfCookie = (res, csrfToken) => {
+  const isProduction = process.env.NODE_ENV === 'production';
+  res.cookie('tw_admin_csrf', csrfToken, {
+    httpOnly: false, // Must be readable by client JS to attach in request headers
+    secure: isProduction,
+    sameSite: isProduction ? 'strict' : 'lax',
+    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+    path: '/',
+  });
+};
+
+/**
+ * Clear CSRF cookie on logout
+ */
+export const clearCsrfCookie = (res) => {
+  const isProduction = process.env.NODE_ENV === 'production';
+  res.cookie('tw_admin_csrf', '', {
+    httpOnly: false,
+    secure: isProduction,
+    sameSite: isProduction ? 'strict' : 'lax',
+    expires: new Date(0),
+    path: '/',
+  });
+};
+
+/**
  * Helper to set HttpOnly Admin auth cookie
  */
 export const setAdminAuthCookie = (res, token) => {
@@ -193,4 +245,5 @@ export const clearAdminAuthCookie = (res) => {
     expires: new Date(0),
     path: '/',
   });
+  clearCsrfCookie(res);
 };

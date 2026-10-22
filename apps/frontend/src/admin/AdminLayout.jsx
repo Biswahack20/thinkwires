@@ -86,26 +86,22 @@ const AdminLayout = () => {
     });
   };
 
-  // Authentication check on mount
+  // Authentication check on mount via server-managed HttpOnly cookie
   useEffect(() => {
-    if (!isAdminAuthenticated()) {
-      navigate('/admin/login', {
-        replace: true,
-        state: { from: location.pathname },
-      });
-      return;
-    }
+    let isMounted = true;
 
     adminApi
       .getMe()
       .then((data) => {
+        if (!isMounted) return;
         if (data && data.user) {
           setCurrentUser(data.user);
           setActiveRole((data.user.role || 'admin').toLowerCase());
         }
       })
       .catch((err) => {
-        console.warn('Admin session validation failed:', err.message);
+        if (!isMounted) return;
+        console.warn('Admin session validation notice:', err.message);
         clearAdminSession();
         navigate('/admin/login', {
           replace: true,
@@ -113,8 +109,14 @@ const AdminLayout = () => {
         });
       })
       .finally(() => {
-        setAuthChecking(false);
+        if (isMounted) {
+          setAuthChecking(false);
+        }
       });
+
+    return () => {
+      isMounted = false;
+    };
   }, [navigate, location.pathname]);
 
   // Load announcements & db status for notifications based on active role

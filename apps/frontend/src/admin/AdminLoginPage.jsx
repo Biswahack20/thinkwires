@@ -15,17 +15,27 @@ const AdminLoginPage = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // If already authenticated, redirect to appropriate admin module
+  // If already authenticated via HttpOnly cookie session, redirect to appropriate admin module
   useEffect(() => {
-    if (isAdminAuthenticated()) {
-      const role = getAdminRole();
-      if (role === 'cms_admin') {
-        navigate('/admin/cms', { replace: true });
-      } else {
-        navigate('/admin', { replace: true });
-      }
-    }
-  }, [navigate]);
+    let isMounted = true;
+    adminApi
+      .getMe()
+      .then((data) => {
+        if (!isMounted) return;
+        if (data && data.user) {
+          const role = (data.user.role || '').toLowerCase();
+          const target = role === 'cms_admin' ? '/admin/cms' : '/admin';
+          navigate(location.state?.from || target, { replace: true });
+        }
+      })
+      .catch(() => {
+        // Not authenticated, remain on login view
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, [navigate, location.state]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

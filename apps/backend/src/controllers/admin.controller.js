@@ -21,6 +21,9 @@ import {
   generateAdminToken,
   setAdminAuthCookie,
   clearAdminAuthCookie,
+  generateCsrfToken,
+  setCsrfCookie,
+  clearCsrfCookie,
 } from '../utils/auth.util.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -2705,9 +2708,13 @@ export const loginAdmin = async (req, res) => {
       await UserMongo.findByIdAndUpdate(user._id, { lastLogin: new Date() });
     }
 
-    // Generate secure Admin JWT
+    // Generate secure Admin JWT and set HttpOnly auth cookie
     const token = generateAdminToken(user);
     setAdminAuthCookie(res, token);
+
+    // Generate and set Double-Submit CSRF cookie
+    const csrfToken = generateCsrfToken();
+    setCsrfCookie(res, csrfToken);
 
     await logActivity(
       'Admin Logged In',
@@ -2718,10 +2725,12 @@ export const loginAdmin = async (req, res) => {
       '#10B981'
     );
 
+    // Security: Do NOT return the JWT token in the JSON body.
+    // Authentication is maintained strictly via HttpOnly cookie.
     return res.json({
       success: true,
       message: `Welcome back, ${user.name}!`,
-      token,
+      csrfToken,
       user: {
         id: user._id ? user._id.toString() : user.id,
         name: user.name,
@@ -2756,9 +2765,13 @@ export const logoutAdmin = async (req, res) => {
 };
 
 export const getCurrentUser = async (req, res) => {
+  const csrfToken = req.cookies?.tw_admin_csrf || generateCsrfToken();
+  setCsrfCookie(res, csrfToken);
+
   res.json({
     success: true,
     user: req.user,
+    csrfToken,
     availableRoles: [
       {
         role: 'superadmin',
@@ -2773,6 +2786,15 @@ export const getCurrentUser = async (req, res) => {
     databaseStatus: isMongoActive()
       ? 'Connected (MongoDB Atlas / Local)'
       : 'In-Memory Resilient Storage (Fallback)',
+  });
+};
+
+export const getCsrfToken = async (req, res) => {
+  const csrfToken = generateCsrfToken();
+  setCsrfCookie(res, csrfToken);
+  return res.json({
+    success: true,
+    csrfToken,
   });
 };
 

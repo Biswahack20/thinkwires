@@ -1,74 +1,231 @@
-// Admin and CMS API Client with JWT Authentication
+// Admin and CMS API Client with HttpOnly Cookie & Double-Submit CSRF Protection
 const API_BASE = '/api/admin';
 
+// In-memory session and CSRF state
+let currentAdminUser = null;
+let inMemoryCsrfToken = null;
+
+// Immediately sanitize and purge any legacy insecure JWT from localStorage
+try {
+  if (typeof localStorage !== 'undefined') {
+    localStorage.removeItem('tw_admin_token');
+    localStorage.removeItem('tw_admin_role');
+  }
+} catch {
+  // Ignore in non-browser environments
+}
+
+/**
+ * Legacy token reader maintained for backward compatibility.
+ * Strictly returns null because the JWT is now isolated inside HttpOnly cookies.
+ */
 export const getAdminToken = () => {
-  return localStorage.getItem('tw_admin_token') || null;
+  return null;
 };
 
+/**
+ * Retrieve non-sensitive authenticated user profile from memory or session storage.
+ */
 export const getAdminUser = () => {
+  if (currentAdminUser) return currentAdminUser;
   try {
-    const raw = localStorage.getItem('tw_admin_user');
-    return raw ? JSON.parse(raw) : null;
-  } catch (e) {
+    if (typeof sessionStorage !== 'undefined') {
+      const raw = sessionStorage.getItem('tw_admin_user');
+      if (raw) {
+        currentAdminUser = JSON.parse(raw);
+        return currentAdminUser;
+      }
+    }
+  } catch {
     return null;
   }
+  return null;
 };
 
+/**
+ * Retrieve current active admin role in lowercase
+ */
 export const getAdminRole = () => {
   const user = getAdminUser();
   return user?.role ? user.role.toLowerCase() : '';
 };
 
-export const setAdminSession = (token, user) => {
-  if (token) localStorage.setItem('tw_admin_token', token);
+/**
+ * Retrieve CSRF token from memory or double-submit cookie
+ */
+export const getCsrfToken = () => {
+  if (inMemoryCsrfToken) return inMemoryCsrfToken;
+  if (typeof document !== 'undefined') {
+    const match = document.cookie.match(/(?:^|;\s*)tw_admin_csrf=([^;]+)/);
+    if (match) return decodeURIComponent(match[1]);
+  }
+  return null;
+};
+
+/**
+ * Update active in-memory CSRF token
+ */
+export const setCsrfToken = (token) => {
+  inMemoryCsrfToken = token || null;
+};
+
+/**
+ * Set active admin session (stores non-sensitive user metadata in memory/sessionStorage).
+ * JWT token is never stored in client storage.
+ */
+export const setAdminSession = (userOrToken, maybeUser) => {
+  // Support both (user, csrfToken) and legacy (token, user) caller signatures
+  let user = userOrToken;
+  let csrf = null;
+
+  if (typeof userOrToken === 'string') {
+    // Legacy signature (token, user)
+    user = maybeUser;
+  } else if (maybeUser && typeof maybeUser === 'string') {
+    csrf = maybeUser;
+  }
+
+  if (csrf) {
+    setCsrfToken(csrf);
+  }
+
   if (user) {
-    localStorage.setItem('tw_admin_user', JSON.stringify(user));
-    localStorage.setItem(
-      'tw_admin_role',
-      user.role ? user.role.toLowerCase() : ''
+    currentAdminUser = user;
+    try {
+      if (typeof sessionStorage !== 'undefined') {
+        sessionStorage.setItem('tw_admin_user', JSON.stringify(user));
+        sessionStorage.setItem(
+          'tw_admin_role',
+          user.role ? user.role.toLowerCase() : ''
+        );
+      }
+      if (typeof localStorage !== 'undefined') {
+        localStorage.removeItem('tw_admin_token');
+        localStorage.removeItem('tw_admin_user');
+        localStorage.removeItem('tw_admin_role');
+      }
+    } catch (e) {
+      console.warn('Could not persist non-sensitive session metadata:', e);
+    }
+  }
+
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(
+      new CustomEvent('tw_admin_auth_changed', { detail: { user } })
     );
   }
-  window.dispatchEvent(
-    new CustomEvent('tw_admin_auth_changed', { detail: { token, user } })
-  );
 };
 
+/**
+ * Terminate client session state and remove cached user metadata.
+ */
 export const clearAdminSession = () => {
-  localStorage.removeItem('tw_admin_token');
-  localStorage.removeItem('tw_admin_user');
-  localStorage.removeItem('tw_admin_role');
-  window.dispatchEvent(
-    new CustomEvent('tw_admin_auth_changed', { detail: null })
-  );
+  currentAdminUser = null;
+  inMemoryCsrfToken = null;
+  try {
+    if (typeof sessionStorage !== 'undefined') {
+      sessionStorage.removeItem('tw_admin_user');
+      sessionStorage.removeItem('tw_admin_role');
+    }
+    if (typeof localStorage !== 'undefined') {
+      localStorage.removeItem('tw_admin_token');
+      localStorage.removeItem('tw_admin_user');
+      localStorage.removeItem('tw_admin_role');
+    }
+  } catch (e) {
+    console.warn('Session clearance storage notice:', e);
+  }
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(
+      new CustomEvent('tw_admin_auth_changed', { detail: null })
+    );
+  }
 };
 
+/**
+ * Verify whether an admin profile is active in client state
+ */
 export const isAdminAuthenticated = () => {
-  return Boolean(getAdminToken() && getAdminUser());
+  return Boolean(getAdminUser());
 };
 
-// Legacy setter maintained for compatibility
+/**
+ * Legacy setter maintained for role-switching demonstrations
+ */
 export const setAdminRole = (role) => {
   const user = getAdminUser();
   if (user) {
     user.role = role;
-    localStorage.setItem('tw_admin_user', JSON.stringify(user));
+    currentAdminUser = user;
+    try {
+      if (typeof sessionStorage !== 'undefined') {
+        sessionStorage.setItem('tw_admin_user', JSON.stringify(user));
+        sessionStorage.setItem('tw_admin_role', role);
+      }
+    } catch {}
   }
-  localStorage.setItem('tw_admin_role', role);
-  window.dispatchEvent(new CustomEvent('tw_role_changed', { detail: role }));
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new CustomEvent('tw_role_changed', { detail: role }));
+  }
 };
 
-const getHeaders = () => {
-  const token = getAdminToken();
+/**
+ * Construct default secure headers with CSRF protection
+ */
+export const getHeaders = (customHeaders = {}) => {
   const headers = {
     'Content-Type': 'application/json',
     Accept: 'application/json',
+    ...customHeaders,
   };
-  if (token) {
-    headers['Authorization'] = `Bearer ${token}`;
-    headers['x-admin-token'] = token;
+  const csrf = getCsrfToken();
+  if (csrf) {
+    headers['X-CSRF-Token'] = csrf;
   }
   return headers;
 };
+
+/**
+ * Centralized, secure request executor with automatic credential transmission,
+ * CSRF injection, and 401 unauthenticated interception.
+ */
+async function request(endpoint, options = {}) {
+  const method = (options.method || 'GET').toUpperCase();
+  const headers = getHeaders(options.headers || {});
+
+  // For state-changing methods, guarantee CSRF token is attached
+  if (!['GET', 'HEAD', 'OPTIONS'].includes(method) && !headers['X-CSRF-Token']) {
+    const csrf = getCsrfToken();
+    if (csrf) headers['X-CSRF-Token'] = csrf;
+  }
+
+  const res = await fetch(`${API_BASE}${endpoint}`, {
+    ...options,
+    headers,
+    credentials: 'include', // Transmit HttpOnly cookies
+  });
+
+  if (res.status === 401) {
+    clearAdminSession();
+    const json = await res.json().catch(() => ({}));
+    const error = new Error(
+      json.error || 'Authentication required. Please log in again.'
+    );
+    error.status = 401;
+    error.data = json;
+    throw error;
+  }
+
+  const json = await res.json().catch(() => ({}));
+  if (!res.ok) {
+    const error = new Error(json.error || `HTTP error ${res.status}`);
+    error.status = res.status;
+    error.data = json;
+    throw error;
+  }
+
+  return json;
+}
 
 export const adminApi = {
   // Authentication
@@ -79,13 +236,17 @@ export const adminApi = {
         'Content-Type': 'application/json',
         Accept: 'application/json',
       },
-      credentials: 'include',
+      credentials: 'include', // Server will respond with Set-Cookie for HttpOnly JWT
       body: JSON.stringify({ email, password }),
     });
-    const json = await res.json();
+    const json = await res.json().catch(() => ({}));
     if (!res.ok) throw new Error(json.error || `Login failed (${res.status})`);
-    if (json.token && json.user) {
-      setAdminSession(json.token, json.user);
+
+    if (json.csrfToken) {
+      setCsrfToken(json.csrfToken);
+    }
+    if (json.user) {
+      setAdminSession(json.user, json.csrfToken);
     }
     return json;
   },
@@ -105,495 +266,316 @@ export const adminApi = {
     return { success: true };
   },
 
-  // Current user & role
+  // Current user & session restoration
   async getMe() {
-    const res = await fetch(`${API_BASE}/auth/me`, {
-      headers: getHeaders(),
-      credentials: 'include',
-    });
-    if (!res.ok) throw new Error(`HTTP error ${res.status}`);
-    const data = await res.json();
+    const data = await request('/auth/me');
+    if (data && data.csrfToken) {
+      setCsrfToken(data.csrfToken);
+    }
     if (data && data.user) {
-      const currentToken = getAdminToken();
-      setAdminSession(currentToken, data.user);
+      setAdminSession(data.user, data.csrfToken);
+    }
+    return data;
+  },
+
+  async getCsrf() {
+    const data = await request('/auth/csrf');
+    if (data && data.csrfToken) {
+      setCsrfToken(data.csrfToken);
     }
     return data;
   },
 
   // Dashboard Overview & Charts
   async getDashboardStats(period = 'month') {
-    const res = await fetch(`${API_BASE}/stats?period=${period}`, {
-      headers: getHeaders(),
-    });
-    if (!res.ok) throw new Error(`HTTP error ${res.status}`);
-    return res.json();
+    return request(`/stats?period=${period}`);
   },
 
   async getActivities() {
-    const res = await fetch(`${API_BASE}/activities`, {
-      headers: getHeaders(),
-    });
-    if (!res.ok) throw new Error(`HTTP error ${res.status}`);
-    return res.json();
+    return request('/activities');
   },
 
   // Employees
   async getEmployees(params = {}) {
     const query = new URLSearchParams(params).toString();
-    const res = await fetch(
-      `${API_BASE}/employees${query ? `?${query}` : ''}`,
-      { headers: getHeaders() }
-    );
-    if (!res.ok) throw new Error(`HTTP error ${res.status}`);
-    return res.json();
+    return request(`/employees${query ? `?${query}` : ''}`);
   },
 
   async createEmployee(data) {
-    const res = await fetch(`${API_BASE}/employees`, {
+    return request('/employees', {
       method: 'POST',
-      headers: getHeaders(),
       body: JSON.stringify(data),
     });
-    const json = await res.json();
-    if (!res.ok) throw new Error(json.error || `HTTP error ${res.status}`);
-    return json;
   },
 
   async updateEmployee(id, data) {
-    const res = await fetch(`${API_BASE}/employees/${id}`, {
+    return request(`/employees/${id}`, {
       method: 'PUT',
-      headers: getHeaders(),
       body: JSON.stringify(data),
     });
-    const json = await res.json();
-    if (!res.ok) throw new Error(json.error || `HTTP error ${res.status}`);
-    return json;
   },
 
   async deleteEmployee(id) {
-    const res = await fetch(`${API_BASE}/employees/${id}`, {
+    return request(`/employees/${id}`, {
       method: 'DELETE',
-      headers: getHeaders(),
     });
-    const json = await res.json();
-    if (!res.ok) throw new Error(json.error || `HTTP error ${res.status}`);
-    return json;
   },
 
   // Candidates
   async getCandidates(params = {}) {
     const query = new URLSearchParams(params).toString();
-    const res = await fetch(
-      `${API_BASE}/candidates${query ? `?${query}` : ''}`,
-      { headers: getHeaders() }
-    );
-    if (!res.ok) throw new Error(`HTTP error ${res.status}`);
-    return res.json();
+    return request(`/candidates${query ? `?${query}` : ''}`);
   },
 
   async createCandidate(data) {
-    const res = await fetch(`${API_BASE}/candidates`, {
+    return request('/candidates', {
       method: 'POST',
-      headers: getHeaders(),
       body: JSON.stringify(data),
     });
-    const json = await res.json();
-    if (!res.ok) throw new Error(json.error || `HTTP error ${res.status}`);
-    return json;
   },
 
   async updateCandidateStatus(id, status) {
-    const res = await fetch(`${API_BASE}/candidates/${id}/status`, {
+    return request(`/candidates/${id}/status`, {
       method: 'PATCH',
-      headers: getHeaders(),
       body: JSON.stringify({ status }),
     });
-    const json = await res.json();
-    if (!res.ok) throw new Error(json.error || `HTTP error ${res.status}`);
-    return json;
   },
 
   async updateCandidate(id, data) {
-    const res = await fetch(`${API_BASE}/candidates/${id}`, {
+    return request(`/candidates/${id}`, {
       method: 'PUT',
-      headers: getHeaders(),
       body: JSON.stringify(data),
     });
-    const json = await res.json();
-    if (!res.ok) throw new Error(json.error || `HTTP error ${res.status}`);
-    return json;
   },
 
   async deleteCandidate(id) {
-    const res = await fetch(`${API_BASE}/candidates/${id}`, {
+    return request(`/candidates/${id}`, {
       method: 'DELETE',
-      headers: getHeaders(),
     });
-    const json = await res.json();
-    if (!res.ok) throw new Error(json.error || `HTTP error ${res.status}`);
-    return json;
   },
 
   // Clients
   async getClients(params = {}) {
     const query = new URLSearchParams(params).toString();
-    const res = await fetch(`${API_BASE}/clients${query ? `?${query}` : ''}`, {
-      headers: getHeaders(),
-    });
-    if (!res.ok) throw new Error(`HTTP error ${res.status}`);
-    return res.json();
+    return request(`/clients${query ? `?${query}` : ''}`);
   },
 
   async createClient(data) {
-    const res = await fetch(`${API_BASE}/clients`, {
+    return request('/clients', {
       method: 'POST',
-      headers: getHeaders(),
       body: JSON.stringify(data),
     });
-    const json = await res.json();
-    if (!res.ok) throw new Error(json.error || `HTTP error ${res.status}`);
-    return json;
   },
 
   async updateClient(id, data) {
-    const res = await fetch(`${API_BASE}/clients/${id}`, {
+    return request(`/clients/${id}`, {
       method: 'PUT',
-      headers: getHeaders(),
       body: JSON.stringify(data),
     });
-    const json = await res.json();
-    if (!res.ok) throw new Error(json.error || `HTTP error ${res.status}`);
-    return json;
   },
 
   async deleteClient(id) {
-    const res = await fetch(`${API_BASE}/clients/${id}`, {
+    return request(`/clients/${id}`, {
       method: 'DELETE',
-      headers: getHeaders(),
     });
-    const json = await res.json();
-    if (!res.ok) throw new Error(json.error || `HTTP error ${res.status}`);
-    return json;
   },
 
   // Jobs
   async getJobs(params = {}) {
     const query = new URLSearchParams(params).toString();
-    const res = await fetch(`${API_BASE}/jobs${query ? `?${query}` : ''}`, {
-      headers: getHeaders(),
-    });
-    if (!res.ok) throw new Error(`HTTP error ${res.status}`);
-    return res.json();
+    return request(`/jobs${query ? `?${query}` : ''}`);
   },
 
   async createJob(data) {
-    const res = await fetch(`${API_BASE}/jobs`, {
+    return request('/jobs', {
       method: 'POST',
-      headers: getHeaders(),
       body: JSON.stringify(data),
     });
-    const json = await res.json();
-    if (!res.ok) throw new Error(json.error || `HTTP error ${res.status}`);
-    return json;
   },
 
   async updateJob(id, data) {
-    const res = await fetch(`${API_BASE}/jobs/${id}`, {
+    return request(`/jobs/${id}`, {
       method: 'PUT',
-      headers: getHeaders(),
       body: JSON.stringify(data),
     });
-    const json = await res.json();
-    if (!res.ok) throw new Error(json.error || `HTTP error ${res.status}`);
-    return json;
   },
 
   async deleteJob(id) {
-    const res = await fetch(`${API_BASE}/jobs/${id}`, {
+    return request(`/jobs/${id}`, {
       method: 'DELETE',
-      headers: getHeaders(),
     });
-    const json = await res.json();
-    if (!res.ok) throw new Error(json.error || `HTTP error ${res.status}`);
-    return json;
   },
 
   // Placements
   async getPlacements() {
-    const res = await fetch(`${API_BASE}/placements`, {
-      headers: getHeaders(),
-    });
-    if (!res.ok) throw new Error(`HTTP error ${res.status}`);
-    return res.json();
+    return request('/placements');
   },
 
   async createPlacement(data) {
-    const res = await fetch(`${API_BASE}/placements`, {
+    return request('/placements', {
       method: 'POST',
-      headers: getHeaders(),
       body: JSON.stringify(data),
     });
-    const json = await res.json();
-    if (!res.ok) throw new Error(json.error || `HTTP error ${res.status}`);
-    return json;
   },
 
   async updatePlacement(id, data) {
-    const res = await fetch(`${API_BASE}/placements/${id}`, {
+    return request(`/placements/${id}`, {
       method: 'PUT',
-      headers: getHeaders(),
       body: JSON.stringify(data),
     });
-    const json = await res.json();
-    if (!res.ok) throw new Error(json.error || `HTTP error ${res.status}`);
-    return json;
   },
 
   async deletePlacement(id) {
-    const res = await fetch(`${API_BASE}/placements/${id}`, {
+    return request(`/placements/${id}`, {
       method: 'DELETE',
-      headers: getHeaders(),
     });
-    const json = await res.json();
-    if (!res.ok) throw new Error(json.error || `HTTP error ${res.status}`);
-    return json;
   },
 
   // CMS Stats
   async getCmsStats() {
-    const res = await fetch(`${API_BASE}/cms/stats`, { headers: getHeaders() });
-    if (!res.ok) throw new Error(`HTTP error ${res.status}`);
-    return res.json();
+    return request('/cms/stats');
   },
 
   // CMS Pages
   async getCmsPages() {
-    const res = await fetch(`${API_BASE}/cms/pages`, { headers: getHeaders() });
-    if (!res.ok) throw new Error(`HTTP error ${res.status}`);
-    return res.json();
+    return request('/cms/pages');
   },
 
   async createCmsPage(data) {
-    const res = await fetch(`${API_BASE}/cms/pages`, {
+    return request('/cms/pages', {
       method: 'POST',
-      headers: getHeaders(),
       body: JSON.stringify(data),
     });
-    const json = await res.json();
-    if (!res.ok) throw new Error(json.error || `HTTP error ${res.status}`);
-    return json;
   },
 
   async updateCmsPage(id, data) {
-    const res = await fetch(`${API_BASE}/cms/pages/${id}`, {
+    return request(`/cms/pages/${id}`, {
       method: 'PUT',
-      headers: getHeaders(),
       body: JSON.stringify(data),
     });
-    const json = await res.json();
-    if (!res.ok) throw new Error(json.error || `HTTP error ${res.status}`);
-    return json;
   },
 
   async togglePublishCmsPage(id) {
-    const res = await fetch(`${API_BASE}/cms/pages/${id}/publish`, {
+    return request(`/cms/pages/${id}/publish`, {
       method: 'PATCH',
-      headers: getHeaders(),
     });
-    const json = await res.json();
-    if (!res.ok) throw new Error(json.error || `HTTP error ${res.status}`);
-    return json;
   },
 
   async deleteCmsPage(id) {
-    const res = await fetch(`${API_BASE}/cms/pages/${id}`, {
+    return request(`/cms/pages/${id}`, {
       method: 'DELETE',
-      headers: getHeaders(),
     });
-    const json = await res.json();
-    if (!res.ok) throw new Error(json.error || `HTTP error ${res.status}`);
-    return json;
   },
 
   // CMS Articles
   async getCmsArticles(params = {}) {
     const query = new URLSearchParams(params).toString();
-    const res = await fetch(
-      `${API_BASE}/cms/articles${query ? `?${query}` : ''}`,
-      { headers: getHeaders() }
-    );
-    if (!res.ok) throw new Error(`HTTP error ${res.status}`);
-    return res.json();
+    return request(`/cms/articles${query ? `?${query}` : ''}`);
   },
 
   async createCmsArticle(data) {
-    const res = await fetch(`${API_BASE}/cms/articles`, {
+    return request('/cms/articles', {
       method: 'POST',
-      headers: getHeaders(),
       body: JSON.stringify(data),
     });
-    const json = await res.json();
-    if (!res.ok) throw new Error(json.error || `HTTP error ${res.status}`);
-    return json;
   },
 
   async updateCmsArticle(id, data) {
-    const res = await fetch(`${API_BASE}/cms/articles/${id}`, {
+    return request(`/cms/articles/${id}`, {
       method: 'PUT',
-      headers: getHeaders(),
       body: JSON.stringify(data),
     });
-    const json = await res.json();
-    if (!res.ok) throw new Error(json.error || `HTTP error ${res.status}`);
-    return json;
   },
 
   async togglePublishCmsArticle(id) {
-    const res = await fetch(`${API_BASE}/cms/articles/${id}/publish`, {
+    return request(`/cms/articles/${id}/publish`, {
       method: 'PATCH',
-      headers: getHeaders(),
     });
-    const json = await res.json();
-    if (!res.ok) throw new Error(json.error || `HTTP error ${res.status}`);
-    return json;
   },
 
   async deleteCmsArticle(id) {
-    const res = await fetch(`${API_BASE}/cms/articles/${id}`, {
+    return request(`/cms/articles/${id}`, {
       method: 'DELETE',
-      headers: getHeaders(),
     });
-    const json = await res.json();
-    if (!res.ok) throw new Error(json.error || `HTTP error ${res.status}`);
-    return json;
   },
 
   // CMS Media
   async getCmsMedia() {
-    const res = await fetch(`${API_BASE}/cms/media`, { headers: getHeaders() });
-    if (!res.ok) throw new Error(`HTTP error ${res.status}`);
-    return res.json();
+    return request('/cms/media');
   },
 
   async createCmsMedia(data) {
-    const res = await fetch(`${API_BASE}/cms/media`, {
+    return request('/cms/media', {
       method: 'POST',
-      headers: getHeaders(),
       body: JSON.stringify(data),
     });
-    const json = await res.json();
-    if (!res.ok) throw new Error(json.error || `HTTP error ${res.status}`);
-    return json;
   },
 
   async deleteCmsMedia(id) {
-    const res = await fetch(`${API_BASE}/cms/media/${id}`, {
+    return request(`/cms/media/${id}`, {
       method: 'DELETE',
-      headers: getHeaders(),
     });
-    const json = await res.json();
-    if (!res.ok) throw new Error(json.error || `HTTP error ${res.status}`);
-    return json;
   },
 
   // CMS SEO
   async getSeoSettings() {
-    const res = await fetch(`${API_BASE}/cms/seo`, { headers: getHeaders() });
-    if (!res.ok) throw new Error(`HTTP error ${res.status}`);
-    return res.json();
+    return request('/cms/seo');
   },
 
   async updateSeoSettings(data) {
-    const res = await fetch(`${API_BASE}/cms/seo`, {
+    return request('/cms/seo', {
       method: 'PUT',
-      headers: getHeaders(),
       body: JSON.stringify(data),
     });
-    const json = await res.json();
-    if (!res.ok) throw new Error(json.error || `HTTP error ${res.status}`);
-    return json;
   },
 
   // CMS Announcements
   async getAnnouncements() {
-    const res = await fetch(`${API_BASE}/cms/announcements`, {
-      headers: getHeaders(),
-    });
-    if (!res.ok) throw new Error(`HTTP error ${res.status}`);
-    return res.json();
+    return request('/cms/announcements');
   },
 
   async createAnnouncement(data) {
-    const res = await fetch(`${API_BASE}/cms/announcements`, {
+    return request('/cms/announcements', {
       method: 'POST',
-      headers: getHeaders(),
       body: JSON.stringify(data),
     });
-    const json = await res.json();
-    if (!res.ok) throw new Error(json.error || `HTTP error ${res.status}`);
-    return json;
   },
 
   async togglePublishAnnouncement(id) {
-    const res = await fetch(`${API_BASE}/cms/announcements/${id}/publish`, {
+    return request(`/cms/announcements/${id}/publish`, {
       method: 'PATCH',
-      headers: getHeaders(),
     });
-    const json = await res.json();
-    if (!res.ok) throw new Error(json.error || `HTTP error ${res.status}`);
-    return json;
   },
 
   async deleteAnnouncement(id) {
-    const res = await fetch(`${API_BASE}/cms/announcements/${id}`, {
+    return request(`/cms/announcements/${id}`, {
       method: 'DELETE',
-      headers: getHeaders(),
     });
-    const json = await res.json();
-    if (!res.ok) throw new Error(json.error || `HTTP error ${res.status}`);
-    return json;
   },
 
   // System Members (Superadmin Exclusive)
   async getSystemMembers() {
-    const res = await fetch(`${API_BASE}/system-members`, {
-      headers: getHeaders(),
-    });
-    const json = await res.json();
-    if (!res.ok) throw new Error(json.error || `HTTP error ${res.status}`);
-    return json;
+    return request('/system-members');
   },
 
   async createSystemMember(data) {
-    const res = await fetch(`${API_BASE}/system-members`, {
+    return request('/system-members', {
       method: 'POST',
-      headers: getHeaders(),
       body: JSON.stringify(data),
     });
-    const json = await res.json();
-    if (!res.ok) throw new Error(json.error || `HTTP error ${res.status}`);
-    return json;
   },
 
   async updateSystemMember(id, data) {
-    const res = await fetch(`${API_BASE}/system-members/${id}`, {
+    return request(`/system-members/${id}`, {
       method: 'PUT',
-      headers: getHeaders(),
       body: JSON.stringify(data),
     });
-    const json = await res.json();
-    if (!res.ok) throw new Error(json.error || `HTTP error ${res.status}`);
-    return json;
   },
 
   async deleteSystemMember(id) {
-    const res = await fetch(`${API_BASE}/system-members/${id}`, {
+    return request(`/system-members/${id}`, {
       method: 'DELETE',
-      headers: getHeaders(),
     });
-    const json = await res.json();
-    if (!res.ok) throw new Error(json.error || `HTTP error ${res.status}`);
-    return json;
   },
 };
 

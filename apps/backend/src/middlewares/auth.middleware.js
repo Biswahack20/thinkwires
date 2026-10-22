@@ -1,11 +1,84 @@
-import { verifyCandidateToken, verifyAdminToken } from '../utils/auth.util.js';
+import { verifyCandidateToken, verifyAdminToken, verifyCsrfToken } from '../utils/auth.util.js';
 import Candidate from '../models/candidate.mongo.model.js';
 import UserMongo from '../models/user.mongo.model.js';
 import User from '../models/user.model.js';
 import mongoose from 'mongoose';
 
+/**
+ * CSRF Protection Middleware for Admin Endpoints
+ * Enforces Double-Submit Cookie pattern and Origin/Referer verification on state-changing methods.
+ */
+export const requireCsrf = () => {
+  return (req, res, next) => {
+    // Safe HTTP methods (GET, HEAD, OPTIONS) do not modify state
+    if (['GET', 'HEAD', 'OPTIONS'].includes(req.method)) {
+      return next();
+    }
+
+    // Allow requests with Bearer auth token header (e.g. automated tests or programmatic scripts)
+    // where ambient browser cookie transmission is not used
+    const authHeader = req.headers.authorization;
+    if (authHeader && authHeader.startsWith('Bearer ') && !req.cookies?.thinkwires_admin_jwt) {
+      return next();
+    }
+
+    // Verify Origin or Referer header against trusted origins if present
+    const origin = req.headers.origin || req.headers.referer;
+    if (origin) {
+      try {
+        const originUrl = new URL(origin);
+        const host = originUrl.host;
+        const allowedHosts = [
+          'localhost:5173',
+          'localhost:5000',
+          'localhost:3000',
+          '127.0.0.1:5173',
+          '127.0.0.1:5000',
+          '127.0.0.1:3000',
+        ];
+        if (process.env.ALLOWED_ORIGINS) {
+          process.env.ALLOWED_ORIGINS.split(',').forEach((o) => {
+            try {
+              allowedHosts.push(new URL(o.trim()).host);
+            } catch {}
+          });
+        }
+        if (process.env.CLIENT_URL) {
+          try {
+            allowedHosts.push(new URL(process.env.CLIENT_URL).host);
+          } catch {}
+        }
+        if (!allowedHosts.includes(host) && process.env.NODE_ENV === 'production') {
+          return res.status(403).json({
+            success: false,
+            error: 'Untrusted origin rejected for state-changing administrative request.',
+          });
+        }
+      } catch {
+        return res.status(403).json({
+          success: false,
+          error: 'Invalid request origin header.',
+        });
+      }
+    }
+
+    // Validate Double-Submit CSRF cookie & header
+    const cookieCsrf = req.cookies?.tw_admin_csrf;
+    const headerCsrf = req.headers['x-csrf-token'];
+
+    if (!cookieCsrf || !headerCsrf || !verifyCsrfToken(cookieCsrf, headerCsrf)) {
+      return res.status(403).json({
+        success: false,
+        error: 'CSRF token missing or invalid. Please refresh and try again.',
+      });
+    }
+
+    next();
+  };
+};
+
 // ================= ADMIN ROLE-BASED AUTHENTICATION & RBAC =================
-// Strictly verifies the administrator's JWT cookie or Authorization Bearer header
+// Strictly verifies the administrator's HttpOnly JWT cookie or Authorization Bearer header
 export const requireAuth = (
   allowedRoles = ['superadmin', 'admin', 'cms_admin']
 ) => {
@@ -13,7 +86,7 @@ export const requireAuth = (
     try {
       let token = null;
 
-      // 1. Check HttpOnly cookie, Authorization header, or x-admin-token header
+      // 1. Check HttpOnly cookie or Authorization Bearer header
       if (req.cookies && req.cookies.thinkwires_admin_jwt) {
         token = req.cookies.thinkwires_admin_jwt;
       } else if (
@@ -21,8 +94,6 @@ export const requireAuth = (
         req.headers.authorization.startsWith('Bearer ')
       ) {
         token = req.headers.authorization.split(' ')[1];
-      } else if (req.headers['x-admin-token']) {
-        token = req.headers['x-admin-token'];
       }
 
       if (!token) {
@@ -276,8 +347,6 @@ export const authenticateCandidateOrAdmin = async (req, res, next) => {
       req.headers.authorization.startsWith('Bearer ')
     ) {
       token = req.headers.authorization.split(' ')[1];
-    } else if (req.headers['x-admin-token']) {
-      token = req.headers['x-admin-token'];
     }
 
     if (!token) {
