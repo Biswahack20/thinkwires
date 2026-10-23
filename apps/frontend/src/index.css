@@ -142,12 +142,10 @@ body {
     'Helvetica Neue',
     sans-serif;
   background-color: var(--color-background);
-  background-image: linear-gradient(
-    180deg,
-    #ffffff 0%,
-    #faf8ff 50%,
-    #f3f2fe 100%
-  );
+  background-image: linear-gradient(180deg,
+      #ffffff 0%,
+      #faf8ff 50%,
+      #f3f2fe 100%);
   background-attachment: fixed;
   color: var(--color-on-background);
 }
@@ -566,10 +564,12 @@ body {
 .Hero-heroSection {
   position: relative;
   overflow: hidden;
-  min-height: calc(100vh - 120px); /* Adjust based on actual navbar height */
+  min-height: calc(100vh - 120px);
+  /* Adjust based on actual navbar height */
   display: flex;
   align-items: center;
-  background-color: var(--color-navy-dark); /* Fallback color */
+  background-color: var(--color-navy-dark);
+  /* Fallback color */
 }
 
 .Hero-heroVideo {
@@ -714,9 +714,11 @@ body {
   .Industries-section {
     padding: 3.5rem 1.5rem;
   }
+
   .Industries-title {
     font-size: 1.75rem;
   }
+
   .Industries-grid {
     grid-template-columns: repeat(2, 1fr);
   }
@@ -1244,9 +1246,11 @@ body {
   .Process-section {
     padding: 3.5rem 1.5rem;
   }
+
   .Process-title {
     font-size: 1.75rem;
   }
+
   .Process-grid {
     grid-template-columns: 1fr;
   }
@@ -1430,14 +1434,17 @@ body {
   .Reports-section {
     padding: 3.5rem 1.5rem;
   }
+
   .Reports-title {
     font-size: 1.75rem;
   }
+
   .Reports-header {
     flex-direction: column;
     align-items: flex-start;
     gap: 1rem;
   }
+
   .Reports-grid {
     grid-template-columns: 1fr;
   }
@@ -1470,7 +1477,8 @@ body {
 }
 
 .StatsJourney-statCard {
-  background-color: #151e32; /* Slightly lighter than section background */
+  background-color: #151e32;
+  /* Slightly lighter than section background */
   border-radius: var(--rounded-lg);
   padding: 2rem 1.5rem;
 }
@@ -1484,7 +1492,8 @@ body {
 }
 
 .StatsJourney-statAccent {
-  color: var(--color-emerald-accent); /* Green for +, % */
+  color: var(--color-emerald-accent);
+  /* Green for +, % */
 }
 
 .StatsJourney-statTitle {
@@ -1551,7 +1560,8 @@ body {
 }
 
 .StatsJourney-timelineYear {
-  color: var(--color-tertiary-fixed-dim); /* Light green */
+  color: var(--color-tertiary-fixed-dim);
+  /* Light green */
   font-size: 1.5rem;
   font-weight: 700;
   margin: 0 0 1rem 0;
@@ -1573,6 +1583,7 @@ body {
 
 /* Responsive */
 @media (max-width: 1200px) {
+
   .StatsJourney-statsGrid,
   .StatsJourney-timelineGrid {
     grid-template-columns: repeat(2, 1fr);
@@ -1583,9 +1594,11 @@ body {
   .StatsJourney-section {
     padding: 4rem 1.5rem;
   }
+
   .StatsJourney-timelineTitle {
     font-size: 2rem;
   }
+
   .StatsJourney-statsGrid,
   .StatsJourney-timelineGrid {
     grid-template-columns: 1fr;
@@ -2110,7 +2123,8 @@ body {
 }
 
 .Footer-newsletterBtn {
-  background-color: #0f4a8a; /* Darker blue */
+  background-color: #0f4a8a;
+  /* Darker blue */
   color: var(--color-on-primary);
   border: none;
   padding: 0 1rem;
@@ -2167,6 +2181,7 @@ body {
   .Footer-topSection {
     grid-template-columns: 1fr;
   }
+
   .Footer-bottomSection {
     flex-direction: column;
     text-align: center;
@@ -2297,8 +2312,10 @@ body {
 .Navbar-logoContainer {
   display: flex;
   align-items: center;
-  height: 60px; /* fixed container height preserves navbar height strictly */
-  width: 265px; /* reserve space for the enlarged logo */
+  height: 60px;
+  /* fixed container height preserves navbar height strictly */
+  width: 265px;
+  /* reserve space for the enlarged logo */
   position: relative;
   overflow: visible;
 }
@@ -2306,8 +2323,10 @@ body {
 .Navbar-logo {
   display: block;
   width: auto;
-  height: 235px; /* increased logo size to make graphic and text prominent */
-  position: absolute; /* pull out of flow to prevent navbar stretching */
+  height: 235px;
+  /* increased logo size to make graphic and text prominent */
+  position: absolute;
+  /* pull out of flow to prevent navbar stretching */
   left: -24px;
   top: 50%;
   transform: translateY(-50%);
@@ -2566,7 +2585,7 @@ body {
   gap: 1rem;
 }
 
-.ApplyModal-row > * {
+.ApplyModal-row>* {
   flex: 1;
 }
 
@@ -2934,7 +2953,8 @@ textarea {
   }
 
   .Navbar-topBarItem:nth-child(2) {
-    display: none; /* Hide non-critical tagline to prevent overflow */
+    display: none;
+    /* Hide non-critical tagline to prevent overflow */
   }
 
   .Navbar-mainNav {
@@ -3530,7 +3550,8 @@ textarea {
    -------------------------------------------------------------------------- */
 @media (max-width: 380px) {
   .Navbar-topBarRight a[href^='mailto:'] {
-    display: none; /* Keep phone + theme toggle on <=380px to prevent overflow */
+    display: none;
+    /* Keep phone + theme toggle on <=380px to prevent overflow */
   }
 
   .Navbar-logoContainer {
@@ -3573,11 +3594,9 @@ textarea {
 .JobsHero-heroContainer {
   padding: 4.5rem 1.5rem 5rem 1.5rem;
   background:
-    radial-gradient(
-      circle at 50% 30%,
+    radial-gradient(circle at 50% 30%,
       rgba(37, 99, 235, 0.22) 0%,
-      rgba(10, 17, 40, 0.98) 75%
-    ),
+      rgba(10, 17, 40, 0.98) 75%),
     #0a1128;
   text-align: center;
   position: relative;
@@ -3668,9 +3687,11 @@ textarea {
   color: #10b981;
   font-weight: 800;
 }
+
 .JobsHero-pillIconBlue {
   color: #60a5fa;
 }
+
 .JobsHero-pillIconYellow {
   color: #f59e0b;
 }
@@ -4107,18 +4128,22 @@ textarea {
   background-color: #dbeafe;
   color: #1e40af;
 }
+
 .JobCard-tag-green {
   background-color: #dcfce7;
   color: #166534;
 }
+
 .JobCard-tag-purple {
   background-color: #f3e8ff;
   color: #6b21a8;
 }
+
 .JobCard-tag-amber {
   background-color: #fef3c7;
   color: #92400e;
 }
+
 .JobCard-tag-red {
   background-color: #fee2e2;
   color: #991b1b;
@@ -4241,11 +4266,9 @@ textarea {
 /* --- TalentBench --- */
 .TalentBench-section {
   padding: 5rem 1.5rem;
-  background: linear-gradient(
-    180deg,
-    var(--color-surface-container-low) 0%,
-    var(--color-background) 100%
-  );
+  background: linear-gradient(180deg,
+      var(--color-surface-container-low) 0%,
+      var(--color-background) 100%);
 }
 
 .TalentBench-container {
@@ -4697,10 +4720,12 @@ textarea {
   background-color: #dbeafe;
   color: #1d4ed8;
 }
+
 .CareerInsights-tag-green {
   background-color: #dcfce7;
   color: #15803d;
 }
+
 .CareerInsights-tag-purple {
   background-color: #f3e8ff;
   color: #7e22ce;
@@ -5677,13 +5702,11 @@ textarea {
 .section-divider-line {
   width: 100%;
   height: 2px;
-  background: linear-gradient(
-    90deg,
-    rgba(226, 232, 240, 0.3) 0%,
-    #cbd5e1 20%,
-    #cbd5e1 80%,
-    rgba(226, 232, 240, 0.3) 100%
-  );
+  background: linear-gradient(90deg,
+      rgba(226, 232, 240, 0.3) 0%,
+      #cbd5e1 20%,
+      #cbd5e1 80%,
+      rgba(226, 232, 240, 0.3) 100%);
   border: none;
   margin: 0;
   padding: 0;
@@ -5795,10 +5818,12 @@ textarea {
     transform: scale(0.95);
     box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.7);
   }
+
   70% {
     transform: scale(1);
     box-shadow: 0 0 0 8px rgba(34, 197, 94, 0);
   }
+
   100% {
     transform: scale(0.95);
     box-shadow: 0 0 0 0 rgba(34, 197, 94, 0);
@@ -6008,11 +6033,9 @@ textarea {
 .FeaturedArticle-imageOverlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    180deg,
-    rgba(15, 23, 42, 0.15) 0%,
-    rgba(15, 23, 42, 0.45) 100%
-  );
+  background: linear-gradient(180deg,
+      rgba(15, 23, 42, 0.15) 0%,
+      rgba(15, 23, 42, 0.45) 100%);
   z-index: 1;
 }
 
@@ -6996,10 +7019,12 @@ textarea {
 .NewsletterCTA-figmaSuccess {
   text-align: center;
   padding: 1.5rem 1rem;
+
   h3 {
     color: #22c55e;
     margin: 0 0 0.5rem 0;
   }
+
   p {
     color: #cbd5e1;
     font-size: 0.9rem;
@@ -7301,9 +7326,11 @@ textarea {
   0% {
     opacity: 0.6;
   }
+
   50% {
     opacity: 1;
   }
+
   100% {
     opacity: 0.6;
   }
@@ -7347,11 +7374,9 @@ textarea {
 .BlogCard-imageOverlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    180deg,
-    rgba(0, 0, 0, 0) 50%,
-    rgba(0, 0, 0, 0.3) 100%
-  );
+  background: linear-gradient(180deg,
+      rgba(0, 0, 0, 0) 50%,
+      rgba(0, 0, 0, 0.3) 100%);
 }
 
 .BlogCard-categoryBadge {
@@ -7732,6 +7757,7 @@ textarea {
     font-weight: 800;
     margin: 0 0 0.5rem 0;
   }
+
   p {
     color: #94a3b8;
     margin: 0;
@@ -7764,11 +7790,9 @@ textarea {
 .NewsletterCTA-card {
   position: relative;
   background:
-    linear-gradient(
-      135deg,
+    linear-gradient(135deg,
       rgba(37, 99, 235, 0.1) 0%,
-      rgba(139, 92, 246, 0.1) 100%
-    ),
+      rgba(139, 92, 246, 0.1) 100%),
     var(--color-surface-container-lowest);
   border: 1px solid var(--color-outline-variant);
   border-radius: 28px;
@@ -7871,10 +7895,12 @@ textarea {
     font-size: 2.5rem;
     margin-bottom: 0.5rem;
   }
+
   h3 {
     margin: 0 0 0.5rem 0;
     color: #15803d;
   }
+
   p {
     margin: 0;
     font-size: 0.95rem;
@@ -8044,6 +8070,7 @@ textarea {
   margin-bottom: 1.5rem;
   padding-bottom: 1rem;
   border-bottom: 1px solid var(--color-outline-variant);
+
   img {
     width: 44px;
     height: 44px;
@@ -8113,11 +8140,9 @@ textarea {
   width: 24rem;
   height: 24rem;
   border-radius: 9999px;
-  background: radial-gradient(
-    circle,
-    rgba(59, 130, 246, 0.12) 0%,
-    transparent 70%
-  );
+  background: radial-gradient(circle,
+      rgba(59, 130, 246, 0.12) 0%,
+      transparent 70%);
   filter: blur(48px);
   pointer-events: none;
 }
@@ -8129,11 +8154,9 @@ textarea {
   width: 20rem;
   height: 20rem;
   border-radius: 9999px;
-  background: radial-gradient(
-    circle,
-    rgba(34, 197, 94, 0.08) 0%,
-    transparent 70%
-  );
+  background: radial-gradient(circle,
+      rgba(34, 197, 94, 0.08) 0%,
+      transparent 70%);
   filter: blur(48px);
   pointer-events: none;
 }
@@ -8318,11 +8341,9 @@ textarea {
   position: absolute;
   inset: 0.5rem;
   border-radius: 0.75rem;
-  background: linear-gradient(
-    180deg,
-    rgba(15, 23, 42, 0.05) 0%,
-    rgba(15, 23, 42, 0.75) 100%
-  );
+  background: linear-gradient(180deg,
+      rgba(15, 23, 42, 0.05) 0%,
+      rgba(15, 23, 42, 0.75) 100%);
   pointer-events: none;
 }
 
@@ -8792,11 +8813,9 @@ textarea {
   width: 24rem;
   height: 24rem;
   border-radius: 9999px;
-  background: radial-gradient(
-    circle,
-    rgba(37, 99, 235, 0.16) 0%,
-    transparent 70%
-  );
+  background: radial-gradient(circle,
+      rgba(37, 99, 235, 0.16) 0%,
+      transparent 70%);
   filter: blur(48px);
   pointer-events: none;
 }
@@ -8896,11 +8915,9 @@ textarea {
 .Philosophy-imageOverlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    180deg,
-    transparent 40%,
-    rgba(15, 23, 42, 0.6) 100%
-  );
+  background: linear-gradient(180deg,
+      transparent 40%,
+      rgba(15, 23, 42, 0.6) 100%);
 }
 
 .Philosophy-imageTag {
@@ -9406,11 +9423,9 @@ textarea {
   width: 26rem;
   height: 26rem;
   border-radius: 9999px;
-  background: radial-gradient(
-    circle,
-    rgba(37, 99, 235, 0.18) 0%,
-    transparent 70%
-  );
+  background: radial-gradient(circle,
+      rgba(37, 99, 235, 0.18) 0%,
+      transparent 70%);
   filter: blur(52px);
   pointer-events: none;
 }
@@ -9942,11 +9957,13 @@ textarea {
 }
 
 @keyframes pulseDot {
+
   0%,
   100% {
     transform: scale(1);
     opacity: 1;
   }
+
   50% {
     transform: scale(1.3);
     opacity: 0.75;
@@ -10731,6 +10748,7 @@ textarea {
 
 /* ========================  MOBILE  (max-width: 768px) ======================== */
 @media (max-width: 768px) {
+
   /* --- Hero --- */
   .ContactHero-section {
     padding: 3rem 1rem 3.5rem;
@@ -11206,11 +11224,9 @@ textarea {
   left: -5%;
   width: 25rem;
   height: 25rem;
-  background: radial-gradient(
-    circle,
-    rgba(34, 197, 94, 0.15) 0%,
-    transparent 70%
-  );
+  background: radial-gradient(circle,
+      rgba(34, 197, 94, 0.15) 0%,
+      transparent 70%);
 }
 
 .IndustriesHero-bgGlow--right {
@@ -11218,11 +11234,9 @@ textarea {
   right: -5%;
   width: 30rem;
   height: 30rem;
-  background: radial-gradient(
-    circle,
-    rgba(37, 99, 235, 0.25) 0%,
-    transparent 70%
-  );
+  background: radial-gradient(circle,
+      rgba(37, 99, 235, 0.25) 0%,
+      transparent 70%);
 }
 
 .IndustriesHero-container {
@@ -11692,11 +11706,9 @@ textarea {
   right: 0;
   width: 30rem;
   height: 30rem;
-  background: radial-gradient(
-    circle,
-    rgba(37, 99, 235, 0.05) 0%,
-    transparent 70%
-  );
+  background: radial-gradient(circle,
+      rgba(37, 99, 235, 0.05) 0%,
+      transparent 70%);
 }
 
 .FeatureComparison-bgBlob--bottom {
@@ -11704,11 +11716,9 @@ textarea {
   left: 0;
   width: 30rem;
   height: 30rem;
-  background: radial-gradient(
-    circle,
-    rgba(34, 197, 94, 0.05) 0%,
-    transparent 70%
-  );
+  background: radial-gradient(circle,
+      rgba(34, 197, 94, 0.05) 0%,
+      transparent 70%);
 }
 
 .FeatureComparison-container {
@@ -12211,11 +12221,9 @@ textarea {
   left: -5%;
   width: 25rem;
   height: 25rem;
-  background: radial-gradient(
-    circle,
-    rgba(37, 99, 235, 0.2) 0%,
-    transparent 70%
-  );
+  background: radial-gradient(circle,
+      rgba(37, 99, 235, 0.2) 0%,
+      transparent 70%);
 }
 
 .CapabilityBriefing-bgGlow--right {
@@ -12223,11 +12231,9 @@ textarea {
   right: 0;
   width: 25rem;
   height: 25rem;
-  background: radial-gradient(
-    circle,
-    rgba(34, 197, 94, 0.15) 0%,
-    transparent 70%
-  );
+  background: radial-gradient(circle,
+      rgba(34, 197, 94, 0.15) 0%,
+      transparent 70%);
 }
 
 .CapabilityBriefing-container {
@@ -12911,6 +12917,7 @@ textarea {
 }
 
 @media (min-width: 1024px) {
+
   .BenchHero-container,
   .BenchExplorer-container,
   .BenchDossierFeatures-container,
@@ -12924,11 +12931,9 @@ textarea {
 .BenchHero-section {
   padding: 5rem 0 3.5rem;
   background:
-    radial-gradient(
-      circle at 50% 0%,
+    radial-gradient(circle at 50% 0%,
       rgba(14, 165, 233, 0.15) 0%,
-      rgba(8, 12, 20, 0) 70%
-    ),
+      rgba(8, 12, 20, 0) 70%),
     #080c14;
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
@@ -12966,11 +12971,13 @@ textarea {
 }
 
 @keyframes benchPulse {
+
   0%,
   100% {
     opacity: 1;
     transform: scale(1);
   }
+
   50% {
     opacity: 0.4;
     transform: scale(0.85);
@@ -13666,6 +13673,7 @@ textarea {
   from {
     opacity: 0;
   }
+
   to {
     opacity: 1;
   }
@@ -13688,6 +13696,7 @@ textarea {
   from {
     transform: translateX(100%);
   }
+
   to {
     transform: translateX(0);
   }
@@ -13986,11 +13995,9 @@ textarea {
 
 /* Booking Card & Form */
 .BenchDrawer-bookingCard {
-  background: linear-gradient(
-    135deg,
-    rgba(14, 165, 233, 0.1) 0%,
-    rgba(15, 23, 42, 0.85) 100%
-  );
+  background: linear-gradient(135deg,
+      rgba(14, 165, 233, 0.1) 0%,
+      rgba(15, 23, 42, 0.85) 100%);
   border: 1px solid rgba(56, 189, 248, 0.3);
   border-radius: 14px;
   padding: 1.5rem;
@@ -14376,11 +14383,9 @@ textarea {
 }
 
 .BenchCta-card {
-  background: linear-gradient(
-    135deg,
-    rgba(15, 23, 42, 0.9) 0%,
-    rgba(2, 6, 23, 0.95) 100%
-  );
+  background: linear-gradient(135deg,
+      rgba(15, 23, 42, 0.9) 0%,
+      rgba(2, 6, 23, 0.95) 100%);
   border: 1px solid rgba(56, 189, 248, 0.3);
   border-radius: 20px;
   padding: 3.5rem 3rem;
@@ -14538,6 +14543,7 @@ textarea {
 
 /* ========================  MOBILE  (max-width: 768px) ======================== */
 @media (max-width: 768px) {
+
   /* --- Page Root --- */
   .BenchHero-container,
   .BenchExplorer-container,
@@ -14936,6 +14942,7 @@ textarea {
 
 /* ====================  EXTRA-SMALL PHONES  (max-width: 480px) ==================== */
 @media (max-width: 480px) {
+
   .BenchHero-container,
   .BenchExplorer-container,
   .BenchDossierFeatures-container,
@@ -15188,12 +15195,10 @@ textarea {
   right: 0;
   width: 580px;
   height: 580px;
-  background: radial-gradient(
-    circle,
-    rgba(29, 78, 216, 0.14) 0%,
-    rgba(37, 99, 235, 0.04) 65%,
-    transparent 75%
-  );
+  background: radial-gradient(circle,
+      rgba(29, 78, 216, 0.14) 0%,
+      rgba(37, 99, 235, 0.04) 65%,
+      transparent 75%);
 }
 
 .NewHero-glowTeal {
@@ -15201,12 +15206,10 @@ textarea {
   left: -8rem;
   width: 450px;
   height: 450px;
-  background: radial-gradient(
-    circle,
-    rgba(111, 251, 190, 0.2) 0%,
-    rgba(34, 197, 94, 0.05) 60%,
-    transparent 75%
-  );
+  background: radial-gradient(circle,
+      rgba(111, 251, 190, 0.2) 0%,
+      rgba(34, 197, 94, 0.05) 60%,
+      transparent 75%);
 }
 
 /* Container */
@@ -15265,6 +15268,7 @@ textarea {
 }
 
 @keyframes newHeroPing {
+
   75%,
   100% {
     transform: scale(2.4);
@@ -15323,12 +15327,10 @@ textarea {
 }
 
 .NewHero-gradientText {
-  background: linear-gradient(
-    135deg,
-    var(--color-primary, #0037b0) 0%,
-    var(--color-cobalt-bright, #2563eb) 45%,
-    var(--color-tertiary-container, #006a48) 100%
-  );
+  background: linear-gradient(135deg,
+      var(--color-primary, #0037b0) 0%,
+      var(--color-cobalt-bright, #2563eb) 45%,
+      var(--color-tertiary-container, #006a48) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -15359,11 +15361,9 @@ textarea {
   gap: 0.5rem;
   padding: 0.875rem 1.75rem;
   border-radius: var(--rounded-lg, 0.75rem);
-  background: linear-gradient(
-    135deg,
-    var(--color-primary, #0037b0) 0%,
-    var(--color-primary-container, #1d4ed8) 100%
-  );
+  background: linear-gradient(135deg,
+      var(--color-primary, #0037b0) 0%,
+      var(--color-primary-container, #1d4ed8) 100%);
   color: #ffffff;
   font-size: 0.9375rem;
   font-weight: 700;
@@ -15375,11 +15375,9 @@ textarea {
 }
 
 .NewHero-btnPrimary:hover {
-  background: linear-gradient(
-    135deg,
-    var(--color-cobalt-bright, #2563eb) 0%,
-    var(--color-primary, #0037b0) 100%
-  );
+  background: linear-gradient(135deg,
+      var(--color-cobalt-bright, #2563eb) 0%,
+      var(--color-primary, #0037b0) 100%);
   transform: translateY(-2px);
   box-shadow: 0 8px 22px rgba(29, 78, 216, 0.38);
 }
@@ -15509,12 +15507,10 @@ textarea {
 .NewHero-imageGradientOverlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    180deg,
-    rgba(15, 23, 42, 0.2) 0%,
-    rgba(15, 23, 42, 0.45) 50%,
-    rgba(15, 23, 42, 0.94) 100%
-  );
+  background: linear-gradient(180deg,
+      rgba(15, 23, 42, 0.2) 0%,
+      rgba(15, 23, 42, 0.45) 50%,
+      rgba(15, 23, 42, 0.94) 100%);
   pointer-events: none;
   z-index: 2;
 }
@@ -15621,6 +15617,7 @@ textarea {
     opacity: 0;
     transform: translateY(8px);
   }
+
   100% {
     opacity: 1;
     transform: translateY(0);
@@ -15660,6 +15657,7 @@ textarea {
 .NewHero-badge-emerald {
   color: var(--color-tertiary-container, #006a48);
 }
+
 [data-theme='dark'] .NewHero-badge-emerald {
   color: #4edea3;
 }
@@ -15667,6 +15665,7 @@ textarea {
 .NewHero-badge-cobalt {
   color: var(--color-cobalt-bright, #2563eb);
 }
+
 [data-theme='dark'] .NewHero-badge-cobalt {
   color: #60a5fa;
 }
@@ -15674,6 +15673,7 @@ textarea {
 .NewHero-badge-cyan {
   color: #0284c7;
 }
+
 [data-theme='dark'] .NewHero-badge-cyan {
   color: #38bdf8;
 }
@@ -15687,11 +15687,13 @@ textarea {
 }
 
 @keyframes newHeroPulse {
+
   0%,
   100% {
     opacity: 1;
     transform: scale(1);
   }
+
   50% {
     opacity: 0.4;
     transform: scale(0.85);
@@ -15840,11 +15842,9 @@ textarea {
 
 .NewHero-progressBarFill {
   height: 100%;
-  background: linear-gradient(
-    90deg,
-    var(--color-primary, #0037b0),
-    var(--color-cobalt-bright, #2563eb)
-  );
+  background: linear-gradient(90deg,
+      var(--color-primary, #0037b0),
+      var(--color-cobalt-bright, #2563eb));
   border-radius: 9999px;
   animation: progressFill 5s linear forwards;
 }
@@ -15853,6 +15853,7 @@ textarea {
   0% {
     width: 0%;
   }
+
   100% {
     width: 100%;
   }
@@ -16005,11 +16006,9 @@ textarea {
   gap: 0.5rem;
   padding: 0.95rem 1.5rem;
   border-radius: var(--rounded-md, 0.625rem);
-  background: linear-gradient(
-    135deg,
-    var(--color-primary, #0037b0) 0%,
-    var(--color-primary-container, #1d4ed8) 100%
-  );
+  background: linear-gradient(135deg,
+      var(--color-primary, #0037b0) 0%,
+      var(--color-primary-container, #1d4ed8) 100%);
   color: #ffffff;
   font-size: 0.9375rem;
   font-weight: 700;
@@ -16021,11 +16020,9 @@ textarea {
 }
 
 .NewHero-searchBtn:hover {
-  background: linear-gradient(
-    135deg,
-    var(--color-cobalt-bright, #2563eb) 0%,
-    var(--color-primary, #0037b0) 100%
-  );
+  background: linear-gradient(135deg,
+      var(--color-cobalt-bright, #2563eb) 0%,
+      var(--color-primary, #0037b0) 100%);
   transform: translateY(-2px);
   box-shadow: 0 8px 20px rgba(29, 78, 216, 0.35);
 }
@@ -16162,20 +16159,16 @@ textarea {
   width: 100%;
   overflow: hidden;
   padding: 0.5rem 0 1rem 0;
-  mask-image: linear-gradient(
-    to right,
-    transparent 0%,
-    black 8%,
-    black 92%,
-    transparent 100%
-  );
-  -webkit-mask-image: linear-gradient(
-    to right,
-    transparent 0%,
-    black 8%,
-    black 92%,
-    transparent 100%
-  );
+  mask-image: linear-gradient(to right,
+      transparent 0%,
+      black 8%,
+      black 92%,
+      transparent 100%);
+  -webkit-mask-image: linear-gradient(to right,
+      transparent 0%,
+      black 8%,
+      black 92%,
+      transparent 100%);
 }
 
 .TechStack-carouselTrack {
@@ -16195,6 +16188,7 @@ textarea {
   0% {
     transform: translate3d(0, 0, 0);
   }
+
   100% {
     transform: translate3d(-50%, 0, 0);
   }
@@ -16281,20 +16275,16 @@ textarea {
   }
 
   .TechStack-carouselWrapper {
-    mask-image: linear-gradient(
-      to right,
-      transparent 0%,
-      black 5%,
-      black 95%,
-      transparent 100%
-    );
-    -webkit-mask-image: linear-gradient(
-      to right,
-      transparent 0%,
-      black 5%,
-      black 95%,
-      transparent 100%
-    );
+    mask-image: linear-gradient(to right,
+        transparent 0%,
+        black 5%,
+        black 95%,
+        transparent 100%);
+    -webkit-mask-image: linear-gradient(to right,
+        transparent 0%,
+        black 5%,
+        black 95%,
+        transparent 100%);
   }
 
   .TechStack-gridCard {
@@ -16352,11 +16342,9 @@ textarea {
   width: 24rem;
   height: 24rem;
   border-radius: 9999px;
-  background: radial-gradient(
-    circle,
-    rgba(59, 130, 246, 0.2) 0%,
-    transparent 70%
-  );
+  background: radial-gradient(circle,
+      rgba(59, 130, 246, 0.2) 0%,
+      transparent 70%);
   filter: blur(80px);
   pointer-events: none;
 }
@@ -16368,11 +16356,9 @@ textarea {
   width: 30rem;
   height: 30rem;
   border-radius: 9999px;
-  background: radial-gradient(
-    circle,
-    rgba(34, 197, 94, 0.12) 0%,
-    transparent 70%
-  );
+  background: radial-gradient(circle,
+      rgba(34, 197, 94, 0.12) 0%,
+      transparent 70%);
   filter: blur(100px);
   pointer-events: none;
 }
@@ -16432,11 +16418,13 @@ textarea {
 }
 
 @keyframes pulseDot {
+
   0%,
   100% {
     opacity: 1;
     transform: scale(1);
   }
+
   50% {
     opacity: 0.4;
     transform: scale(0.85);
@@ -17442,11 +17430,9 @@ textarea {
 .Eor-separationOverlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    180deg,
-    transparent 40%,
-    rgba(15, 23, 42, 0.85) 100%
-  );
+  background: linear-gradient(180deg,
+      transparent 40%,
+      rgba(15, 23, 42, 0.85) 100%);
   display: flex;
   align-items: flex-end;
   padding: 1rem;
@@ -17524,11 +17510,9 @@ textarea {
   margin-top: 2rem;
   padding: 1.75rem;
   border-radius: 0.75rem;
-  background: linear-gradient(
-    90deg,
-    var(--color-surface-container, #ededf9) 0%,
-    var(--color-surface-container-low, #f3f2fe) 100%
-  );
+  background: linear-gradient(90deg,
+      var(--color-surface-container, #ededf9) 0%,
+      var(--color-surface-container-low, #f3f2fe) 100%);
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
@@ -17657,12 +17641,10 @@ textarea {
 .StaffAug-heroSection {
   position: relative;
   overflow: hidden;
-  background: linear-gradient(
-    180deg,
-    var(--color-surface-container-low, #f3f2fe) 0%,
-    var(--color-surface, #faf8ff) 60%,
-    var(--color-background, #faf8ff) 100%
-  );
+  background: linear-gradient(180deg,
+      var(--color-surface-container-low, #f3f2fe) 0%,
+      var(--color-surface, #faf8ff) 60%,
+      var(--color-background, #faf8ff) 100%);
   padding: 3rem 0 4.5rem 0;
 }
 
@@ -17768,12 +17750,10 @@ textarea {
 }
 
 .StaffAug-headlineGradient {
-  background: linear-gradient(
-    135deg,
-    var(--color-primary, #0037b0) 0%,
-    var(--color-cobalt-bright, #2563eb) 50%,
-    var(--color-emerald-accent, #22c55e) 100%
-  );
+  background: linear-gradient(135deg,
+      var(--color-primary, #0037b0) 0%,
+      var(--color-cobalt-bright, #2563eb) 50%,
+      var(--color-emerald-accent, #22c55e) 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -17935,11 +17915,9 @@ textarea {
 
 .StaffAug-sparkline .sparkline-fill {
   height: 100%;
-  background: linear-gradient(
-    90deg,
-    var(--color-primary, #0037b0),
-    var(--color-cobalt-bright, #2563eb)
-  );
+  background: linear-gradient(90deg,
+      var(--color-primary, #0037b0),
+      var(--color-cobalt-bright, #2563eb));
   border-radius: 9999px;
   transition: width 0.8s ease;
 }
@@ -19034,11 +19012,9 @@ textarea {
   position: relative;
   overflow: hidden;
   padding: 3.5rem 0 5rem 0;
-  background: linear-gradient(
-    180deg,
-    var(--color-surface-container-low, #f3f2fe) 0%,
-    var(--color-surface, #faf8ff) 100%
-  );
+  background: linear-gradient(180deg,
+      var(--color-surface-container-low, #f3f2fe) 0%,
+      var(--color-surface, #faf8ff) 100%);
 }
 
 .PermStaff-ambientGlow {
@@ -19048,12 +19024,10 @@ textarea {
   transform: translateX(-50%);
   width: 980px;
   height: 480px;
-  background: radial-gradient(
-    circle,
-    rgba(29, 78, 216, 0.15) 0%,
-    rgba(59, 130, 246, 0.05) 50%,
-    transparent 80%
-  );
+  background: radial-gradient(circle,
+      rgba(29, 78, 216, 0.15) 0%,
+      rgba(59, 130, 246, 0.05) 50%,
+      transparent 80%);
   filter: blur(80px);
   pointer-events: none;
 }
@@ -19807,11 +19781,9 @@ textarea {
   right: 0;
   width: 20rem;
   height: 20rem;
-  background: radial-gradient(
-    circle,
-    rgba(29, 78, 216, 0.08) 0%,
-    transparent 70%
-  );
+  background: radial-gradient(circle,
+      rgba(29, 78, 216, 0.08) 0%,
+      transparent 70%);
   filter: blur(60px);
   pointer-events: none;
 }
@@ -20212,12 +20184,10 @@ textarea {
 .FindTalent-heroSection {
   position: relative;
   overflow: hidden;
-  background: linear-gradient(
-    180deg,
-    var(--color-surface-container-low, #f3f2fe) 0%,
-    var(--color-surface, #faf8ff) 60%,
-    var(--color-background, #faf8ff) 100%
-  );
+  background: linear-gradient(180deg,
+      var(--color-surface-container-low, #f3f2fe) 0%,
+      var(--color-surface, #faf8ff) 60%,
+      var(--color-background, #faf8ff) 100%);
   padding: 3rem 0 4rem 0;
 }
 
@@ -20349,15 +20319,19 @@ textarea {
 .sla-item-icon.color-0 {
   color: #0037b0;
 }
+
 .sla-item-icon.color-1 {
   color: #006a48;
 }
+
 .sla-item-icon.color-2 {
   color: #1d4ed8;
 }
+
 .sla-item-icon.color-3 {
   color: #004f35;
 }
+
 .sla-item-icon .material-symbols-outlined {
   font-size: 18px;
 }
@@ -20665,12 +20639,15 @@ textarea {
   .FindTalent-rowGrid {
     grid-template-columns: repeat(12, 1fr);
   }
+
   .FindTalent-rowGrid .span-8 {
     grid-column: span 8;
   }
+
   .FindTalent-rowGrid .span-4 {
     grid-column: span 4;
   }
+
   .FindTalent-rowGrid .span-12 {
     grid-column: span 12;
   }
@@ -21338,12 +21315,15 @@ textarea {
 .metric-stat.color-0 {
   color: #0037b0;
 }
+
 .metric-stat.color-1 {
   color: #004f35;
 }
+
 .metric-stat.color-2 {
   color: #1a1b23;
 }
+
 .metric-stat.color-3 {
   color: #1d4ed8;
 }
@@ -21920,14 +21900,17 @@ textarea {
   background-color: #dce1ff;
   color: #0037b0;
 }
+
 .card-icon-wrap.icon-ctc {
   background-color: #6ffbbe;
   color: #004f35;
 }
+
 .card-icon-wrap.icon-vetting {
   background-color: #d2e4ff;
   color: #1d4ed8;
 }
+
 .card-icon-wrap.icon-interview {
   background-color: rgba(255, 255, 255, 0.2);
   color: #ffffff;
@@ -22210,6 +22193,7 @@ textarea {
 .pipeline-avatar-badge.type-nl {
   background-color: #49607e;
 }
+
 .pipeline-avatar-badge.type-af {
   background-color: #004f35;
 }
@@ -22248,10 +22232,12 @@ textarea {
   background-color: #ffdad6;
   color: #93000a;
 }
+
 .pipe-status-tag.tag-pending {
   background-color: #d2e4ff;
   color: #001c37;
 }
+
 .pipe-status-tag.tag-offer {
   background-color: #6ffbbe;
   color: #002113;
@@ -22495,12 +22481,15 @@ textarea {
 .progress-bar.bar-0 {
   background-color: #2563eb;
 }
+
 .progress-bar.bar-1 {
   background-color: #22c55e;
 }
+
 .progress-bar.bar-2 {
   background-color: #3b82f6;
 }
+
 .progress-bar.bar-3 {
   background-color: #0037b0;
 }
@@ -23180,8 +23169,7 @@ html.lenis {
 }
 
 /* When JS animation manager is active, below-the-fold unrevealed elements start subtle */
-html.tw-scroll-anim-ready
-  .tw-scroll-reveal:not(.tw-revealed):not(.tw-revealed-done) {
+html.tw-scroll-anim-ready .tw-scroll-reveal:not(.tw-revealed):not(.tw-revealed-done) {
   opacity: 0;
   transform: translateY(32px);
   will-change: opacity, transform;
@@ -23200,15 +23188,19 @@ html.tw-scroll-anim-ready .tw-scroll-reveal.tw-revealed {
 html.tw-scroll-anim-ready .tw-scroll-reveal.tw-stagger-0 {
   transition-delay: 0s;
 }
+
 html.tw-scroll-anim-ready .tw-scroll-reveal.tw-stagger-1 {
   transition-delay: 0.1s;
 }
+
 html.tw-scroll-anim-ready .tw-scroll-reveal.tw-stagger-2 {
   transition-delay: 0.2s;
 }
+
 html.tw-scroll-anim-ready .tw-scroll-reveal.tw-stagger-3 {
   transition-delay: 0.3s;
 }
+
 html.tw-scroll-anim-ready .tw-scroll-reveal.tw-stagger-4 {
   transition-delay: 0.4s;
 }
@@ -23234,8 +23226,7 @@ html.tw-scroll-anim-ready .tw-scroll-reveal.tw-stagger-4 {
   }
 
   .tw-scroll-reveal,
-  html.tw-scroll-anim-ready
-    .tw-scroll-reveal:not(.tw-revealed):not(.tw-revealed-done),
+  html.tw-scroll-anim-ready .tw-scroll-reveal:not(.tw-revealed):not(.tw-revealed-done),
   html.tw-scroll-anim-ready .tw-scroll-reveal.tw-revealed,
   .tw-revealed-done {
     opacity: 1 !important;
@@ -23246,9 +23237,9 @@ html.tw-scroll-anim-ready .tw-scroll-reveal.tw-stagger-4 {
 
 /* --- 4. Print Overrides: Guarantee full visibility --- */
 @media print {
+
   .tw-scroll-reveal,
-  html.tw-scroll-anim-ready
-    .tw-scroll-reveal:not(.tw-revealed):not(.tw-revealed-done),
+  html.tw-scroll-anim-ready .tw-scroll-reveal:not(.tw-revealed):not(.tw-revealed-done),
   html.tw-scroll-anim-ready .tw-scroll-reveal.tw-revealed,
   .tw-revealed-done {
     opacity: 1 !important;
@@ -23411,6 +23402,7 @@ textarea {
     transform: scale(0.8);
     opacity: 1;
   }
+
   100% {
     transform: scale(2.4);
     opacity: 0;
@@ -23635,11 +23627,9 @@ textarea {
   right: 0;
   width: 90px;
   height: 90px;
-  background: radial-gradient(
-    circle at top right,
-    rgba(56, 189, 248, 0.25),
-    transparent 70%
-  );
+  background: radial-gradient(circle at top right,
+      rgba(56, 189, 248, 0.25),
+      transparent 70%);
   pointer-events: none;
   opacity: 0;
   transition: opacity 0.4s ease;
@@ -23653,16 +23643,19 @@ textarea {
   .StatsJourney-spineLineTrack {
     left: 20px;
   }
+
   .StatsJourney-spineRow {
     flex-direction: column !important;
     align-items: flex-start;
     padding-left: 52px;
   }
+
   .StatsJourney-spineNode {
     left: 20px;
     top: 2rem;
     transform: translateY(0) translateX(-50%);
   }
+
   .StatsJourney-spineCard {
     width: 100%;
   }
@@ -23718,11 +23711,9 @@ textarea {
   width: 300px;
   height: 300px;
   border-radius: 50%;
-  background: radial-gradient(
-    circle,
-    rgba(56, 189, 248, 0.12),
-    transparent 70%
-  );
+  background: radial-gradient(circle,
+      rgba(56, 189, 248, 0.12),
+      transparent 70%);
   pointer-events: none;
 }
 
@@ -23797,6 +23788,7 @@ textarea {
    TABLET  (max-width: 1024px)
    ========================================================================== */
 @media (max-width: 1024px) {
+
   /* --- Payroll --- */
   .Payroll-heroSection {
     padding-top: 4rem;
@@ -23881,6 +23873,7 @@ textarea {
    MOBILE  (max-width: 768px)
    ========================================================================== */
 @media (max-width: 768px) {
+
   /* ─── PAYROLL ──────────────────────────────────────────────────────────── */
   .Payroll-heroSection {
     padding-top: 3rem;
@@ -24281,6 +24274,7 @@ textarea {
    EXTRA-SMALL PHONES  (max-width: 480px)
    ========================================================================== */
 @media (max-width: 480px) {
+
   /* ─── PAYROLL ──────────────────────────────────────────────────────────── */
   .Payroll-heroSection {
     padding-top: 2.5rem;
@@ -24461,6 +24455,7 @@ textarea {
    VERY SMALL PHONES  (max-width: 380px)
    ========================================================================== */
 @media (max-width: 380px) {
+
   /* Payroll */
   .Payroll-heroHeadline {
     font-size: 1.4rem;
@@ -24751,11 +24746,9 @@ body {
   left: 0;
   right: 0;
   height: 3px;
-  background: linear-gradient(
-    90deg,
-    var(--color-primary, #0037b0),
-    var(--color-cobalt-glow, #3b82f6)
-  );
+  background: linear-gradient(90deg,
+      var(--color-primary, #0037b0),
+      var(--color-cobalt-glow, #3b82f6));
   border-radius: 16px 16px 0 0;
   opacity: 0;
   transition: opacity 0.25s ease;
@@ -24768,22 +24761,18 @@ body {
 /* ── Distinct 2026+ Future Initiative Card ─────────────────────────────── */
 .MilestoneCard--future {
   background:
-    linear-gradient(
-      135deg,
+    linear-gradient(135deg,
       rgba(34, 197, 94, 0.03) 0%,
-      rgba(0, 55, 176, 0.02) 100%
-    ),
+      rgba(0, 55, 176, 0.02) 100%),
     #ffffff;
   border-color: rgba(34, 197, 94, 0.4);
   border-style: dashed;
 }
 
 .MilestoneCard--future::before {
-  background: linear-gradient(
-    90deg,
-    var(--color-emerald-accent, #22c55e),
-    var(--color-cobalt-glow, #3b82f6)
-  );
+  background: linear-gradient(90deg,
+      var(--color-emerald-accent, #22c55e),
+      var(--color-cobalt-glow, #3b82f6));
 }
 
 .MilestoneCard--future:hover {
@@ -24795,11 +24784,9 @@ body {
 
 [data-theme='dark'] .MilestoneCard--future {
   background:
-    linear-gradient(
-      135deg,
+    linear-gradient(135deg,
       rgba(34, 197, 94, 0.05) 0%,
-      rgba(0, 55, 176, 0.05) 100%
-    ),
+      rgba(0, 55, 176, 0.05) 100%),
     #242731;
   border-color: rgba(34, 197, 94, 0.35);
 }
@@ -26116,6 +26103,7 @@ body {
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
@@ -26125,6 +26113,7 @@ body {
   from {
     transform: rotate(360deg);
   }
+
   to {
     transform: rotate(0deg);
   }
@@ -26132,10 +26121,12 @@ body {
 
 /* Prefers Reduced Motion */
 @media (prefers-reduced-motion: reduce) {
+
   .MVE-orbitRing--outer,
   .MVE-orbitRing--mid {
     animation: none !important;
   }
+
   .MVE-wingCard,
   .MVE-coreGlobe,
   .MVE-milestoneNode {
@@ -26277,4 +26268,3 @@ body {
     max-width: none;
   }
 }
-
