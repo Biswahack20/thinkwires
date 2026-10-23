@@ -16,6 +16,37 @@ const CandidatePayoutAndCompliance = ({ data = {} }) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [hours, setHours] = useState('40');
   const [comments, setComments] = useState('');
+  const [payslipLoading, setPayslipLoading] = useState(false);
+
+  const handlePayslipDownload = async () => {
+    setPayslipLoading(true);
+    try {
+      const response = await fetch('/api/candidate/payslip/download', {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/pdf',
+        },
+        credentials: 'include',
+      });
+      if (!response.ok) {
+        throw new Error('Failed to download payslip');
+      }
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'payslip.pdf';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error(err);
+      alert(err.message);
+    } finally {
+      setPayslipLoading(false);
+    }
+  };
 
   const handleTimesheetSubmit = (e) => {
     e.preventDefault();
@@ -55,9 +86,9 @@ const CandidatePayoutAndCompliance = ({ data = {} }) => {
             <span className="material-symbols-outlined">more_time</span>
             <span>Submit Weekly Timesheet</span>
           </button>
-          <button type="button" className="btn-payslip">
+          <button type="button" className="btn-payslip" onClick={handlePayslipDownload} disabled={payslipLoading}>
             <span className="material-symbols-outlined">receipt_long</span>
-            <span>Download Payslip PDF</span>
+            <span>{payslipLoading ? 'Downloading...' : 'Download Payslip PDF'}</span>
           </button>
         </div>
       </div>
