@@ -1,12 +1,12 @@
 import React from 'react';
 import { CloseIcon } from '../../admin/AdminIcons';
 
-const categories = [
-  'All Insights (15)',
-  'AI & Tech Trends',
-  'GCC Economics',
-  'Talent Strategy',
-  'Case Studies',
+const DEFAULT_CATEGORIES = [
+  { key: 'all', label: 'All Insights' },
+  { key: 'AI & Tech Trends', label: 'AI & Tech Trends' },
+  { key: 'GCC Economics', label: 'GCC Economics' },
+  { key: 'Talent Strategy', label: 'Talent Strategy' },
+  { key: 'Case Studies', label: 'Case Studies' },
 ];
 
 const BlogFilters = ({
@@ -15,25 +15,35 @@ const BlogFilters = ({
   selectedCategory,
   setSelectedCategory,
   totalResults,
+  totalArticles,
 }) => {
+  const allCount = totalArticles !== undefined ? totalArticles : totalResults;
+  const categories = DEFAULT_CATEGORIES.map((cat) =>
+    cat.key === 'all'
+      ? { ...cat, label: `All Insights (${allCount || 0})` }
+      : cat
+  );
+
   return (
     <div className="BlogFilters-figmaBar blog-container">
       {/* Category Pills on Left */}
       <div className="BlogFilters-figmaPillsGroup">
         {categories.map((cat) => {
           const isActive =
-            selectedCategory === cat ||
-            (cat.startsWith('All Insights') &&
-              (selectedCategory === 'All' ||
-                selectedCategory === 'All Insights (15)'));
+            selectedCategory === cat.key ||
+            (cat.key === 'all' &&
+              (selectedCategory === 'all' ||
+                selectedCategory === 'All' ||
+                selectedCategory === 'All Insights' ||
+                selectedCategory.startsWith('All Insights')));
 
           return (
             <button
-              key={cat}
-              onClick={() => setSelectedCategory(cat)}
+              key={cat.key}
+              onClick={() => setSelectedCategory(cat.key)}
               className={`BlogFilters-figmaPillBtn ${isActive ? 'is-active' : ''}`}
             >
-              {cat}
+              {cat.label}
             </button>
           );
         })}
