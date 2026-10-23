@@ -17262,6 +17262,20 @@ textarea {
   margin-top: 1rem;
 }
 
+.Payroll-errorBanner {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem;
+  border-radius: 0.75rem;
+  background-color: rgba(220, 38, 38, 0.1);
+  border: 1px solid rgba(220, 38, 38, 0.3);
+  color: var(--color-error, #b91c1c);
+  font-size: 0.875rem;
+  font-weight: 600;
+  margin-top: 1rem;
+}
+
 /* ==========================================================================
    Employer of Record (EOR) Component Styles
    ========================================================================== */
