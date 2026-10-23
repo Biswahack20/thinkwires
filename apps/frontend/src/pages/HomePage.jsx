@@ -4,6 +4,7 @@ import Navbar from '../components/common/Navbar';
 import NewHero from '../components/HomeComponents/NewHero';
 import TechStack from '../components/HomeComponents/TechStack';
 import About from '../components/HomeComponents/About';
+import MissionVisionExperience from '../components/HomeComponents/MissionVisionExperience';
 import Footer from '../components/common/Footer';
 
 const Capabilities = React.lazy(
@@ -35,6 +36,7 @@ const HomePage = () => {
         <NewHero />
         <TechStack />
         <About />
+        <MissionVisionExperience />
         <Suspense
           fallback={
             <div style={{ padding: '2rem', textAlign: 'center' }}>
