@@ -19,10 +19,11 @@ const FindTalentHero = ({ data }) => {
         <div className="FindTalent-heroGrid">
           <div className="FindTalent-heroContent">
             <h1 className="FindTalent-heroTitle">
-              Deploy Pre-Vetted Tech Talent &amp;{' '}
-              <span className="FindTalent-titleHighlight">
-                High-Velocity Engineering Squads.
-              </span>
+              {heading || (
+                <>Deploy Pre-Vetted Tech Talent &nbsp;
+                  <span className="FindTalent-titleHighlight">High-Velocity Engineering Squads.</span>
+                </>
+              )}
             </h1>
             <p className="FindTalent-heroDesc">{description}</p>
           </div>
