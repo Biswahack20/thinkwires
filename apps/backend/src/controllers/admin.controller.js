@@ -2680,22 +2680,14 @@ export const loginAdmin = async (req, res) => {
       });
     }
 
-    // Verify Password:
+    // Verify Password using cryptographically secure bcrypt
     let isMatch = false;
     if (user.password) {
-      isMatch = await comparePassword(password, user.password);
-    }
-
-    // Support default initial seed passwords for demo resilience:
-    if (!isMatch) {
-      const allowedDefaultPasswords = [
-        'Thinkwires@2026',
-        'Admin@123456',
-        'demo_password_secure',
-        'demo_password_hash_secure',
-      ];
-      if (allowedDefaultPasswords.includes(password)) {
-        isMatch = true;
+      if (user.password.startsWith('$2a$') || user.password.startsWith('$2b$')) {
+        isMatch = await comparePassword(password, user.password);
+      } else if (process.env.NODE_ENV !== 'production' && !isMongoActive()) {
+        // Safe equality comparison only for offline local development demo seed
+        isMatch = password === user.password;
       }
     }
 
@@ -3122,11 +3114,16 @@ export const deleteSystemMember = async (req, res) => {
         ? { _id: id }
         : { email: id };
       const member = await UserMongo.findOne(query);
-      if (member && member.email === 'superadmin@thinkwires.com') {
+      if (
+        member &&
+        (member.email === 'superadmin@thinkwires.com' ||
+          member.email === req.user?.email ||
+          String(member._id) === String(req.user?.id))
+      ) {
         return res.status(400).json({
           success: false,
           error:
-            'Protection violation: Cannot delete the primary root Superadmin account.',
+            'Protection violation: You cannot delete your own active administrative account or the root Superadmin account.',
         });
       }
       if (member) {

@@ -186,7 +186,7 @@ const ScrollAnimationManager = () => {
   const observerRef = useRef(null);
 
   useEffect(() => {
-    // 1. Accessibility: Check user's motion preference
+    // Respect OS-level motion reduction preference (WCAG 2.1 compliance)
     const prefersReducedMotion =
       window.matchMedia &&
       window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -202,7 +202,6 @@ const ScrollAnimationManager = () => {
       return;
     }
 
-    // 2. Mark document ready for scroll animations
     document.documentElement.classList.add('tw-scroll-anim-ready');
 
     if (!('IntersectionObserver' in window)) {

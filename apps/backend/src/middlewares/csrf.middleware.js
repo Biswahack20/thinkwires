@@ -2,20 +2,14 @@ import crypto from 'crypto';
 
 export const CSRF_COOKIE_NAME = 'thinkwires_csrf_token';
 
-/**
- * Generate cryptographically secure random CSRF token
- */
 export const generateCsrfToken = () => {
   return crypto.randomBytes(32).toString('hex');
 };
 
-/**
- * Set client-readable CSRF cookie
- */
 export const setCsrfCookie = (res, token) => {
   const isProduction = process.env.NODE_ENV === 'production';
   res.cookie(CSRF_COOKIE_NAME, token, {
-    httpOnly: false, // Must be accessible to client-side JavaScript
+    httpOnly: false, // Must be readable by client JS for double-submit header
     secure: isProduction,
     sameSite: isProduction ? 'strict' : 'lax',
     path: '/',
@@ -23,9 +17,6 @@ export const setCsrfCookie = (res, token) => {
   });
 };
 
-/**
- * Clear CSRF cookie
- */
 export const clearCsrfCookie = (res) => {
   const isProduction = process.env.NODE_ENV === 'production';
   res.cookie(CSRF_COOKIE_NAME, '', {
@@ -37,9 +28,6 @@ export const clearCsrfCookie = (res) => {
   });
 };
 
-/**
- * List of trusted origins allowed to interact with the API
- */
 export const getAllowedOrigins = () => {
   const envOrigins = (
     process.env.ALLOWED_ORIGINS ||
@@ -67,33 +55,41 @@ export const getAllowedOrigins = () => {
 };
 
 export const isAllowedOrigin = (origin) => {
-  if (!origin) return true; // Non-browser clients, same-origin, supertest
+  if (!origin) return true; // Direct server-to-server or test requests
   const allowed = getAllowedOrigins();
-  return allowed.includes(origin);
+  if (allowed.includes(origin)) return true;
+
+  // Allow Vercel preview branch deployments dynamically
+  try {
+    const parsed = new URL(origin);
+    if (parsed.hostname.endsWith('.vercel.app')) {
+      return true;
+    }
+  } catch {
+    // Malformed origin
+  }
+
+  // Prevent total lockout if production environment variables are not yet seeded
+  if (process.env.NODE_ENV === 'production' && allowed.length === 0) {
+    return true;
+  }
+
+  return false;
 };
 
-/**
- * Extract origin from referer header URL if origin header is omitted
- */
 const getOriginFromReferer = (referer) => {
   if (!referer) return null;
   try {
-    const parsed = new URL(referer);
-    return parsed.origin;
+    return new URL(referer).origin;
   } catch {
     return null;
   }
 };
 
-/**
- * CSRF Protection Middleware for Admin Endpoints
- * Combines Origin/Referer verification with Double-Submit Cookie / Synchronizer token pattern.
- */
 export const adminCsrfProtection = (req, res, next) => {
   const safeMethods = ['GET', 'HEAD', 'OPTIONS'];
   const method = req.method.toUpperCase();
 
-  // For safe read-only methods, ensure CSRF cookie is present and pass through
   if (safeMethods.includes(method)) {
     if (!req.cookies || !req.cookies[CSRF_COOKIE_NAME]) {
       const newToken = generateCsrfToken();
@@ -102,8 +98,7 @@ export const adminCsrfProtection = (req, res, next) => {
     return next();
   }
 
-  // State-changing methods (POST, PUT, PATCH, DELETE)
-  // Exempt public login if unauthenticated (no existing admin cookie)
+  // Exempt unauthenticated initial login to establish session
   const isLoginRoute = req.path === '/auth/login' || req.originalUrl?.endsWith('/auth/login');
   const hasAdminCookie = Boolean(req.cookies && req.cookies.thinkwires_admin_jwt);
 
@@ -111,7 +106,6 @@ export const adminCsrfProtection = (req, res, next) => {
     return next();
   }
 
-  // 1. Origin / Referer validation for cross-site attack defense
   const origin = req.headers.origin;
   const referer = req.headers.referer;
   const effectiveOrigin = origin || getOriginFromReferer(referer);
@@ -124,7 +118,6 @@ export const adminCsrfProtection = (req, res, next) => {
     });
   }
 
-  // 2. Token verification for cookie-authenticated requests
   if (hasAdminCookie) {
     const clientToken =
       req.headers['x-csrf-token'] ||
@@ -142,7 +135,7 @@ export const adminCsrfProtection = (req, res, next) => {
       });
     }
 
-    // Timing-safe comparison to prevent side-channel timing attacks
+    // Constant-time comparison to prevent side-channel timing leaks
     const clientBuffer = Buffer.from(String(clientToken));
     const cookieBuffer = Buffer.from(String(cookieToken));
 
@@ -160,9 +153,6 @@ export const adminCsrfProtection = (req, res, next) => {
   next();
 };
 
-/**
- * Controller to explicitly fetch or renew CSRF token
- */
 export const getCsrfTokenHandler = (req, res) => {
   let token = req.cookies?.[CSRF_COOKIE_NAME];
   if (!token) {

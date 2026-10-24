@@ -3,6 +3,7 @@ import path from 'path';
 import { fileURLToPath, pathToFileURL } from 'url';
 import mongoose from 'mongoose';
 import config from '../configs/dotenv.js';
+import { connectMongoDB, disconnectMongoDB } from '../configs/mongodb.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -27,12 +28,7 @@ const MigrationRecord =
   mongoose.models._Migration || mongoose.model('_Migration', migrationSchema);
 
 const connectDB = async () => {
-  if (mongoose.connection.readyState !== 1) {
-    await mongoose.connect(config.MONGODB_URI, {
-      serverSelectionTimeoutMS: 10000,
-    });
-  }
-  return mongoose.connection;
+  return connectMongoDB();
 };
 
 const getMigrationFiles = () => {
@@ -266,9 +262,8 @@ const main = async () => {
     console.error('Pipeline Error:', err.message);
     process.exit(1);
   } finally {
-    if (mongoose.connection.readyState !== 0) {
-      await mongoose.disconnect();
-    }
+    await disconnectMongoDB();
+    process.exit(0);
   }
 };
 

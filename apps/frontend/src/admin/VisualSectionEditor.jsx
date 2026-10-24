@@ -18,7 +18,6 @@ const FieldRenderer = ({ path, label, value, onChange, onRemove }) => {
       value.includes('\n') ||
       /desc|description|subtitle|summary|notes|body|message|text/i.test(label));
 
-  // 1. Primitive: String
   if (typeof value === 'string') {
     return (
       <div className="tw-form-group" style={{ marginBottom: '0.85rem' }}>
@@ -53,7 +52,6 @@ const FieldRenderer = ({ path, label, value, onChange, onRemove }) => {
     );
   }
 
-  // 2. Primitive: Number
   if (typeof value === 'number') {
     return (
       <div className="tw-form-group" style={{ marginBottom: '0.85rem' }}>
@@ -78,7 +76,6 @@ const FieldRenderer = ({ path, label, value, onChange, onRemove }) => {
     );
   }
 
-  // 3. Primitive: Boolean
   if (typeof value === 'boolean') {
     return (
       <div
@@ -117,7 +114,7 @@ const FieldRenderer = ({ path, label, value, onChange, onRemove }) => {
     );
   }
 
-  // 4. Array of Primitives (e.g. string tags, bullet items)
+  // Primitive collections (e.g. string tags, bullet items)
   if (
     Array.isArray(value) &&
     (value.length === 0 || typeof value[0] !== 'object')
@@ -216,7 +213,7 @@ const FieldRenderer = ({ path, label, value, onChange, onRemove }) => {
     );
   }
 
-  // 5. Array of Objects (e.g. points, cards, FAQs, milestones)
+  // Structured record collections (cards, FAQs, milestones)
   if (Array.isArray(value) && typeof value[0] === 'object') {
     const handleCardChange = (idx, subKey, newVal) => {
       const copy = [...value];
@@ -357,7 +354,7 @@ const FieldRenderer = ({ path, label, value, onChange, onRemove }) => {
     );
   }
 
-  // 6. Nested Object (Group of fields)
+  // Nested composite object groups
   if (typeof value === 'object' && value !== null) {
     const handleSubFieldChange = (subKey, newVal) => {
       onChange({

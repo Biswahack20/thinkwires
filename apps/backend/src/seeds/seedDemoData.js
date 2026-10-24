@@ -15,6 +15,9 @@ import Media from '../models/media.mongo.model.js';
 import Announcement from '../models/announcement.mongo.model.js';
 import Activity from '../models/activity.mongo.model.js';
 import UserMongo from '../models/user.mongo.model.js';
+import { User as UserPg } from '../models/user.model.js';
+import { sequelize } from '../configs/db.js';
+import { connectMongoDB } from '../configs/mongodb.js';
 import { hashPassword } from '../utils/auth.util.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -29,40 +32,55 @@ export const seedDatabase = async () => {
     ? JSON.parse(fs.readFileSync(mockSeedFilePath, 'utf8'))
     : {};
 
-  console.log(
-    'Seeding MongoDB collections from adminSeedData.json and mockData.json...'
-  );
+  // Bootstrap initial Superadmin if none exists
+  const adminEmail = (
+    process.env.INITIAL_SUPERADMIN_EMAIL || 'superadmin@thinkwires.com'
+  )
+    .toLowerCase()
+    .trim();
+  const adminPassword =
+    process.env.INITIAL_SUPERADMIN_PASSWORD || 'ThinkWires@Admin2026!';
+  const defaultHashedPassword = await hashPassword(adminPassword);
 
-  const defaultHashedPassword = await hashPassword('demo_password_hash_secure');
-
-  // 1. Users - Keep authentic administrative accounts only, do not seed mock users
-  console.log(
-    'Skipping fake demo users and employees seeding (live DB models active).'
-  );
-
-  // 2. Employees - Clean directory; only real employees created by Superadmin
-  /*
-  for (const emp of adminData.employees || []) {
-    await Employee.findOneAndUpdate(
-      { email: emp.email },
-      { ...emp },
-      { upsert: true, new: true }
-    );
+  if (mongoose.connection.readyState === 1) {
+    const existingAdmin = await UserMongo.findOne({ email: adminEmail });
+    if (!existingAdmin) {
+      await UserMongo.create({
+        name: 'Super Admin',
+        email: adminEmail,
+        password: defaultHashedPassword,
+        role: 'superadmin',
+        designation: 'Superadmin',
+        isActive: true,
+      });
+      console.log(`✅ [MongoDB] Initial Superadmin bootstrapped: ${adminEmail}`);
+    } else {
+      console.log(`ℹ️ [MongoDB] Superadmin account present: ${adminEmail}`);
+    }
   }
-  */
 
-  // 3. Candidates - Clean directory; only real candidates applied or created
-  /*
-  for (const cand of adminData.candidates || []) {
-    await Candidate.findOneAndUpdate(
-      { email: cand.email },
-      { ...cand },
-      { upsert: true, new: true }
-    );
+  // Dual-mode: sync PostgreSQL User table if connected
+  try {
+    await sequelize.authenticate();
+    await sequelize.sync();
+    const existingPgAdmin = await UserPg.findOne({ where: { email: adminEmail } });
+    if (!existingPgAdmin) {
+      await UserPg.create({
+        name: 'Super Admin',
+        email: adminEmail,
+        password: defaultHashedPassword,
+        role: 'superadmin',
+        designation: 'Superadmin',
+        isActive: true,
+      });
+      console.log(`✅ [PostgreSQL] Initial Superadmin bootstrapped: ${adminEmail}`);
+    } else {
+      console.log(`ℹ️ [PostgreSQL] Superadmin account present: ${adminEmail}`);
+    }
+  } catch (pgErr) {
+    console.log(`ℹ️ [PostgreSQL] User table bootstrap bypassed: ${pgErr.message}`);
   }
-  */
 
-  // 4. Clients
   for (const cli of adminData.clients || []) {
     await Client.findOneAndUpdate(
       { companyName: cli.companyName },
@@ -71,57 +89,6 @@ export const seedDatabase = async () => {
     );
   }
 
-  // 5. Jobs / Openings - Clean directory; only real jobs created by admins
-  /*
-  if (Array.isArray(adminData.jobs)) {
-    for (const job of adminData.jobs) {
-      await JobRequirement.findOneAndUpdate(
-        { title: job.title, client: job.client },
-        { ...job },
-        { upsert: true, new: true }
-      );
-    }
-  }
-
-  if (Array.isArray(mockData.initialOpenings)) {
-    for (const j of mockData.initialOpenings) {
-      const clientName = j.company || 'ThinkWires Client';
-      await JobRequirement.findOneAndUpdate(
-        { title: j.title, client: clientName },
-        {
-          title: j.title,
-          client: clientName,
-          jobId: j.id,
-          category: j.category || 'Technology',
-          badge: j.badge || '',
-          badgeColor: j.badgeColor || 'blue',
-          logo: j.logo || 'TW',
-          location: j.location || 'Remote',
-          experience: j.experience || '',
-          experienceTier: j.experienceTier || 'Mid-Senior',
-          experienceRequired: parseInt(j.experience, 10) || 3,
-          salary: j.salary || '',
-          budget: j.salary || 'Competitive CTC',
-          joining: j.joining || 'Immediate',
-          jobMode: j.jobMode || 'Permanent',
-          workMode: j.workMode || 'Remote',
-          noticePeriod: j.noticePeriod || 'Immediate',
-          description: j.description || '',
-          skills: j.skills || [],
-          requiredSkills: j.skills || [],
-          department: j.department || 'Technology',
-          postedDate: j.postedDate || new Date().toISOString().split('T')[0],
-          priority: j.priority || 1,
-          status: 'Open',
-          openingsCount: 1,
-        },
-        { upsert: true, new: true }
-      );
-    }
-  }
-  */
-
-  // 6. Placements
   for (const plc of adminData.placements || []) {
     await Placement.findOneAndUpdate(
       {
@@ -367,7 +334,6 @@ export const seedDatabase = async () => {
     );
   }
 
-  // 9. Media
   for (const med of adminData.media || []) {
     await Media.findOneAndUpdate(
       { fileUrl: med.fileUrl },
@@ -376,7 +342,6 @@ export const seedDatabase = async () => {
     );
   }
 
-  // 10. Announcements
   for (const ann of adminData.announcements || []) {
     await Announcement.findOneAndUpdate(
       { title: ann.title },
@@ -385,7 +350,6 @@ export const seedDatabase = async () => {
     );
   }
 
-  // 11. Activities
   for (const act of adminData.activities || []) {
     await Activity.findOneAndUpdate(
       { action: act.action, description: act.description },
@@ -394,30 +358,32 @@ export const seedDatabase = async () => {
     );
   }
 
-  console.log(
-    'MongoDB database successfully seeded with both Admin and mockData datasets!'
-  );
+  console.log('Database successfully seeded.');
 };
 
-// If run directly from terminal
 if (process.argv[1] === fileURLToPath(import.meta.url)) {
-  mongoose
-    .connect(config.MONGODB_URI, { serverSelectionTimeoutMS: 8000 })
+  connectMongoDB()
     .then(async () => {
       console.log('Connected to MongoDB, starting seeding...');
       await seedDatabase();
       await mongoose.disconnect();
-      console.log('Seeding finished, connection closed.');
+      try {
+        await sequelize.close();
+      } catch (_) {}
+      console.log('Seeding finished, all database connections closed.');
       process.exit(0);
     })
-    .catch((err) => {
-      console.warn(
-        '⚠️ MongoDB connection failed during standalone seed execution:',
+    .catch(async (err) => {
+      console.error(
+        '❌ MongoDB connection failed during standalone seed execution:',
         err.message
       );
       console.log(
-        'ℹ️ You can run MongoDB or rely on the dual-mode in-memory seed dataset.'
+        'ℹ️ Please verify that MONGODB_URI is reachable in your .env file.'
       );
-      process.exit(0);
+      try {
+        await sequelize.close();
+      } catch (_) {}
+      process.exit(1);
     });
 }

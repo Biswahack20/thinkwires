@@ -184,10 +184,8 @@ const AdminLayout = () => {
   const isRestrictedForCurrentRole =
     isCmsAdminBlocked || isAdminCmsBlocked || isSystemMembersBlocked;
 
-  // Navigation Items dynamic based on RBAC Role:
-  // Only assigned pages are visible to respective roles!
+  // Role-filtered navigation tree based on active RBAC entitlements
   const navItems = [
-    // 1. Overview & Manpower (Visible ONLY to SuperAdmin and Admin)
     ...(isSuperAdmin || isAdmin
       ? [
           {
@@ -233,7 +231,6 @@ const AdminLayout = () => {
         ]
       : []),
 
-    // 2. Content Management System (Visible ONLY to SuperAdmin and CMS Admin)
     ...(isSuperAdmin || isCmsAdmin
       ? [
           {
@@ -274,7 +271,6 @@ const AdminLayout = () => {
         ]
       : []),
 
-    // 3. System Governance & RBAC (Visible ONLY to SuperAdmin)
     ...(isSuperAdmin
       ? [
           {

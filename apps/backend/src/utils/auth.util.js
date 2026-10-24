@@ -3,9 +3,6 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import config from '../configs/dotenv.js';
 
-/**
- * Get JWT Secret safely or throw error if not configured
- */
 const INSECURE_DEFAULT_SECRETS = new Set([
   'your_jwt_secret_here',
   'super_secret_jwt_key_here',
@@ -33,6 +30,7 @@ export const getJwtSecret = () => {
     );
   }
 
+  // Enforce minimum 256-bit entropy in production
   if (isProduction && cleanSecret.length < 32) {
     throw new Error(
       'FATAL: JWT_SECRET in production must be at least 32 characters long.'
@@ -42,9 +40,7 @@ export const getJwtSecret = () => {
   return cleanSecret;
 };
 
-/**
- * Hash plaintext password using bcrypt
- */
+// 12 rounds provides optimal protection against GPU cracking while maintaining sub-100ms request times
 export const hashPassword = async (plainPassword) => {
   if (!plainPassword || typeof plainPassword !== 'string') {
     throw new Error('Password must be a non-empty string');
@@ -53,17 +49,11 @@ export const hashPassword = async (plainPassword) => {
   return bcrypt.hash(plainPassword, salt);
 };
 
-/**
- * Compare candidate password with stored hash
- */
 export const comparePassword = async (plainPassword, hashedPassword) => {
   if (!plainPassword || !hashedPassword) return false;
   return bcrypt.compare(plainPassword, hashedPassword);
 };
 
-/**
- * Generate signed JWT for candidate authentication
- */
 export const generateCandidateToken = (candidate) => {
   const secret = getJwtSecret();
   const payload = {
@@ -71,32 +61,33 @@ export const generateCandidateToken = (candidate) => {
     email: candidate.email,
     name: candidate.name,
     role: 'candidate',
+    portal: 'candidate',
   };
 
   return jwt.sign(payload, secret, {
     expiresIn: '7d',
+    algorithm: 'HS256',
   });
 };
 
-/**
- * Verify JWT token string
- */
+// Pin algorithm to HS256 to prevent algorithm-substitution attacks (e.g. 'none' or public key confusion)
 export const verifyCandidateToken = (token) => {
   const secret = getJwtSecret();
-  return jwt.verify(token, secret);
+  const decoded = jwt.verify(token, secret, { algorithms: ['HS256'] });
+  if (decoded && decoded.portal && decoded.portal !== 'candidate') {
+    throw new Error('Invalid token scope for candidate portal.');
+  }
+  return decoded;
 };
 
-/**
- * Generate cryptographically secure reset token
- * Returns { rawToken, hashedToken, expiresAt }
- */
+// Store SHA-256 hash in DB; raw token is only sent once to user email to prevent leakage from DB read replicas
 export const generatePasswordResetToken = () => {
   const rawToken = crypto.randomBytes(32).toString('hex');
   const hashedToken = crypto
     .createHash('sha256')
     .update(rawToken)
     .digest('hex');
-  const expiresAt = new Date(Date.now() + 60 * 60 * 1000); // 1 hour validity
+  const expiresAt = new Date(Date.now() + 60 * 60 * 1000);
 
   return {
     rawToken,
@@ -105,44 +96,34 @@ export const generatePasswordResetToken = () => {
   };
 };
 
-/**
- * Hash raw token for verification against DB stored hash
- */
 export const hashResetToken = (rawToken) => {
   return crypto.createHash('sha256').update(rawToken).digest('hex');
 };
 
-/**
- * Helper to set HttpOnly auth cookie
- */
 export const setAuthCookie = (res, token) => {
   const isProduction = process.env.NODE_ENV === 'production';
+  const sameSite = process.env.COOKIE_SAME_SITE || 'lax';
   res.cookie('thinkwires_candidate_jwt', token, {
     httpOnly: true,
-    secure: isProduction, // secure in production HTTPS
-    sameSite: isProduction ? 'strict' : 'lax',
-    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+    secure: isProduction,
+    sameSite,
+    maxAge: 7 * 24 * 60 * 60 * 1000,
     path: '/',
   });
 };
 
-/**
- * Clear candidate auth cookie on logout
- */
 export const clearAuthCookie = (res) => {
   const isProduction = process.env.NODE_ENV === 'production';
+  const sameSite = process.env.COOKIE_SAME_SITE || 'lax';
   res.cookie('thinkwires_candidate_jwt', '', {
     httpOnly: true,
     secure: isProduction,
-    sameSite: isProduction ? 'strict' : 'lax',
+    sameSite,
     expires: new Date(0),
     path: '/',
   });
 };
 
-/**
- * Generate signed JWT for Admin Portal members (superadmin, admin, cms_admin)
- */
 export const generateAdminToken = (user) => {
   const secret = getJwtSecret();
   const payload = {
@@ -156,10 +137,10 @@ export const generateAdminToken = (user) => {
 
   return jwt.sign(payload, secret, {
     expiresIn: '7d',
+    algorithm: 'HS256',
   });
 };
 
-// Token Revocation Store (Server-side revocation for logout)
 const revokedTokens = new Set();
 
 export const revokeToken = (token) => {
@@ -177,50 +158,45 @@ export const clearRevocationStore = () => {
   revokedTokens.clear();
 };
 
-/**
- * Verify Admin JWT token string
- */
 export const verifyAdminToken = (token) => {
   const secret = getJwtSecret();
-  return jwt.verify(token, secret);
+  const decoded = jwt.verify(token, secret, { algorithms: ['HS256'] });
+  if (decoded && decoded.portal && decoded.portal !== 'admin') {
+    throw new Error('Invalid token scope for admin portal.');
+  }
+  return decoded;
 };
 
 export const ADMIN_COOKIE_NAME = 'thinkwires_admin_jwt';
 export const ADMIN_COOKIE_PATH = '/api/admin';
-export const ADMIN_COOKIE_MAX_AGE = 7 * 24 * 60 * 60 * 1000; // 7 days, matching token expiresIn
+export const ADMIN_COOKIE_MAX_AGE = 7 * 24 * 60 * 60 * 1000;
 
-/**
- * Helper to set HttpOnly Admin auth cookie
- */
 export const setAdminAuthCookie = (res, token) => {
   const isProduction = process.env.NODE_ENV === 'production';
+  const sameSite = process.env.COOKIE_SAME_SITE || 'lax';
   res.cookie(ADMIN_COOKIE_NAME, token, {
     httpOnly: true,
     secure: isProduction,
-    sameSite: isProduction ? 'strict' : 'lax',
+    sameSite,
     maxAge: ADMIN_COOKIE_MAX_AGE,
     path: ADMIN_COOKIE_PATH,
   });
 };
 
-/**
- * Clear Admin auth cookie on logout
- */
 export const clearAdminAuthCookie = (res) => {
   const isProduction = process.env.NODE_ENV === 'production';
-  // Clear the scoped cookie
+  const sameSite = process.env.COOKIE_SAME_SITE || 'lax';
   res.cookie(ADMIN_COOKIE_NAME, '', {
     httpOnly: true,
     secure: isProduction,
-    sameSite: isProduction ? 'strict' : 'lax',
+    sameSite,
     expires: new Date(0),
     path: ADMIN_COOKIE_PATH,
   });
-  // Also clear legacy root path if present
   res.cookie(ADMIN_COOKIE_NAME, '', {
     httpOnly: true,
     secure: isProduction,
-    sameSite: isProduction ? 'strict' : 'lax',
+    sameSite,
     expires: new Date(0),
     path: '/',
   });

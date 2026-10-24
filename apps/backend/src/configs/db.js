@@ -1,18 +1,50 @@
 import { Sequelize } from 'sequelize';
 import config from './dotenv.js';
 
-// Option 1: Passing a connection URI
+const isProduction = config.NODE_ENV === 'production';
+
+// Auto-detect cloud providers (Neon, Supabase, RDS) to configure SSL defaults
+// while leaving local dev/docker connections unencrypted unless DB_SSL is explicitly set.
+const isLocalhost =
+  !config.DATABASE_URL ||
+  config.DATABASE_URL.includes('localhost') ||
+  config.DATABASE_URL.includes('127.0.0.1') ||
+  config.DATABASE_URL.includes('::1');
+
+const isCloudManaged =
+  typeof config.DATABASE_URL === 'string' &&
+  (config.DATABASE_URL.includes('neon.tech') ||
+    config.DATABASE_URL.includes('supabase.co') ||
+    config.DATABASE_URL.includes('rds.amazonaws.com') ||
+    config.DATABASE_URL.includes('render.com') ||
+    config.DATABASE_URL.includes('azure.com') ||
+    config.DATABASE_URL.includes('sslmode=require') ||
+    config.DATABASE_URL.includes('ssl=true'));
+
+const enableSsl =
+  process.env.DB_SSL === 'true' ||
+  (process.env.DB_SSL !== 'false' && (isCloudManaged || (isProduction && !isLocalhost)));
+
 export const sequelize = new Sequelize(config.DATABASE_URL, {
   dialect: 'postgres',
   protocol: 'postgres',
-  logging: false,
+  logging: process.env.DB_LOGGING === 'true' ? console.log : false,
   dialectOptions: {
-    connectTimeout: 3000,
+    connectTimeout: isCloudManaged ? 10000 : 5000,
+    ...(enableSsl
+      ? {
+          ssl: {
+            require: true,
+            // Cloud poolers (Neon/Supabase) present TLS certs requiring relaxed verification in Node
+            rejectUnauthorized: false,
+          },
+        }
+      : {}),
   },
   pool: {
-    max: 5,
+    max: isProduction ? 10 : 5,
     min: 0,
-    acquire: 3000,
+    acquire: 15000,
     idle: 5000,
   },
 });
@@ -20,7 +52,10 @@ export const sequelize = new Sequelize(config.DATABASE_URL, {
 export const connectDB = async () => {
   try {
     await sequelize.authenticate();
-    console.log('✅ Connection has been established successfully.');
+    const target = isLocalhost ? 'Local PostgreSQL' : 'Cloud PostgreSQL';
+    console.log(
+      `[PostgreSQL] Connection established successfully (${target}, SSL: ${enableSsl}).`
+    );
   } catch (error) {
     console.error('❌ Unable to connect to the database:', error);
     throw error;

@@ -10,6 +10,8 @@ import Page from '../models/page.mongo.model.js';
 import Candidate from '../models/candidate.mongo.model.js';
 import Activity from '../models/activity.mongo.model.js';
 import { logger } from '../utils/logger.js';
+import rateLimit from 'express-rate-limit';
+import requireAuth from '../middlewares/auth.middleware.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -59,6 +61,21 @@ let currentCandidatePortalData = candidatePortalData
   : null;
 
 const router = express.Router();
+
+// Strict RBAC guard for mutating operations on CMS/site collections
+const adminAuthGuard = requireAuth(['superadmin', 'admin', 'cms_admin']);
+
+// Rate limiter for public lead generation / consultation submissions to prevent spam and DoS
+const publicSubmissionRateLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 30, // limit each IP to 30 submissions per 15 minutes
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: {
+    success: false,
+    error: 'Too many requests from this network. Please wait a few minutes before submitting again.',
+  },
+});
 
 // Mutable in-memory state for fallback & instant local responses
 let techStack = [...initialTechStack];
@@ -191,7 +208,7 @@ router.get('/openings', async (req, res) => {
 
   let sourceOpenings = openings;
 
-  // 1. Fetch freshest openings from MongoDB if connected
+  // Populate active postings from MongoDB if available
   if (isMongoActive()) {
     try {
       const dbJobs = await JobRequirement.find({ status: { $ne: 'Closed' } })
@@ -402,7 +419,7 @@ router.get('/openings', async (req, res) => {
   res.json(filtered);
 });
 
-router.post('/openings', async (req, res) => {
+router.post('/openings', adminAuthGuard, async (req, res) => {
   if (Array.isArray(req.body.openings)) {
     openings = req.body.openings;
     if (isMongoActive()) {
@@ -429,7 +446,7 @@ router.get('/stats', async (req, res) => {
   const result = await getHomeSection('stats', stats);
   res.json(result);
 });
-router.post('/stats', async (req, res) => {
+router.post('/stats', adminAuthGuard, async (req, res) => {
   if (req.body.stats) {
     stats = { ...stats, ...req.body.stats };
     if (isMongoActive()) {
@@ -454,7 +471,7 @@ router.get('/industries', async (req, res) => {
   const result = await getHomeSection('industries', industries);
   res.json(result);
 });
-router.post('/industries', async (req, res) => {
+router.post('/industries', adminAuthGuard, async (req, res) => {
   if (Array.isArray(req.body.industries)) {
     industries = req.body.industries;
     if (isMongoActive()) {
@@ -506,7 +523,7 @@ router.get('/sector-catalog', async (req, res) => {
   res.json(data.sectors || []);
 });
 
-router.post('/industries-page', async (req, res) => {
+router.post('/industries-page', adminAuthGuard, async (req, res) => {
   if (req.body.industriesPageData) {
     currentIndustriesPageData = {
       ...currentIndustriesPageData,
@@ -542,7 +559,7 @@ router.get('/process', async (req, res) => {
   const result = await getHomeSection('process', processSteps);
   res.json(result);
 });
-router.post('/process', async (req, res) => {
+router.post('/process', adminAuthGuard, async (req, res) => {
   if (Array.isArray(req.body.processSteps)) {
     processSteps = req.body.processSteps;
     if (isMongoActive()) {
@@ -570,7 +587,7 @@ router.get('/capabilities', async (req, res) => {
   const result = await getHomeSection('capabilities', capabilities);
   res.json(result);
 });
-router.post('/capabilities', async (req, res) => {
+router.post('/capabilities', adminAuthGuard, async (req, res) => {
   if (Array.isArray(req.body.capabilities)) {
     capabilities = req.body.capabilities;
     if (isMongoActive()) {
@@ -595,7 +612,7 @@ router.get('/reports', async (req, res) => {
   const result = await getHomeSection('reports', reports);
   res.json(result);
 });
-router.post('/reports', async (req, res) => {
+router.post('/reports', adminAuthGuard, async (req, res) => {
   if (Array.isArray(req.body.reports)) {
     reports = req.body.reports;
     if (isMongoActive()) {
@@ -760,7 +777,7 @@ router.get('/articles/:id', async (req, res) => {
   }
 });
 
-router.post('/articles/newsletter', (req, res) => {
+router.post('/articles/newsletter', publicSubmissionRateLimiter, (req, res) => {
   const { email, role } = req.body;
   if (email && email.includes('@')) {
     console.log('New Benchmark Dispatch Newsletter Subscription:', {
@@ -793,8 +810,8 @@ router.get('/contact', async (req, res) => {
   res.json(contactPageData);
 });
 
-// Update office locations dynamically
-router.post('/contact/offices', async (req, res) => {
+// Update office locations dynamically (Admin Only)
+router.post('/contact/offices', adminAuthGuard, async (req, res) => {
   if (Array.isArray(req.body.officeLocations)) {
     contactPageData.officeLocations = req.body.officeLocations;
     if (isMongoActive()) {
@@ -822,8 +839,8 @@ router.post('/contact/offices', async (req, res) => {
   }
 });
 
-// Update contact channels dynamically
-router.post('/contact/channels', async (req, res) => {
+// Update contact channels dynamically (Admin Only)
+router.post('/contact/channels', adminAuthGuard, async (req, res) => {
   if (Array.isArray(req.body.channels)) {
     contactPageData.channels = req.body.channels;
     if (isMongoActive()) {
@@ -846,8 +863,8 @@ router.post('/contact/channels', async (req, res) => {
   }
 });
 
-// Update FAQ dynamically
-router.post('/contact/faq', async (req, res) => {
+// Update FAQ dynamically (Admin Only)
+router.post('/contact/faq', adminAuthGuard, async (req, res) => {
   if (Array.isArray(req.body.faq)) {
     contactPageData.faq = req.body.faq;
     if (isMongoActive()) {
@@ -868,7 +885,7 @@ router.post('/contact/faq', async (req, res) => {
 });
 
 // Handle contact form submission
-router.post('/contact/message', (req, res) => {
+router.post('/contact/message', publicSubmissionRateLimiter, (req, res) => {
   const { fullName, workEmail, inquiryType } = req.body;
   if (!fullName || !workEmail || !inquiryType) {
     return res
@@ -1257,7 +1274,7 @@ router.get('/bench/talents/:id', async (req, res) => {
   }
 });
 
-router.post('/bench/book-interview', (req, res) => {
+router.post('/bench/book-interview', publicSubmissionRateLimiter, (req, res) => {
   const {
     talentId,
     talentCode,
@@ -1286,10 +1303,7 @@ router.post('/bench/book-interview', (req, res) => {
   });
 });
 
-// ==============================================================================
-// ABOUT PAGE & CORPORATE ADVISORY ROUTES
-// ==============================================================================
-
+// About Page & Corporate Advisory Endpoints
 const aboutDataset = {
   company: {
     name: 'ThinkWires',
@@ -1696,8 +1710,8 @@ const handleConsultationSubmission = async (req, res) => {
 };
 
 // POST /api/about/consultation and POST /api/consultations
-router.post('/about/consultation', handleConsultationSubmission);
-router.post('/consultations', handleConsultationSubmission);
+router.post('/about/consultation', publicSubmissionRateLimiter, handleConsultationSubmission);
+router.post('/consultations', publicSubmissionRateLimiter, handleConsultationSubmission);
 // --- Payroll Outsourcing Endpoints ---
 router.get('/payroll', async (req, res) => {
   const result = await getPageDataBySlug(
@@ -1707,7 +1721,7 @@ router.get('/payroll', async (req, res) => {
   res.json(result);
 });
 
-router.post('/payroll', async (req, res) => {
+router.post('/payroll', adminAuthGuard, async (req, res) => {
   if (req.body.payrollData) {
     currentPayrollData = { ...currentPayrollData, ...req.body.payrollData };
     if (isMongoActive()) {
@@ -1730,7 +1744,7 @@ router.post('/payroll', async (req, res) => {
   }
 });
 
-router.post('/payroll/consultation', (req, res) => {
+router.post('/payroll/consultation', publicSubmissionRateLimiter, (req, res) => {
   const {
     companyName,
     fullName,
@@ -1765,7 +1779,7 @@ router.get('/eor', async (req, res) => {
   res.json(result);
 });
 
-router.post('/eor', async (req, res) => {
+router.post('/eor', adminAuthGuard, async (req, res) => {
   if (req.body.eorData) {
     currentEorData = { ...currentEorData, ...req.body.eorData };
     if (isMongoActive()) {
@@ -1788,7 +1802,7 @@ router.post('/eor', async (req, res) => {
   }
 });
 
-router.post('/eor/consultation', (req, res) => {
+router.post('/eor/consultation', publicSubmissionRateLimiter, (req, res) => {
   const {
     fullName,
     workEmail,
@@ -1826,7 +1840,7 @@ router.get('/staff-augmentation', async (req, res) => {
   res.json(result);
 });
 
-router.post('/staff-augmentation', async (req, res) => {
+router.post('/staff-augmentation', adminAuthGuard, async (req, res) => {
   if (req.body.staffAugmentationData) {
     currentStaffAugmentationData = {
       ...currentStaffAugmentationData,
@@ -1857,7 +1871,7 @@ router.post('/staff-augmentation', async (req, res) => {
   }
 });
 
-router.post('/staff-augmentation/consultation', (req, res) => {
+router.post('/staff-augmentation/consultation', publicSubmissionRateLimiter, (req, res) => {
   const { name, email, phone, company, roleNeeded, preferredTime, details } =
     req.body;
   if (!name || !email || !company) {
@@ -1898,7 +1912,7 @@ router.get('/executive-search', async (req, res) => {
   res.json(result);
 });
 
-router.post('/permanent-staffing', async (req, res) => {
+router.post('/permanent-staffing', adminAuthGuard, async (req, res) => {
   if (req.body.permanentStaffingData) {
     currentPermanentStaffingData = {
       ...currentPermanentStaffingData,
@@ -1929,7 +1943,7 @@ router.post('/permanent-staffing', async (req, res) => {
   }
 });
 
-router.post('/permanent-staffing/consultation', (req, res) => {
+router.post('/permanent-staffing/consultation', publicSubmissionRateLimiter, (req, res) => {
   const {
     fullName,
     workEmail,
@@ -1962,7 +1976,7 @@ router.post('/permanent-staffing/consultation', (req, res) => {
   });
 });
 
-router.post('/executive-search/consultation', (req, res) => {
+router.post('/executive-search/consultation', publicSubmissionRateLimiter, (req, res) => {
   const {
     fullName,
     workEmail,
@@ -2001,7 +2015,7 @@ router.get('/find-talent', async (req, res) => {
   res.json(result);
 });
 
-router.post('/find-talent/requisition', async (req, res) => {
+router.post('/find-talent/requisition', publicSubmissionRateLimiter, async (req, res) => {
   const {
     engagementModel,
     targetRole,
