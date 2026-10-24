@@ -213,29 +213,71 @@ const BlogPage = () => {
               </div>
             </div>
             <div className="BlogPage-modalBody">
-              <p
-                style={{
-                  fontSize: '1.1rem',
-                  fontWeight: '500',
-                  color: 'var(--color-on-surface)',
-                  lineHeight: '1.7',
-                  marginBottom: '1.5rem',
-                }}
-              >
-                {activeArticleModal.excerpt}
-              </p>
-              <p
-                style={{
-                  lineHeight: '1.8',
-                  color: 'var(--color-on-surface-variant)',
-                }}
-              >
-                Modern enterprise engineering teams face unprecedented
-                complexity when evaluating infrastructure investment, AI model
-                deployment, and international team scale. In this comprehensive
-                deep-dive, we analyze empirical benchmarks gathered from over
-                750 enterprise deployments across Americas and Asia-Pacific.
-              </p>
+              {activeArticleModal.content ? (
+                <>
+                  {activeArticleModal.excerpt && (
+                    <p
+                      style={{
+                        fontSize: '1.1rem',
+                        fontWeight: '500',
+                        color: 'var(--color-on-surface)',
+                        lineHeight: '1.7',
+                        marginBottom: '1.5rem',
+                      }}
+                    >
+                      {activeArticleModal.excerpt}
+                    </p>
+                  )}
+                  {typeof activeArticleModal.content === 'string' ? (
+                    activeArticleModal.content
+                      .split('\n\n')
+                      .filter((p) => p.trim() !== '')
+                      .map((paragraph, idx) => (
+                        <p
+                          key={idx}
+                          style={{
+                            lineHeight: '1.8',
+                            color: 'var(--color-on-surface-variant)',
+                            marginBottom: '1rem',
+                            whiteSpace: 'pre-line',
+                          }}
+                        >
+                          {paragraph}
+                        </p>
+                      ))
+                  ) : (
+                    <p
+                      style={{
+                        lineHeight: '1.8',
+                        color: 'var(--color-on-surface-variant)',
+                      }}
+                    >
+                      {String(activeArticleModal.content)}
+                    </p>
+                  )}
+                </>
+              ) : activeArticleModal.excerpt ? (
+                <p
+                  style={{
+                    lineHeight: '1.8',
+                    color: 'var(--color-on-surface-variant)',
+                    fontSize: '1.05rem',
+                    whiteSpace: 'pre-line',
+                  }}
+                >
+                  {activeArticleModal.excerpt}
+                </p>
+              ) : (
+                <p
+                  style={{
+                    lineHeight: '1.8',
+                    color: 'var(--color-on-surface-variant)',
+                    fontStyle: 'italic',
+                  }}
+                >
+                  No content available for this article.
+                </p>
+              )}
             </div>
             <div className="BlogPage-modalFooter">
               <button
