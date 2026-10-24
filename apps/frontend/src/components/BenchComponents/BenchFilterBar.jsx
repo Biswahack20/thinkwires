@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
   setActiveSpecialty,
   setActiveUrgency,
+  setActiveNoticePeriod,
   setActiveExperience,
   setActiveLocation,
   setSortBy,
@@ -16,6 +17,7 @@ const BenchFilterBar = ({ totalCount }) => {
     filterOptions,
     activeSpecialty,
     activeUrgency,
+    activeNoticePeriod,
     activeExperience,
     activeLocation,
     sortBy,
@@ -42,6 +44,13 @@ const BenchFilterBar = ({ totalCount }) => {
     'Within 1 Week',
     'Within 2 Weeks',
   ];
+  const defaultNoticePeriods = [
+    'All Notice Periods',
+    '30 Days',
+    'Immediate',
+    '60 Days',
+    '90 Days',
+  ];
   const defaultExperience = [
     'All Experience',
     'Staff/Principal (10+y)',
@@ -55,9 +64,15 @@ const BenchFilterBar = ({ totalCount }) => {
     'EU Remote',
     'Global / Flexible',
   ];
-  const defaultSorts = ['Highest Score', 'Fastest Availability', 'Lowest Rate'];
+  const defaultSorts = [
+    'AI Assessment',
+    'Highest Score',
+    'Fastest Availability',
+    'Lowest Rate',
+  ];
 
   const urgencyList = filterOptions?.urgency || defaultUrgency;
+  const noticePeriodList = filterOptions?.noticePeriod || defaultNoticePeriods;
   const experienceList = filterOptions?.experience || defaultExperience;
   const locationList = filterOptions?.locations || defaultLocations;
   const sortList = filterOptions?.sortOptions || defaultSorts;
@@ -130,6 +145,25 @@ const BenchFilterBar = ({ totalCount }) => {
               {urgencyList.map((u, i) => (
                 <option key={i} value={u}>
                   {u}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div className="BenchFilter-selectField">
+            <label className="BenchFilter-selectLabel">
+              <span className="material-symbols-outlined">hourglass_top</span>{' '}
+              Notice Period:
+            </label>
+            <select
+              value={activeNoticePeriod}
+              onChange={(e) => dispatch(setActiveNoticePeriod(e.target.value))}
+              className="BenchFilter-select"
+              aria-label="Filter candidates by notice period"
+            >
+              {noticePeriodList.map((np, i) => (
+                <option key={i} value={np}>
+                  {np}
                 </option>
               ))}
             </select>

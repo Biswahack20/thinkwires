@@ -19,13 +19,16 @@ const BenchCandidateCard = ({ talent }) => {
     assessmentScore,
     fitScore,
     urgency,
+    noticePeriod,
     hourlyRate,
     proofQuote,
     skills = [],
     initials = 'TW',
   } = talent;
 
-  const isImmediate = urgency && urgency.includes('Immediate');
+  const resolvedNotice = noticePeriod || (urgency && urgency.includes('Immediate') ? 'Immediate' : urgency || '30 Days');
+  const is30Days = typeof resolvedNotice === 'string' && (resolvedNotice === '30 Days' || resolvedNotice === '30-day' || resolvedNotice.toLowerCase().includes('30'));
+  const isImmediate = (urgency && urgency.includes('Immediate')) || (typeof resolvedNotice === 'string' && resolvedNotice.toLowerCase().includes('immediate'));
 
   return (
     <div className="BenchCard-card">
@@ -39,9 +42,13 @@ const BenchCandidateCard = ({ talent }) => {
         </div>
         <div
           className={`BenchCard-urgencyBadge ${isImmediate ? 'is-immediate' : ''}`}
+          style={is30Days ? { color: '#38bdf8' } : undefined}
         >
-          <span className="BenchCard-urgencyDot"></span>
-          <span>{urgency}</span>
+          <span
+            className="BenchCard-urgencyDot"
+            style={is30Days ? { backgroundColor: '#38bdf8', boxShadow: '0 0 8px #38bdf8' } : undefined}
+          ></span>
+          <span>{urgency || resolvedNotice}</span>
         </div>
       </div>
 
@@ -61,6 +68,17 @@ const BenchCandidateCard = ({ talent }) => {
             <span className="BenchCard-metaItem">
               <span className="material-symbols-outlined">location_on</span>{' '}
               {location}
+            </span>
+            <span className="BenchCard-metaDot">•</span>
+            <span
+              className="BenchCard-metaItem"
+              style={{
+                color: is30Days ? '#38bdf8' : isImmediate ? '#34d399' : '#94a3b8',
+                fontWeight: is30Days || isImmediate ? 600 : 500,
+              }}
+            >
+              <span className="material-symbols-outlined">hourglass_top</span>{' '}
+              {resolvedNotice}
             </span>
           </div>
         </div>
