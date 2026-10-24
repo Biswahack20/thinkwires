@@ -76,8 +76,10 @@ const BlogPage = () => {
   const filteredArticles = articles.filter((art) => {
     if (art.featured) return false;
     const matchesCategory =
+      selectedCategory === 'all' ||
       selectedCategory === 'All' ||
-      selectedCategory === 'All Insights (15)' ||
+      selectedCategory === 'All Insights' ||
+      selectedCategory.startsWith('All Insights') ||
       art.category === selectedCategory ||
       art.badge === selectedCategory;
 
@@ -94,6 +96,8 @@ const BlogPage = () => {
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
+
+  const totalInsightsCount = articles.filter((art) => !art.featured).length;
 
   return (
     <div className="BlogPage-wrapper">
@@ -119,6 +123,7 @@ const BlogPage = () => {
             selectedCategory={selectedCategory}
             setSelectedCategory={(cat) => dispatch(setSelectedCategory(cat))}
             totalResults={filteredArticles.length}
+            totalArticles={totalInsightsCount}
           />
 
           {/* 4. Articles Grid & Pagination */}
@@ -131,7 +136,7 @@ const BlogPage = () => {
               onReadClick={(art) => setActiveArticleModal(art)}
               onResetFilters={() => {
                 dispatch(setSearchQuery(''));
-                dispatch(setSelectedCategory('All Insights (15)'));
+                dispatch(setSelectedCategory('all'));
               }}
             />
 

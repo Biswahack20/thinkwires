@@ -20,14 +20,14 @@ const Openings = () => {
     }
   }, [dispatch, status.openings]);
 
-  const [activeFilter, setActiveFilter] = useState('All Roles (4)');
+  const [activeFilter, setActiveFilter] = useState('all');
 
   const filters = [
-    'All Roles (4)',
-    'SAP & Enterprise',
-    'Full Stack & AEM',
-    'Platform Architecture',
-    'PLM & Systems',
+    { key: 'all', label: `All Roles (${openings?.length || 0})` },
+    { key: 'SAP & Enterprise', label: 'SAP & Enterprise' },
+    { key: 'Full Stack & AEM', label: 'Full Stack & AEM' },
+    { key: 'Platform Architecture', label: 'Platform Architecture' },
+    { key: 'PLM & Systems', label: 'PLM & Systems' },
   ];
 
   // Sort by latest posted date (descending), then priority
@@ -39,7 +39,7 @@ const Openings = () => {
   });
 
   const filteredOpenings = sortedOpenings.filter((job) => {
-    if (activeFilter.startsWith('All Roles')) return true;
+    if (activeFilter === 'all' || activeFilter.startsWith('All Roles')) return true;
     if (activeFilter === 'SAP & Enterprise') {
       return (
         job.title?.toLowerCase().includes('sap') ||
@@ -161,13 +161,13 @@ const Openings = () => {
         </div>
 
         <div className={'Openings-filters'}>
-          {filters.map((f, i) => (
+          {filters.map((f) => (
             <button
-              key={i}
-              onClick={() => setActiveFilter(f)}
-              className={`${'Openings-filterBtn'} ${activeFilter === f ? 'Openings-active' : ''}`}
+              key={f.key}
+              onClick={() => setActiveFilter(f.key)}
+              className={`${'Openings-filterBtn'} ${activeFilter === f.key ? 'Openings-active' : ''}`}
             >
-              {f}
+              {f.label}
             </button>
           ))}
         </div>

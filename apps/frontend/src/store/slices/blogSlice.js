@@ -14,8 +14,9 @@ export const fetchArticles = createAsyncThunk(
       if (params.q) queryParams.append('q', params.q);
       if (
         params.category &&
+        params.category !== 'all' &&
         params.category !== 'All' &&
-        params.category !== 'All Insights (15)'
+        !params.category.startsWith('All Insights')
       ) {
         queryParams.append('category', params.category);
       }
@@ -307,7 +308,7 @@ const blogSlice = createSlice({
     featuredArticle: featuredFlagshipArticle,
     researchers: figmaResearchers,
     searchQuery: '',
-    selectedCategory: 'All Insights (15)',
+    selectedCategory: 'all',
     sortBy: 'Latest',
     currentPage: 1,
     itemsPerPage: 6,
