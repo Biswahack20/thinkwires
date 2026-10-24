@@ -8,8 +8,6 @@ import UserMongo from '../models/user.mongo.model.js';
 import User from '../models/user.model.js';
 import mongoose from 'mongoose';
 
-// ================= ADMIN ROLE-BASED AUTHENTICATION & RBAC =================
-// Strictly verifies the administrator's JWT cookie or Authorization Bearer header
 export const requireAuth = (
   allowedRoles = ['superadmin', 'admin', 'cms_admin']
 ) => {
@@ -17,7 +15,6 @@ export const requireAuth = (
     try {
       let token = null;
 
-      // 1. Check HttpOnly cookie, Authorization header, or x-admin-token header
       if (req.cookies && req.cookies.thinkwires_admin_jwt) {
         token = req.cookies.thinkwires_admin_jwt;
       } else if (
@@ -38,7 +35,6 @@ export const requireAuth = (
         });
       }
 
-      // Check for token revocation (e.g. after logout)
       if (isTokenRevoked(token)) {
         return res.status(401).json({
           success: false,
@@ -47,7 +43,6 @@ export const requireAuth = (
         });
       }
 
-      // 2. Decode and verify token
       let decoded;
       try {
         decoded = verifyAdminToken(token);
@@ -75,7 +70,6 @@ export const requireAuth = (
         });
       }
 
-      // 3. Database verification if MongoDB is connected
       let userObj = {
         id: decoded.id,
         name: decoded.name || 'System Member',
@@ -117,7 +111,6 @@ export const requireAuth = (
       req.user = userObj;
       const role = (userObj.role || 'admin').toLowerCase();
 
-      // 4. Role check (superadmin always passes)
       if (
         role !== 'superadmin' &&
         allowedRoles.length > 0 &&
@@ -186,11 +179,8 @@ export const requireRole = (...allowedRoles) => {
   };
 };
 
-// ================= CANDIDATE PORTAL AUTHORIZATION =================
-// Strictly verifies the candidate's HttpOnly cookie or Authorization Bearer token
 export const requireCandidateAuth = async (req, res, next) => {
   try {
-    // 1. Check for token in HttpOnly cookie or Authorization header
     let token = null;
 
     if (req.cookies && req.cookies.thinkwires_candidate_jwt) {
@@ -211,7 +201,6 @@ export const requireCandidateAuth = async (req, res, next) => {
       });
     }
 
-    // 2. Decode and verify token using the strictly configured JWT_SECRET
     const decoded = verifyCandidateToken(token);
 
     if (!decoded || !decoded.id || decoded.role !== 'candidate') {
@@ -222,7 +211,6 @@ export const requireCandidateAuth = async (req, res, next) => {
       });
     }
 
-    // 3. Database verification to ensure candidate still exists and is active
     let candidate = null;
     if (mongoose.connection.readyState === 1) {
       candidate = await Candidate.findById(decoded.id).select(
@@ -253,7 +241,6 @@ export const requireCandidateAuth = async (req, res, next) => {
       };
     }
 
-    // Attach candidate to request context
     req.candidate = candidate;
     next();
   } catch (error) {

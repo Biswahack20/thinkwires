@@ -16,8 +16,10 @@ import StaffAugmentationPage from './pages/StaffAugmentationPage';
 import PermanentStaffingPage from './pages/PermanentStaffingPage';
 import FindTalentPage from './pages/FindTalentPage';
 import LegalPage from './pages/LegalPage';
+import NotFoundPage from './pages/NotFoundPage';
 import ScrollAnimationManager from './components/common/ScrollAnimationManager';
 import ProtectedRoute from './components/common/ProtectedRoute';
+import GlobalErrorBoundary from './components/common/GlobalErrorBoundary';
 
 // Authentication Pages
 import LoginPage from './pages/auth/LoginPage';
@@ -206,7 +208,14 @@ function App() {
           <Route path="/admin/login" element={<AdminLoginPage />} />
 
           {/* ThinkWires Admin Dashboard & CMS */}
-          <Route path="/admin" element={<AdminLayout />}>
+          <Route
+            path="/admin"
+            element={
+              <GlobalErrorBoundary>
+                <AdminLayout />
+              </GlobalErrorBoundary>
+            }
+          >
             <Route index element={<AdminDashboard />} />
             <Route path="employees" element={<EmployeesView />} />
             <Route path="candidates" element={<CandidatesView />} />
@@ -225,7 +234,8 @@ function App() {
             />
           </Route>
 
-          <Route path="*" element={<HomePage />} />
+          {/* 404 Dedicated Fallback */}
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </Suspense>
     </BrowserRouter>

@@ -1,53 +1,133 @@
 import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
+import path from 'path';
+import fs from 'fs';
+import mongoose from 'mongoose';
+import { fileURLToPath } from 'url';
 import apiRoutes from './routes/api.route.js';
 import adminRoutes from './routes/admin.route.js';
 import authRoutes from './routes/auth.route.js';
 import candidateRoutes from './routes/candidate.route.js';
 import userRoutes from './routes/user.route.js';
-
-import path from 'path';
 import { isAllowedOrigin } from './middlewares/csrf.middleware.js';
+import { sequelize } from './configs/db.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 
-// Standard middleware
+app.disable('x-powered-by');
+
+app.use((req, res, next) => {
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  res.setHeader('X-Frame-Options', 'SAMEORIGIN');
+  res.setHeader('X-XSS-Protection', '1; mode=block');
+  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
+  next();
+});
+
 app.use(
   cors({
     origin: (origin, callback) => {
-      if (isAllowedOrigin(origin)) {
-        callback(null, true);
-      } else {
-        callback(null, false);
-      }
+      callback(null, isAllowedOrigin(origin));
     },
     credentials: true,
   })
 );
-app.use(express.json());
+app.use(express.json({ limit: '10mb' }));
+app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 app.use(cookieParser());
 
-// Static uploads serving (e.g. resumes)
-app.use('/uploads', express.static(path.resolve(process.cwd(), 'uploads')));
+const uploadsDir = path.resolve(process.cwd(), 'uploads');
+if (!fs.existsSync(uploadsDir)) {
+  try {
+    fs.mkdirSync(uploadsDir, { recursive: true });
+  } catch (err) {
+    console.warn('[Server] Could not create uploads directory:', err.message);
+  }
+}
+app.use('/uploads', express.static(uploadsDir));
 
-// ================= HEALTH CHECK =================
-app.get('/', (req, res) => {
-  res.send('API is running...');
-});
 app.get('/api/health', (req, res) => {
-  res
-    .status(200)
-    .json({ status: 'healthy', timestamp: new Date().toISOString() });
+  const mongoStatusMap = {
+    0: 'disconnected',
+    1: 'connected',
+    2: 'connecting',
+    3: 'disconnecting',
+  };
+
+  const isPostgresReady = Boolean(sequelize);
+
+  res.status(200).json({
+    status: 'healthy',
+    service: 'ThinkWires Enterprise Core Backend',
+    version: '1.0.0',
+    timestamp: new Date().toISOString(),
+    uptime: Math.floor(process.uptime()),
+    environment: process.env.NODE_ENV || 'development',
+    databases: {
+      mongodb: mongoStatusMap[mongoose.connection.readyState] || 'unknown',
+      postgresql: isPostgresReady ? 'connected' : 'optional/fallback',
+    },
+    memoryUsage: {
+      rssMb: Math.round(process.memoryUsage().rss / 1024 / 1024),
+      heapUsedMb: Math.round(process.memoryUsage().heapUsed / 1024 / 1024),
+    },
+  });
 });
 
-// Authentication & Candidate Portal Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/candidate', candidateRoutes);
 app.use('/api/user', userRoutes);
-
-// Admin & Legacy API Routes
 app.use('/api/admin', adminRoutes);
 app.use('/api', apiRoutes);
 
+// Resolve built frontend assets across monorepo layouts (Render, Docker, standalone)
+const possibleDistPaths = [
+  path.resolve(__dirname, '../../frontend/dist'),
+  path.resolve(process.cwd(), 'apps/frontend/dist'),
+  path.resolve(process.cwd(), '../frontend/dist'),
+  path.resolve(process.cwd(), 'dist'),
+];
+
+const resolvedDist = possibleDistPaths.find((p) => fs.existsSync(p));
+
+if (resolvedDist) {
+  app.use(
+    express.static(resolvedDist, {
+      maxAge: '1d',
+      setHeaders: (res, filePath) => {
+        if (filePath.includes('/assets/')) {
+          res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+        }
+      },
+    })
+  );
+
+  // Express 5 / path-to-regexp v7 breaks on un-named wildcard routes like app.get('*').
+  // Use catch-all middleware fallback for SPA client-side routing.
+  app.use((req, res, next) => {
+    if (req.method !== 'GET') {
+      return next();
+    }
+    if (req.path.startsWith('/api') || req.path.startsWith('/uploads')) {
+      return next();
+    }
+    res.sendFile(path.join(resolvedDist, 'index.html'));
+  });
+} else {
+  app.get('/', (req, res) => {
+    res.json({
+      service: 'ThinkWires Enterprise API',
+      status: 'operational',
+      environment: process.env.NODE_ENV || 'development',
+      health: '/api/health',
+      docs: '/api/docs',
+    });
+  });
+}
+
 export default app;
+

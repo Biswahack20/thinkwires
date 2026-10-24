@@ -6,8 +6,12 @@
   ],
   "packageManager": "npm@11.7.0",
   "scripts": {
+    "start": "npm --prefix apps/backend start",
     "build": "turbo build",
+    "build:frontend": "npm --prefix apps/frontend run build",
+    "build:backend": "npm --prefix apps/backend run build",
     "dev": "turbo dev",
+    "seed": "npm --prefix apps/backend run seed",
     "lint": "turbo lint",
     "test": "turbo test",
     "test:e2e": "turbo test:e2e",
@@ -16,7 +20,10 @@
     "format:check": "prettier --check .",
     "migrate": "npm --prefix apps/backend run migrate",
     "migrate:status": "npm --prefix apps/backend run migrate:status",
-    "migrate:down": "npm --prefix apps/backend run migrate:down"
+    "migrate:down": "npm --prefix apps/backend run migrate:down",
+    "docker:build": "docker compose build",
+    "docker:up": "docker compose up -d",
+    "docker:down": "docker compose down"
   },
   "devDependencies": {
     "prettier": "^3.9.9",

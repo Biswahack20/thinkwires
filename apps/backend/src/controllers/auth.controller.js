@@ -10,25 +10,17 @@ import {
   clearAuthCookie,
 } from '../utils/auth.util.js';
 
-// Simple in-memory fallback for candidate auth if MongoDB is offline in local development ONLY
+// In-memory fallback if MongoDB is offline during local development
 const localDevCandidates = new Map();
 
-/**
- * Validate email format
- */
 const isValidEmail = (email) => {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(email).toLowerCase());
 };
 
-/**
- * Register Candidate
- * POST /api/auth/register
- */
 export const registerCandidate = async (req, res) => {
   try {
     const { name, email, password, confirmPassword, phone } = req.body;
 
-    // 1. Validation
     if (!name || !name.trim()) {
       return res
         .status(400)
@@ -55,7 +47,6 @@ export const registerCandidate = async (req, res) => {
 
     const cleanEmail = email.toLowerCase().trim();
 
-    // 2. Check for duplicate email
     if (mongoose.connection.readyState === 1) {
       const existingCandidate = await Candidate.findOne({ email: cleanEmail });
       if (existingCandidate) {
@@ -66,13 +57,6 @@ export const registerCandidate = async (req, res) => {
         });
       }
     } else {
-      if (process.env.NODE_ENV === 'production') {
-        return res.status(503).json({
-          success: false,
-          error:
-            'Database connection unavailable. Cannot register candidates in production.',
-        });
-      }
       if (localDevCandidates.has(cleanEmail)) {
         return res.status(409).json({
           success: false,
@@ -82,10 +66,8 @@ export const registerCandidate = async (req, res) => {
       }
     }
 
-    // 3. Hash password using bcrypt
     const hashedPassword = await hashPassword(password);
 
-    // 4. Create Candidate
     let candidate;
     if (mongoose.connection.readyState === 1) {
       candidate = await Candidate.create({
@@ -111,7 +93,6 @@ export const registerCandidate = async (req, res) => {
       localDevCandidates.set(cleanEmail, candidate);
     }
 
-    // 5. Generate secure JWT and set in HttpOnly cookie
     const token = generateCandidateToken(candidate);
     setAuthCookie(res, token);
 
@@ -137,10 +118,6 @@ export const registerCandidate = async (req, res) => {
   }
 };
 
-/**
- * Login Candidate
- * POST /api/auth/login
- */
 export const loginCandidate = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -156,7 +133,9 @@ export const loginCandidate = async (req, res) => {
     let candidate = null;
 
     if (mongoose.connection.readyState === 1) {
-      candidate = await Candidate.findOne({ email: cleanEmail });
+      candidate = await Candidate.findOne({ email: cleanEmail }).select(
+        '+password'
+      );
     } else {
       if (process.env.NODE_ENV === 'production') {
         return res.status(503).json({
@@ -174,7 +153,6 @@ export const loginCandidate = async (req, res) => {
       });
     }
 
-    // Compare passwords
     const isMatch = await comparePassword(password, candidate.password);
     if (!isMatch) {
       return res.status(401).json({
@@ -183,7 +161,6 @@ export const loginCandidate = async (req, res) => {
       });
     }
 
-    // Generate JWT and set in HttpOnly cookie
     const token = generateCandidateToken(candidate);
     setAuthCookie(res, token);
 
@@ -211,10 +188,6 @@ export const loginCandidate = async (req, res) => {
   }
 };
 
-/**
- * Get Current Authenticated Candidate
- * GET /api/auth/me
- */
 export const getMe = async (req, res) => {
   try {
     const candidate = req.candidate;
@@ -249,10 +222,6 @@ export const getMe = async (req, res) => {
   }
 };
 
-/**
- * Logout Candidate
- * POST /api/auth/logout
- */
 export const logoutCandidate = async (req, res) => {
   try {
     clearAuthCookie(res);
@@ -268,10 +237,6 @@ export const logoutCandidate = async (req, res) => {
   }
 };
 
-/**
- * Forgot Password
- * POST /api/auth/forgot-password
- */
 export const forgotPassword = async (req, res) => {
   try {
     const { email } = req.body;
@@ -291,7 +256,7 @@ export const forgotPassword = async (req, res) => {
       candidate = localDevCandidates.get(cleanEmail);
     }
 
-    // Always return a generic success message to prevent user enumeration
+    // Return generic success to mitigate user enumeration attacks
     if (!candidate) {
       return res.status(200).json({
         success: true,
@@ -300,7 +265,6 @@ export const forgotPassword = async (req, res) => {
       });
     }
 
-    // Generate single-use expiring token
     const { rawToken, hashedToken, expiresAt } = generatePasswordResetToken();
 
     if (mongoose.connection.readyState === 1) {
@@ -318,7 +282,7 @@ export const forgotPassword = async (req, res) => {
         'If an account exists with that email, a password reset link has been dispatched.',
     };
 
-    // In local development mode ONLY (never in production), provide the reset url for easy developer testing
+    // Expose reset link in development response for friction-free local verification
     if (process.env.NODE_ENV !== 'production') {
       responsePayload.devResetUrl = `/reset-password?token=${rawToken}&email=${encodeURIComponent(cleanEmail)}`;
       console.log(
@@ -336,10 +300,6 @@ export const forgotPassword = async (req, res) => {
   }
 };
 
-/**
- * Reset Password
- * POST /api/auth/reset-password
- */
 export const resetPassword = async (req, res) => {
   try {
     const { token, email, password, confirmPassword } = req.body;
@@ -394,9 +354,8 @@ export const resetPassword = async (req, res) => {
       });
     }
 
-    // Set new password
     candidate.password = await hashPassword(password);
-    // Invalidate token so it cannot be used again
+    // Invalidate token immediately to prevent replay attacks
     candidate.resetPasswordToken = null;
     candidate.resetPasswordExpire = null;
 

@@ -2,50 +2,70 @@ import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
 
-// Ensure the resume upload directory exists
-const uploadDir = path.resolve(process.cwd(), 'uploads/resumes');
+// Vercel serverless runtime has a read-only filesystem; only /tmp is writable
+const uploadDir = process.env.VERCEL
+  ? path.resolve('/tmp', 'resumes')
+  : path.resolve(process.cwd(), 'uploads/resumes');
+
 if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursive: true });
+  try {
+    fs.mkdirSync(uploadDir, { recursive: true });
+  } catch (err) {
+    console.warn('[Upload] Directory init notice:', err.message);
+  }
 }
 
-// Configure disk storage
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, uploadDir);
   },
   filename: (req, file, cb) => {
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
-    const sanitizedOriginalName = file.originalname.replace(
-      /[^a-zA-Z0-9.-]/g,
-      '_'
-    );
-    const ext = path.extname(sanitizedOriginalName) || '.pdf';
-    const baseName = path.basename(sanitizedOriginalName, ext);
-    cb(null, `${baseName}-${uniqueSuffix}${ext}`);
+    const rawExt = path.extname(file.originalname || '').toLowerCase();
+    const safeExt = ['.pdf', '.doc', '.docx'].includes(rawExt) ? rawExt : '.pdf';
+    const rawBase = path.basename(file.originalname || 'resume', rawExt);
+    const sanitizedBase = rawBase.replace(/[^a-zA-Z0-9_-]/g, '_').slice(0, 50);
+    cb(null, `${sanitizedBase}-${uniqueSuffix}${safeExt}`);
   },
 });
 
-// File filter accepting PDF, DOC, DOCX
 const fileFilter = (req, file, cb) => {
   const allowedExtensions = ['.pdf', '.doc', '.docx'];
-  const ext = path.extname(file.originalname).toLowerCase();
+  const ext = path.extname(file.originalname || '').toLowerCase();
 
-  const allowedMimeTypes = [
-    'application/pdf',
-    'application/msword',
-    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-    'application/octet-stream', // Often sent by browsers for docx
-  ];
+  if (!allowedExtensions.includes(ext)) {
+    return cb(
+      new Error(
+        'Invalid file type. Only PDF, DOC, and DOCX files are allowed.'
+      ),
+      false
+    );
+  }
 
-  if (
-    allowedExtensions.includes(ext) ||
-    allowedMimeTypes.includes(file.mimetype)
-  ) {
+  // Guard against double-extensions (e.g. payload.php.pdf)
+  const lowerName = (file.originalname || '').toLowerCase();
+  const dangerousPatterns = ['.html', '.htm', '.svg', '.js', '.exe', '.sh', '.php', '.bat', '.py'];
+  if (dangerousPatterns.some((pattern) => lowerName.includes(pattern))) {
+    return cb(new Error('Potentially unsafe file format detected.'), false);
+  }
+
+  const extensionMimeMap = {
+    '.pdf': ['application/pdf'],
+    '.doc': ['application/msword', 'application/octet-stream'],
+    '.docx': [
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      'application/octet-stream',
+      'application/zip',
+    ],
+  };
+
+  const validMimes = extensionMimeMap[ext] || [];
+  if (validMimes.includes(file.mimetype) || file.mimetype === 'application/octet-stream') {
     cb(null, true);
   } else {
     cb(
       new Error(
-        'Invalid file type. Only PDF, DOC, and DOCX files are allowed.'
+        'Invalid file content. Uploaded file MIME type does not match the permitted document format.'
       ),
       false
     );

@@ -311,19 +311,16 @@ class AIServiceClient {
       .map((l) => l.trim())
       .filter(Boolean);
 
-    // 1. Email extraction
     let email = '';
     const emailMatch = text.match(/[\w.-]+@[\w.-]+\.\w+/);
     if (emailMatch) email = emailMatch[0].toLowerCase();
 
-    // 2. Phone extraction
     let phone = '';
     const phoneMatch = text.match(
       /(\+?\d{1,3}[\s-]?)?\(?\d{2,4}\)?[\s-]?\d{3,5}[\s-]?\d{4,5}|\+?\d{10,12}/
     );
     if (phoneMatch) phone = phoneMatch[0].trim();
 
-    // 3. Candidate Name
     let candidateName = '';
     for (const line of lines.slice(0, 6)) {
       if (
@@ -361,7 +358,6 @@ class AIServiceClient {
     const firstName = nameParts[0] || 'Applicant';
     const lastName = nameParts.slice(1).join(' ') || '';
 
-    // 4. LinkedIn & GitHub & Portfolio Links
     let linkedinUrl = '';
     const linkedinMatch = text.match(
       /(?:https?:\/\/)?(?:www\.)?linkedin\.com\/in\/[\w-]+(?:\/)?/i
@@ -380,7 +376,6 @@ class AIServiceClient {
     );
     if (portfolioMatch) portfolioUrl = portfolioMatch[0];
 
-    // 5. Technical Skills matching
     const matchedSkills = [];
     const seen = new Set();
     for (const skill of COMMON_TECH_SKILLS) {
@@ -397,7 +392,6 @@ class AIServiceClient {
       }
     }
 
-    // 6. Experience extraction
     let expYears = 1.0;
     const expMatch = text.match(/(\d+(?:\.\d+)?)\+?\s*(?:years?|yrs?)\b/i);
     if (expMatch) {
@@ -416,7 +410,6 @@ class AIServiceClient {
       }
     }
 
-    // 7. Role / Headline
     const roleTitles = [
       'Full Stack Developer',
       'Full Stack Engineer',
@@ -461,7 +454,6 @@ class AIServiceClient {
       }
     }
 
-    // 8. Location extraction
     const headerBlock = lines.slice(0, 6).join('\n');
     let location = '';
     const locMatch = headerBlock.match(
@@ -508,7 +500,6 @@ class AIServiceClient {
 
     if (!location) location = 'Remote';
 
-    // 9. Summary extraction
     let summary = '';
     const summaryMatch = text.match(
       /(?:PROFESSIONAL SUMMARY|SUMMARY|ABOUT ME|PROFILE)[\s:\-\n]+(.*?)(?=\n[A-Z\s]{4,}|\Z)/is

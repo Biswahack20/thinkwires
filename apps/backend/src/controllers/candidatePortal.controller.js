@@ -12,6 +12,24 @@ import aiService from '../services/ai.service.js';
 const localDevApplications = [];
 
 /**
+ * Validate and sanitize external URL strings to prevent Stored XSS via javascript: or data: schemes
+ */
+export const sanitizeSafeUrl = (urlStr) => {
+  if (!urlStr || typeof urlStr !== 'string') return '';
+  const trimmed = urlStr.trim();
+  if (!trimmed) return '';
+  // Only allow http://, https://, or root-relative paths
+  if (/^(https?:\/\/|\/)/i.test(trimmed)) {
+    return trimmed;
+  }
+  // Automatically prepend https:// to plain domain names (e.g. github.com/user)
+  if (/^[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/.test(trimmed)) {
+    return `https://${trimmed}`;
+  }
+  return '';
+};
+
+/**
  * Get Candidate Dashboard Data
  * GET /api/candidate/dashboard
  */
@@ -102,9 +120,9 @@ export const updateCandidateProfile = async (req, res) => {
     if (expectedSalary !== undefined)
       updateFields.expectedSalary = expectedSalary;
     if (bio !== undefined) updateFields.bio = bio;
-    if (githubUrl !== undefined) updateFields.githubUrl = githubUrl;
-    if (linkedinUrl !== undefined) updateFields.linkedinUrl = linkedinUrl;
-    if (portfolioUrl !== undefined) updateFields.portfolioUrl = portfolioUrl;
+    if (githubUrl !== undefined) updateFields.githubUrl = sanitizeSafeUrl(githubUrl);
+    if (linkedinUrl !== undefined) updateFields.linkedinUrl = sanitizeSafeUrl(linkedinUrl);
+    if (portfolioUrl !== undefined) updateFields.portfolioUrl = sanitizeSafeUrl(portfolioUrl);
 
     let updatedCandidate;
     if (mongoose.connection.readyState === 1) {
@@ -180,7 +198,6 @@ export const applyForJob = async (req, res) => {
     let candidate = req.candidate || null;
     let candidateId = candidate ? candidate._id || candidate.id : null;
 
-    // Extract all fields from req.body (works for JSON and multipart)
     const {
       jobId,
       jobTitle,
@@ -188,8 +205,6 @@ export const applyForJob = async (req, res) => {
       location,
       employmentType,
       postingDate,
-
-      // Basic Information
       lastName,
       firstName,
       mobileNumber,
@@ -198,8 +213,6 @@ export const applyForJob = async (req, res) => {
       noticePeriod,
       city,
       state,
-
-      // Professional Details
       totalExperienceYears,
       relevantExperienceYears,
       currentEmployer,
@@ -210,8 +223,6 @@ export const applyForJob = async (req, res) => {
       facebookLink,
       candidateNote,
       agreedToTerms,
-
-      // Legacy fallbacks if submitted
       experience,
       skills,
       coverLetter,
@@ -225,7 +236,6 @@ export const applyForJob = async (req, res) => {
       });
     }
 
-    // Required fields check
     const resolvedLastName = (lastName || '').trim();
     const resolvedFirstName = (firstName || '').trim();
     const resolvedMobile = (
@@ -296,7 +306,7 @@ export const applyForJob = async (req, res) => {
       });
     }
 
-    // 1. Prevent duplicate applications for the same candidate and job
+    // Enforce single active submission per job opening
     if (mongoose.connection.readyState === 1) {
       const existingApplication = await JobApplication.findOne({
         $or: [
@@ -313,7 +323,6 @@ export const applyForJob = async (req, res) => {
         });
       }
 
-      // ── AI ATS Resume Match Scoring & Assessment Generation ─────────────
       let matchScoreResult = {
         fit_score: 85,
         fit_badge: 'Top Match',
@@ -375,14 +384,10 @@ export const applyForJob = async (req, res) => {
         location: location || 'Remote',
         employmentType: employmentType || 'Permanent',
         postingDate: postingDate || '',
-
-        // Resume info
         resumeOriginalName,
         resumeFileName,
         resumePath,
         resumeUrl: finalResumeUrl,
-
-        // Basic Info
         lastName: resolvedLastName,
         firstName: resolvedFirstName,
         mobileNumber: resolvedMobile,
@@ -391,8 +396,6 @@ export const applyForJob = async (req, res) => {
         noticePeriod: noticePeriod || 'Immediate',
         city: (city || '').trim(),
         state: (state || '').trim(),
-
-        // Professional Details
         totalExperienceYears: totalExperienceYears || experience || '',
         relevantExperienceYears: relevantExperienceYears || '',
         currentEmployer: (currentEmployer || '').trim(),
@@ -408,8 +411,6 @@ export const applyForJob = async (req, res) => {
           agreedToTerms === 'true' || agreedToTerms === true
             ? new Date()
             : null,
-
-        // Legacy compatibility fields
         candidateName: `${resolvedFirstName} ${resolvedLastName}`.trim(),
         candidateEmail: resolvedEmail,
         candidatePhone: resolvedMobile,
@@ -417,8 +418,6 @@ export const applyForJob = async (req, res) => {
           ? `${totalExperienceYears} Years`
           : experience || '3 - 5 Years',
         coverLetter: candidateNote || coverLetter || '',
-
-        // AI ATS Scoring & Assessment Fields
         fitScore: matchScoreResult.fit_score,
         fitBadge: matchScoreResult.fit_badge,
         aiAnalysis: {
@@ -432,13 +431,11 @@ export const applyForJob = async (req, res) => {
         },
         assessment: assessmentResult || {},
         assessmentStatus: 'Not Started',
-
         status: 'Applied',
         stage: 'Application Received',
         emailNotificationStatus: 'Pending',
       });
 
-      // Update candidate profile with application details & ATS fit score
       if (mongoose.connection.readyState === 1) {
         const candidateUpdates = {
           fitScore: matchScoreResult.fit_score,

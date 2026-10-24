@@ -1,5 +1,5 @@
 /**
- * Migration: 002_create_core_indexes.js
+ * Migration: 001_create_core_indexes.js
  * Creates performance indexes across core collections for instant search and filtering
  */
 

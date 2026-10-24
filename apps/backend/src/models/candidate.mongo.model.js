@@ -18,6 +18,7 @@ const candidateSchema = new mongoose.Schema(
       type: String,
       required: [true, 'Password is required'],
       minlength: 6,
+      select: false,
     },
     phone: {
       type: String,
@@ -106,10 +107,12 @@ const candidateSchema = new mongoose.Schema(
     resetPasswordToken: {
       type: String,
       default: null,
+      select: false,
     },
     resetPasswordExpire: {
       type: Date,
       default: null,
+      select: false,
     },
     isActive: {
       type: Boolean,

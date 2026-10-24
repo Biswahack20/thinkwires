@@ -26,7 +26,7 @@ const authRateLimiter = rateLimit({
 });
 
 // Candidate Registration & Login
-router.post('/register', registerCandidate);
+router.post('/register', authRateLimiter, registerCandidate);
 router.post('/login', authRateLimiter, loginCandidate);
 router.post('/logout', logoutCandidate);
 
