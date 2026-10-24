@@ -61,6 +61,13 @@ export const fallbackBenchData = {
       'Available in 48h',
       'Available in 7 Days',
     ],
+    noticePeriod: [
+      'All Notice Periods',
+      '30 Days',
+      'Immediate',
+      '60 Days',
+      '90 Days',
+    ],
     experience: [
       'All Experience',
       'Staff/Principal (10+y)',
@@ -76,7 +83,12 @@ export const fallbackBenchData = {
       'Pan-India (Full US Shift)',
       'Gurugram / Remote',
     ],
-    sortOptions: ['Highest Score', 'Fastest Availability', 'Lowest Rate'],
+    sortOptions: [
+      'AI Assessment',
+      'Highest Score',
+      'Fastest Availability',
+      'Lowest Rate',
+    ],
   },
   talents: [
     {
@@ -89,6 +101,8 @@ export const fallbackBenchData = {
       yearsExp: '11+ Yrs Experience',
       location: 'Bengaluru (EST Overlap)',
       score: 98,
+      assessmentScore: 98,
+      noticePeriod: 'Immediate',
       urgency: 'Immediate (24-48h)',
       hourlyRate: '₹5,500 – ₹6,800',
       proofQuote:
@@ -119,7 +133,9 @@ export const fallbackBenchData = {
       yearsExp: '9+ Yrs (4 Yrs GenAI)',
       location: 'Hyderabad / Remote Global',
       score: 96,
-      urgency: 'Immediate (24-48h)',
+      assessmentScore: 96,
+      noticePeriod: '30 Days',
+      urgency: '30 Days',
       hourlyRate: '₹6,000 – ₹7,200',
       proofQuote:
         'Engineered sovereign agentic RAG pipeline handling 3.5M daily document queries at <320ms TTFT.',
@@ -142,6 +158,8 @@ export const fallbackBenchData = {
       yearsExp: '8+ Yrs (4 Greenfield S/4)',
       location: 'Pune / Noida / Hybrid',
       score: 95,
+      assessmentScore: 95,
+      noticePeriod: 'Immediate',
       urgency: 'Immediate (24-48h)',
       hourlyRate: '₹5,000 – ₹6,400',
       proofQuote:
@@ -172,7 +190,9 @@ export const fallbackBenchData = {
       yearsExp: '8+ Yrs Experience',
       location: 'Chennai / Remote',
       score: 94,
-      urgency: 'Immediate (24-48h)',
+      assessmentScore: 94,
+      noticePeriod: '30 Days',
+      urgency: '30 Days',
       hourlyRate: '₹4,600 – ₹5,900',
       proofQuote:
         'Led omnichannel headless re-architecture achieving 99 Lighthouse performance across 14 localized domains.',
@@ -202,7 +222,9 @@ export const fallbackBenchData = {
       yearsExp: '10+ Yrs Experience',
       location: 'Pan-India (Full US Shift)',
       score: 99,
-      urgency: 'Within 1 Week',
+      assessmentScore: 99,
+      noticePeriod: '30 Days',
+      urgency: '30 Days',
       hourlyRate: '₹6,400 – ₹7,600',
       proofQuote:
         'Architected real-time distributed ACH ledger processing ₹6,700 Cr monthly volume with sub-millisecond locks.',
@@ -232,7 +254,9 @@ export const fallbackBenchData = {
       yearsExp: '7+ Yrs Experience',
       location: 'Gurugram / Remote',
       score: 95,
-      urgency: 'Immediate (24-48h)',
+      assessmentScore: 95,
+      noticePeriod: '60 Days',
+      urgency: '60 Days',
       hourlyRate: '₹4,600 – ₹5,900',
       proofQuote:
         'Cut analytical query latency by 68% and optimized cloud warehouse computing credits by 42% via dbt models.',
@@ -368,9 +392,10 @@ const initialState = {
   // UI Filter state
   activeSpecialty: 'All Engineering',
   activeUrgency: 'All Urgency',
+  activeNoticePeriod: 'All Notice Periods',
   activeExperience: 'All Experience',
   activeLocation: 'All Locations',
-  sortBy: 'Highest Score',
+  sortBy: 'AI Assessment',
   searchQuery: '',
   selectedTalent: null, // For slide-over drawer modal
   drawerOpen: false,
@@ -390,6 +415,9 @@ const benchSlice = createSlice({
     },
     setActiveUrgency: (state, action) => {
       state.activeUrgency = action.payload;
+    },
+    setActiveNoticePeriod: (state, action) => {
+      state.activeNoticePeriod = action.payload;
     },
     setActiveExperience: (state, action) => {
       state.activeExperience = action.payload;
@@ -458,6 +486,7 @@ const benchSlice = createSlice({
 export const {
   setActiveSpecialty,
   setActiveUrgency,
+  setActiveNoticePeriod,
   setActiveExperience,
   setActiveLocation,
   setSortBy,

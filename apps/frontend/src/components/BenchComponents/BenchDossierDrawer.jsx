@@ -101,6 +101,11 @@ const BenchDossierDrawer = () => {
                   {selectedTalent.location}
                 </span>
                 <span>•</span>
+                <span>
+                  <span className="material-symbols-outlined">hourglass_top</span>{' '}
+                  Notice: {selectedTalent.noticePeriod || selectedTalent.urgency || '30 Days'}
+                </span>
+                <span>•</span>
                 <span className="BenchDrawer-rateHighlight">
                   {selectedTalent.hourlyRate}/hr
                 </span>

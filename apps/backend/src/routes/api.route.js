@@ -938,7 +938,9 @@ router.get('/bench', async (req, res) => {
           score: c.assessmentScore || c.vettingScore || 90,
           assessmentScore: c.assessmentScore,
           fitScore: c.fitScore,
-          availability: 'Immediate (24-48h)',
+          availability: c.noticePeriod || 'Immediate (24-48h)',
+          urgency: c.noticePeriod || 'Immediate (24-48h)',
+          noticePeriod: c.noticePeriod || '30 Days',
           hourlyRate: c.expectedSalary || '$65 - $80',
           engineeringProof:
             c.bio ||
@@ -981,9 +983,15 @@ router.get('/bench', async (req, res) => {
     yearsExp: c.experience || `${c.years || 8}+ Yrs Exp`,
     location: c.location || 'Remote Global',
     score: c.technicalRating || c.score || 96,
-    assessmentScore: c.assessmentScore,
+    assessmentScore:
+      c.assessmentScore !== undefined && c.assessmentScore !== null
+        ? c.assessmentScore
+        : c.dossier?.rubric?.systemDesign
+          ? parseInt(c.dossier.rubric.systemDesign) || null
+          : c.rubric?.systemDesign || null,
     fitScore: c.fitScore,
     urgency: c.availability || c.urgency || 'Immediate (24-48h)',
+    noticePeriod: c.noticePeriod || (c.urgency === 'immediate' || (c.availability && c.availability.includes('Immediate')) ? 'Immediate' : '30 Days'),
     hourlyRate: c.hourlyRate || '$55 - $75',
     proofQuote:
       c.engineeringProof ||
@@ -1181,9 +1189,15 @@ router.get('/bench/talents', async (req, res) => {
     yearsExp: c.experience || `${c.years || 8}+ Yrs Exp`,
     location: c.location || 'Remote Global',
     score: c.technicalRating || c.score || 96,
-    assessmentScore: c.assessmentScore,
+    assessmentScore:
+      c.assessmentScore !== undefined && c.assessmentScore !== null
+        ? c.assessmentScore
+        : c.dossier?.rubric?.systemDesign
+          ? parseInt(c.dossier.rubric.systemDesign) || null
+          : c.rubric?.systemDesign || null,
     fitScore: c.fitScore,
     urgency: c.availability || c.urgency || 'Immediate (24-48h)',
+    noticePeriod: c.noticePeriod || (c.urgency === 'immediate' || (c.availability && c.availability.includes('Immediate')) ? 'Immediate' : '30 Days'),
     hourlyRate: c.hourlyRate || '$55 - $75',
     proofQuote:
       c.engineeringProof ||
@@ -1211,6 +1225,18 @@ router.get('/bench/talents', async (req, res) => {
     filtered = filtered.filter((t) => t.urgency === urgency);
   }
 
+  const noticePeriodQuery = req.query.noticePeriod;
+  if (noticePeriodQuery && noticePeriodQuery !== 'All Notice' && noticePeriodQuery !== 'All') {
+    const target = noticePeriodQuery.toString().toLowerCase().trim();
+    filtered = filtered.filter((t) => {
+      const np = (t.noticePeriod || '').toString().toLowerCase().trim();
+      if (target === '30 days' || target === '30' || target === '30-day') {
+        return np === '30 days' || np === '30' || np === '30-day' || np.includes('30');
+      }
+      return np === target || np.includes(target);
+    });
+  }
+
   if (experience && experience !== 'All Experience' && experience !== 'All') {
     filtered = filtered.filter((t) => t.experienceLevel === experience);
   }
@@ -1219,8 +1245,16 @@ router.get('/bench/talents', async (req, res) => {
     filtered = filtered.filter((t) => t.location === location);
   }
 
-  if (sort === 'Highest Score') {
-    filtered.sort((a, b) => b.score - a.score);
+  if (sort === 'AI Assessment' || !sort || sort === 'Highest Score') {
+    if (sort === 'AI Assessment') {
+      filtered.sort((a, b) => {
+        const scoreA = typeof a.assessmentScore === 'number' && !isNaN(a.assessmentScore) ? a.assessmentScore : -Infinity;
+        const scoreB = typeof b.assessmentScore === 'number' && !isNaN(b.assessmentScore) ? b.assessmentScore : -Infinity;
+        return scoreB - scoreA;
+      });
+    } else {
+      filtered.sort((a, b) => b.score - a.score);
+    }
   } else if (sort === 'Fastest Availability') {
     const urgencyOrder = {
       'Immediate (24-48h)': 1,

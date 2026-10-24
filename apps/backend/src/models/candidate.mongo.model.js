@@ -87,6 +87,10 @@ const candidateSchema = new mongoose.Schema(
       enum: ['Full-Time Looking', 'Freelancer', 'On-Bench'],
       default: 'Full-Time Looking',
     },
+    noticePeriod: {
+      type: String,
+      default: '30 Days',
+    },
     assessmentScore: {
       type: Number,
       default: null,

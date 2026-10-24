@@ -17,6 +17,7 @@ const BenchPage = () => {
     talents,
     activeSpecialty,
     activeUrgency,
+    activeNoticePeriod,
     activeExperience,
     activeLocation,
     sortBy,
@@ -42,11 +43,12 @@ const BenchPage = () => {
       const q = searchQuery.toLowerCase().trim();
       result = result.filter(
         (t) =>
-          t.role.toLowerCase().includes(q) ||
-          t.code.toLowerCase().includes(q) ||
-          t.skills.some((s) => s.toLowerCase().includes(q)) ||
-          t.proofQuote.toLowerCase().includes(q) ||
-          (t.location && t.location.toLowerCase().includes(q))
+          (t.role && t.role.toLowerCase().includes(q)) ||
+          (t.code && t.code.toLowerCase().includes(q)) ||
+          (t.skills && t.skills.some((s) => s.toLowerCase().includes(q))) ||
+          (t.proofQuote && t.proofQuote.toLowerCase().includes(q)) ||
+          (t.location && t.location.toLowerCase().includes(q)) ||
+          (t.noticePeriod && t.noticePeriod.toLowerCase().includes(q))
       );
     }
 
@@ -68,6 +70,49 @@ const BenchPage = () => {
       result = result.filter((t) => t.urgency === activeUrgency);
     }
 
+    // Notice Period filter
+    if (
+      activeNoticePeriod &&
+      activeNoticePeriod !== 'All Notice Periods' &&
+      activeNoticePeriod !== 'All Notice' &&
+      activeNoticePeriod !== 'All'
+    ) {
+      const filterTarget = activeNoticePeriod.toString().toLowerCase().trim();
+      result = result.filter((t) => {
+        // Read raw notice period from candidate data
+        const raw = t.noticePeriod !== undefined && t.noticePeriod !== null
+          ? t.noticePeriod
+          : t.urgency;
+
+        if (raw === undefined || raw === null) return false;
+
+        // If filtering by 30 days
+        if (
+          filterTarget === '30 days' ||
+          filterTarget === '30' ||
+          filterTarget === '30-day' ||
+          filterTarget === '30 day' ||
+          filterTarget === 'within 30 days' ||
+          filterTarget === '30-day notice'
+        ) {
+          // Exact numerical representation 30
+          if (typeof raw === 'number') {
+            return raw === 30;
+          }
+          const str = raw.toString().toLowerCase().trim();
+          // Avoid matching 60 days or 90 days or 300 days
+          if (str.includes('60') || str.includes('90') || str.includes('15')) {
+            return false;
+          }
+          return str === '30' || str === '30 days' || str === '30-day' || str === '30 days notice' || str.includes('30');
+        }
+
+        // Generic matching for other options like 'Immediate', '60 Days', etc.
+        const str = raw.toString().toLowerCase().trim();
+        return str === filterTarget || str.includes(filterTarget);
+      });
+    }
+
     // Experience filter
     if (
       activeExperience &&
@@ -86,23 +131,59 @@ const BenchPage = () => {
       result = result.filter((t) => t.location === activeLocation);
     }
 
-    // Sorting
-    if (sortBy === 'Highest Score') {
+    // Helper to extract actual AI assessment score from backend data
+    const getAiScore = (candidate) => {
+      if (typeof candidate.assessmentScore === 'number' && !isNaN(candidate.assessmentScore)) {
+        return candidate.assessmentScore;
+      }
+      if (candidate.rubric && typeof candidate.rubric.systemDesign === 'number') {
+        return candidate.rubric.systemDesign;
+      }
+      if (candidate.dossier?.rubric?.systemDesign) {
+        const parsed = parseInt(candidate.dossier.rubric.systemDesign, 10);
+        if (!isNaN(parsed)) return parsed;
+      }
+      return null;
+    };
+
+    // Sorting (AI Assessment as primary default)
+    if (sortBy === 'AI Assessment') {
+      result.sort((a, b) => {
+        const scoreA = getAiScore(a);
+        const scoreB = getAiScore(b);
+
+        const hasScoreA = scoreA !== null;
+        const hasScoreB = scoreB !== null;
+
+        // Candidates without valid scores appear after scored candidates
+        if (hasScoreA && !hasScoreB) return -1;
+        if (!hasScoreA && hasScoreB) return 1;
+        if (!hasScoreA && !hasScoreB) return (b.score || 0) - (a.score || 0);
+
+        // Descending sorting: highest score -> lowest score
+        return scoreB - scoreA;
+      });
+    } else if (sortBy === 'Highest Score') {
       result.sort((a, b) => b.score - a.score);
     } else if (sortBy === 'Fastest Availability') {
       const urgencyOrder = {
         'Immediate (24-48h)': 1,
+        'Immediate': 1,
         'Within 1 Week': 2,
         'Within 2 Weeks': 3,
+        '30 Days': 4,
+        '60 Days': 5,
+        '90 Days': 6,
       };
       result.sort(
         (a, b) =>
-          (urgencyOrder[a.urgency] || 99) - (urgencyOrder[b.urgency] || 99)
+          (urgencyOrder[a.noticePeriod || a.urgency] || 99) -
+          (urgencyOrder[b.noticePeriod || b.urgency] || 99)
       );
     } else if (sortBy === 'Lowest Rate') {
       result.sort((a, b) => {
-        const rateA = parseInt(a.hourlyRate.replace(/[^0-9]/g, '')) || 0;
-        const rateB = parseInt(b.hourlyRate.replace(/[^0-9]/g, '')) || 0;
+        const rateA = parseInt((a.hourlyRate || '').replace(/[^0-9]/g, '')) || 0;
+        const rateB = parseInt((b.hourlyRate || '').replace(/[^0-9]/g, '')) || 0;
         return rateA - rateB;
       });
     }
@@ -113,6 +194,7 @@ const BenchPage = () => {
     searchQuery,
     activeSpecialty,
     activeUrgency,
+    activeNoticePeriod,
     activeExperience,
     activeLocation,
     sortBy,
