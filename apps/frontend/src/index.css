@@ -24647,6 +24647,74 @@ body {
   }
 }
 
+/* LegalPage – Table & Content Enhancements */
+.LegalPage-contentCard table {
+  font-family: inherit;
+}
+
+.LegalPage-contentCard h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin-bottom: 1rem;
+}
+
+.LegalPage-contentCard h3 {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #0f172a;
+  margin-top: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.LegalPage-contentCard p {
+  margin-bottom: 1rem;
+  line-height: 1.7;
+}
+
+.LegalPage-contentCard ul,
+.LegalPage-contentCard ol {
+  padding-left: 1.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.LegalPage-contentCard li {
+  margin-bottom: 0.4rem;
+  line-height: 1.65;
+}
+
+.LegalPage-contentCard a {
+  color: #2563eb;
+  text-decoration: underline;
+  transition: color 0.2s ease;
+}
+
+.LegalPage-contentCard a:hover {
+  color: #1d4ed8;
+}
+
+@media (max-width: 768px) {
+  .LegalPage-contentCard table {
+    font-size: 0.8125rem;
+  }
+
+  .LegalPage-contentCard table th,
+  .LegalPage-contentCard table td {
+    padding: 0.5rem 0.625rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .LegalPage-contentCard table {
+    font-size: 0.75rem;
+  }
+
+  .LegalPage-contentCard table th,
+  .LegalPage-contentCard table td {
+    padding: 0.4rem 0.5rem;
+  }
+}
+
 /* ==========================================================================
    GrowthTimeline — Balanced Centered 2x2 Responsive Milestone Grid
    ========================================================================== */
