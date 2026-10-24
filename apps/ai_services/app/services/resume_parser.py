@@ -3,7 +3,10 @@ import re
 import io
 import json
 from typing import Dict, Any, Optional, List, Tuple
-from pypdf import PdfReader
+try:
+    from pypdf import PdfReader
+except ImportError:
+    PdfReader = None
 import httpx
 
 from app.config import settings, logger
@@ -30,6 +33,9 @@ def extract_text_and_links_from_pdf(file_bytes: bytes) -> Tuple[str, List[str]]:
     extracted_text = []
     links = []
     try:
+        if PdfReader is None:
+            logger.warning("pypdf is not installed. PDF text extraction fallback engaged.")
+            return "", []
         reader = PdfReader(io.BytesIO(file_bytes))
         for page in reader.pages:
             text = page.extract_text()
