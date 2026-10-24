@@ -34,10 +34,12 @@ const StaffAugHero = ({ data, valueProps = [] }) => {
         <div className="StaffAug-heroMainGrid">
           <div className="StaffAug-heroContent">
             <h1 className="StaffAug-heroHeadline">
-              Scale High-Velocity Engineering Squads{' '}
-              <span className="StaffAug-headlineGradient">
-                Without Long-Term Overhead.
-              </span>
+              {heading || (
+                <>
+                  Scale High-Velocity Engineering Squads&nbsp;
+                  <span className="StaffAug-headlineGradient">Without Long-Term Overhead.</span>
+                </>
+              )}
             </h1>
             <p className="StaffAug-heroDesc">{description}</p>
 
