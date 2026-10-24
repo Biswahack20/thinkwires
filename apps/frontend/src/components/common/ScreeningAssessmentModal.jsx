@@ -87,6 +87,16 @@ const ScreeningAssessmentModal = ({
   const questions = assessment?.questions || [];
   const currentQ = questions[currentQuestionIndex];
   const totalQuestions = questions.length;
+  const currentQType = (
+    currentQ?.type ||
+    currentQ?.question_type ||
+    (currentQ?.options && currentQ.options.length > 0
+      ? 'mcq'
+      : currentQ?.starter_code
+        ? 'practical'
+        : 'scenario')
+  ).toLowerCase();
+  const currentQId = currentQ?.id || `q_${currentQuestionIndex}`;
 
   const handleSelectMCQ = (questionId, optionIndex) => {
     setAnswers((prev) => ({
@@ -433,7 +443,7 @@ const ScreeningAssessmentModal = ({
                           color: '#475569',
                         }}
                       >
-                        Q{idx + 1} ({item.type.toUpperCase()})
+                        Q{idx + 1} ({(item?.type || item?.question_type || 'question').toUpperCase()})
                       </span>
                       <span
                         style={{
@@ -531,15 +541,15 @@ const ScreeningAssessmentModal = ({
                     <span
                       style={{
                         background:
-                          currentQ.type === 'mcq'
+                          currentQType === 'mcq'
                             ? '#EFF6FF'
-                            : currentQ.type === 'scenario'
+                            : currentQType === 'scenario'
                               ? '#FAF5FF'
                               : '#FFFBEB',
                         color:
-                          currentQ.type === 'mcq'
+                          currentQType === 'mcq'
                             ? '#2563EB'
-                            : currentQ.type === 'scenario'
+                            : currentQType === 'scenario'
                               ? '#7E22CE'
                               : '#B45309',
                         fontSize: '0.75rem',
@@ -550,7 +560,7 @@ const ScreeningAssessmentModal = ({
                       }}
                     >
                       Question {currentQuestionIndex + 1} of {totalQuestions} •{' '}
-                      {currentQ.type.toUpperCase()} ({currentQ.points || 10}{' '}
+                      {currentQType.toUpperCase()} ({currentQ.points || 10}{' '}
                       pts)
                     </span>
                   </div>
@@ -568,7 +578,7 @@ const ScreeningAssessmentModal = ({
                   </h3>
 
                   {/* Render based on Question Type */}
-                  {currentQ.type === 'mcq' && (
+                  {currentQType === 'mcq' && (
                     <div
                       style={{
                         display: 'flex',
@@ -577,11 +587,11 @@ const ScreeningAssessmentModal = ({
                       }}
                     >
                       {currentQ.options?.map((opt, optIdx) => {
-                        const isSelected = answers[currentQ.id] === optIdx;
+                        const isSelected = answers[currentQId] === optIdx;
                         return (
                           <label
                             key={optIdx}
-                            onClick={() => handleSelectMCQ(currentQ.id, optIdx)}
+                            onClick={() => handleSelectMCQ(currentQId, optIdx)}
                             style={{
                               display: 'flex',
                               alignItems: 'flex-start',
@@ -598,10 +608,10 @@ const ScreeningAssessmentModal = ({
                           >
                             <input
                               type="radio"
-                              name={currentQ.id}
+                              name={currentQId}
                               checked={isSelected}
                               onChange={() =>
-                                handleSelectMCQ(currentQ.id, optIdx)
+                                handleSelectMCQ(currentQId, optIdx)
                               }
                               style={{ marginTop: '0.2rem' }}
                             />
@@ -620,7 +630,7 @@ const ScreeningAssessmentModal = ({
                     </div>
                   )}
 
-                  {currentQ.type === 'scenario' && (
+                  {currentQType === 'scenario' && (
                     <div>
                       {currentQ.scenario && (
                         <div
@@ -641,9 +651,9 @@ const ScreeningAssessmentModal = ({
                       <textarea
                         rows={6}
                         placeholder="Detail your architectural strategy, mitigation steps, and trade-off considerations..."
-                        value={answers[currentQ.id] || ''}
+                        value={answers[currentQId] || ''}
                         onChange={(e) =>
-                          handleTextChange(currentQ.id, e.target.value)
+                          handleTextChange(currentQId, e.target.value)
                         }
                         style={{
                           width: '100%',
@@ -659,7 +669,7 @@ const ScreeningAssessmentModal = ({
                     </div>
                   )}
 
-                  {currentQ.type === 'practical' && (
+                  {currentQType === 'practical' && (
                     <div>
                       <div
                         style={{
@@ -677,12 +687,12 @@ const ScreeningAssessmentModal = ({
                         rows={10}
                         placeholder="Implement your solution here..."
                         value={
-                          answers[currentQ.id] !== undefined
-                            ? answers[currentQ.id]
+                          answers[currentQId] !== undefined
+                            ? answers[currentQId]
                             : currentQ.starter_code || ''
                         }
                         onChange={(e) =>
-                          handleTextChange(currentQ.id, e.target.value)
+                          handleTextChange(currentQId, e.target.value)
                         }
                         style={{
                           width: '100%',

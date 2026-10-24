@@ -687,6 +687,7 @@ class AIServiceClient {
         : 'Filtered - Below Threshold',
       detailed_feedback: questions.map((q) => ({
         question_id: q.id,
+        type: q.type || 'mcq',
         earned_points: candidateAnswers[q.id] !== undefined ? 10 : 0,
         possible_points: q.points || 10,
         is_correct: true,
