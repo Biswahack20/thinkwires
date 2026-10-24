@@ -79,6 +79,7 @@ export const updateCandidateProfile = async (req, res) => {
       githubUrl,
       linkedinUrl,
       portfolioUrl,
+      workMode,
     } = req.body;
 
     const updateFields = {};
@@ -87,6 +88,7 @@ export const updateCandidateProfile = async (req, res) => {
     if (headline !== undefined) updateFields.headline = headline;
     if (location !== undefined) updateFields.location = location;
     if (currentRole !== undefined) updateFields.currentRole = currentRole;
+    if (workMode !== undefined) updateFields.workMode = workMode;
     if (technicalSkills !== undefined) {
       updateFields.technicalSkills = Array.isArray(technicalSkills)
         ? technicalSkills

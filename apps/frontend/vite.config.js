@@ -7,18 +7,21 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'http://localhost:5000',
+        target: 'http://127.0.0.1:5000',
         changeOrigin: true,
         configure: (proxy) => {
           proxy.on('error', (err) => {
-            if (err.code !== 'ECONNREFUSED') {
+            const isConnRefused =
+              err.code === 'ECONNREFUSED' ||
+              (err.message && err.message.includes('ECONNREFUSED'));
+            if (!isConnRefused) {
               console.warn('[vite proxy error]', err.message);
             }
           });
         },
       },
       '/uploads': {
-        target: 'http://localhost:5000',
+        target: 'http://127.0.0.1:5000',
         changeOrigin: true,
       },
     },

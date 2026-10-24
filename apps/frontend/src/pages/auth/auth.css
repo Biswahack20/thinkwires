@@ -693,3 +693,216 @@
     font-size: 1.5rem;
   }
 }
+
+/* ================= LEGACY & STANDARD AUTH / FORM COMPATIBILITY ================= */
+.tw-auth-page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #f8fafc;
+}
+
+.tw-auth-container {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 3rem 1.5rem;
+  box-sizing: border-box;
+}
+
+.tw-auth-card {
+  width: 100%;
+  max-width: 480px;
+  background: #ffffff;
+  border-radius: 16px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 10px 30px -10px rgba(15, 23, 42, 0.08), 0 4px 6px -2px rgba(15, 23, 42, 0.02);
+  padding: 2.5rem;
+  box-sizing: border-box;
+}
+
+.tw-auth-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.tw-auth-badge {
+  display: inline-block;
+  padding: 0.3rem 0.8rem;
+  background: rgba(0, 55, 176, 0.08);
+  color: #0037b0;
+  border-radius: 9999px;
+  font-size: 0.74rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 0.75rem;
+}
+
+.tw-auth-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 0.5rem 0;
+}
+
+.tw-auth-subtitle {
+  color: #64748b;
+  font-size: 0.92rem;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.tw-auth-alert {
+  padding: 0.85rem 1rem;
+  border-radius: 8px;
+  font-size: 0.88rem;
+  margin-bottom: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  line-height: 1.45;
+}
+
+.tw-auth-alert-error {
+  background-color: #fef2f2;
+  border: 1px solid #fca5a5;
+  color: #b91c1c;
+}
+
+.tw-auth-alert-success {
+  background-color: #ecfdf5;
+  border: 1px solid #a7f3d0;
+  color: #065f46;
+}
+
+.tw-auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1.15rem;
+}
+
+.tw-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  text-align: left;
+  margin-bottom: 0.85rem;
+}
+
+.tw-form-label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #334155;
+  margin-bottom: 0.35rem;
+}
+
+.tw-form-input {
+  width: 100%;
+  padding: 0.75rem 0.95rem;
+  font-size: 0.92rem;
+  color: #0f172a;
+  background-color: #ffffff;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 8px;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  box-sizing: border-box;
+  font-family: inherit;
+}
+
+.tw-form-input:hover {
+  border-color: #94a3b8;
+}
+
+.tw-form-input:focus {
+  border-color: #0037b0;
+  box-shadow: 0 0 0 3px rgba(0, 55, 176, 0.12);
+}
+
+.tw-form-help {
+  font-size: 0.8rem;
+  color: #64748b;
+  margin-top: 0.3rem;
+  display: block;
+}
+
+.tw-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.tw-password-toggle {
+  position: absolute;
+  right: 0.75rem;
+  background: none;
+  border: none;
+  color: #64748b;
+  cursor: pointer;
+  padding: 0.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+}
+
+.tw-password-toggle:hover {
+  color: #0f172a;
+}
+
+.tw-btn-submit {
+  width: 100%;
+  padding: 0.85rem 1.25rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #ffffff;
+  background: #0037b0;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: background-color 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
+  box-shadow: 0 4px 10px -2px rgba(0, 55, 176, 0.25);
+  font-family: inherit;
+}
+
+.tw-btn-submit:hover:not(:disabled) {
+  background: #002c91;
+  box-shadow: 0 6px 14px -3px rgba(0, 55, 176, 0.35);
+}
+
+.tw-btn-submit:active:not(:disabled) {
+  transform: translateY(1px);
+}
+
+.tw-btn-submit:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.tw-auth-footer {
+  margin-top: 1.5rem;
+  text-align: center;
+  font-size: 0.88rem;
+  color: #64748b;
+  border-top: 1px solid #f1f5f9;
+  padding-top: 1.25rem;
+}
+
+.tw-auth-link {
+  color: #0037b0;
+  font-weight: 600;
+  text-decoration: none;
+  margin-left: 0.25rem;
+}
+
+.tw-auth-link:hover {
+  text-decoration: underline;
+}
