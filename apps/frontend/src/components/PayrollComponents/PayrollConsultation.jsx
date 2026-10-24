@@ -385,6 +385,25 @@ const PayrollConsultation = ({ data }) => {
                 </div>
               )}
 
+              {submitStatus === 'failed' && (
+                <div
+                  className="Payroll-errorBanner"
+                  role="alert"
+                  aria-live="assertive"
+                >
+                  <span
+                    className="material-symbols-outlined"
+                    style={{ fontSize: '24px' }}
+                  >
+                    error
+                  </span>
+                  <span>
+                    {submitMessage ||
+                      'Submission failed. Please check your details and try again.'}
+                  </span>
+                </div>
+              )}
+
               <div
                 style={{
                   textAlign: 'center',
