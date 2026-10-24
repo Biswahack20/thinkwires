@@ -72,7 +72,79 @@ const IconPhone = () => (
   </svg>
 );
 
+import { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { subscribeNewsletter } from '../../store/slices/blogSlice';
 import logoImg from '../../assets/logo/logo.png';
+
+const NewsletterForm = () => {
+  const dispatch = useDispatch();
+  const [email, setEmail] = useState('');
+  const [status, setStatus] = useState('idle'); // idle | loading | success | error | invalid
+  const [message, setMessage] = useState('');
+
+  const validateEmail = (value) => {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(value);
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const trimmed = email.trim();
+    if (!validateEmail(trimmed)) {
+      setStatus('invalid');
+      setMessage('Please enter a valid email address.');
+      return;
+    }
+    setStatus('loading');
+    setMessage('');
+    try {
+      await dispatch(subscribeNewsletter({ email: trimmed })).unwrap();
+      setStatus('success');
+      setMessage("Thanks for subscribing! You're on the list.");
+      setEmail('');
+    } catch (err) {
+      setStatus('error');
+      setMessage('Subscription failed. Please try again.');
+    }
+  };
+
+  return (
+    <>
+      <form className={'Footer-newsletterForm'} onSubmit={handleSubmit} noValidate>
+        <input
+          type="email"
+          placeholder="Your work email"
+          className={'Footer-newsletterInput'}
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          required
+          aria-label="Email address"
+        />
+        <button
+          type="submit"
+          className={'Footer-newsletterBtn'}
+          disabled={status === 'loading'}
+        >
+          {status === 'loading' ? 'Joining...' : 'Join'}
+        </button>
+      </form>
+      {status !== 'idle' && (
+        <div
+          role="status"
+          aria-live="polite"
+          className={'Footer-newsletterFeedback'}
+          style={{
+            marginTop: '0.5rem',
+            color: status === 'success' ? 'var(--color-success, #16a34a)' : 'var(--color-error, #dc2626)',
+          }}
+        >
+          {message}
+        </div>
+      )}
+    </>
+  );
+};
 
 const Footer = () => {
   return (
@@ -218,16 +290,8 @@ const Footer = () => {
             <h4 className={'Footer-newsletterTitle'}>
               Talent Advisory Newsletter
             </h4>
-            <form className={'Footer-newsletterForm'}>
-              <input
-                type="email"
-                placeholder="Your work email"
-                className={'Footer-newsletterInput'}
-              />
-              <button type="submit" className={'Footer-newsletterBtn'}>
-                Join
-              </button>
-            </form>
+      <NewsletterForm />
+
           </div>
         </div>
 
