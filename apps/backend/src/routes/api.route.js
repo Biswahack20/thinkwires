@@ -1641,8 +1641,8 @@ const aboutDataset = {
       address:
         'Plot No. 20, Block H-1/A, Sector 63, Noida, Uttar Pradesh 201301',
     },
-    phones: ['+91 (120) 450-8800', '+91 89205 55626'],
-    email: 'connect@thinkwires.com',
+    phones: [],
+    email: 'info@thinkwires.com',
     hours: 'Monday - Friday: 9:00 AM - 7:00 PM IST (EST/PST Overlap Supported)',
   },
 };

@@ -268,7 +268,7 @@ export const fallbackStaffAugmentationData = {
     heading: 'Schedule a Workforce Strategy Call',
     description:
       'Speak directly with an Enterprise Talent Partner to calibrate your tech stack needs, budget constraints, and delivery timelines.',
-    hotline: '+91 89205 55626',
+    email: 'hr@thinkwires.com',
     hubs: 'Noida Sector 63 (India) • San Francisco • Austin • Toronto',
     sla: '5-Hour Response SLA',
     certifications:

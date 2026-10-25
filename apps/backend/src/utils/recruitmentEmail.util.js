@@ -268,11 +268,11 @@ export const sendRecruitmentNotificationEmail = async (
       process.env.RECRUITMENT_NOTIFICATION_EMAIL ||
       process.env.RECRUITMENT_EMAIL ||
       process.env.ADMIN_NOTIFICATION_EMAIL ||
-      'careers@thinkwires.com';
+      'hr@thinkwires.com';
 
     const fromAddress =
       process.env.EMAIL_FROM ||
-      `"ThinkWires Talent Engine" <${process.env.SMTP_USER || 'careers@thinkwires.com'}>`;
+      `"ThinkWires Talent Engine" <${process.env.SMTP_USER || 'hr@thinkwires.com'}>`;
 
     const subject =
       `Submit Candidate for - ${applicationData.jobTitle || 'Technical Specialist'} [${applicationData.firstName || ''} ${applicationData.lastName || ''}]`.trim();

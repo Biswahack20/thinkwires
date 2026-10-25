@@ -1846,8 +1846,7 @@
       "hqDetails": {
         "title": "Direct Corporate Headquarters",
         "address": "Plot No. 20, Block H-1/A, Sector 63, Noida, Uttar Pradesh 201301",
-        "hotline": "+91 89205 55626",
-        "email": "contact@thinkwires.com",
+        "email": "hr@thinkwires.com",
         "hours": "09:00 AM – 19:00 PM IST (Mon–Sat)",
         "regions": ["United States", "Canada Hub", "India Central"]
       }
@@ -1902,7 +1901,7 @@
             "statusType": "emerald"
           }
         ],
-        "hotline": "+91 89205 55626",
+        "email": "hr@thinkwires.com",
         "slaText": "24/7 SLAs"
       }
     },
@@ -2096,7 +2095,7 @@
       "sidebar": {
         "title": "Need tailored contract clauses?",
         "desc": "Our legal counsel configures customized service level agreements and master services contracts for high-compliance sectors.",
-        "phone": "+91 89205 55626",
+        "email": "hr@thinkwires.com",
         "actionText": "Speak directly with Legal Operations"
       },
       "items": [
@@ -2125,7 +2124,7 @@
       "benefits": [
         "Guaranteed 5-Hour SLA Business Response",
         "SOC 2 Type II • ISO 27001 Certified Infrastructure",
-        "Instant WhatsApp Connect: +91 89205 55626"
+        "Direct Advisory Email: hr@thinkwires.com"
       ],
       "hq": "Corporate Headquarters: Sector 62, Electronic City, Noida, UP 201309 • Operations in Silicon Valley & Toronto"
     }
@@ -2376,7 +2375,7 @@
       "eyebrow": "Direct Channel",
       "heading": "Schedule a Workforce Strategy Call",
       "description": "Speak directly with an Enterprise Talent Partner to calibrate your tech stack needs, budget constraints, and delivery timelines.",
-      "hotline": "+91 89205 55626",
+      "email": "hr@thinkwires.com",
       "hubs": "Noida Sector 63 (India) • San Francisco • Austin • Toronto",
       "sla": "5-Hour Response SLA",
       "certifications": "ISO 27001 • SOC 2 Type II Compliant • 100% NDA Protection Prior to Discussion"
@@ -2667,7 +2666,7 @@
       "eyebrow": "Confidential Mandate Desk",
       "heading": "Initiate Executive Search Mandate",
       "description": "Connect directly with our senior talent acquisition partners. We will formulate a preliminary market intelligence brief and talent acquisition roadmap within 24 business hours.",
-      "hotline": "+91 89205 55626",
+      "email": "hr@thinkwires.com",
       "hotlineAvailability": "Available 09:00 AM – 19:00 PM IST • Mon – Fri",
       "hubs": [
         {
@@ -2856,7 +2855,7 @@
     "hotline": {
       "title": "Executive Direct Line",
       "desc": "Immediate workforce briefing with our Senior Managing Director:",
-      "phone": "+91 89205 55626"
+      "email": "hr@thinkwires.com"
     }
   },
   "candidatePortalData": {
@@ -3035,8 +3034,7 @@
       "name": "Meera Iyer",
       "role": "Senior Director - Global Talent Operations & Candidate Advocate",
       "avatar": "https://lh3.googleusercontent.com/aida-public/AB6AXuD3_fNrKZrdX7wzEga8HMg9HJC7tpO5ja7xmdZLSByZZLcsRwqFCX9iqpwXVfUXprZuj4U-KpNN7i88ZcFgooAN0vN0E5YD0e3ZJMYorLezjr2_RDjt2ASUe77cxWwCWLTGoIqRNlnS0Xw6RrPLZpBB6JBfv98XcTccVovBHjTGC5R8nDduq2iuoeSm6NAQlZT1kcrSdSrQxONMQ2PC7hB_n14aPTJenVxZkLhQCoOjyru4Ks7F-28uSA",
-      "phone": "+91 89205 55626",
-      "whatsapp": "https://wa.me/918920555626",
+      "email": "hr@thinkwires.com",
       "sla": "Average response time: < 8 minutes"
     }
   },
@@ -3350,8 +3348,8 @@
         "title": "ThinkWires Global Headquarters",
         "line": "Plot No. 20, Block H-1/A, Sector 63, Noida, Uttar Pradesh 201301"
       },
-      "phones": ["+91 (120) 450-8800", "+91 89205 55626"],
-      "email": "connect@thinkwires.com",
+      "phones": [],
+      "email": "hr@thinkwires.com",
       "form": {
         "title": "Request a 20-Min Strategy Call",
         "subtitle": "Receive matched engineering profiles in under 5 hours.",
@@ -3427,8 +3425,8 @@
         "city": "Noida, India",
         "address": "Plot No. 20, Block H-1/A, Sector 63",
         "cityLine": "Noida, Uttar Pradesh 201301",
-        "phones": ["+91 (120) 450-8800", "+91 89205 55626"],
-        "email": "connect@thinkwires.com",
+        "phones": [],
+        "email": "info@thinkwires.com",
         "hours": "Mon – Fri, 9:00 AM – 7:00 PM IST",
         "coverageTag": "India Talent Operations",
         "mapEmbedUrl": ""
@@ -3439,8 +3437,8 @@
         "city": "United States",
         "address": "Remote-First Operations",
         "cityLine": "EST / PST Coverage",
-        "phones": ["+1 (800) 555-0120"],
-        "email": "us@thinkwires.com",
+        "phones": [],
+        "email": "info@thinkwires.com",
         "hours": "Mon – Fri, 8:00 AM – 6:00 PM EST",
         "coverageTag": "US & Canada EOR Corridor",
         "mapEmbedUrl": ""
@@ -3450,18 +3448,18 @@
       {
         "id": "ch-1",
         "icon": "mail",
-        "title": "Email Us",
-        "detail": "connect@thinkwires.com",
-        "sublabel": "General inquiries & partnerships",
-        "href": "mailto:connect@thinkwires.com"
+        "title": "Company Information",
+        "detail": "info@thinkwires.com",
+        "sublabel": "General inquiries & company info",
+        "href": "mailto:info@thinkwires.com"
       },
       {
         "id": "ch-2",
-        "icon": "phone",
-        "title": "Call Direct",
-        "detail": "+91 (120) 450-8800",
-        "sublabel": "Mon-Fri 9AM–7PM IST",
-        "href": "tel:+911204508800"
+        "icon": "mail",
+        "title": "HR & Talent Desk",
+        "detail": "hr@thinkwires.com",
+        "sublabel": "Clients, candidates & hiring mandates",
+        "href": "mailto:hr@thinkwires.com"
       },
       {
         "id": "ch-3",

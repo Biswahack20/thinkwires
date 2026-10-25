@@ -46,7 +46,7 @@ export const fallbackEorData = {
           statusType: 'emerald',
         },
       ],
-      hotline: '+91 89205 55626',
+      email: 'hr@thinkwires.com',
       slaText: '24/7 SLAs',
     },
   },
@@ -239,8 +239,8 @@ export const fallbackEorData = {
     sidebar: {
       title: 'Need tailored contract clauses?',
       desc: 'Our legal counsel configures customized service level agreements and master services contracts for high-compliance sectors.',
-      phone: '+91 89205 55626',
-      actionText: 'Speak directly with Legal Operations',
+      email: 'hr@thinkwires.com',
+      actionText: 'Email HR & Legal Operations',
     },
     items: [
       {
@@ -273,7 +273,7 @@ export const fallbackEorData = {
     benefits: [
       'Guaranteed 5-Hour SLA Business Response',
       'SOC 2 Type II • ISO 27001 Certified Infrastructure',
-      'Instant WhatsApp Connect: +91 89205 55626',
+      'Direct HR Advisory: hr@thinkwires.com',
     ],
     hq: 'Corporate Headquarters: Sector 62, Electronic City, Noida, UP 201309 • Operations in Silicon Valley & Toronto',
   },

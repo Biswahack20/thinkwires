@@ -66,23 +66,23 @@ const PermStaffConsultation = ({ data }) => {
                 </h2>
                 <p className="consultation-desc">{description}</p>
 
-                {/* Direct Partner Line Card */}
+                {/* Direct Partner Email Card */}
                 <div className="hotline-card">
                   <div className="hl-top">
                     <span className="material-symbols-outlined">
-                      phone_in_talk
+                      mail
                     </span>
-                    <span>Direct Executive Partner Line</span>
+                    <span>Executive Mandate Inquiries</span>
                   </div>
                   <a
-                    href={`tel:${(hotline || '').replace(/[^0-9+]/g, '')}`}
+                    href="mailto:hr@thinkwires.com"
                     className="hl-phone"
                   >
-                    {hotline || '+91 89205 55626'}
+                    hr@thinkwires.com
                   </a>
                   <p className="hl-note">
                     {hotlineAvailability ||
-                      'Available 09:00 AM – 19:00 PM IST • Mon – Fri'}
+                      '5-Hour Response SLA • Mon – Fri'}
                   </p>
                 </div>
 

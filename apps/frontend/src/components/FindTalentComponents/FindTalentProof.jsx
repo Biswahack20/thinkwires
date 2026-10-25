@@ -49,7 +49,7 @@ const FindTalentProof = ({ metrics = [], testimonial = {}, hotline = {} }) => {
                 </div>
                 <div>
                   <h4 className="hotline-title">
-                    {hotline.title || 'Executive Direct Line'}
+                    {hotline.title || 'Enterprise Talent Briefing'}
                   </h4>
                   <p className="hotline-desc">
                     {hotline.desc ||
@@ -59,13 +59,13 @@ const FindTalentProof = ({ metrics = [], testimonial = {}, hotline = {} }) => {
               </div>
               <div className="hotline-right">
                 <a
-                  href={`tel:${hotline.phone || '+918920555626'}`}
+                  href="mailto:hr@thinkwires.com"
                   className="btn-hotline"
                 >
                   <span className="material-symbols-outlined">
-                    phone_in_talk
+                    mail
                   </span>
-                  <span>{hotline.phone || '+91 89205 55626'}</span>
+                  <span>hr@thinkwires.com</span>
                 </a>
               </div>
             </div>

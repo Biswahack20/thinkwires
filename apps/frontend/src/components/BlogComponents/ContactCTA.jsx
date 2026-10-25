@@ -1,5 +1,5 @@
 import React from 'react';
-import { PhoneIcon, MailIcon } from '../../admin/AdminIcons';
+import { MailIcon } from '../../admin/AdminIcons';
 
 const ContactCTA = () => {
   return (
@@ -38,19 +38,7 @@ const ContactCTA = () => {
 
         <div className="ContactCTA-figmaRight">
           <a
-            href="tel:+918920555626"
-            className="ContactCTA-figmaPhoneBtn"
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '0.4rem',
-            }}
-          >
-            <PhoneIcon size={14} color="currentColor" />
-            <span>+91 89205 55626</span>
-          </a>
-          <a
-            href="mailto:research@thinkwires.com"
+            href="mailto:info@thinkwires.com"
             className="ContactCTA-figmaPitchBtn"
             style={{
               display: 'inline-flex',

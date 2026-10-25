@@ -276,9 +276,6 @@ const Footer = () => {
               Pradesh 201301
             </div>
             <div className={'Footer-contactInfo'}>
-              <a href="tel:+918920555826" className={'Footer-contactLink'}>
-                <IconPhone /> +91 89205 55826
-              </a>
               <a
                 href="mailto:info@thinkwires.com"
                 className={'Footer-contactLink'}

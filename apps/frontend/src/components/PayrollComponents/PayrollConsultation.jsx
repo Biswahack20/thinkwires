@@ -65,39 +65,21 @@ const PayrollConsultation = ({ data }) => {
 
               <div className="Payroll-hqItem">
                 <span
-                  className="material-symbols-outlined text-emerald-accent"
-                  style={{ fontSize: '20px' }}
-                >
-                  call
-                </span>
-                <div>
-                  <strong>Direct Operations Hotline</strong>
-                  <a
-                    href={`tel:${hqDetails.hotline}`}
-                    style={{
-                      color: 'var(--color-primary, #0037b0)',
-                      fontWeight: 700,
-                    }}
-                  >
-                    {hqDetails.hotline}
-                  </a>
-                </div>
-              </div>
-
-              <div className="Payroll-hqItem">
-                <span
                   className="material-symbols-outlined text-primary"
                   style={{ fontSize: '20px' }}
                 >
                   mail
                 </span>
                 <div>
-                  <strong>Enterprise Inquiries</strong>
+                  <strong>Direct Operations & HR Desk</strong>
                   <a
-                    href={`mailto:${hqDetails.email}`}
-                    style={{ color: 'var(--color-primary, #0037b0)' }}
+                    href={`mailto:${hqDetails.email || 'hr@thinkwires.com'}`}
+                    style={{
+                      color: 'var(--color-primary, #0037b0)',
+                      fontWeight: 700,
+                    }}
                   >
-                    {hqDetails.email}
+                    {hqDetails.email || 'hr@thinkwires.com'}
                   </a>
                 </div>
               </div>

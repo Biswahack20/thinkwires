@@ -157,8 +157,7 @@ export const fallbackCandidatePortalData = {
     role: 'Senior Director - Global Talent Operations & Candidate Advocate',
     avatar:
       'https://lh3.googleusercontent.com/aida-public/AB6AXuD3_fNrKZrdX7wzEga8HMg9HJC7tpO5ja7xmdZLSByZZLcsRwqFCX9iqpwXVfUXprZuj4U-KpNN7i88ZcFgooAN0vN0E5YD0e3ZJMYorLezjr2_RDjt2ASUe77cxWwCWLTGoIqRNlnS0Xw6RrPLZpBB6JBfv98XcTccVovBHjTGC5R8nDduq2iuoeSm6NAQlZT1kcrSdSrQxONMQ2PC7hB_n14aPTJenVxZkLhQCoOjyru4Ks7F-28uSA',
-    phone: '+91 89205 55626',
-    whatsapp: 'https://wa.me/918920555626',
+    email: 'hr@thinkwires.com',
     sla: 'Average response time: < 8 minutes',
   },
 };

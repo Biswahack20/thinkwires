@@ -270,7 +270,7 @@ export const fallbackPermanentStaffingData = {
     heading: 'Initiate Executive Search Mandate',
     description:
       'Connect directly with our senior talent acquisition partners. We will formulate a preliminary market intelligence brief and talent acquisition roadmap within 24 business hours.',
-    hotline: '+91 89205 55626',
+    email: 'hr@thinkwires.com',
     hotlineAvailability: 'Available 09:00 AM – 19:00 PM IST • Mon – Fri',
     hubs: [
       {

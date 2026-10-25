@@ -23,11 +23,11 @@ const CandidateConcierge = ({ concierge = {} }) => {
 
           <div className="concierge-meta-row">
             <a
-              href={`tel:${concierge.phone || '+918920555626'}`}
+              href={`mailto:${concierge.email || 'hr@thinkwires.com'}`}
               className="concierge-phone"
             >
-              <span className="material-symbols-outlined">call</span>
-              <span>{concierge.phone || '+91 89205 55626'}</span>
+              <span className="material-symbols-outlined">mail</span>
+              <span>{concierge.email || 'hr@thinkwires.com'}</span>
             </a>
             <span className="sep">•</span>
             <span className="concierge-sla">
@@ -46,13 +46,11 @@ const CandidateConcierge = ({ concierge = {} }) => {
           <span>Book 15-Min Check-In</span>
         </Link>
         <a
-          href={concierge.whatsapp || 'https://wa.me/918920555626'}
-          target="_blank"
-          rel="noopener noreferrer"
+          href={concierge.email ? `mailto:${concierge.email}` : 'mailto:hr@thinkwires.com'}
           className="btn-whatsapp"
         >
-          <span className="material-symbols-outlined">chat</span>
-          <span>Instant WhatsApp Support</span>
+          <span className="material-symbols-outlined">mail</span>
+          <span>Email Talent Concierge</span>
         </a>
       </div>
     </div>

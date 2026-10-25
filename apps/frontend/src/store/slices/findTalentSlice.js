@@ -183,7 +183,7 @@ export const fallbackFindTalentData = {
   hotline: {
     title: 'Executive Direct Line',
     desc: 'Immediate workforce briefing with our Senior Managing Director:',
-    phone: '+91 89205 55626',
+    email: 'hr@thinkwires.com',
   },
 };
 

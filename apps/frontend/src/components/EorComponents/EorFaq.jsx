@@ -75,7 +75,7 @@ const EorFaq = ({ data }) => {
                 {sidebar.desc}
               </p>
               <a
-                href={`tel:${sidebar.phone}`}
+                href={sidebar.email ? `mailto:${sidebar.email}` : 'mailto:hr@thinkwires.com'}
                 style={{
                   display: 'inline-flex',
                   alignItems: 'center',
@@ -90,9 +90,9 @@ const EorFaq = ({ data }) => {
                   className="material-symbols-outlined"
                   style={{ fontSize: '16px' }}
                 >
-                  call
+                  mail
                 </span>
-                {sidebar.actionText}
+                {sidebar.actionText || 'Email HR & Legal Operations'}
               </a>
             </div>
           </div>

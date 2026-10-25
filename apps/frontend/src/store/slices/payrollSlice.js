@@ -218,8 +218,7 @@ export const fallbackPayrollData = {
       title: 'Direct Corporate Headquarters',
       address:
         'Plot No. 20, Block H-1/A, Sector 63, Noida, Uttar Pradesh 201301',
-      hotline: '+91 89205 55626',
-      email: 'contact@thinkwires.com',
+      email: 'hr@thinkwires.com',
       hours: '09:00 AM – 19:00 PM IST (Mon–Sat)',
       regions: ['United States', 'Canada Hub', 'India Central'],
     },
