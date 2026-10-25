@@ -53,6 +53,7 @@ const AdminLayout = () => {
   const [dbStatus, setDbStatus] = useState('In-Memory Resilient Demo');
   const [isMongo, setIsMongo] = useState(false);
   const [toastMessage, setToastMessage] = useState(null);
+  const [pendingRequisitionsCount, setPendingRequisitionsCount] = useState(2);
 
   const markAllAnnouncementsAsRead = () => {
     const allIds = announcements.map(
@@ -132,6 +133,16 @@ const AdminLayout = () => {
         if (data && data.databaseMode) setDbStatus(data.databaseMode);
         if (data && data.isMongoActive !== undefined)
           setIsMongo(data.isMongoActive);
+        if (data && data.kpis && data.kpis.pendingRequisitionsSla !== undefined) {
+          setPendingRequisitionsCount(data.kpis.pendingRequisitionsSla);
+        } else if (data && data.kpis && data.kpis.inboundRequisitionsCount !== undefined) {
+          setPendingRequisitionsCount(data.kpis.inboundRequisitionsCount);
+        } else if (data && data.inboundRequisitions) {
+          const pending = data.inboundRequisitions.filter(
+            (r) => r.status === 'Inbound Request' || r.status === 'Inbound Requisition'
+          ).length;
+          setPendingRequisitionsCount(pending > 0 ? pending : data.inboundRequisitions.length);
+        }
       })
       .catch((err) =>
         console.warn('Could not fetch topbar stats:', err.message)
@@ -201,6 +212,15 @@ const AdminLayout = () => {
           {
             group: 'MANPOWER & RECRUITMENT',
             items: [
+              {
+                label: 'Requisition Requests',
+                path: '/admin/requisitions',
+                icon: <FileTextIcon size={18} />,
+                badge:
+                  pendingRequisitionsCount > 0
+                    ? String(pendingRequisitionsCount)
+                    : null,
+              },
               {
                 label: 'Employees',
                 path: '/admin/employees',

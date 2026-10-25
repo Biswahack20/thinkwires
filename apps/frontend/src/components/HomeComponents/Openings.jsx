@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchOpenings } from '../../store/slices/homeSlice';
-import ApplyModal from '../common/ApplyModal';
+import QuickApplyModal from '../common/QuickApplyModal';
 import SectionBadge from '../common/SectionBadge';
 import JobSpecModal from '../JobsComponents/JobSpecModal';
 
@@ -32,23 +32,7 @@ const Openings = () => {
   const displayOpenings = sortedOpenings.slice(0, 4);
 
   const handleApplyClick = (job) => {
-    const jobId = job.id || job._id || 'general-pool';
-    const empType =
-      job.jobMode || job.employmentType || job.type || 'Permanent';
-    const postDate = job.postedDate
-      ? new Date(job.postedDate).toLocaleDateString('en-US', {
-          month: 'short',
-          day: 'numeric',
-          year: 'numeric',
-        })
-      : job.postingDate || 'Active Mandate';
-    const targetApplyUrl = `/jobs/${encodeURIComponent(jobId)}/apply?title=${encodeURIComponent(job.title || '')}&department=${encodeURIComponent(job.department || 'Engineering')}&location=${encodeURIComponent(job.location || 'Remote')}&employmentType=${encodeURIComponent(empType)}&postingDate=${encodeURIComponent(postDate)}`;
-
-    if (isAuthenticated) {
-      setSelectedJob(job);
-    } else {
-      navigate(`/login?redirect=${encodeURIComponent(targetApplyUrl)}`);
-    }
+    setSelectedJob(job);
   };
 
   return (
@@ -237,10 +221,17 @@ const Openings = () => {
                         View Job Spec
                       </button>
                       <button
+                        type="button"
                         onClick={() => handleApplyClick(job)}
                         className={'Openings-applyBtn'}
                       >
-                        Apply Now
+                        <span
+                          className="material-symbols-outlined"
+                          style={{ fontSize: '16px' }}
+                        >
+                          bolt
+                        </span>
+                        <span>Quick Apply</span>
                       </button>
                     </div>
                   </div>
@@ -304,12 +295,13 @@ const Openings = () => {
             </div>
           </div>
           <button
+            type="button"
             onClick={() =>
               handleApplyClick({
                 title: 'General Engineering Candidate Pool',
                 jobId: 'general-pool',
-                department: 'Engineering',
-                location: 'Remote',
+                department: 'Global Talent Cloud',
+                location: 'Remote / Hybrid',
                 employmentType: 'Permanent',
                 postingDate: new Date().toLocaleDateString('en-US', {
                   month: 'short',
@@ -320,7 +312,7 @@ const Openings = () => {
             }
             className={'Openings-uploadBtn'}
           >
-            Upload CV / Profile
+            Quick Apply / Upload CV
           </button>
         </div>
       </div>
@@ -336,7 +328,7 @@ const Openings = () => {
         />
       )}
 
-      <ApplyModal
+      <QuickApplyModal
         isOpen={!!selectedJob}
         onClose={() => setSelectedJob(null)}
         jobData={selectedJob}

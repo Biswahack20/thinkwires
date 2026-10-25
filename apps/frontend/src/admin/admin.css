@@ -1467,3 +1467,101 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* Inbound Requisition Desk & SLA Styles */
+.tw-badge.inbound-request,
+.tw-badge.inbound-requisition,
+.tw-badge.client-requisition {
+  background-color: #ede9fe;
+  color: #6d28d9;
+  border: 1px solid #ddd6fe;
+}
+
+.tw-sla-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.2rem 0.5rem;
+  border-radius: 9999px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.tw-sla-pill.urgent {
+  background-color: #fee2e2;
+  color: #b91c1c;
+  border: 1px solid #fca5a5;
+}
+
+.tw-sla-pill.high {
+  background-color: #fef3c7;
+  color: #b45309;
+  border: 1px solid #fcd34d;
+}
+
+.tw-sla-pill.normal {
+  background-color: #e0e7ff;
+  color: #4338ca;
+  border: 1px solid #c7d2fe;
+}
+
+.tw-requisition-banner {
+  background: linear-gradient(135deg, #0f172a, #1e1b4b);
+  border: 1px solid rgba(139, 92, 246, 0.25);
+  border-radius: var(--tw-radius-lg);
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1.5rem;
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.tw-requisition-banner-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: #f8fafc;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.tw-requisition-banner-desc {
+  font-size: 0.82rem;
+  color: #cbd5e1;
+  margin-top: 0.25rem;
+}
+
+.tw-candidate-match-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.85rem 1rem;
+  border: 1px solid var(--tw-border);
+  border-radius: var(--tw-radius-md);
+  margin-bottom: 0.65rem;
+  background-color: #ffffff;
+  transition: all 0.2s ease;
+}
+
+.tw-candidate-match-card:hover {
+  border-color: var(--tw-emerald);
+  box-shadow: 0 4px 12px rgba(0, 143, 104, 0.08);
+}
+
+.tw-fit-badge-high {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  background-color: #ecfdf5;
+  color: #047857;
+  border: 1px solid #a7f3d0;
+  padding: 0.2rem 0.55rem;
+  border-radius: 9999px;
+  font-size: 0.72rem;
+  font-weight: 700;
+}

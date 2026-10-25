@@ -12,6 +12,7 @@ import Activity from '../models/activity.mongo.model.js';
 import { logger } from '../utils/logger.js';
 import rateLimit from 'express-rate-limit';
 import requireAuth from '../middlewares/auth.middleware.js';
+import { recordInboundRequisition } from '../controllers/admin.controller.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -2091,28 +2092,18 @@ router.post('/find-talent/requisition', publicSubmissionRateLimiter, async (req,
     jobDescription,
   });
 
-  if (isMongoActive()) {
-    try {
-      await Activity.create({
-        action: 'Requisition Created',
-        entityType: 'Job',
-        entityId: company,
-        description: `Enterprise talent requisition for ${headcount || 1}x ${targetRole} (${seniority || 'Senior'}) by ${company} (${fullName} - ${corporateEmail})`,
-        user: { name: fullName, role: 'client' },
-        badgeColor: '#8064D8',
-      });
-    } catch (err) {
-      logger.warn(
-        'Could not persist requisition activity to MongoDB:',
-        err.message
-      );
-    }
+  let createdRequisition = null;
+  try {
+    createdRequisition = await recordInboundRequisition(req.body);
+  } catch (recErr) {
+    logger.warn('Failed to record inbound requisition in admin store:', recErr.message);
   }
 
   res.json({
     success: true,
     message:
       'Requisition logged with Enterprise Queue. 3 candidate dossiers will be delivered within 5 hours.',
+    requisition: createdRequisition,
   });
 });
 

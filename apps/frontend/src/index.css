@@ -2764,6 +2764,316 @@ body {
   background-color: #002266;
 }
 
+/* --- QuickApplyModal Styles --- */
+.QuickApplyModal-overlay {
+  background-color: rgba(15, 23, 42, 0.7);
+  backdrop-filter: blur(8px);
+}
+
+.QuickApplyModal-card {
+  max-width: 600px;
+  border-radius: 16px;
+  border: 1px solid var(--color-card-stroke, #e2e8f0);
+  background-color: #ffffff;
+  box-shadow: 0 25px 50px -12px rgba(15, 23, 42, 0.25);
+  animation: twModalPop 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes twModalPop {
+  from {
+    opacity: 0;
+    transform: scale(0.96) translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.QuickApplyModal-header {
+  padding: 1.5rem 1.75rem 1.25rem;
+  background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
+  border-bottom: 1px solid var(--color-card-stroke, #e2e8f0);
+}
+
+.QuickApplyModal-badgeRow {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.QuickApplyModal-lightningBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+  color: #059669;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.2rem 0.6rem;
+  border-radius: 9999px;
+  border: 1px solid #a7f3d0;
+  letter-spacing: 0.02em;
+}
+
+.QuickApplyModal-slaBadge {
+  display: inline-flex;
+  align-items: center;
+  background-color: #eff6ff;
+  color: #2563eb;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 0.2rem 0.55rem;
+  border-radius: 9999px;
+  border: 1px solid #bfdbfe;
+}
+
+.QuickApplyModal-title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0.25rem 0 0.5rem;
+  line-height: 1.3;
+}
+
+.QuickApplyModal-metaPills {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-top: 0.5rem;
+}
+
+.QuickApplyModal-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  font-size: 0.78rem;
+  color: #64748b;
+  background-color: #f1f5f9;
+  padding: 0.25rem 0.6rem;
+  border-radius: 6px;
+  font-weight: 500;
+}
+
+.QuickApplyModal-form {
+  padding: 1.5rem 1.75rem 1.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.15rem;
+}
+
+.QuickApplyModal-uploadBox {
+  cursor: pointer;
+  border-radius: 10px;
+  background-color: #f8fafc;
+  border: 2px dashed #cbd5e1;
+  transition: all 0.2s ease;
+}
+
+.QuickApplyModal-uploadBox:hover,
+.QuickApplyModal-dragOver {
+  border-color: #003399;
+  background-color: #eff6ff;
+}
+
+.QuickApplyModal-hasFile {
+  border-color: #10b981;
+  background-color: #f0fdf4;
+}
+
+.QuickApplyModal-fileSelected {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.QuickApplyModal-parsingState {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.QuickApplyModal-spinner {
+  width: 24px;
+  height: 24px;
+  border: 3px solid #bfdbfe;
+  border-top-color: #003399;
+  border-radius: 50%;
+  animation: twSpin 0.7s linear infinite;
+  margin-bottom: 0.5rem;
+}
+
+.QuickApplyModal-errorBanner {
+  background-color: #fef2f2;
+  border: 1px solid #fecaca;
+  color: #b91c1c;
+  padding: 0.65rem 0.85rem;
+  border-radius: 8px;
+  font-size: 0.84rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.QuickApplyModal-autoFillNotice {
+  background-color: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  color: #15803d;
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-weight: 500;
+}
+
+.QuickApplyModal-authStatus {
+  background-color: #f8fafc;
+  border: 1px solid #e2e8f0;
+  color: #334155;
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+  font-size: 0.82rem;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.QuickApplyModal-guestAccountBox {
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 0.85rem 1rem;
+}
+
+.QuickApplyModal-guestHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.QuickApplyModal-guestTitle {
+  font-size: 0.84rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.QuickApplyModal-guestSubtext {
+  font-size: 0.75rem;
+  color: #64748b;
+  margin: 0.15rem 0 0;
+  line-height: 1.35;
+}
+
+.QuickApplyModal-guestToggle {
+  background: none;
+  border: none;
+  color: #003399;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  text-decoration: underline;
+  white-space: nowrap;
+}
+
+.QuickApplyModal-guestToggle:hover {
+  color: #1d4ed8;
+}
+
+.QuickApplyModal-submitBtn {
+  background: linear-gradient(135deg, #003399 0%, #1d4ed8 100%);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  box-shadow: 0 4px 12px rgba(0, 51, 153, 0.25);
+  font-weight: 700;
+}
+
+.QuickApplyModal-submitBtn:hover {
+  background: linear-gradient(135deg, #002266 0%, #1e40af 100%);
+  box-shadow: 0 6px 16px rgba(0, 51, 153, 0.35);
+}
+
+.QuickApplyModal-btnSpinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: twSpin 0.7s linear infinite;
+  display: inline-block;
+}
+
+.QuickApplyModal-successState {
+  padding: 3rem 2rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.QuickApplyModal-successIcon {
+  margin-bottom: 1rem;
+}
+
+.QuickApplyModal-successTitle {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 0.5rem;
+}
+
+.QuickApplyModal-successText {
+  color: #64748b;
+  font-size: 0.92rem;
+  line-height: 1.5;
+  max-width: 440px;
+  margin: 0 auto 1.5rem;
+}
+
+.QuickApplyModal-appRefBox {
+  background-color: #f8fafc;
+  border: 1px dashed #cbd5e1;
+  border-radius: 8px;
+  padding: 0.65rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  margin-bottom: 2rem;
+}
+
+.QuickApplyModal-appRefBox span {
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  color: #64748b;
+  letter-spacing: 0.05em;
+}
+
+.QuickApplyModal-appRefBox strong {
+  font-size: 1rem;
+  color: #003399;
+  letter-spacing: 0.05em;
+}
+
+.QuickApplyModal-successActions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  width: 100%;
+  max-width: 320px;
+}
+
 /* ==========================================================================
    RESPONSIVE DESIGN SYSTEM
    Breakpoints: Mobile (320px-430px), Tablet (600px-820px), Laptop (1024px-1280px), Desktop (1440px+)

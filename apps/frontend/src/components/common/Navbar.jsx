@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import logo from '../../assets/logo/logo.png';
-import ApplyModal from './ApplyModal';
+import QuickApplyModal from './QuickApplyModal';
 import { useTheme } from '../../useTheme';
 import { GlobeIcon, MailIcon } from '../../admin/AdminIcons';
 
@@ -343,7 +343,7 @@ const Navbar = () => {
         </nav>
       </header>
 
-      <ApplyModal
+      <QuickApplyModal
         isOpen={isApplyModalOpen}
         onClose={() => setIsApplyModalOpen(false)}
         roleTitle="General Engineering Candidate Pool"
