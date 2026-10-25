@@ -63,6 +63,18 @@ try {
 
 const isMongoActive = () => mongoose.connection.readyState === 1;
 
+const VALID_ENTITY_TYPES = new Set([
+  'Employee',
+  'Candidate',
+  'Client',
+  'Job',
+  'Placement',
+  'CMS',
+  'Security',
+  'Security RBAC',
+  'System',
+]);
+
 // Helper to log activities
 const logActivity = async (
   action,
@@ -72,10 +84,16 @@ const logActivity = async (
   user = { name: 'Admin User', role: 'admin' },
   badgeColor = '#008F68'
 ) => {
+  const resolvedEntityType = VALID_ENTITY_TYPES.has(entityType)
+    ? entityType
+    : entityType && typeof entityType === 'string' && entityType.toLowerCase().includes('security')
+      ? 'Security RBAC'
+      : 'Employee';
+
   const newAct = {
     id: `act_${Date.now()}`,
     action,
-    entityType,
+    entityType: resolvedEntityType,
     entityId: String(entityId),
     description,
     user,
@@ -90,8 +108,8 @@ const logActivity = async (
     try {
       await Activity.create({
         action,
-        entityType,
-        entityId,
+        entityType: resolvedEntityType,
+        entityId: String(entityId),
         description,
         user,
         badgeColor,

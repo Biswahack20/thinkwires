@@ -17,6 +17,8 @@ const activitySchema = new mongoose.Schema(
         'Placement',
         'CMS',
         'Security',
+        'Security RBAC',
+        'System',
       ],
       default: 'Employee',
     },

@@ -270,16 +270,34 @@ const NewHero = ({ onOpenModal }) => {
     }
   };
 
-  const handleExploreJobs = (e) => {
-    e.preventDefault();
-    const openingsSection =
-      document.getElementById('openings') ||
-      document.getElementById('hot-jobs');
-    if (openingsSection) {
-      openingsSection.scrollIntoView({ behavior: 'smooth' });
-    } else {
-      navigate('/jobs');
+  const handleHireTalent = (e) => {
+    if (
+      e?.defaultPrevented ||
+      e?.button !== 0 ||
+      e?.metaKey ||
+      e?.ctrlKey ||
+      e?.altKey ||
+      e?.shiftKey
+    ) {
+      return;
     }
+    e?.preventDefault();
+    navigate('/talent-cloud');
+  };
+
+  const handleExploreJobs = (e) => {
+    if (
+      e?.defaultPrevented ||
+      e?.button !== 0 ||
+      e?.metaKey ||
+      e?.ctrlKey ||
+      e?.altKey ||
+      e?.shiftKey
+    ) {
+      return;
+    }
+    e?.preventDefault();
+    navigate('/hot-jobs');
   };
 
   const currentSlide = heroSlides[currentSlideIndex] || heroSlides[0];
@@ -361,12 +379,10 @@ const NewHero = ({ onOpenModal }) => {
                 variants={itemVariants}
                 className="NewHero-actionGroup"
               >
-                <motion.button
-                  type="button"
+                <motion.a
+                  href="/talent-cloud"
                   className="NewHero-btnPrimary"
-                  onClick={() =>
-                    handleOpenModal('Hire Top Tech Talent - Enterprise Inquiry')
-                  }
+                  onClick={handleHireTalent}
                   whileHover={{ scale: 1.025, y: -2 }}
                   whileTap={{ scale: 0.975 }}
                 >
@@ -374,10 +390,10 @@ const NewHero = ({ onOpenModal }) => {
                     person_add
                   </span>
                   <span>Hire Top Tech Talent</span>
-                </motion.button>
+                </motion.a>
 
                 <motion.a
-                  href="#hot-jobs"
+                  href="/hot-jobs"
                   className="NewHero-btnSecondary"
                   onClick={handleExploreJobs}
                   whileHover={{ scale: 1.02, y: -2 }}
@@ -385,7 +401,7 @@ const NewHero = ({ onOpenModal }) => {
                 >
                   <span>Explore Hot Jobs</span>
                   <span className="material-symbols-outlined NewHero-btnIcon">
-                    arrow_downward
+                    arrow_forward
                   </span>
                 </motion.a>
               </motion.div>
