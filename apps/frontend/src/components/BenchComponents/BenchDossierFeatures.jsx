@@ -27,7 +27,7 @@ const BenchDossierFeatures = () => {
       icon: 'rule',
       title: 'Standardized Rubric Scores',
       description:
-        'Calibrated scoring across 18 technical competencies evaluated by ThinkWires Principal Staff Engineers.',
+        'Calibrated scoring across 18 technical competencies evaluated by Thinkwires Principal Staff Engineers.',
       highlight: 'Quantitative Peer Benchmark',
     },
     {
@@ -54,7 +54,7 @@ const BenchDossierFeatures = () => {
               TRANSPARENT VERIFICATION AUDIT
             </span>
             <h2 className="BenchDossierFeatures-title">
-              What's Inside a ThinkWires Technical Dossier?
+              What's Inside a Thinkwires Technical Dossier?
             </h2>
             <p className="BenchDossierFeatures-subtitle">
               We don't send resumes. We send auditable technical proof so your

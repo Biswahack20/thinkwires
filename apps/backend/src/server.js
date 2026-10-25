@@ -9,7 +9,7 @@ const startServer = async () => {
   // Start HTTP server immediately so APIs and Vite proxy respond without blocking on DB timeouts
   const server = app.listen(PORT, () => {
     console.log(
-      `[Server] ThinkWires API server running on http://localhost:${PORT}`
+      `[Server] Thinkwires API server running on http://localhost:${PORT}`
     );
   });
 

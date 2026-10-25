@@ -7,7 +7,7 @@ export const fallbackFindTalentData = {
     heading:
       'Deploy Pre-Vetted Tech Talent & High-Velocity Engineering Squads.',
     description:
-      "Connect directly with ThinkWires' aggregator network of 740+ enterprise-tested recruiters and pre-screened technical benches. Scale across India, the US, and Canada with institutional speed and zero cross-border compliance risk.",
+      "Connect directly with Thinkwires' aggregator network of 740+ enterprise-tested recruiters and pre-screened technical benches. Scale across India, the US, and Canada with institutional speed and zero cross-border compliance risk.",
     slaCards: [
       {
         icon: 'timer',
@@ -176,7 +176,7 @@ export const fallbackFindTalentData = {
   ],
   testimonial: {
     quote:
-      'When our core cloud payment engine required 4 Senior Distributed Systems Architects on an emergency 10-day notice, standard consultancies quoted us 4 weeks. ThinkWires dispatched 7 pre-screened technical dossiers within 6 hours. All four passed our internal architecture bar on the first interview.',
+      'When our core cloud payment engine required 4 Senior Distributed Systems Architects on an emergency 10-day notice, standard consultancies quoted us 4 weeks. Thinkwires dispatched 7 pre-screened technical dossiers within 6 hours. All four passed our internal architecture bar on the first interview.',
     author: 'Siddharth Nambiar',
     designation: 'VP of Engineering • Global FinTech Infrastructure Platform',
   },

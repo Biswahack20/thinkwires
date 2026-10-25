@@ -22,7 +22,7 @@ const BenchVettingGates = () => {
       title: 'Live System Architecture Defense',
       passRate: 'Top 4% Pass Rate',
       details: [
-        'Live 60-min defense with a Staff Engineer at ThinkWires',
+        'Live 60-min defense with a Staff Engineer at Thinkwires',
         'Designing for 10M+ DAU, high availability, and failover',
         'Live chaos engineering & unexpected dependency failure scenario',
       ],
@@ -35,7 +35,7 @@ const BenchVettingGates = () => {
       details: [
         'Async client status reporting & stakeholder alignment',
         'Security compliance & IP adherence background audit',
-        'Final vetting placement into ThinkWires Rapid Bench pool',
+        'Final vetting placement into Thinkwires Rapid Bench pool',
       ],
       badge: 'Executive Evaluation',
     },

@@ -11,7 +11,7 @@ const FindTalentComparison = ({ matrix = [] }) => {
             Structural Sourcing Advantage
           </span>
           <h2 className="FindTalent-sectionTitle">
-            Why Engineering Leaders Choose ThinkWires vs. Legacy Agencies
+            Why Engineering Leaders Choose Thinkwires vs. Legacy Agencies
           </h2>
           <p className="FindTalent-sectionSubtitle">
             Compare the engineering-first talent aggregation model against
@@ -30,7 +30,7 @@ const FindTalentComparison = ({ matrix = [] }) => {
                     <span className="material-symbols-outlined star-icon">
                       stars
                     </span>
-                    <span>ThinkWires Aggregator</span>
+                    <span>Thinkwires Aggregator</span>
                   </div>
                 </th>
               </tr>

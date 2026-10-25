@@ -22,7 +22,7 @@ const AboutPage = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
     document.title =
-      'About Us | ThinkWires — Borderless Tech Talent & Workforce Advisory';
+      'About Us | Thinkwires — Borderless Tech Talent & Workforce Advisory';
     if (status === 'idle') {
       dispatch(fetchAboutData());
     }
@@ -38,7 +38,7 @@ const AboutPage = () => {
           stats={aboutData.statsStrip || aboutData.stats}
         />
 
-        {/* 2. The ThinkWires Aggregator Model */}
+        {/* 2. The Thinkwires Aggregator Model */}
         <AggregatorModel data={aboutData.aggregatorModel} />
 
         {/* 3. Our Core Philosophy (Deep Navy Editorial) */}

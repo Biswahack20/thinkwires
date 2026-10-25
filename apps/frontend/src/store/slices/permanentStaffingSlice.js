@@ -8,7 +8,7 @@ export const fallbackPermanentStaffingData = {
     heading:
       'Secure Visionary Tech Leadership & Core Permanent Engineering Talent',
     description:
-      'From principal architects to C-suite executive leaders (CTO, VP of Engineering, CPO), ThinkWires delivers verified transformational talent that drives long-term organizational growth across North America and APAC GCCs.',
+      'From principal architects to C-suite executive leaders (CTO, VP of Engineering, CPO), Thinkwires delivers verified transformational talent that drives long-term organizational growth across North America and APAC GCCs.',
     ctaSearchText: 'Initiate Executive Search',
     ctaRolesText: 'View Specialized Practice Roles',
     proofStats: [
@@ -128,7 +128,7 @@ export const fallbackPermanentStaffingData = {
         phase: 'Phase IV: Days 19–30+',
         title: 'Placement, Offer & Executive Onboarding',
         description:
-          'Strategic compensation calibration, counter-offer mitigation, and background verification. ThinkWires facilitates transition through day 90 and beyond.',
+          'Strategic compensation calibration, counter-offer mitigation, and background verification. Thinkwires facilitates transition through day 90 and beyond.',
         deliverable: 'Signed Mandate & Onboarding Plan',
       },
     ],
@@ -247,7 +247,7 @@ export const fallbackPermanentStaffingData = {
       question:
         'How long does the permanent recruitment process typically take?',
       answer:
-        'Timelines depend on domain rarity and seniority. For core engineering and managerial roles, ThinkWires delivers qualified shortlists within 7–14 business days, with final placement completed in 2–4 weeks. Specialized C-suite or VP searches typically require 6–10 weeks to accommodate discreet passive talent engagement, deep multi-stakeholder interviews, and executive notice periods.',
+        'Timelines depend on domain rarity and seniority. For core engineering and managerial roles, Thinkwires delivers qualified shortlists within 7–14 business days, with final placement completed in 2–4 weeks. Specialized C-suite or VP searches typically require 6–10 weeks to accommodate discreet passive talent engagement, deep multi-stakeholder interviews, and executive notice periods.',
     },
     {
       question: 'What industries and roles do you specialize in?',
@@ -257,7 +257,7 @@ export const fallbackPermanentStaffingData = {
     {
       question: 'Do you offer a guarantee on permanent placements?',
       answer:
-        'Yes. Every permanent placement executed by ThinkWires is safeguarded by our formal 90-day replacement guarantee. In the uncommon event that a placed leader departs or fails to meet documented competency objectives within 90 calendar days, ThinkWires immediately initiates an expedited search and delivers a fully qualified replacement at zero additional placement fee.',
+        'Yes. Every permanent placement executed by Thinkwires is safeguarded by our formal 90-day replacement guarantee. In the uncommon event that a placed leader departs or fails to meet documented competency objectives within 90 calendar days, Thinkwires immediately initiates an expedited search and delivers a fully qualified replacement at zero additional placement fee.',
     },
     {
       question: 'How do you ensure cultural fit for permanent positions?',

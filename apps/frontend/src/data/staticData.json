@@ -41,7 +41,7 @@
       "number": "03",
       "numberColor": "#bbf7d0",
       "title": "Seamless Onboarding & Scale",
-      "description": "Our talent integrates immediately into your Slack, Jira, and Git repositories. ThinkWires oversees performance continuity, payroll, and scaling adjustments.",
+      "description": "Our talent integrates immediately into your Slack, Jira, and Git repositories. Thinkwires oversees performance continuity, payroll, and scaling adjustments.",
       "delivery": "Delivery: Instant Sprint Participation",
       "iconBg": "#22c55e",
       "iconColor": "#ffffff",
@@ -164,7 +164,7 @@
     },
     {
       "id": 2,
-      "question": "Does ThinkWires deduct any commission or placement fees from my salary?",
+      "question": "Does Thinkwires deduct any commission or placement fees from my salary?",
       "answer": "No, 100% free for candidates. All recruitment, technical vetting, and placement advisory costs are funded entirely by enterprise client partners."
     },
     {
@@ -174,7 +174,7 @@
     },
     {
       "id": 4,
-      "question": "How does ThinkWires handle cross-border payments for Remote US/Canada roles?",
+      "question": "How does Thinkwires handle cross-border payments for Remote US/Canada roles?",
       "answer": "We manage end-to-end Employer of Record (EOR) operations, handling multi-currency salary disbursements, local tax compliance, health insurance, and statutory benefits with zero hassle."
     }
   ],
@@ -295,7 +295,7 @@
       "id": "ch-3",
       "icon": "linkedin",
       "title": "LinkedIn",
-      "detail": "ThinkWires",
+      "detail": "Thinkwires",
       "sublabel": "Follow for talent insights",
       "href": "https://linkedin.com"
     },

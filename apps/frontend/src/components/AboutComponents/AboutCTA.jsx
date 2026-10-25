@@ -20,7 +20,7 @@ const AboutCTA = ({ data }) => {
     heading = 'Ready to Build Your High-Velocity Engineering Squad?',
     description = 'Book a 20-minute workforce strategy consultation with our staffing directors to audit your technical requirements and receive benchmark rates for India and North America.',
     address = {
-      title: 'ThinkWires Global Headquarters',
+      title: 'Thinkwires Global Headquarters',
       line: 'Plot No: 20, Block: H-1/A, Sector: 63, Noida, Uttar Pradesh 201301',
     },
     email = 'info@thinkwires.com',
@@ -219,7 +219,7 @@ const AboutCTA = ({ data }) => {
                     </h4>
                     <p className="AboutCTA-successMsg">
                       {consultationMessage ||
-                        'Thank you! A ThinkWires workforce strategist will contact you within 5 working hours.'}
+                        'Thank you! A Thinkwires workforce strategist will contact you within 5 working hours.'}
                     </p>
 
                     {bookingRef && (

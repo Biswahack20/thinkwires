@@ -28,7 +28,7 @@ const StaffAugmentationPage = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
     document.title =
-      'Staff Augmentation & Dedicated Engineering Pods | ThinkWires';
+      'Staff Augmentation & Dedicated Engineering Pods | Thinkwires';
     if (status === 'idle') {
       dispatch(fetchStaffAugmentationData());
     }

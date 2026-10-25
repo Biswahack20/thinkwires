@@ -62,7 +62,7 @@ app.get('/api/health', (req, res) => {
 
   res.status(200).json({
     status: 'healthy',
-    service: 'ThinkWires Enterprise Core Backend',
+    service: 'Thinkwires Enterprise Core Backend',
     version: '1.0.0',
     timestamp: new Date().toISOString(),
     uptime: Math.floor(process.uptime()),
@@ -92,7 +92,10 @@ const possibleDistPaths = [
   path.resolve(process.cwd(), 'dist'),
 ];
 
-const resolvedDist = possibleDistPaths.find((p) => fs.existsSync(p));
+const resolvedDist =
+  process.env.NODE_ENV !== 'test'
+    ? possibleDistPaths.find((p) => fs.existsSync(p))
+    : null;
 
 if (resolvedDist) {
   app.use(
@@ -119,13 +122,7 @@ if (resolvedDist) {
   });
 } else {
   app.get('/', (req, res) => {
-    res.json({
-      service: 'ThinkWires Enterprise API',
-      status: 'operational',
-      environment: process.env.NODE_ENV || 'development',
-      health: '/api/health',
-      docs: '/api/docs',
-    });
+    res.send('API is running...');
   });
 }
 

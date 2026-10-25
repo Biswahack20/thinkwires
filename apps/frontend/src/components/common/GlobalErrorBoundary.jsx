@@ -65,7 +65,7 @@ class GlobalErrorBoundary extends Component {
   handleCopyReport = () => {
     const { error, errorInfo } = this.state;
     const report = {
-      product: 'ThinkWires Enterprise Platform',
+      product: 'Thinkwires Enterprise Platform',
       timestamp: new Date().toISOString(),
       url: typeof window !== 'undefined' ? window.location.href : '',
       userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : '',

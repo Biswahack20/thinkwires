@@ -381,10 +381,10 @@ const AdminLayout = () => {
           <Link
             to={isCmsAdmin ? '/admin/cms' : '/admin'}
             className="tw-brand"
-            title="ThinkWires Admin"
+            title="Thinkwires Admin"
           >
             <div className="tw-brand-logo-wrap">
-              <img src={logo} alt="ThinkWires" className="tw-brand-logo-img" />
+              <img src={logo} alt="Thinkwires" className="tw-brand-logo-img" />
             </div>
           </Link>
           <button
@@ -623,7 +623,7 @@ const AdminLayout = () => {
             <Link
               to="/"
               className="tw-exit-link"
-              title="Open Public ThinkWires Website"
+              title="Open Public Thinkwires Website"
               target="_blank"
               rel="noopener noreferrer"
             >

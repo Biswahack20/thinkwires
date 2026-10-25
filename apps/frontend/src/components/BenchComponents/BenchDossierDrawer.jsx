@@ -150,7 +150,7 @@ const BenchDossierDrawer = () => {
                     >
                       psychology
                     </span>{' '}
-                    ThinkWires Proctored AI Assessment
+                    Thinkwires Proctored AI Assessment
                   </h4>
                   <p
                     style={{
@@ -293,7 +293,7 @@ const BenchDossierDrawer = () => {
             </div>
             <p className="BenchDrawer-evalDetail">
               {selectedTalent.bio ||
-                `Demonstrated outstanding capability in scalable backend architectures and distributed system design. Cleared deep technical audits with unredacted git commits verified by ThinkWires Senior Technical Directors.`}
+                `Demonstrated outstanding capability in scalable backend architectures and distributed system design. Cleared deep technical audits with unredacted git commits verified by Thinkwires Senior Technical Directors.`}
             </p>
           </div>
 

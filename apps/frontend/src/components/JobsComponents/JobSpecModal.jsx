@@ -392,7 +392,7 @@ const JobSpecModal = ({ job, onClose, onApply }) => {
               <strong style={{ color: '#0F172A' }}>
                 Client Partner Confidentiality:
               </strong>{' '}
-              ThinkWires exclusively represents verified Tier-1 enterprise
+              Thinkwires exclusively represents verified Tier-1 enterprise
               organizations and global technology centers. Exact client legal
               entity names and project NDA specifics are shared during the
               direct technical round.
@@ -779,7 +779,7 @@ const JobSpecModal = ({ job, onClose, onApply }) => {
               >
                 speed
               </span>
-              ThinkWires Direct Intake Protocol
+              Thinkwires Direct Intake Protocol
             </div>
             <p
               style={{

@@ -127,7 +127,7 @@ export const fallbackCandidatePortalData = {
     },
     sponsoredTrack: {
       title: 'Kubernetes CKA Refresh Challenge',
-      desc: 'ThinkWires sponsors 100% of exam fees for certified cloud architects refreshing their advanced container security credentials.',
+      desc: 'Thinkwires sponsors 100% of exam fees for certified cloud architects refreshing their advanced container security credentials.',
       target: 'CNCF CKA 2025 v1.31 Release',
       prepTime: 'Estimated prep time: 8-12 hours',
     },

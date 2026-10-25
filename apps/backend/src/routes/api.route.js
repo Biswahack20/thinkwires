@@ -426,8 +426,8 @@ router.post('/openings', adminAuthGuard, async (req, res) => {
       try {
         for (const j of req.body.openings) {
           await JobRequirement.findOneAndUpdate(
-            { title: j.title, client: j.company || 'ThinkWires Client' },
-            { ...j, client: j.company || 'ThinkWires Client' },
+            { title: j.title, client: j.company || 'Thinkwires Client' },
+            { ...j, client: j.company || 'Thinkwires Client' },
             { upsert: true }
           );
         }
@@ -896,7 +896,7 @@ router.post('/contact/message', publicSubmissionRateLimiter, (req, res) => {
   res.json({
     success: true,
     message:
-      'Thank you for reaching out! A ThinkWires staffing director will respond within 5 business hours.',
+      'Thank you for reaching out! A Thinkwires staffing director will respond within 5 business hours.',
   });
 });
 
@@ -961,7 +961,7 @@ router.get('/bench', async (req, res) => {
           hourlyRate: c.expectedSalary || '$65 - $80',
           engineeringProof:
             c.bio ||
-            `Cleared ThinkWires technical screening assessment (${c.assessmentScore || 90}%).`,
+            `Cleared Thinkwires technical screening assessment (${c.assessmentScore || 90}%).`,
           skills:
             c.technicalSkills && c.technicalSkills.length > 0
               ? c.technicalSkills
@@ -1075,7 +1075,7 @@ router.get('/bench', async (req, res) => {
       liveBadge: '142 PRE-VETTED TALENTS ON ACTIVE BENCH',
       title: 'Engineers on the Bench. Available to Deploy in 48 Hours.',
       subtitle:
-        'Bypass the 60-day hiring cycle. Access active ThinkWires senior contractors, fully vetted with verified code commits, system design scores, and instant contract execution.',
+        'Bypass the 60-day hiring cycle. Access active Thinkwires senior contractors, fully vetted with verified code commits, system design scores, and instant contract execution.',
       slaCard: {
         tag: '48-HOUR SLA ASSURANCE',
         title: 'Instant Pod Matching & Zero-Friction EOR Onboarding',
@@ -1168,7 +1168,7 @@ router.get('/bench/talents', async (req, res) => {
           hourlyRate: c.expectedSalary || '$65 - $80',
           engineeringProof:
             c.bio ||
-            `Cleared ThinkWires technical screening assessment (${c.assessmentScore || 90}%).`,
+            `Cleared Thinkwires technical screening assessment (${c.assessmentScore || 90}%).`,
           skills:
             c.technicalSkills && c.technicalSkills.length > 0
               ? c.technicalSkills
@@ -1340,7 +1340,7 @@ router.post('/bench/book-interview', publicSubmissionRateLimiter, (req, res) => 
 // About Page & Corporate Advisory Endpoints
 const aboutDataset = {
   company: {
-    name: 'ThinkWires',
+    name: 'Thinkwires',
     founded: 2022,
     headquarters:
       'Plot No. 20, Block H-1/A, Sector 63, Noida, Uttar Pradesh 201301',
@@ -1348,14 +1348,14 @@ const aboutDataset = {
     eyebrow: 'ABOUT THINKWIRES',
     headline: 'Connecting Global Ambition with Exceptional Tech Talent.',
     subheading:
-      'Founded in 2022 as a premier workforce advisor and staffing aggregator, ThinkWires connects high-growth enterprises with specialized engineering talent and compliant Employer of Record (EOR) infrastructure across India, the US, and Canada.',
+      'Founded in 2022 as a premier workforce advisor and staffing aggregator, Thinkwires connects high-growth enterprises with specialized engineering talent and compliant Employer of Record (EOR) infrastructure across India, the US, and Canada.',
     heroImage: '/images/about-hero.jpg',
-    heroImageAlt: 'ThinkWires Global Technology Talent Delivery Network',
+    heroImageAlt: 'Thinkwires Global Technology Talent Delivery Network',
     overview: {
       eyebrow: 'COMPANY OVERVIEW',
       title: 'Architecting High-Velocity Engineering Squads for Global Scale',
       summary:
-        'ThinkWires was established in 2022 to dismantle the structural bottlenecks of traditional IT staffing. Operating across high-demand tech corridors in India, the United States, and Canada, we combine the domain depth of an executive search firm with the rapid scalability of an aggregator ecosystem.',
+        'Thinkwires was established in 2022 to dismantle the structural bottlenecks of traditional IT staffing. Operating across high-demand tech corridors in India, the United States, and Canada, we combine the domain depth of an executive search firm with the rapid scalability of an aggregator ecosystem.',
       mission:
         'To engineer frictionless, compliant, and hyper-targeted talent pipelines that enable technology leaders to build and scale world-class software teams without borders.',
       pillars: [
@@ -1417,9 +1417,9 @@ const aboutDataset = {
   ],
   aggregatorModel: {
     eyebrow: 'STRATEGIC ADVANTAGE',
-    heading: 'The ThinkWires Aggregator Model',
+    heading: 'The Thinkwires Aggregator Model',
     description:
-      'Traditional recruitment agencies bottleneck on internal databases. ThinkWires functions as an enterprise staffing aggregator orchestrating a high-velocity ecosystem of verified partner agencies, independent specialists, and automated compliance pipelines.',
+      'Traditional recruitment agencies bottleneck on internal databases. Thinkwires functions as an enterprise staffing aggregator orchestrating a high-velocity ecosystem of verified partner agencies, independent specialists, and automated compliance pipelines.',
     cards: [
       {
         id: 'agg-1',
@@ -1463,9 +1463,9 @@ const aboutDataset = {
     eyebrow: 'OUR PHILOSOPHY',
     heading: '"Recruitment is Not Transactional; It is Architectural."',
     description:
-      'At ThinkWires, we reject the legacy headhunter pattern of resume-dumping. We treat every client intake as an engineering brief. From understanding the nuances of microservices architectures to navigating localized tax laws in Ontario or California, our teams engineer frictionless, compliant talent conduits.',
+      'At Thinkwires, we reject the legacy headhunter pattern of resume-dumping. We treat every client intake as an engineering brief. From understanding the nuances of microservices architectures to navigating localized tax laws in Ontario or California, our teams engineer frictionless, compliant talent conduits.',
     image: '/images/about-philosophy.jpg',
-    imageAlt: 'ThinkWires executive strategic advisory session',
+    imageAlt: 'Thinkwires executive strategic advisory session',
     metrics: [
       {
         id: 'metric-1',

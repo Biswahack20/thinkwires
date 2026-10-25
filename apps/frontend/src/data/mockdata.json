@@ -1,30 +1,30 @@
 {
   "company": {
-    "name": "ThinkWires",
+    "name": "Thinkwires",
     "founded": 2022,
     "headquarters": "Plot No. 20, Block H-1/A, Sector 63, Noida, Uttar Pradesh 201301",
     "locations": ["India", "USA", "Canada"],
     "eyebrow": "ABOUT THINKWIRES",
     "headline": "Connecting Global Ambition with Exceptional Tech Talent.",
-    "subheading": "Founded in 2022 as a premier workforce advisor and staffing aggregator, ThinkWires connects high-growth enterprises with specialized engineering talent and compliant Employer of Record (EOR) infrastructure across India, the US, and Canada.",
+    "subheading": "Founded in 2022 as a premier workforce advisor and staffing aggregator, Thinkwires connects high-growth enterprises with specialized engineering talent and compliant Employer of Record (EOR) infrastructure across India, the US, and Canada.",
     "heroImage": "/images/about-hero.jpg",
-    "heroImageAlt": "ThinkWires Global Technology Talent Delivery Network",
+    "heroImageAlt": "Thinkwires Global Technology Talent Delivery Network",
     "overview": {
       "eyebrow": "COMPANY OVERVIEW",
       "title": "Architecting High-Velocity Engineering Squads for Global Scale",
-      "summary": "ThinkWires was established in 2022 to dismantle the structural bottlenecks of traditional IT staffing. Operating across high-demand tech corridors in India, the United States, and Canada, we combine the domain depth of an executive search firm with the rapid scalability of an aggregator ecosystem.",
+      "summary": "Thinkwires was established in 2022 to dismantle the structural bottlenecks of traditional IT staffing. Operating across high-demand tech corridors in India, the United States, and Canada, we combine the domain depth of an executive search firm with the rapid scalability of an aggregator ecosystem.",
       "mission": "To engineer frictionless, compliant, and hyper-targeted talent pipelines that enable technology leaders to build and scale world-class software teams without borders."
     }
   },
   "hero": {
-    "badge": "About ThinkWires • Transforming Global IT Talent Delivery",
+    "badge": "About Thinkwires • Transforming Global IT Talent Delivery",
     "breadcrumbs": [
       { "label": "Home", "href": "/" },
       { "label": "Who We Are", "href": "/about" }
     ],
     "heading": "Connecting Global Ambition with",
     "headingHighlight": "Exceptional Tech Talent.",
-    "description": "Founded in 2022 as a premier workforce advisor and staffing aggregator, ThinkWires connects high-growth enterprises with specialized engineering talent and compliant Employer of Record (EOR) infrastructure across India, the US, and Canada.",
+    "description": "Founded in 2022 as a premier workforce advisor and staffing aggregator, Thinkwires connects high-growth enterprises with specialized engineering talent and compliant Employer of Record (EOR) infrastructure across India, the US, and Canada.",
     "heroImage": "/images/about-hero.jpg",
     "heroImageAlt": "Global Talent Grid - India, USA, Canada",
     "ctaButtons": [
@@ -86,8 +86,8 @@
   ],
   "aggregatorModel": {
     "eyebrow": "STRATEGIC ADVANTAGE",
-    "heading": "The ThinkWires Aggregator Model",
-    "description": "Traditional recruitment agencies bottleneck on internal databases. ThinkWires functions as an enterprise staffing aggregator orchestrating a high-velocity ecosystem of verified partner agencies, independent specialists, and automated compliance pipelines.",
+    "heading": "The Thinkwires Aggregator Model",
+    "description": "Traditional recruitment agencies bottleneck on internal databases. Thinkwires functions as an enterprise staffing aggregator orchestrating a high-velocity ecosystem of verified partner agencies, independent specialists, and automated compliance pipelines.",
     "statusBadge": {
       "icon": "settings",
       "text": "Enterprise Staffing Aggregator Model"
@@ -138,9 +138,9 @@
   "philosophy": {
     "eyebrow": "OUR CORE THESIS",
     "heading": "\"Recruitment is Not Transactional; It is Architectural.\"",
-    "description": "At ThinkWires, we reject the legacy headhunter pattern of resume-dumping. We treat every client intake as an engineering brief. From understanding the nuances of microservices architectures to navigating localized tax laws in Ontario or California, our teams engineer frictionless, compliant talent conduits.",
+    "description": "At Thinkwires, we reject the legacy headhunter pattern of resume-dumping. We treat every client intake as an engineering brief. From understanding the nuances of microservices architectures to navigating localized tax laws in Ontario or California, our teams engineer frictionless, compliant talent conduits.",
     "image": "/images/about-philosophy.jpg",
-    "imageAlt": "ThinkWires executive strategic advisory session",
+    "imageAlt": "Thinkwires executive strategic advisory session",
     "metrics": [
       {
         "id": "metric-1",
@@ -360,7 +360,7 @@
     "heading": "Ready to Build Your High-Velocity Engineering Squad?",
     "description": "Book a 20-minute workforce strategy consultation with our staffing directors to audit your technical requirements and receive benchmark rates for India and North America.",
     "address": {
-      "title": "ThinkWires Global Headquarters",
+      "title": "Thinkwires Global Headquarters",
       "line": "Plot No. 20, Block H-1/A, Sector 63, Noida, Uttar Pradesh 201301"
     },
     "phones": [],

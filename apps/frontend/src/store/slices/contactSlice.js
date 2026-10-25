@@ -7,7 +7,7 @@ const API_BASE =
 
 export const fallbackContactData = {
   hero: {
-    badge: 'Contact ThinkWires • We Respond Within 5 Hours',
+    badge: 'Contact Thinkwires • We Respond Within 5 Hours',
     breadcrumbs: [
       { label: 'Home', href: '/' },
       { label: 'Contact Us', href: '/contact' },
@@ -64,7 +64,7 @@ export const fallbackContactData = {
       id: 'ch-3',
       icon: 'linkedin',
       title: 'LinkedIn',
-      detail: 'ThinkWires',
+      detail: 'Thinkwires',
       sublabel: 'Follow for talent insights',
       href: 'https://linkedin.com/company/thinkwires',
     },
@@ -214,7 +214,7 @@ export const submitContactMessage = createAsyncThunk(
       return {
         success: true,
         message:
-          'Thank you for reaching out! A ThinkWires staffing director will respond within 5 business hours.',
+          'Thank you for reaching out! A Thinkwires staffing director will respond within 5 business hours.',
       };
     }
   }

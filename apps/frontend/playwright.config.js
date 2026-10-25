@@ -1,7 +1,7 @@
 import { defineConfig, devices } from '@playwright/test';
 
 /**
- * Playwright E2E configuration for ThinkWires Frontend
+ * Playwright E2E configuration for Thinkwires Frontend
  * All test specs are located in src/test/e2e
  */
 export default defineConfig({

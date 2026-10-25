@@ -48,8 +48,8 @@ const DEFAULT_CARDS = [
 const AggregatorModel = ({ data }) => {
   const {
     eyebrow = 'STRATEGIC ADVANTAGE',
-    heading = 'The ThinkWires Aggregator Model',
-    description = 'Traditional recruitment agencies bottleneck on internal databases. ThinkWires functions as an enterprise staffing aggregator orchestrating a high-velocity ecosystem of verified agencies, independent specialists, and automated compliance pipelines.',
+    heading = 'The Thinkwires Aggregator Model',
+    description = 'Traditional recruitment agencies bottleneck on internal databases. Thinkwires functions as an enterprise staffing aggregator orchestrating a high-velocity ecosystem of verified agencies, independent specialists, and automated compliance pipelines.',
     statusBadge = {
       text: 'Aggregator Architecture 3.2 Active',
     },
@@ -170,7 +170,7 @@ const AggregatorModel = ({ data }) => {
     <section
       id="model"
       className="AggregatorModel-section"
-      aria-label="The ThinkWires Aggregator Model"
+      aria-label="The Thinkwires Aggregator Model"
     >
       {/* Hidden legacy anchor for backwards compatibility */}
       <span

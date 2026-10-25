@@ -126,7 +126,7 @@ export const GlobalErrorProvider = ({ children }) => {
       // Avoid showing toast if it originated inside React component rendering (caught by ErrorBoundary)
       if (event.error?.name === 'ChunkLoadError' || event.message?.includes('Loading chunk')) {
         showWarning(
-          'A new version of ThinkWires has been deployed. Please reload the page to load updated assets.',
+          'A new version of Thinkwires has been deployed. Please reload the page to load updated assets.',
           'Asset Version Update'
         );
       }

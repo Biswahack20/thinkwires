@@ -1,12 +1,12 @@
-# ThinkWires Admin Dashboard and CMS Specification (adminPanel.md)
+# Thinkwires Admin Dashboard and CMS Specification (adminPanel.md)
 
-This document is the complete architectural specification and operational manual for the **ThinkWires Admin Panel & Content Management System (CMS)**. It covers frontend interfaces, backend controllers, role-based security, design system tokens, and dual-mode data persistence for both human operators and autonomous AI agents.
+This document is the complete architectural specification and operational manual for the **Thinkwires Admin Panel & Content Management System (CMS)**. It covers frontend interfaces, backend controllers, role-based security, design system tokens, and dual-mode data persistence for both human operators and autonomous AI agents.
 
 ---
 
 ## 1. Overview and Objective
 
-The **ThinkWires Admin Panel & CMS** is an enterprise-grade control suite integrated directly into the ThinkWires monorepo. It manages the full lifecycle of global tech manpower supply, from candidate intake and bench tracking to corporate client placements and marketing website CMS administration.
+The **Thinkwires Admin Panel & CMS** is an enterprise-grade control suite integrated directly into the Thinkwires monorepo. It manages the full lifecycle of global tech manpower supply, from candidate intake and bench tracking to corporate client placements and marketing website CMS administration.
 
 ### Key Capabilities
 
@@ -61,7 +61,7 @@ The **ThinkWires Admin Panel & CMS** is an enterprise-grade control suite integr
 - **Frontend Framework**: React 19 bundled with Vite.
 - **Code Splitting**: Dynamic imports (`React.lazy()`) in `App.jsx` keep admin code isolated from public site bundles.
 - **Visualizations**: **Recharts** for revenue gradients, placement quotas, and recruitment SLA metrics.
-- **Styling Architecture**: Modular CSS in `admin.css` utilizing ThinkWires brand custom properties.
+- **Styling Architecture**: Modular CSS in `admin.css` utilizing Thinkwires brand custom properties.
 - **Backend Controller**: `admin.controller.js` providing unified REST endpoints.
 - **Dual-Mode Persistence**:
   - _Live Mode_: Direct persistence through Mongoose schemas on MongoDB Atlas.
@@ -71,7 +71,7 @@ The **ThinkWires Admin Panel & CMS** is an enterprise-grade control suite integr
 
 ## 3. Brand Identity and Design System Tokens
 
-The admin panel interface uses ThinkWires' emerald and slate design system:
+The admin panel interface uses Thinkwires' emerald and slate design system:
 
 | Token Name            | Value     | Purpose                                                              |
 | --------------------- | --------- | -------------------------------------------------------------------- |
@@ -133,7 +133,7 @@ thinkwires/
 
 ### 5.1. Top Navigation & Global Controls
 
-- **Brand Identity**: `ThinkWires ADMIN` badge.
+- **Brand Identity**: `Thinkwires ADMIN` badge.
 - **Global Search**: Instant client-side search across talent, clients, and pages.
 - **Interactive Persona Switcher**: Seamlessly switch between **Superadmin**, **Admin**, **CMS Admin**, **Editor**, and **Viewer**. Injects the `X-Demo-Role` header on all outbound API calls to test permissions live.
 - **Notification Bell**: Displays live count of corporate announcements.

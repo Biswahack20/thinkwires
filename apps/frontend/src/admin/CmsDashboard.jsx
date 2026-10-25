@@ -44,7 +44,7 @@ const CmsDashboard = () => {
         <div className="tw-view-title-group">
           <h1>Content Management System (CMS)</h1>
           <p className="tw-view-subtitle">
-            Publish and maintain ThinkWires public website pages, editorial
+            Publish and maintain Thinkwires public website pages, editorial
             thought leadership articles, media assets, and corporate
             announcements.
           </p>

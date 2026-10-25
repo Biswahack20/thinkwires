@@ -21,7 +21,7 @@ const EorPage = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
     document.title =
-      'Employer of Record (EOR) Services | ThinkWires - Compliant Global Staffing';
+      'Employer of Record (EOR) Services | Thinkwires - Compliant Global Staffing';
     if (status === 'idle') {
       dispatch(fetchEorData());
     }

@@ -72,7 +72,7 @@ const CandidatePayoutAndCompliance = ({ data = {} }) => {
             </h2>
           </div>
           <p className="section-subtext">
-            Governed by ThinkWires Global Employer of Record &amp;
+            Governed by Thinkwires Global Employer of Record &amp;
             Multi-Currency Escrow Facility.
           </p>
         </div>
@@ -181,7 +181,7 @@ const CandidatePayoutAndCompliance = ({ data = {} }) => {
             ))}
           </div>
           <div className="gov-footnote">
-            All legal covenants audited by ThinkWires Legal Ops
+            All legal covenants audited by Thinkwires Legal Ops
           </div>
         </div>
       </div>

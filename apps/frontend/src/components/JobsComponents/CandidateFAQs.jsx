@@ -11,7 +11,7 @@ const DEFAULT_FAQS = [
   },
   {
     question:
-      'Does ThinkWires deduct any commission or placement fees from my salary?',
+      'Does Thinkwires deduct any commission or placement fees from my salary?',
     answer:
       'No, 100% free for candidates. All recruitment, technical vetting, and placement advisory costs are funded entirely by enterprise client partners.',
   },
@@ -23,7 +23,7 @@ const DEFAULT_FAQS = [
   },
   {
     question:
-      'How does ThinkWires handle cross-border payments for Remote US/Canada roles?',
+      'How does Thinkwires handle cross-border payments for Remote US/Canada roles?',
     answer:
       'We manage end-to-end Employer of Record (EOR) operations, handling multi-currency salary disbursements, local tax compliance, health insurance, and statutory benefits with zero hassle.',
   },

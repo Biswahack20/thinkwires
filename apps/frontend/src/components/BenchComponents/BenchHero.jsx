@@ -8,7 +8,7 @@ const BenchHero = () => {
     liveRepoBadge: '142 PRE-VETTED TALENTS ON ACTIVE BENCH',
     title: 'Engineers on the Bench. Available to Deploy in 48 Hours.',
     subtitle:
-      'Bypass the 60-day hiring cycle. Access active ThinkWires senior contractors, fully vetted with verified code commits, system design scores, and instant contract execution.',
+      'Bypass the 60-day hiring cycle. Access active Thinkwires senior contractors, fully vetted with verified code commits, system design scores, and instant contract execution.',
     slaCard: {
       tag: '48-HOUR SLA ASSURANCE',
       title: 'Instant Pod Matching & Zero-Friction EOR Onboarding',

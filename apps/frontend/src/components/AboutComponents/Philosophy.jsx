@@ -32,9 +32,9 @@ const Philosophy = ({ data }) => {
   const {
     eyebrow = 'OUR PHILOSOPHY',
     heading = '"Recruitment is Not Transactional; It is Architectural."',
-    description = 'At ThinkWires, we reject the legacy headhunter pattern of resume-dumping. We treat every client intake as an engineering brief. From understanding the nuances of microservices architectures to navigating localized tax laws in Ontario or California, our teams engineer frictionless, compliant talent conduits.',
+    description = 'At Thinkwires, we reject the legacy headhunter pattern of resume-dumping. We treat every client intake as an engineering brief. From understanding the nuances of microservices architectures to navigating localized tax laws in Ontario or California, our teams engineer frictionless, compliant talent conduits.',
     image = STITCH_PHILOSOPHY_IMG,
-    imageAlt = 'ThinkWires executive technology meeting room and talent architecture planning',
+    imageAlt = 'Thinkwires executive technology meeting room and talent architecture planning',
     metrics = [],
   } = data || {};
 

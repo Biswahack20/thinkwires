@@ -67,7 +67,7 @@ const articleSchema = new mongoose.Schema(
     author: {
       type: mongoose.Schema.Types.Mixed,
       default: {
-        name: 'ThinkWires Research Team',
+        name: 'Thinkwires Research Team',
         role: 'Editorial Director',
       },
     },

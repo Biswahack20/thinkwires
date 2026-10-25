@@ -88,8 +88,8 @@ const Navbar = () => {
         {/* Main Navigation */}
         <nav className="Navbar-mainNav" aria-label="Main navigation">
           <div className="Navbar-logoContainer">
-            <Link to="/" onClick={closeMobileMenu} aria-label="ThinkWires Home">
-              <img src={logo} alt="ThinkWires Logo" className="Navbar-logo" />
+            <Link to="/" onClick={closeMobileMenu} aria-label="Thinkwires Home">
+              <img src={logo} alt="Thinkwires Logo" className="Navbar-logo" />
             </Link>
           </div>
 

@@ -1,12 +1,12 @@
-# ThinkWires AI Services Architecture and API Documentation (Ai_ServicesDocs.md)
+# Thinkwires AI Services Architecture and API Documentation (Ai_ServicesDocs.md)
 
-This document is the authoritative architectural and API reference for the **ThinkWires AI Microservice** housed in `apps/ai_services`. It outlines the service topology, resume extraction pipeline, ATS fit scoring engine, automated screening test generation and grading system, and modular codebase layout.
+This document is the authoritative architectural and API reference for the **Thinkwires AI Microservice** housed in `apps/ai_services`. It outlines the service topology, resume extraction pipeline, ATS fit scoring engine, automated screening test generation and grading system, and modular codebase layout.
 
 ---
 
 ## 1. Executive Summary and Design Philosophy
 
-The ThinkWires AI Microservice is a high-throughput, asynchronous **FastAPI** service operating on port `8000`. It decouples heavy compute, ML/NLP document processing, ATS candidate scoring, and automated technical screening evaluation from the primary Express.js API gateway.
+The Thinkwires AI Microservice is a high-throughput, asynchronous **FastAPI** service operating on port `8000`. It decouples heavy compute, ML/NLP document processing, ATS candidate scoring, and automated technical screening evaluation from the primary Express.js API gateway.
 
 ```
 ┌────────────────────────────────────────────────────────┐
@@ -197,7 +197,7 @@ Returns service status, operational mode, and endpoint directory.
 ```json
 {
   "status": "online",
-  "service": "ThinkWires AI Microservice",
+  "service": "Thinkwires AI Microservice",
   "version": "1.0.0",
   "openai_configured": false,
   "endpoints": [
@@ -354,7 +354,7 @@ const evaluation = await aiService.evaluateAssessment(
 
 ## 7. Automated Testing & Quality Assurance
 
-ThinkWires AI Microservice is covered by a **5-layer automated testing framework** powered by **Pytest** and FastAPI's **TestClient** (Starlette/HTTPX). All test fixtures, runners, and suites reside inside `apps/ai_services/tests/`.
+Thinkwires AI Microservice is covered by a **5-layer automated testing framework** powered by **Pytest** and FastAPI's **TestClient** (Starlette/HTTPX). All test fixtures, runners, and suites reside inside `apps/ai_services/tests/`.
 
 ### 7.1 The 5-Layer Testing Taxonomy
 

@@ -33,7 +33,7 @@ const mediaSchema = new mongoose.Schema(
     },
     altText: {
       type: String,
-      default: 'ThinkWires Media Asset',
+      default: 'Thinkwires Media Asset',
     },
     uploadedBy: {
       type: String,

@@ -515,7 +515,7 @@
       "number": "03",
       "numberColor": "#bbf7d0",
       "title": "Seamless Onboarding & Scale",
-      "description": "Our talent integrates immediately into your Slack, Jira, and Git repositories. ThinkWires oversees performance continuity, payroll, and scaling adjustments.",
+      "description": "Our talent integrates immediately into your Slack, Jira, and Git repositories. Thinkwires oversees performance continuity, payroll, and scaling adjustments.",
       "delivery": "Delivery: Instant Sprint Participation",
       "iconBg": "#22c55e",
       "iconColor": "#ffffff",
@@ -674,7 +674,7 @@
     },
     {
       "id": 2,
-      "question": "Does ThinkWires deduct any commission or placement fees from my salary?",
+      "question": "Does Thinkwires deduct any commission or placement fees from my salary?",
       "answer": "No, 100% free for candidates. All recruitment, technical vetting, and placement advisory costs are funded entirely by enterprise client partners."
     },
     {
@@ -684,7 +684,7 @@
     },
     {
       "id": 4,
-      "question": "How does ThinkWires handle cross-border payments for Remote US/Canada roles?",
+      "question": "How does Thinkwires handle cross-border payments for Remote US/Canada roles?",
       "answer": "We manage end-to-end Employer of Record (EOR) operations, handling multi-currency salary disbursements, local tax compliance, health insurance, and statutory benefits with zero hassle."
     }
   ],
@@ -1082,7 +1082,7 @@
     "featureComparison": {
       "badge": "Engineering Precision Matters",
       "title": "Why Industry-Specific Staffing Protects Enterprise Velocity",
-      "subtitle": "Commodity staffing agencies forward generic resumes without technical screening. ThinkWires deploys calibrated engineering pods vetted by veteran domain architects.",
+      "subtitle": "Commodity staffing agencies forward generic resumes without technical screening. Thinkwires deploys calibrated engineering pods vetted by veteran domain architects.",
       "generalistCard": {
         "title": "Generalist Staffing",
         "subtitle": "Transactional Brokerage",
@@ -1109,7 +1109,7 @@
         "metricUnit": "Days"
       },
       "thinkWiresCard": {
-        "title": "ThinkWires Pods",
+        "title": "Thinkwires Pods",
         "subtitle": "Domain-Calibrated Teams",
         "tierBadge": "Enterprise Tier",
         "points": [
@@ -1145,7 +1145,7 @@
           "tagVariant": "green",
           "location": "Boston, MA",
           "title": "48-Hour FDA 21 CFR Compliance Deployment",
-          "desc": "A clinical trials software provider faced critical audit remediation deadlines. ThinkWires mobilized a pod of 4 Bio-Stats engineers and a Regulatory QA Lead within 48 hours.",
+          "desc": "A clinical trials software provider faced critical audit remediation deadlines. Thinkwires mobilized a pod of 4 Bio-Stats engineers and a Regulatory QA Lead within 48 hours.",
           "metrics": [
             {
               "label": "Turnaround Time",
@@ -1263,7 +1263,7 @@
       "headlineHighlight": "48-Hour Deployment.",
       "description": "Bypass 4-week recruitment lag. Inspect pre-audited production codebases, live system design rubric ratings, and secure direct initial technical rounds with senior specialists across India, US, and Canada.",
       "slaAssurance": {
-        "title": "ThinkWires Execution SLA",
+        "title": "Thinkwires Execution SLA",
         "badge": "Guaranteed",
         "matchSla": "5-Hour Match",
         "matchDesc": "Dossier sent to your inbox",
@@ -1366,7 +1366,7 @@
             "eorComplianceNote": "BGV & KYC Cleared"
           },
           "evaluatorNotes": "Exceptional mastery over multi-tenant Kubernetes topologies. Demonstrated how they managed pod disruption budgets across 8 AWS availability zones with zero downtime under payment flash sales.",
-          "evaluatorAuthor": "Vetted by Anurag S., Principal Staff Architect (Ex-Razorpay, ThinkWires Technical Council)"
+          "evaluatorAuthor": "Vetted by Anurag S., Principal Staff Architect (Ex-Razorpay, Thinkwires Technical Council)"
         }
       },
       {
@@ -1408,7 +1408,7 @@
             "eorComplianceNote": "BGV & KYC Cleared"
           },
           "evaluatorNotes": "In-depth understanding of GPU memory bandwidth constraints, KV cache optimizations, and Triton inference server orchestration.",
-          "evaluatorAuthor": "Vetted by Dr. S. Kulkarni, AI Council Chair (ThinkWires)"
+          "evaluatorAuthor": "Vetted by Dr. S. Kulkarni, AI Council Chair (Thinkwires)"
         }
       },
       {
@@ -1450,7 +1450,7 @@
             "eorComplianceNote": "BGV & KYC Cleared"
           },
           "evaluatorNotes": "Demonstrated seamless migration from classic ECC to clean-core S/4HANA with zero customer downtime.",
-          "evaluatorAuthor": "Vetted by Rajeshwar M., SAP Practice Director (ThinkWires)"
+          "evaluatorAuthor": "Vetted by Rajeshwar M., SAP Practice Director (Thinkwires)"
         }
       },
       {
@@ -1492,7 +1492,7 @@
             "eorComplianceNote": "BGV & KYC Cleared"
           },
           "evaluatorNotes": "Strong mastery of Adobe Experience Platform Web SDK and seamless SPA editor integration.",
-          "evaluatorAuthor": "Vetted by Vikram N., Digital Experience Lead (ThinkWires)"
+          "evaluatorAuthor": "Vetted by Vikram N., Digital Experience Lead (Thinkwires)"
         }
       },
       {
@@ -1534,7 +1534,7 @@
             "eorComplianceNote": "BGV & KYC Cleared"
           },
           "evaluatorNotes": "Phenomenal clarity on distributed ledger consistency, raft consensus, and transactional isolation levels.",
-          "evaluatorAuthor": "Vetted by Hardik P., Fintech Systems Lead (ThinkWires)"
+          "evaluatorAuthor": "Vetted by Hardik P., Fintech Systems Lead (Thinkwires)"
         }
       },
       {
@@ -1576,7 +1576,7 @@
             "eorComplianceNote": "BGV & KYC Cleared"
           },
           "evaluatorNotes": "Exceptional expertise in cost-governed data pipelines and zero-copy cloning for QA verification.",
-          "evaluatorAuthor": "Vetted by Tanya S., Principal Data Architect (ThinkWires)"
+          "evaluatorAuthor": "Vetted by Tanya S., Principal Data Architect (Thinkwires)"
         }
       }
     ],
@@ -1590,7 +1590,7 @@
       {
         "icon": "architecture",
         "title": "Architect Rubric Scorecard",
-        "description": "60-minute recorded system design session evaluated by ThinkWires Principal Reviewers against CAP theorem, caching, and resiliency.",
+        "description": "60-minute recorded system design session evaluated by Thinkwires Principal Reviewers against CAP theorem, caching, and resiliency.",
         "tag": "Standardized 100-pt Scale"
       },
       {
@@ -1618,7 +1618,7 @@
         "step": "02",
         "badge": "Gate 2: Architecture Defense",
         "title": "Live System Architecture Defense",
-        "description": "Candidates defend trade-offs in high-concurrency distributed caching, microservice decomposition, and data consistency under failure modes before ThinkWires Principal Architects.",
+        "description": "Candidates defend trade-offs in high-concurrency distributed caching, microservice decomposition, and data consistency under failure modes before Thinkwires Principal Architects.",
         "stat": "Filtered: 82% cumulative drop"
       },
       {
@@ -1708,7 +1708,7 @@
     },
     "pillarsSection": {
       "eyebrow": "End-to-End Governance",
-      "heading": "Four Pillars of ThinkWires Institutional Payroll Management",
+      "heading": "Four Pillars of Thinkwires Institutional Payroll Management",
       "description": "We combine statutory domain mastery with state-of-the-art computational infrastructure to insulate your organization from regulatory penalties, computational leakage, and operational drag.",
       "pillars": [
         {
@@ -1743,7 +1743,7 @@
     },
     "beneficiariesSection": {
       "eyebrow": "Architected For Scale",
-      "heading": "Who Benefits From ThinkWires Payroll Outsourcing?",
+      "heading": "Who Benefits From Thinkwires Payroll Outsourcing?",
       "description": "From fast-moving venture startups to multi-entity foreign subsidiaries, our payroll model dynamically flexes around headcount and regulatory jurisdictions.",
       "segments": [
         {
@@ -1795,7 +1795,7 @@
     "featuresSection": {
       "eyebrow": "Enterprise Operational Capabilities",
       "heading": "Engineered For Zero Friction, Maximum Accuracy",
-      "description": "Every touchpoint in the ThinkWires payroll framework is backed by an iron-clad SLA, robust banking APIs, and proactive regulatory filings.",
+      "description": "Every touchpoint in the Thinkwires payroll framework is backed by an iron-clad SLA, robust banking APIs, and proactive regulatory filings.",
       "features": [
         {
           "icon": "gavel",
@@ -1841,8 +1841,8 @@
     },
     "consultationSection": {
       "eyebrow": "Enterprise Consultation",
-      "heading": "Get Started with ThinkWires HR Today!",
-      "description": "Avoid payroll errors, compliance risks, and time-consuming internal administration. Partner with ThinkWires HR and experience seamless, institutional payroll management.",
+      "heading": "Get Started with Thinkwires HR Today!",
+      "description": "Avoid payroll errors, compliance risks, and time-consuming internal administration. Partner with Thinkwires HR and experience seamless, institutional payroll management.",
       "hqDetails": {
         "title": "Direct Corporate Headquarters",
         "address": "Plot No. 20, Block H-1/A, Sector 63, Noida, Uttar Pradesh 201301",
@@ -1856,7 +1856,7 @@
     "hero": {
       "badge": "GLOBAL EMPLOYER OF RECORD (EOR) • 100% REGULATORY COMPLIANCE",
       "heading": "Make Contract & Global Hiring Effortless With a Modern EOR",
-      "description": "Deploy, manage, and pay contingent engineering talent locally and internationally through ThinkWires on-demand EOR platform without foreign entity setup or compliance risk.",
+      "description": "Deploy, manage, and pay contingent engineering talent locally and internationally through Thinkwires on-demand EOR platform without foreign entity setup or compliance risk.",
       "badges": [
         {
           "icon": "bolt",
@@ -1882,7 +1882,7 @@
           {
             "icon": "gavel",
             "title": "Legal Employer Liability",
-            "desc": "100% Absorbed by ThinkWires EOR",
+            "desc": "100% Absorbed by Thinkwires EOR",
             "status": "Active Shield",
             "statusType": "emerald"
           },
@@ -1931,7 +1931,7 @@
       "eyebrow": "Operational Blueprint",
       "heading": "What is an Employer of Record (EOR) for Staffing?",
       "description1": "When expanding engineering squads or engaging high-caliber contractors, an Employer of Record (EOR) acts as the official legal employer for contingent talent while your engineering leads maintain 100% operational command.",
-      "description2": "ThinkWires assumes complete institutional responsibility: background checks, mandatory insurance coverage, compliant tax withholdings, local labor law compliance, and tier-1 benefits. This safeguards your enterprise against misclassification liabilities and bureaucratic gridlock.",
+      "description2": "Thinkwires assumes complete institutional responsibility: background checks, mandatory insurance coverage, compliant tax withholdings, local labor law compliance, and tier-1 benefits. This safeguards your enterprise against misclassification liabilities and bureaucratic gridlock.",
       "highlights": [
         {
           "icon": "verified_user",
@@ -1955,7 +1955,7 @@
         }
       ],
       "separationModel": {
-        "title": "The ThinkWires EOR Separation Model",
+        "title": "The Thinkwires EOR Separation Model",
         "clientDirects": {
           "title": "You Direct (Day-to-Day)",
           "points": [
@@ -1966,7 +1966,7 @@
           ]
         },
         "thinkWiresManages": {
-          "title": "ThinkWires Employs (Legal)",
+          "title": "Thinkwires Employs (Legal)",
           "points": [
             "Local Employment Contract",
             "Monthly Payroll & Direct Deposit",
@@ -2001,7 +2001,7 @@
           "icon": "card_membership",
           "tag": "Candidate Attraction Edge",
           "title": "Enterprise Employee Benefits",
-          "description": "Succeed in today's fiercely competitive talent landscape. ThinkWires bundles executive-grade healthcare and wellness coverage with high-touch support, providing contingent hires with enterprise security and giving your firm an unparalleled hiring advantage.",
+          "description": "Succeed in today's fiercely competitive talent landscape. Thinkwires bundles executive-grade healthcare and wellness coverage with high-touch support, providing contingent hires with enterprise security and giving your firm an unparalleled hiring advantage.",
           "bullets": [
             "Universal PTO eligibility across any state or province",
             "Predictable, fixed monthly copays for healthcare and outpatient coverage",
@@ -2029,7 +2029,7 @@
           "icon": "calculate",
           "tag": "Precision Payroll",
           "title": "Tax Retention & Statutory Filings",
-          "description": "Maintain uncompromising payroll compliance across tightly governed tax authorities. ThinkWires experts handle multi-level liabilities so you avoid double taxation risks and penalty exposures.",
+          "description": "Maintain uncompromising payroll compliance across tightly governed tax authorities. Thinkwires experts handle multi-level liabilities so you avoid double taxation risks and penalty exposures.",
           "bullets": [
             "Administration of multi-level tax liabilities (EPF, ESI, TDS, W-2, 1099)",
             "Real-time tracking of legislative and labor statute updates",
@@ -2043,7 +2043,7 @@
     },
     "comparisonSection": {
       "eyebrow": "Strategic Advantage",
-      "heading": "Why Partner with ThinkWires EOR?",
+      "heading": "Why Partner with Thinkwires EOR?",
       "description": "Establishing a foreign subsidiary drains financial capital and consumes executive attention. Compare the traditional route against our agile EOR framework.",
       "rows": [
         {
@@ -2063,14 +2063,14 @@
         {
           "factor": "Local Corporate Governance",
           "traditional": "Resident directors, local bank accounts, annual filings",
-          "eor": "100% Handled by ThinkWires",
+          "eor": "100% Handled by Thinkwires",
           "eorIcon": "shield",
           "eorColor": "emerald-accent"
         },
         {
           "factor": "Compliance & Labor Defense",
           "traditional": "Direct company legal exposure",
-          "eor": "ThinkWires assumes legal liability",
+          "eor": "Thinkwires assumes legal liability",
           "eorIcon": "verified_user",
           "eorColor": "tertiary-container"
         },
@@ -2101,19 +2101,19 @@
       "items": [
         {
           "question": "What are the benefits of partnering with an EOR?",
-          "answer": "Working with an Employer of Record (EOR) provides clear advantages: simplified compliance, minimized risk, improved HR processes, access to global talent, and greater workforce flexibility. ThinkWires absorbs local labor law liabilities, files statutory taxes, and provisions comprehensive benefits so you scale without administrative overhead."
+          "answer": "Working with an Employer of Record (EOR) provides clear advantages: simplified compliance, minimized risk, improved HR processes, access to global talent, and greater workforce flexibility. Thinkwires absorbs local labor law liabilities, files statutory taxes, and provisions comprehensive benefits so you scale without administrative overhead."
         },
         {
           "question": "How can EOR help my business grow internationally?",
-          "answer": "An EOR drives business growth through local expertise, strict compliance, streamlined payroll and benefits, and effective risk management. Instead of spending 6–9 months and $50k+ creating regional legal subsidiaries in India, North America, or the GCC, ThinkWires enables day-five deployment of verified engineering teams using our existing legal infrastructure."
+          "answer": "An EOR drives business growth through local expertise, strict compliance, streamlined payroll and benefits, and effective risk management. Instead of spending 6–9 months and $50k+ creating regional legal subsidiaries in India, North America, or the GCC, Thinkwires enables day-five deployment of verified engineering teams using our existing legal infrastructure."
         },
         {
           "question": "How do I pick the right EOR partner for my business?",
-          "answer": "Choosing the ideal EOR partner entails evaluating their physical regional presence, technology portal capabilities, multi-currency processing rails, responsiveness of candidate support, and verified compliance certifications (such as ISO 27001 and SOC 2 Type II). ThinkWires pairs on-the-ground presence in Noida HQ, San Francisco, and Toronto with 24/7 dedicated account directors."
+          "answer": "Choosing the ideal EOR partner entails evaluating their physical regional presence, technology portal capabilities, multi-currency processing rails, responsiveness of candidate support, and verified compliance certifications (such as ISO 27001 and SOC 2 Type II). Thinkwires pairs on-the-ground presence in Noida HQ, San Francisco, and Toronto with 24/7 dedicated account directors."
         },
         {
           "question": "How does IP ownership and non-disclosure work under an EOR?",
-          "answer": "Intellectual Property ownership is strictly guarded via bi-lateral and tri-partite employment contracts. Under ThinkWires EOR covenants, all contractor inventions, source code, patents, and technical artifacts are automatically assigned directly to your company upon creation, supported by strict institutional NDAs valid in international jurisdictions."
+          "answer": "Intellectual Property ownership is strictly guarded via bi-lateral and tri-partite employment contracts. Under Thinkwires EOR covenants, all contractor inventions, source code, patents, and technical artifacts are automatically assigned directly to your company upon creation, supported by strict institutional NDAs valid in international jurisdictions."
         }
       ]
     },
@@ -2174,7 +2174,7 @@
     ],
     "solutions": {
       "eyebrow": "Our Solutions",
-      "heading": "On-Demand Talent Solutions by ThinkWires",
+      "heading": "On-Demand Talent Solutions by Thinkwires",
       "description": "We provide enterprise solutions that are fast, business-focused, and tailored to mission-critical engineering initiatives.",
       "pillars": [
         {
@@ -2202,7 +2202,7 @@
       "spotlight": {
         "badge": "Workforce Governance Framework",
         "title": "People4People • Turnkey Workforce Management",
-        "description": "People4People by ThinkWires delivers rigorous third-party contingent workforce administration. From contract compliance and hardware provision to bi-weekly velocity reporting and instant replacement guarantees, we manage workforce operations so your engineering leads can focus on shipping.",
+        "description": "People4People by Thinkwires delivers rigorous third-party contingent workforce administration. From contract compliance and hardware provision to bi-weekly velocity reporting and instant replacement guarantees, we manage workforce operations so your engineering leads can focus on shipping.",
         "bullets": [
           "Automated Performance Audits",
           "No-Questions-Asked Replacements",
@@ -2227,7 +2227,7 @@
     "benefits": {
       "eyebrow": "Key Benefits",
       "heading": "Strategic Advantages of Technical Staff Augmentation",
-      "description": "Discover why high-growth enterprises leverage ThinkWires talent augmentation to de-risk engineering roadmaps and accelerate feature delivery.",
+      "description": "Discover why high-growth enterprises leverage Thinkwires talent augmentation to de-risk engineering roadmaps and accelerate feature delivery.",
       "cards": [
         {
           "icon": "account_balance_wallet",
@@ -2308,7 +2308,7 @@
     },
     "comparison": {
       "eyebrow": "Compare Engagement Models",
-      "heading": "Why Augment Your Tech Teams With ThinkWires?",
+      "heading": "Why Augment Your Tech Teams With Thinkwires?",
       "description": "Compare models to choose the right delivery structure for your engineering roadmap.",
       "rows": [
         {
@@ -2352,7 +2352,7 @@
     "faqs": [
       {
         "question": "What is staff augmentation and how does it differ from traditional hiring?",
-        "answer": "Staff augmentation is a flexible hiring model where you add skilled technical specialists directly to your existing internal team on a project basis. Unlike traditional hiring, it allows you to scale up capacity quickly without long-term severance commitments, costly benefits packages, or multi-month recruitment delays. You maintain full operational control over daily sprints and technical direction, while ThinkWires manages HR, compliance, payroll, and infrastructure support."
+        "answer": "Staff augmentation is a flexible hiring model where you add skilled technical specialists directly to your existing internal team on a project basis. Unlike traditional hiring, it allows you to scale up capacity quickly without long-term severance commitments, costly benefits packages, or multi-month recruitment delays. You maintain full operational control over daily sprints and technical direction, while Thinkwires manages HR, compliance, payroll, and infrastructure support."
       },
       {
         "question": "How quickly can you provide staff augmentation resources?",
@@ -2385,7 +2385,7 @@
     "hero": {
       "badge": "EXECUTIVE SEARCH & PERMANENT TALENT ACQUISITION • 90-DAY GUARANTEE",
       "heading": "Secure Visionary Tech Leadership & Core Permanent Engineering Talent",
-      "description": "From principal architects to C-suite executive leaders (CTO, VP of Engineering, CPO), ThinkWires delivers verified transformational talent that drives long-term organizational growth across North America and APAC GCCs.",
+      "description": "From principal architects to C-suite executive leaders (CTO, VP of Engineering, CPO), Thinkwires delivers verified transformational talent that drives long-term organizational growth across North America and APAC GCCs.",
       "ctaSearchText": "Initiate Executive Search",
       "ctaRolesText": "View Specialized Practice Roles",
       "proofStats": [
@@ -2495,7 +2495,7 @@
           "step": "4",
           "phase": "Phase IV: Days 19–30+",
           "title": "Placement, Offer & Executive Onboarding",
-          "description": "Strategic compensation calibration, counter-offer mitigation, and background verification. ThinkWires facilitates transition through day 90 and beyond.",
+          "description": "Strategic compensation calibration, counter-offer mitigation, and background verification. Thinkwires facilitates transition through day 90 and beyond.",
           "deliverable": "Signed Mandate & Onboarding Plan"
         }
       ],
@@ -2647,7 +2647,7 @@
       },
       {
         "question": "How long does the permanent recruitment process typically take?",
-        "answer": "Timelines depend on domain rarity and seniority. For core engineering and managerial roles, ThinkWires delivers qualified shortlists within 7–14 business days, with final placement completed in 2–4 weeks. Specialized C-suite or VP searches typically require 6–10 weeks to accommodate discreet passive talent engagement, deep multi-stakeholder interviews, and executive notice periods."
+        "answer": "Timelines depend on domain rarity and seniority. For core engineering and managerial roles, Thinkwires delivers qualified shortlists within 7–14 business days, with final placement completed in 2–4 weeks. Specialized C-suite or VP searches typically require 6–10 weeks to accommodate discreet passive talent engagement, deep multi-stakeholder interviews, and executive notice periods."
       },
       {
         "question": "What industries and roles do you specialize in?",
@@ -2655,7 +2655,7 @@
       },
       {
         "question": "Do you offer a guarantee on permanent placements?",
-        "answer": "Yes. Every permanent placement executed by ThinkWires is safeguarded by our formal 90-day replacement guarantee. In the uncommon event that a placed leader departs or fails to meet documented competency objectives within 90 calendar days, ThinkWires immediately initiates an expedited search and delivers a fully qualified replacement at zero additional placement fee."
+        "answer": "Yes. Every permanent placement executed by Thinkwires is safeguarded by our formal 90-day replacement guarantee. In the uncommon event that a placed leader departs or fails to meet documented competency objectives within 90 calendar days, Thinkwires immediately initiates an expedited search and delivers a fully qualified replacement at zero additional placement fee."
       },
       {
         "question": "How do you ensure cultural fit for permanent positions?",
@@ -2685,7 +2685,7 @@
     "hero": {
       "badge": "Enterprise Requisition Portal • 5-Hour Candidate Dossiers • 7-Day Fulfillment SLA",
       "heading": "Deploy Pre-Vetted Tech Talent & High-Velocity Engineering Squads.",
-      "description": "Connect directly with ThinkWires' aggregator network of 740+ enterprise-tested recruiters and pre-screened technical benches. Scale across India, the US, and Canada with institutional speed and zero cross-border compliance risk.",
+      "description": "Connect directly with Thinkwires' aggregator network of 740+ enterprise-tested recruiters and pre-screened technical benches. Scale across India, the US, and Canada with institutional speed and zero cross-border compliance risk.",
       "slaCards": [
         {
           "icon": "timer",
@@ -2848,7 +2848,7 @@
       }
     ],
     "testimonial": {
-      "quote": "When our core cloud payment engine required 4 Senior Distributed Systems Architects on an emergency 10-day notice, standard consultancies quoted us 4 weeks. ThinkWires dispatched 7 pre-screened technical dossiers within 6 hours. All four passed our internal architecture bar on the first interview.",
+      "quote": "When our core cloud payment engine required 4 Senior Distributed Systems Architects on an emergency 10-day notice, standard consultancies quoted us 4 weeks. Thinkwires dispatched 7 pre-screened technical dossiers within 6 hours. All four passed our internal architecture bar on the first interview.",
       "author": "Siddharth Nambiar",
       "designation": "VP of Engineering • Global FinTech Infrastructure Platform"
     },
@@ -2996,7 +2996,7 @@
       },
       "sponsoredTrack": {
         "title": "Kubernetes CKA Refresh Challenge",
-        "desc": "ThinkWires sponsors 100% of exam fees for certified cloud architects refreshing their advanced container security credentials.",
+        "desc": "Thinkwires sponsors 100% of exam fees for certified cloud architects refreshing their advanced container security credentials.",
         "target": "CNCF CKA 2025 v1.31 Release",
         "prepTime": "Estimated prep time: 8-12 hours"
       }
@@ -3040,7 +3040,7 @@
   },
   "aboutData": {
     "hero": {
-      "badge": "About ThinkWires • Transforming Global IT Talent Delivery",
+      "badge": "About Thinkwires • Transforming Global IT Talent Delivery",
       "breadcrumbs": [
         {
           "label": "Home",
@@ -3053,7 +3053,7 @@
       ],
       "heading": "Bridging Enterprise Innovation with",
       "headingHighlight": "Borderless Tech Talent",
-      "description": "Founded in 2022 as a premier workforce advisor and staffing aggregator, ThinkWires connects high-growth enterprises with specialized engineering talent and compliant Employer of Record (EOR) infrastructure across India, the US, and Canada.",
+      "description": "Founded in 2022 as a premier workforce advisor and staffing aggregator, Thinkwires connects high-growth enterprises with specialized engineering talent and compliant Employer of Record (EOR) infrastructure across India, the US, and Canada.",
       "heroImage": "/images/about-hero.jpg",
       "heroImageAlt": "Global Talent Grid - India, USA, Canada",
       "ctaButtons": [
@@ -3108,8 +3108,8 @@
     ],
     "aggregatorModel": {
       "eyebrow": "STRATEGIC ADVANTAGE",
-      "heading": "The ThinkWires Aggregator Model",
-      "description": "Traditional recruitment agencies bottleneck on internal databases. ThinkWires functions as an enterprise staffing aggregator orchestrating a high-velocity ecosystem of verified agencies, independent specialists, and automated compliance pipelines.",
+      "heading": "The Thinkwires Aggregator Model",
+      "description": "Traditional recruitment agencies bottleneck on internal databases. Thinkwires functions as an enterprise staffing aggregator orchestrating a high-velocity ecosystem of verified agencies, independent specialists, and automated compliance pipelines.",
       "statusBadge": {
         "icon": "settings",
         "text": "Aggregator Architecture 3.2 Active"
@@ -3156,9 +3156,9 @@
     "philosophy": {
       "eyebrow": "OUR PHILOSOPHY",
       "heading": "\"Recruitment is Not Transactional; It is Architectural.\"",
-      "description": "At ThinkWires, we reject the legacy headhunter pattern of resume-dumping. We treat every client intake as an engineering brief. From understanding the nuances of microservices architectures to navigating localized tax laws in Ontario or California, our teams engineer frictionless, compliant talent conduits.",
+      "description": "At Thinkwires, we reject the legacy headhunter pattern of resume-dumping. We treat every client intake as an engineering brief. From understanding the nuances of microservices architectures to navigating localized tax laws in Ontario or California, our teams engineer frictionless, compliant talent conduits.",
       "image": "/images/about-philosophy.jpg",
-      "imageAlt": "ThinkWires team in boardroom meeting",
+      "imageAlt": "Thinkwires team in boardroom meeting",
       "metrics": [
         {
           "id": "metric-1",
@@ -3345,7 +3345,7 @@
       "heading": "Ready to Build Your High-Velocity Engineering Squad?",
       "description": "Book a 20-minute workforce strategy consultation with our staffing directors to audit your technical requirements and receive benchmark rates for India and North America.",
       "address": {
-        "title": "ThinkWires Global Headquarters",
+        "title": "Thinkwires Global Headquarters",
         "line": "Plot No. 20, Block H-1/A, Sector 63, Noida, Uttar Pradesh 201301"
       },
       "phones": [],
@@ -3403,7 +3403,7 @@
   },
   "contactData": {
     "hero": {
-      "badge": "Contact ThinkWires • We Respond Within 5 Hours",
+      "badge": "Contact Thinkwires • We Respond Within 5 Hours",
       "breadcrumbs": [
         {
           "label": "Home",
@@ -3465,7 +3465,7 @@
         "id": "ch-3",
         "icon": "linkedin",
         "title": "LinkedIn",
-        "detail": "ThinkWires",
+        "detail": "Thinkwires",
         "sublabel": "Follow for talent insights",
         "href": "https://linkedin.com/company/thinkwires"
       },

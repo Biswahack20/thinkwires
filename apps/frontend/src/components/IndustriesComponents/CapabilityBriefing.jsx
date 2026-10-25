@@ -177,7 +177,7 @@ const CapabilityBriefing = () => {
 
               {submitted && (
                 <div className="CapabilityBriefing-feedback">
-                  ✓ Briefing request received. A ThinkWires Sector Lead will
+                  ✓ Briefing request received. A Thinkwires Sector Lead will
                   deliver your capability memo within 4 hours.
                 </div>
               )}

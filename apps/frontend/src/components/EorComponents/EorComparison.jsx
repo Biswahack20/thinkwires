@@ -27,7 +27,7 @@ const EorComparison = ({ data }) => {
               <div>Operational Factor</div>
               <div>Traditional Entity Setup</div>
               <div style={{ color: 'var(--color-emerald-accent, #22c55e)' }}>
-                ThinkWires EOR Solution
+                Thinkwires EOR Solution
               </div>
             </div>
 

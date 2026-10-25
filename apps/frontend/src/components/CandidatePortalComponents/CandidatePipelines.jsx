@@ -15,7 +15,7 @@ const CandidatePipelines = ({ pipelines = [] }) => {
             </h2>
           </div>
           <p className="section-subtext">
-            Live interview dispatches coordinated through ThinkWires Priority
+            Live interview dispatches coordinated through Thinkwires Priority
             SLA.
           </p>
         </div>

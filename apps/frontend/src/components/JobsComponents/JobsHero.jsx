@@ -16,7 +16,7 @@ const JobsHero = ({ children }) => {
         <h1 className="JobsHero-mainTitle">
           Available Jobs & High-Growth <br />
           <span className="JobsHero-gradientText">
-            Tech Careers at ThinkWires
+            Tech Careers at Thinkwires
           </span>
         </h1>
 

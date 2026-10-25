@@ -1,6 +1,6 @@
-# ThinkWires Staffing and Workforce Solutions
+# Thinkwires Staffing and Workforce Solutions
 
-ThinkWires is an enterprise technical manpower supply, global staffing, and talent management platform connecting three primary ecosystems:
+Thinkwires is an enterprise technical manpower supply, global staffing, and talent management platform connecting three primary ecosystems:
 
 1. **Clients (Enterprises & Startups)**: Sourcing pre-vetted engineering talent, managing staff augmentation, payroll outsourcing, and Employer of Record (EOR) operations.
 2. **Candidates (Job Seekers & Bench Talent)**: Browsing technical mandates, applying with resumes, agreeing to Terms & Conditions and Privacy Policies, tracking application pipelines, taking proctored screening assessments, and maintaining professional profiles.

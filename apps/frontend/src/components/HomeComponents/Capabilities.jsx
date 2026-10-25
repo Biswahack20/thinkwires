@@ -54,7 +54,7 @@ const Capabilities = () => {
             </h2>
             <p className="Capabilities-subtitle">
               From flexible staff augmentation to comprehensive Employer of
-              Record infrastructure, ThinkWires powers your end-to-end talent
+              Record infrastructure, Thinkwires powers your end-to-end talent
               lifecycle.
             </p>
           </div>

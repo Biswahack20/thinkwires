@@ -5,7 +5,7 @@ const CandidateRoadmap = ({ stages = [] }) => {
     <div className="CandidatePortal-cardSection">
       <div className="section-header-bar">
         <div>
-          <span className="eyebrow-accent">ThinkWires Enterprise Protocol</span>
+          <span className="eyebrow-accent">Thinkwires Enterprise Protocol</span>
           <h2 className="section-main-title">
             Candidate Syndication &amp; Vetting Roadmap
           </h2>

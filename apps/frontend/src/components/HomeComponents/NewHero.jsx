@@ -81,7 +81,7 @@ const BRAND_PLACEHOLDER_SLIDES = [
   {
     id: 'hero-talent-stream',
     image: SLIDE_IMAGES[0],
-    alt: 'ThinkWires Talent Cloud Dispatch',
+    alt: 'Thinkwires Talent Cloud Dispatch',
     tag: 'TALENT DISPATCH ENGINE',
     liveBadgeText: 'Live Stream',
     badgeTheme: 'emerald',

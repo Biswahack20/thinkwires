@@ -33,7 +33,7 @@ import CandidateProfilePage from './pages/candidate/CandidateProfilePage';
 import CandidateApplicationsPage from './pages/candidate/CandidateApplicationsPage';
 import JobApplyPage from './pages/candidate/JobApplyPage';
 
-// ThinkWires Admin Dashboard & CMS Modules (Code-split with React.lazy)
+// Thinkwires Admin Dashboard & CMS Modules (Code-split with React.lazy)
 const AdminLayout = lazy(() => import('./admin/AdminLayout'));
 const AdminLoginPage = lazy(() => import('./admin/AdminLoginPage'));
 const AdminDashboard = lazy(() => import('./admin/AdminDashboard'));
@@ -73,7 +73,7 @@ function App() {
               fontWeight: 600,
             }}
           >
-            Loading ThinkWires...
+            Loading Thinkwires...
           </div>
         }
       >
@@ -204,10 +204,10 @@ function App() {
           <Route path="/compliance" element={<LegalPage />} />
           <Route path="/cookies" element={<LegalPage />} />
 
-          {/* ThinkWires Admin Portal Login */}
+          {/* Thinkwires Admin Portal Login */}
           <Route path="/admin/login" element={<AdminLoginPage />} />
 
-          {/* ThinkWires Admin Dashboard & CMS */}
+          {/* Thinkwires Admin Dashboard & CMS */}
           <Route
             path="/admin"
             element={

@@ -53,19 +53,19 @@ const DEFAULT_MEMBERS = [
     bio: 'A 20-year veteran at the intersection of talent acquisition, organizational culture, and brand positioning. Focused on solving why high-growth enterprises struggle to hire and how elite culture transforms product velocity.',
     footerTag: 'People Strategy & Brand',
     linkedinUrl: 'https://www.linkedin.com/company/thinkwires-technology',
-    colSpan: 1,
   },
   {
     id: 'leader-5',
     initials: 'MI',
     avatarVariant: 'primary-container',
+    badgeText: 'Global TA & Ops',
+    badgeDotColor: 'emerald',
     companies: ['BlackRock', 'Microsoft', 'IBM', 'Infosys'],
     name: 'Meera Iyer',
     role: 'Senior Director - Global Head of TA Operations & HR Services',
     bio: 'Strategic Talent Acquisition and HR Operations executive who has built scalable, technology-driven recruitment frameworks across enterprise leaders including BlackRock, Microsoft, IBM, Ameriprise, and Infosys. Ensures institutional governance, risk mitigation, compliance, and flawless multi-region operations.',
     footerTag: 'Global Delivery Operations & Risk Governance',
     linkedinUrl: 'https://www.linkedin.com/company/thinkwires-technology',
-    colSpan: 2,
   },
 ];
 
@@ -92,7 +92,6 @@ const LeadershipTeam = ({ data }) => {
             badgeText: m.badge?.text || def.badgeText,
             companies: m.companies || def.companies,
             footerTag: m.footerTag || def.footerTag,
-            colSpan: idx === 4 ? 2 : 1,
           };
         })
       : DEFAULT_MEMBERS;
@@ -131,24 +130,18 @@ const LeadershipTeam = ({ data }) => {
           <p className="LeadershipTeam-subtitle">{subheading}</p>
         </div>
 
-        {/* 3 + 2 Grid Layout matching Stitch */}
+        {/* 3 + 2 Balanced Centered Layout */}
         <div className="LeadershipTeam-grid">
           {resolvedMembers.map((member, idx) => {
-            const isWide = member.colSpan === 2;
-
             return (
               <ScrollReveal
                 key={member.id || idx}
                 direction="up"
                 delay={idx * 0.08}
                 distance={35}
-                className={isWide ? 'LeadershipTeam-colSpan2' : ''}
-                style={{ display: 'flex' }}
+                className="LeadershipTeam-cardCol"
               >
-                <div
-                  className={`LeadershipTeam-card ${isWide ? 'LeadershipTeam-card--wide' : ''}`}
-                  style={{ width: '100%' }}
-                >
+                <div className="LeadershipTeam-card">
                   {/* Card Header: Avatar & Experience Badge */}
                   <div className="LeadershipTeam-cardHeader">
                     <div

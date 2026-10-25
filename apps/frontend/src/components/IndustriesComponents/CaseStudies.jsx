@@ -16,7 +16,7 @@ const CaseStudies = () => {
       tagVariant: 'green',
       location: 'Boston, MA',
       title: '48-Hour FDA 21 CFR Compliance Deployment',
-      desc: 'A clinical trials software provider faced critical audit remediation deadlines. ThinkWires mobilized a pod of 4 Bio-Stats engineers and a Regulatory QA Lead within 48 hours.',
+      desc: 'A clinical trials software provider faced critical audit remediation deadlines. Thinkwires mobilized a pod of 4 Bio-Stats engineers and a Regulatory QA Lead within 48 hours.',
       metrics: [
         { label: 'Turnaround Time', value: 'Under 48 Hours' },
         {

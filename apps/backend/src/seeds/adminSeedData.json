@@ -2,24 +2,27 @@
   "users": [
     {
       "id": "usr_001",
-      "name": "Alexander Vance",
-      "email": "superadmin@thinkwires.com",
+      "name": "Super Admin",
+      "email": "super.admin@thinkwires.com",
       "role": "superadmin",
-      "designation": "Chief Technology Officer / Superadmin"
+      "designation": "Chief Technology Officer / Superadmin",
+      "password": "Thinkwires@2026"
     },
     {
       "id": "usr_002",
       "name": "Elena Rostova",
       "email": "cmsadmin@thinkwires.com",
       "role": "cms_admin",
-      "designation": "Chief Content Officer / CMS Admin"
+      "designation": "Chief Content Officer / CMS Admin",
+      "password": "Thinkwires@2026"
     },
     {
       "id": "usr_003",
       "name": "Biswarupa Swain",
       "email": "admin@thinkwires.com",
       "role": "admin",
-      "designation": "Principal System Admin"
+      "designation": "Principal System Admin",
+      "password": "Thinkwires@2026"
     }
   ],
   "employees": [
@@ -276,7 +279,7 @@
       "status": "Applied",
       "jobTitle": "Applied Machine Learning Engineer",
       "resumeUrl": "https://example.com/resumes/meera-j.pdf",
-      "notes": "Application received via ThinkWires Talent Cloud bench."
+      "notes": "Application received via Thinkwires Talent Cloud bench."
     },
     {
       "id": "cand_005",
@@ -579,7 +582,7 @@
       "billingRate": 11500,
       "durationMonths": 12,
       "assignmentStatus": "Active",
-      "notes": "Direct hire converted through ThinkWires Talent Cloud bench."
+      "notes": "Direct hire converted through Thinkwires Talent Cloud bench."
     }
   ],
   "pages": [
@@ -588,9 +591,9 @@
       "title": "Home",
       "slug": "home",
       "category": "Core Website",
-      "content": "ThinkWires delivers enterprise-grade IT manpower supply, specialized tech staffing, and seamless cross-border Employer of Record (EOR) infrastructure connecting high-velocity businesses with pre-vetted engineers across India, the US, and Canada.",
-      "metaTitle": "ThinkWires — Tech Manpower Supply & Staffing Aggregator",
-      "metaDescription": "Deploy top 1% engineering talent, dedicated tech squads, and fully compliant global workforce infrastructure with ThinkWires.",
+      "content": "Thinkwires delivers enterprise-grade IT manpower supply, specialized tech staffing, and seamless cross-border Employer of Record (EOR) infrastructure connecting high-velocity businesses with pre-vetted engineers across India, the US, and Canada.",
+      "metaTitle": "Thinkwires — Tech Manpower Supply & Staffing Aggregator",
+      "metaDescription": "Deploy top 1% engineering talent, dedicated tech squads, and fully compliant global workforce infrastructure with Thinkwires.",
       "ogImage": "/images/about-hero.jpg",
       "isIndexed": true,
       "status": "published",
@@ -602,9 +605,9 @@
       "title": "About Us",
       "slug": "about",
       "category": "Company",
-      "content": "Founded in 2022 as a premier workforce advisor and staffing aggregator, ThinkWires connects high-growth enterprises with specialized engineering talent and compliant Employer of Record (EOR) infrastructure across India, the US, and Canada.",
-      "metaTitle": "About ThinkWires — Transforming Global Tech Talent Delivery",
-      "metaDescription": "Learn about the ThinkWires aggregator model, executive leadership, and our mission to power borderless engineering innovation.",
+      "content": "Founded in 2022 as a premier workforce advisor and staffing aggregator, Thinkwires connects high-growth enterprises with specialized engineering talent and compliant Employer of Record (EOR) infrastructure across India, the US, and Canada.",
+      "metaTitle": "About Thinkwires — Transforming Global Tech Talent Delivery",
+      "metaDescription": "Learn about the Thinkwires aggregator model, executive leadership, and our mission to power borderless engineering innovation.",
       "ogImage": "/images/about-philosophy.jpg",
       "isIndexed": true,
       "status": "published",
@@ -617,8 +620,8 @@
       "slug": "services",
       "category": "Solutions",
       "content": "Our comprehensive workforce solutions cover Staff Augmentation, Permanent Staffing, Executive Search, Dedicated R&D Squads, and Cross-Border Employer of Record (EOR) services.",
-      "metaTitle": "Enterprise Staffing & EOR Services — ThinkWires",
-      "metaDescription": "From flexible staff augmentation to comprehensive global payroll and EOR management, explore ThinkWires enterprise offerings.",
+      "metaTitle": "Enterprise Staffing & EOR Services — Thinkwires",
+      "metaDescription": "From flexible staff augmentation to comprehensive global payroll and EOR management, explore Thinkwires enterprise offerings.",
       "ogImage": "/images/about-hero.jpg",
       "isIndexed": true,
       "status": "published",
@@ -630,8 +633,8 @@
       "title": "Careers",
       "slug": "careers",
       "category": "Talent",
-      "content": "Join the ThinkWires Talent Bench. Access high-impact roles at top enterprises across the US, UK, and APAC with competitive compensation, remote flexibility, and continuous upskilling.",
-      "metaTitle": "Engineering Careers & Hot Tech Jobs — ThinkWires",
+      "content": "Join the Thinkwires Talent Bench. Access high-impact roles at top enterprises across the US, UK, and APAC with competitive compensation, remote flexibility, and continuous upskilling.",
+      "metaTitle": "Engineering Careers & Hot Tech Jobs — Thinkwires",
       "metaDescription": "Explore verified job openings in Cloud, Full-Stack, AI/ML, and DevOps. Apply directly or join our pre-vetted bench.",
       "ogImage": "/images/about-hero.jpg",
       "isIndexed": true,
@@ -645,7 +648,7 @@
       "slug": "contact",
       "category": "Support",
       "content": "Connect with our staffing directors and workforce advisors. Receive curated engineering profiles tailored to your stack within 5 hours.",
-      "metaTitle": "Contact ThinkWires — Get Pre-Vetted Tech Profiles in 5 Hours",
+      "metaTitle": "Contact Thinkwires — Get Pre-Vetted Tech Profiles in 5 Hours",
       "metaDescription": "Reach our offices in Noida and North America. Request talent consultation or schedule a scope call with engineering directors.",
       "ogImage": "/images/about-hero.jpg",
       "isIndexed": true,
@@ -658,9 +661,9 @@
       "title": "Privacy Policy",
       "slug": "privacy-policy",
       "category": "Legal & Compliance",
-      "content": "ThinkWires is committed to protecting candidate and client data privacy adhering to GDPR, SOC2, and statutory cross-border employment compliance frameworks.",
-      "metaTitle": "Privacy Policy & Data Security — ThinkWires",
-      "metaDescription": "Review how ThinkWires manages personal data, resume confidentiality, and cross-border statutory compliance.",
+      "content": "Thinkwires is committed to protecting candidate and client data privacy adhering to GDPR, SOC2, and statutory cross-border employment compliance frameworks.",
+      "metaTitle": "Privacy Policy & Data Security — Thinkwires",
+      "metaDescription": "Review how Thinkwires manages personal data, resume confidentiality, and cross-border statutory compliance.",
       "ogImage": "/images/about-hero.jpg",
       "isIndexed": false,
       "status": "published",
@@ -692,7 +695,7 @@
       "title": "Employer of Record (EOR) vs Direct Entity: Navigating Cross-Border Hiring",
       "slug": "eor-vs-direct-entity-cross-border-hiring",
       "summary": "A comprehensive executive guide on how US and European enterprises hire full-time Indian engineering talent compliantly without establishing local corporate entities.",
-      "body": "Cross-border expansion presents formidable legal hurdles: statutory benefits, localized labor contracts, permanent establishment risk, and complex tax withholding regulations. Utilizing a verified Employer of Record (EOR) aggregator such as ThinkWires eliminates multi-month incorporation timelines, enabling North American firms to onboard senior engineering leads within days while guaranteeing 100% statutory compliance.",
+      "body": "Cross-border expansion presents formidable legal hurdles: statutory benefits, localized labor contracts, permanent establishment risk, and complex tax withholding regulations. Utilizing a verified Employer of Record (EOR) aggregator such as Thinkwires eliminates multi-month incorporation timelines, enabling North American firms to onboard senior engineering leads within days while guaranteeing 100% statutory compliance.",
       "author": { "name": "Sarah Jenkins", "role": "VP Global Compliance" },
       "category": "EOR & Legal",
       "featuredImageUrl": "/images/about-philosophy.jpg",
@@ -736,12 +739,12 @@
   "media": [
     {
       "id": "med_001",
-      "title": "ThinkWires Corporate Brand Emblem",
+      "title": "Thinkwires Corporate Brand Emblem",
       "fileUrl": "/assets/logo-BAtHwehS.png",
       "fileType": "image/png",
       "fileSizeKb": 298,
       "dimensions": "512x512",
-      "altText": "ThinkWires Official Brand Mark",
+      "altText": "Thinkwires Official Brand Mark",
       "uploadedBy": "Biswarupa Swain",
       "isDemo": true
     },
@@ -763,7 +766,7 @@
       "fileType": "image/jpeg",
       "fileSizeKb": 823,
       "dimensions": "1920x1080",
-      "altText": "ThinkWires Engineering Hub Team",
+      "altText": "Thinkwires Engineering Hub Team",
       "uploadedBy": "Sarah Jenkins",
       "isDemo": true
     },
@@ -803,7 +806,7 @@
     {
       "id": "ann_003",
       "title": "Statutory Compliance Audit Completed: 100% Score",
-      "message": "ThinkWires has successfully passed annual multi-jurisdiction labor compliance and statutory EOR audits across all operations in India and North America.",
+      "message": "Thinkwires has successfully passed annual multi-jurisdiction labor compliance and statutory EOR audits across all operations in India and North America.",
       "audience": "Staff",
       "priority": "Normal",
       "status": "published",
