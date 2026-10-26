@@ -8,6 +8,7 @@ import {
   hashResetToken,
   setAuthCookie,
   clearAuthCookie,
+  revokeToken,
 } from '../utils/auth.util.js';
 
 // In-memory fallback if MongoDB is offline during local development
@@ -221,6 +222,20 @@ export const getMe = async (req, res) => {
 
 export const logoutCandidate = async (req, res) => {
   try {
+    let token = null;
+    if (req.cookies && req.cookies.thinkwires_candidate_jwt) {
+      token = req.cookies.thinkwires_candidate_jwt;
+    } else if (
+      req.headers.authorization &&
+      req.headers.authorization.startsWith('Bearer ')
+    ) {
+      token = req.headers.authorization.split(' ')[1];
+    }
+
+    if (token) {
+      await revokeToken(token);
+    }
+
     clearAuthCookie(res);
     return res.status(200).json({
       success: true,

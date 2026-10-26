@@ -35,7 +35,7 @@ export const requireAuth = (
         });
       }
 
-      if (isTokenRevoked(token)) {
+      if (await isTokenRevoked(token)) {
         return res.status(401).json({
           success: false,
           authenticated: false,
@@ -201,6 +201,14 @@ export const requireCandidateAuth = async (req, res, next) => {
       });
     }
 
+    if (await isTokenRevoked(token)) {
+      return res.status(401).json({
+        success: false,
+        authenticated: false,
+        error: 'Candidate session has been revoked. Please log in again.',
+      });
+    }
+
     const decoded = verifyCandidateToken(token);
 
     if (!decoded || !decoded.id || decoded.role !== 'candidate') {
@@ -293,7 +301,7 @@ export const authenticateCandidateOrAdmin = async (req, res, next) => {
 
     try {
       decoded = verifyAdminToken(token);
-      if (isTokenRevoked(token)) {
+      if (await isTokenRevoked(token)) {
         return res.status(401).json({
           success: false,
           authenticated: false,
@@ -304,6 +312,13 @@ export const authenticateCandidateOrAdmin = async (req, res, next) => {
     } catch {
       try {
         decoded = verifyCandidateToken(token);
+        if (await isTokenRevoked(token)) {
+          return res.status(401).json({
+            success: false,
+            authenticated: false,
+            error: 'Session has been revoked.',
+          });
+        }
       } catch (candErr) {
         return res.status(401).json({
           success: false,

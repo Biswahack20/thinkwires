@@ -3,7 +3,11 @@ import {
   requireCandidateAuth,
   requireRole,
 } from '../../middlewares/auth.middleware.js';
-import { generateCandidateToken } from '../../utils/auth.util.js';
+import {
+  generateCandidateToken,
+  revokeToken,
+  clearRevocationStore,
+} from '../../utils/auth.util.js';
 
 describe('Auth Middleware (Unit Tests)', () => {
   const createMockReqRes = (options = {}) => {
@@ -28,6 +32,10 @@ describe('Auth Middleware (Unit Tests)', () => {
     return { req, res, next };
   };
 
+  beforeEach(async () => {
+    await clearRevocationStore();
+  });
+
   describe('requireCandidateAuth', () => {
     it('returns 401 when no cookie or authorization header is present', async () => {
       const { req, res, next } = createMockReqRes();
@@ -48,6 +56,25 @@ describe('Auth Middleware (Unit Tests)', () => {
 
       expect(res.status).toHaveBeenCalledWith(401);
       expect(res.jsonData.error).toMatch(/invalid or forged/i);
+      expect(next).not.toHaveBeenCalled();
+    });
+
+    it('returns 401 when candidate token has been revoked', async () => {
+      const validToken = generateCandidateToken({
+        id: 'candidate-unit-revoked',
+        email: 'revoked@thinkwires.com',
+        name: 'Revoked User',
+      });
+      await revokeToken(validToken);
+
+      const { req, res, next } = createMockReqRes({
+        cookies: { thinkwires_candidate_jwt: validToken },
+      });
+
+      await requireCandidateAuth(req, res, next);
+
+      expect(res.status).toHaveBeenCalledWith(401);
+      expect(res.jsonData.error).toMatch(/revoked/i);
       expect(next).not.toHaveBeenCalled();
     });
 

@@ -1,5 +1,6 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import config from '../../configs/dotenv.js';
+import { setMockRedisClient } from '../../configs/redis.js';
 import {
   getJwtSecret,
   hashPassword,
@@ -10,6 +11,9 @@ import {
   verifyAdminToken,
   generatePasswordResetToken,
   hashResetToken,
+  revokeToken,
+  isTokenRevoked,
+  clearRevocationStore,
 } from '../../utils/auth.util.js';
 
 describe('Auth Utilities (Unit Tests)', () => {
@@ -184,6 +188,131 @@ describe('Auth Utilities (Unit Tests)', () => {
         config.NODE_ENV = origConfigNode;
         process.env.NODE_ENV = origEnvNode;
       }
+    });
+  });
+
+  describe('JWT Token Revocation & Redis Persistence', () => {
+    beforeEach(async () => {
+      setMockRedisClient(null);
+      await clearRevocationStore();
+    });
+
+    afterEach(async () => {
+      setMockRedisClient(null);
+      await clearRevocationStore();
+    });
+
+    it('returns false for unrevoked tokens and handles invalid token inputs safely', async () => {
+      expect(await isTokenRevoked('unrevoked-random-jwt-token')).toBe(false);
+      expect(await isTokenRevoked('')).toBe(false);
+      expect(await isTokenRevoked(null)).toBe(false);
+      expect(await isTokenRevoked(undefined)).toBe(false);
+      expect(await isTokenRevoked(12345)).toBe(false);
+    });
+
+    it('revokes a token and verifies it is revoked in local store', async () => {
+      const token = 'test-token-to-revoke-123';
+      expect(await isTokenRevoked(token)).toBe(false);
+
+      await revokeToken(token);
+      expect(await isTokenRevoked(token)).toBe(true);
+    });
+
+    it('clears all revoked tokens from store', async () => {
+      const token = 'token-to-clear';
+      await revokeToken(token);
+      expect(await isTokenRevoked(token)).toBe(true);
+
+      await clearRevocationStore();
+      expect(await isTokenRevoked(token)).toBe(false);
+    });
+
+    it('persists revoked token to Redis with 7-day TTL and survives in-memory cache wipe', async () => {
+      const redisStore = new Map();
+      const mockRedis = {
+        set: vi.fn(async (key, value, options) => {
+          redisStore.set(key, { value, options });
+        }),
+        get: vi.fn(async (key) => {
+          const entry = redisStore.get(key);
+          return entry ? entry.value : null;
+        }),
+        keys: vi.fn(async (pattern) => {
+          return Array.from(redisStore.keys()).filter((k) =>
+            k.startsWith(pattern.replace('*', ''))
+          );
+        }),
+        del: vi.fn(async (keys) => {
+          for (const k of keys) redisStore.delete(k);
+        }),
+      };
+
+      setMockRedisClient(mockRedis);
+
+      const token = 'sample-jwt-token-redis-persisted';
+      await revokeToken(token);
+
+      // Verify Redis was called with 7-day TTL (7 * 24 * 60 * 60 = 604800 seconds)
+      expect(mockRedis.set).toHaveBeenCalledWith(
+        `revoked:${token}`,
+        '1',
+        { EX: 7 * 24 * 60 * 60 }
+      );
+
+      // Simulate a server restart: in-memory set is wiped, but Redis retains key
+      setMockRedisClient(null);
+      await clearRevocationStore();
+      setMockRedisClient(mockRedis);
+
+      // Querying token should check Redis and find it revoked
+      const isRevokedAfterReboot = await isTokenRevoked(token);
+      expect(isRevokedAfterReboot).toBe(true);
+      expect(mockRedis.get).toHaveBeenCalledWith(`revoked:${token}`);
+    });
+
+    it('clears keys from Redis when clearRevocationStore is invoked', async () => {
+      const redisStore = new Map();
+      const mockRedis = {
+        set: vi.fn(async (key, value) => {
+          redisStore.set(key, value);
+        }),
+        get: vi.fn(async (key) => redisStore.get(key) || null),
+        keys: vi.fn(async () => Array.from(redisStore.keys())),
+        del: vi.fn(async (keys) => {
+          for (const k of keys) redisStore.delete(k);
+        }),
+      };
+
+      setMockRedisClient(mockRedis);
+
+      await revokeToken('token-1');
+      await revokeToken('token-2');
+      expect(redisStore.size).toBe(2);
+
+      await clearRevocationStore();
+      expect(redisStore.size).toBe(0);
+      expect(mockRedis.del).toHaveBeenCalled();
+    });
+
+    it('handles Redis connection or command failures gracefully without throwing', async () => {
+      const failingRedis = {
+        set: vi.fn(async () => {
+          throw new Error('Redis connection timed out');
+        }),
+        get: vi.fn(async () => {
+          throw new Error('Redis ECONNRESET');
+        }),
+        keys: vi.fn(async () => {
+          throw new Error('Redis unreachable');
+        }),
+      };
+
+      setMockRedisClient(failingRedis);
+
+      await expect(revokeToken('token-fail-test')).resolves.not.toThrow();
+      await expect(isTokenRevoked('token-fail-test')).resolves.toBe(true);
+      await expect(isTokenRevoked('unknown-token')).resolves.toBe(false);
+      await expect(clearRevocationStore()).resolves.not.toThrow();
     });
   });
 });
