@@ -2,10 +2,14 @@ import app from './app.js';
 import { connectDB, sequelize } from './configs/db.js';
 import { connectMongoDB, disconnectMongoDB } from './configs/mongodb.js';
 import config from './configs/dotenv.js';
+import { getJwtSecret } from './utils/auth.util.js';
 
 const PORT = config.PORT || 5000;
 
 const startServer = async () => {
+  // Fail fast on startup if JWT_SECRET is missing, insecure, or weak
+  getJwtSecret();
+
   // Start HTTP server immediately so APIs and Vite proxy respond without blocking on DB timeouts
   const server = app.listen(PORT, () => {
     console.log(
