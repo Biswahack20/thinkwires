@@ -82,4 +82,24 @@ describe('Adversarial & Injection Defense (Non-Functional Tests)', () => {
       expect(jwtCookie).toMatch(/SameSite=(Lax|Strict)/i);
     });
   });
+
+  describe('Security Headers & Content-Security-Policy', () => {
+    it('sets Content-Security-Policy and protective HTTP headers on responses', async () => {
+      const res = await api.get('/api/health');
+
+      expect(res.status).toBe(200);
+      expect(res.headers['content-security-policy']).toBeDefined();
+      expect(res.headers['content-security-policy']).toContain(
+        "default-src 'self'"
+      );
+      expect(res.headers['content-security-policy']).toContain(
+        'https://fonts.googleapis.com'
+      );
+      expect(res.headers['content-security-policy']).toContain(
+        'https://fonts.gstatic.com'
+      );
+      expect(res.headers['x-content-type-options']).toBe('nosniff');
+      expect(res.headers['x-frame-options']).toBe('SAMEORIGIN');
+    });
+  });
 });
