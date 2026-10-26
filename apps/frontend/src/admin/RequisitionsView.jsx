@@ -756,7 +756,7 @@ const RequisitionsView = () => {
                   return (
                     <tr key={reqItem.id || reqItem._id}>
                       {/* Target Role & Requisition ID */}
-                      <td>
+                      <td data-label="Target Role">
                         <div
                           style={{
                             display: 'flex',
@@ -856,7 +856,7 @@ const RequisitionsView = () => {
                       </td>
 
                       {/* Client Partner & Contact */}
-                      <td>
+                      <td data-label="Client & Contact">
                         <div
                           style={{
                             fontWeight: 700,
@@ -920,7 +920,7 @@ const RequisitionsView = () => {
                       </td>
 
                       {/* Required Tech Stack */}
-                      <td>
+                      <td data-label="Required Tech Stack">
                         <div
                           style={{
                             display: 'flex',
@@ -959,7 +959,7 @@ const RequisitionsView = () => {
                       </td>
 
                       {/* Urgency & SLA */}
-                      <td>
+                      <td data-label="Urgency & SLA">
                         {isImmediate ? (
                           <span className="tw-sla-pill urgent">5-Hour SLA</span>
                         ) : reqItem.deploymentUrgency === 'within_14_days' ? (
@@ -982,7 +982,7 @@ const RequisitionsView = () => {
                       </td>
 
                       {/* Budget */}
-                      <td>
+                      <td data-label="Budget Envelope">
                         <div style={{ fontSize: '0.8rem', fontWeight: 700 }}>
                           {reqItem.budget || reqItem.salary || 'Competitive'}
                         </div>
@@ -992,7 +992,7 @@ const RequisitionsView = () => {
                       </td>
 
                       {/* Status */}
-                      <td>
+                      <td data-label="Status">
                         {isInbound ? (
                           <span
                             className="tw-badge inbound-request"
@@ -1027,7 +1027,7 @@ const RequisitionsView = () => {
                       </td>
 
                       {/* Actions */}
-                      <td style={{ textAlign: 'right' }}>
+                      <td data-label="Actions" style={{ textAlign: 'right' }}>
                         <div
                           className="tw-action-btn-group"
                           style={{
