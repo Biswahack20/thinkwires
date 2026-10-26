@@ -111,9 +111,7 @@ export const registerCandidate = async (req, res) => {
     console.error('Candidate registration error:', error);
     return res.status(500).json({
       success: false,
-      error:
-        error.message ||
-        'An error occurred during registration. Please try again.',
+      error: 'An error occurred during registration. Please try again.',
     });
   }
 };
@@ -182,8 +180,7 @@ export const loginCandidate = async (req, res) => {
     console.error('Candidate login error:', error);
     return res.status(500).json({
       success: false,
-      error:
-        error.message || 'An error occurred during login. Please try again.',
+      error: 'An error occurred during login. Please try again.',
     });
   }
 };

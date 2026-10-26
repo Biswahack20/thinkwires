@@ -102,4 +102,22 @@ describe('Adversarial & Injection Defense (Non-Functional Tests)', () => {
       expect(res.headers['x-frame-options']).toBe('SAMEORIGIN');
     });
   });
+
+  describe('Error Message Information Leakage Defense', () => {
+    it('does not leak internal exception error.message on login failure', async () => {
+      const res = await api.post('/api/auth/login').send({
+        email: { $gt: '' },
+        password: 'Password123!',
+      });
+
+      expect(res.status).toBe(500);
+      expect(res.body.success).toBe(false);
+      expect(res.body.error).not.toMatch(
+        /toLowerCase|TypeError|Mongoose|ReferenceError|is not a function/i
+      );
+      expect(res.body.error).toBe(
+        'An error occurred during login. Please try again.'
+      );
+    });
+  });
 });

@@ -147,7 +147,7 @@ export const updateCandidateProfile = async (req, res) => {
     console.error('Update profile error:', error);
     return res.status(500).json({
       success: false,
-      error: error.message || 'Failed to update candidate profile.',
+      error: 'Failed to update candidate profile. Please try again.',
     });
   }
 };
@@ -622,7 +622,7 @@ export const applyForJob = async (req, res) => {
     }
     return res.status(500).json({
       success: false,
-      error: error.message || 'Unable to submit job application.',
+      error: 'Unable to submit job application. Please try again.',
     });
   }
 };
