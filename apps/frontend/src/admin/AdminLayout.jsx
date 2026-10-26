@@ -53,7 +53,8 @@ const AdminLayout = () => {
   const [dbStatus, setDbStatus] = useState('In-Memory Resilient Demo');
   const [isMongo, setIsMongo] = useState(false);
   const [toastMessage, setToastMessage] = useState(null);
-  const [pendingRequisitionsCount, setPendingRequisitionsCount] = useState(2);
+  const [pendingRequisitionsCount, setPendingRequisitionsCount] =
+    useState(null);
 
   const markAllAnnouncementsAsRead = () => {
     const allIds = announcements.map(
@@ -217,6 +218,7 @@ const AdminLayout = () => {
                 path: '/admin/requisitions',
                 icon: <FileTextIcon size={18} />,
                 badge:
+                  pendingRequisitionsCount !== null &&
                   pendingRequisitionsCount > 0
                     ? String(pendingRequisitionsCount)
                     : null,
