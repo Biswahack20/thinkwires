@@ -7,9 +7,11 @@ const INSECURE_DEFAULT_SECRETS = new Set([
   'your_jwt_secret_here',
   'super_secret_jwt_key_here',
   'your_secure_random_jwt_secret',
+  'your_secure_random_jwt_secret_here',
   'default_secret',
   'secret',
   'changeme',
+  'thinkwires_default_jwt_secret_change_in_production',
 ]);
 
 export const getJwtSecret = () => {

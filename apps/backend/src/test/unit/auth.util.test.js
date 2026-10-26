@@ -1,5 +1,7 @@
 import { describe, it, expect } from 'vitest';
+import config from '../../configs/dotenv.js';
 import {
+  getJwtSecret,
   hashPassword,
   comparePassword,
   generateCandidateToken,
@@ -97,6 +99,91 @@ describe('Auth Utilities (Unit Tests)', () => {
       expect(hashedToken.length).toBe(64);
       expect(expiresAt.getTime()).toBeGreaterThan(Date.now());
       expect(hashResetToken(rawToken)).toBe(hashedToken);
+    });
+  });
+
+  describe('JWT Secret Validation (getJwtSecret)', () => {
+    it('returns the secret when valid', () => {
+      const secret = getJwtSecret();
+      expect(secret).toBeDefined();
+      expect(typeof secret).toBe('string');
+      expect(secret.length).toBeGreaterThanOrEqual(32);
+    });
+
+    it('throws fatal error when JWT_SECRET is missing or empty', () => {
+      const origConfig = config.JWT_SECRET;
+      const origEnv = process.env.JWT_SECRET;
+      try {
+        config.JWT_SECRET = '';
+        delete process.env.JWT_SECRET;
+        expect(() => getJwtSecret()).toThrow(
+          /FATAL: JWT_SECRET environment variable is missing/i
+        );
+      } finally {
+        config.JWT_SECRET = origConfig;
+        process.env.JWT_SECRET = origEnv;
+      }
+    });
+
+    it('throws fatal error when fallback secret thinkwires_default_jwt_secret_change_in_production is used', () => {
+      const origConfig = config.JWT_SECRET;
+      const origEnv = process.env.JWT_SECRET;
+      try {
+        config.JWT_SECRET =
+          'thinkwires_default_jwt_secret_change_in_production';
+        process.env.JWT_SECRET =
+          'thinkwires_default_jwt_secret_change_in_production';
+        expect(() => getJwtSecret()).toThrow(
+          /FATAL: Insecure default JWT_SECRET detected/i
+        );
+      } finally {
+        config.JWT_SECRET = origConfig;
+        process.env.JWT_SECRET = origEnv;
+      }
+    });
+
+    it('throws fatal error for other insecure default secrets', () => {
+      const origConfig = config.JWT_SECRET;
+      const origEnv = process.env.JWT_SECRET;
+      try {
+        for (const badSecret of [
+          'changeme',
+          'secret',
+          'default_secret',
+          'your_jwt_secret_here',
+          'your_secure_random_jwt_secret_here',
+        ]) {
+          config.JWT_SECRET = badSecret;
+          process.env.JWT_SECRET = badSecret;
+          expect(() => getJwtSecret()).toThrow(
+            /FATAL: Insecure default JWT_SECRET detected/i
+          );
+        }
+      } finally {
+        config.JWT_SECRET = origConfig;
+        process.env.JWT_SECRET = origEnv;
+      }
+    });
+
+    it('throws fatal error in production when JWT_SECRET is shorter than 32 characters', () => {
+      const origConfig = config.JWT_SECRET;
+      const origEnvSecret = process.env.JWT_SECRET;
+      const origEnvNode = process.env.NODE_ENV;
+      const origConfigNode = config.NODE_ENV;
+      try {
+        config.JWT_SECRET = 'short_secret_under_32_chars';
+        process.env.JWT_SECRET = 'short_secret_under_32_chars';
+        config.NODE_ENV = 'production';
+        process.env.NODE_ENV = 'production';
+        expect(() => getJwtSecret()).toThrow(
+          /FATAL: JWT_SECRET in production must be at least 32 characters long/i
+        );
+      } finally {
+        config.JWT_SECRET = origConfig;
+        process.env.JWT_SECRET = origEnvSecret;
+        config.NODE_ENV = origConfigNode;
+        process.env.NODE_ENV = origEnvNode;
+      }
     });
   });
 });
