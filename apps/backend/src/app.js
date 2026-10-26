@@ -102,7 +102,8 @@ if (resolvedDist) {
     express.static(resolvedDist, {
       maxAge: '1d',
       setHeaders: (res, filePath) => {
-        if (filePath.includes('/assets/')) {
+        const normalizedPath = filePath.replace(/\\/g, '/');
+        if (normalizedPath.includes('/assets/')) {
           res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
         }
       },
@@ -127,4 +128,3 @@ if (resolvedDist) {
 }
 
 export default app;
-

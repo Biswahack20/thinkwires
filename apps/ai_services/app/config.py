@@ -3,7 +3,15 @@ import logging
 from typing import List
 from dotenv import load_dotenv
 
-# Load environment configuration from .env file
+# Load environment configuration (apps/ai_services/.env first, then root .env if present)
+_app_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+_local_env = os.path.join(_app_dir, ".env")
+_root_env = os.path.join(os.path.dirname(os.path.dirname(_app_dir)), ".env")
+
+if os.path.exists(_local_env):
+    load_dotenv(_local_env)
+if os.path.exists(_root_env):
+    load_dotenv(_root_env)
 load_dotenv()
 
 class Settings:

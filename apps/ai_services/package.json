@@ -5,13 +5,14 @@
   "scripts": {
     "start": "node run.js",
     "dev": "node run.js --dev",
-    "build": "echo 'FastAPI ready'",
-    "test": ".\\venv\\Scripts\\pytest tests",
-    "test:watch": ".\\venv\\Scripts\\pytest tests -f",
-    "test:unit": ".\\venv\\Scripts\\pytest tests/unit",
-    "test:integration": ".\\venv\\Scripts\\pytest tests/integration",
-    "test:functional": ".\\venv\\Scripts\\pytest tests/functional",
-    "test:non-functional": ".\\venv\\Scripts\\pytest tests/non-functional",
-    "test:exploratory": ".\\venv\\Scripts\\pytest tests/exploratory"
+    "build": "node -e \"console.log('FastAPI ready')\"",
+    "setup": "node setup.js",
+    "test": "node test.js tests",
+    "test:watch": "node test.js tests -f",
+    "test:unit": "node test.js tests/unit",
+    "test:integration": "node test.js tests/integration",
+    "test:functional": "node test.js tests/functional",
+    "test:non-functional": "node test.js tests/non-functional",
+    "test:exploratory": "node test.js tests/exploratory"
   }
 }
