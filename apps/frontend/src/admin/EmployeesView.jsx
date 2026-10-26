@@ -488,7 +488,7 @@ const EmployeesView = () => {
               ) : (
                 employees.map((emp) => (
                   <tr key={emp.id || emp._id}>
-                    <td>
+                    <td data-label="Employee & System Role">
                       <div style={{ fontWeight: 600, color: '#0F172A' }}>
                         {emp.name}
                       </div>
@@ -503,7 +503,7 @@ const EmployeesView = () => {
                       </div>
                     </td>
 
-                    <td>
+                    <td data-label="Designation & Exp">
                       <div style={{ fontWeight: 500 }}>{emp.designation}</div>
                       <div
                         style={{
@@ -516,9 +516,9 @@ const EmployeesView = () => {
                       </div>
                     </td>
 
-                    <td>{renderRoleBadge(emp.role)}</td>
+                    <td data-label="Portal Role">{renderRoleBadge(emp.role)}</td>
 
-                    <td>
+                    <td data-label="Technical Skills">
                       <div
                         style={{
                           display: 'flex',
@@ -554,13 +554,13 @@ const EmployeesView = () => {
                       </div>
                     </td>
 
-                    <td>
+                    <td data-label="Availability">
                       <span className="tw-badge available">
                         {emp.availability || 'Immediate'}
                       </span>
                     </td>
 
-                    <td>
+                    <td data-label="Deployment">
                       <span
                         className={`tw-badge ${(emp.deploymentStatus || 'Available').toLowerCase().replace(' ', '-')}`}
                       >
@@ -568,7 +568,7 @@ const EmployeesView = () => {
                       </span>
                     </td>
 
-                    <td>
+                    <td data-label="Billing Rate">
                       <strong>
                         ${Number(emp.billingRate || 0).toLocaleString()}
                       </strong>
@@ -577,7 +577,7 @@ const EmployeesView = () => {
                       </span>
                     </td>
 
-                    <td style={{ textAlign: 'right' }}>
+                    <td data-label="Actions" style={{ textAlign: 'right' }}>
                       <div
                         className="tw-action-btn-group"
                         style={{ justifyContent: 'flex-end' }}

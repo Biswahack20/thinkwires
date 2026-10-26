@@ -921,7 +921,8 @@
   background-color: var(--tw-card);
   border: 1px solid var(--tw-border);
   border-radius: var(--tw-radius-lg);
-  overflow: hidden;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
   box-shadow: var(--tw-shadow-sm);
 }
 
@@ -1450,6 +1451,90 @@
   }
 }
 
+@media (max-width: 768px) {
+  /* Admin Data Tables Mobile Card Layout */
+  .tw-table thead {
+    display: none;
+  }
+
+  .tw-table,
+  .tw-table tbody,
+  .tw-table tr,
+  .tw-table td {
+    display: block;
+    width: 100% !important;
+  }
+
+  .tw-table tr {
+    margin-bottom: 1rem;
+    background: #ffffff;
+    border: 1px solid var(--tw-border);
+    border-radius: var(--tw-radius-lg);
+    padding: 1rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    position: relative;
+  }
+
+  .tw-table td {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.55rem 0;
+    border-bottom: 1px solid var(--tw-border-light);
+    text-align: right;
+    min-width: 0 !important;
+    word-break: break-word;
+  }
+
+  .tw-table td::before {
+    content: attr(data-label);
+    font-weight: 700;
+    font-size: 0.72rem;
+    color: var(--tw-text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    text-align: left;
+    margin-right: 0.75rem;
+    flex-shrink: 0;
+  }
+
+  .tw-table td:empty::before,
+  .tw-table td[data-label='Actions']::before,
+  .tw-table td:not([data-label])::before {
+    display: none;
+  }
+
+  .tw-table tr td:first-child {
+    border-bottom: 1px solid var(--tw-border);
+    padding-bottom: 0.65rem;
+    margin-bottom: 0.35rem;
+    text-align: left;
+    display: block;
+  }
+
+  .tw-table tr td:last-child {
+    border-bottom: none;
+    padding-top: 0.75rem;
+    margin-top: 0.35rem;
+    border-top: 1px dashed var(--tw-border);
+    justify-content: flex-end;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .tw-table tr:has(td[colspan]) td,
+  .tw-table td[colspan] {
+    display: block !important;
+    text-align: center !important;
+    border-bottom: none !important;
+    padding: 2rem 1rem !important;
+  }
+
+  .tw-table td[colspan]::before {
+    display: none !important;
+  }
+}
+
 @media (max-width: 600px) {
   .tw-kpi-grid {
     grid-template-columns: 1fr;
@@ -1465,6 +1550,141 @@
   }
   .tw-pipeline-board {
     grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .tw-content-area {
+    padding: 0.75rem;
+  }
+
+  .tw-topbar {
+    padding: 0 0.75rem;
+    height: 56px;
+  }
+
+  .tw-page-title {
+    font-size: 1.15rem;
+  }
+
+  .tw-table-container {
+    border-radius: var(--tw-radius-md);
+  }
+
+  .tw-table-toolbar {
+    padding: 0.75rem;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+
+  .tw-table-filters {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+    width: 100%;
+  }
+
+  .tw-filter-input,
+  .tw-filter-select {
+    width: 100%;
+    font-size: 0.85rem;
+    padding: 0.55rem 0.75rem;
+    min-height: 40px;
+  }
+
+  .tw-table tr {
+    padding: 0.85rem;
+    border-radius: var(--tw-radius-md);
+    margin-bottom: 0.85rem;
+  }
+
+  .tw-table td {
+    font-size: 0.8rem;
+    padding: 0.45rem 0;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+  }
+
+  .tw-table td::before {
+    font-size: 0.7rem;
+  }
+
+  .tw-table tr td:last-child {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .tw-action-btn-group {
+    width: 100%;
+    justify-content: stretch !important;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .tw-action-btn-group > * {
+    flex: 1;
+    min-width: 100px;
+    justify-content: center;
+    text-align: center;
+    min-height: 38px;
+  }
+
+  /* Admin Modals (tw-modal) Overflow & Min-Height Guards */
+  .tw-modal-overlay {
+    padding: 0.35rem !important;
+    align-items: center;
+  }
+
+  .tw-modal {
+    max-width: 100% !important;
+    width: 100% !important;
+    max-height: 94dvh !important;
+    max-height: 94vh !important;
+    min-height: 0;
+    border-radius: 12px;
+  }
+
+  .tw-modal-header {
+    padding: 0.85rem 1rem !important;
+  }
+
+  .tw-modal-title {
+    font-size: 1.05rem !important;
+  }
+
+  .tw-modal-body {
+    padding: 1rem 0.85rem !important;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+  }
+
+  .tw-modal-footer {
+    padding: 0.75rem 1rem !important;
+    flex-direction: column-reverse;
+    gap: 0.5rem;
+  }
+
+  .tw-modal-footer button,
+  .tw-modal-footer .tw-btn-primary,
+  .tw-modal-footer .tw-btn-secondary,
+  .tw-modal-footer .tw-btn-danger {
+    width: 100%;
+    justify-content: center;
+    min-height: 40px;
+  }
+
+  .tw-requisition-banner {
+    padding: 1rem;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .tw-candidate-match-card {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
   }
 }
 

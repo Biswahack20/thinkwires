@@ -469,14 +469,19 @@ const CandidatesView = () => {
               <tbody>
                 {candidates.map((cand) => (
                   <tr key={cand.id || cand._id}>
-                    <td>
+                    <td data-label="Candidate">
                       <div style={{ fontWeight: 600 }}>{cand.name}</div>
                       <div style={{ fontSize: '0.73rem', color: '#64748B' }}>
                         {cand.email}
                       </div>
                     </td>
-                    <td>
-                      <div style={{ fontWeight: 500 }}>{cand.jobTitle}</div>
+                    <td data-label="Current Role & Exp">
+                      <div style={{ fontWeight: 500 }}>
+                        {cand.currentRole || cand.jobTitle}
+                      </div>
+                      <div style={{ fontSize: '0.72rem', color: '#64748B' }}>
+                        {cand.experience ? `${cand.experience}y exp` : 'Experienced'}
+                      </div>
                       {cand.assessmentStatus &&
                         cand.assessmentStatus !== 'Not Started' && (
                           <div
@@ -506,7 +511,12 @@ const CandidatesView = () => {
                           </div>
                         )}
                     </td>
-                    <td>
+                    <td data-label="Applied For">
+                      <div style={{ fontWeight: 600, color: '#0F172A' }}>
+                        {cand.jobTitle || 'General Application'}
+                      </div>
+                    </td>
+                    <td data-label="Skills">
                       <div
                         style={{
                           display: 'flex',
@@ -531,10 +541,10 @@ const CandidatesView = () => {
                         ))}
                       </div>
                     </td>
-                    <td>
+                    <td data-label="Comp Expectation">
                       <strong>{cand.expectedSalary}</strong>
                     </td>
-                    <td>
+                    <td data-label="Stage">
                       <select
                         value={cand.status}
                         onChange={(e) =>
@@ -553,7 +563,7 @@ const CandidatesView = () => {
                         ))}
                       </select>
                     </td>
-                    <td style={{ textAlign: 'right' }}>
+                    <td data-label="Actions" style={{ textAlign: 'right' }}>
                       <div
                         className="tw-action-btn-group"
                         style={{ justifyContent: 'flex-end' }}
