@@ -55,6 +55,7 @@ Go to **Project Settings → Environment Variables** and add:
 | `OPENAI_API_KEY` | `sk-...` | Optional: OpenAI key for LLM assessment generator |
 | `OPENAI_MODEL` | `gpt-4o-mini` | Optional: Model name |
 | `COOKIE_SAME_SITE` | `lax` | Cookie SameSite attribute |
+| `ALLOWED_ORIGINS` | `https://your-app.vercel.app` | Comma-separated list of exact trusted frontend URLs for CORS and CSRF |
 
 ### Step 4: Click Deploy
 Vercel will:

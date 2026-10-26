@@ -36,7 +36,7 @@ export const getAllowedOrigins = () => {
     ''
   )
     .split(',')
-    .map((s) => s.trim())
+    .map((s) => s.trim().replace(/\/+$/, ''))
     .filter(Boolean);
 
   const devOrigins = [
@@ -56,25 +56,9 @@ export const getAllowedOrigins = () => {
 
 export const isAllowedOrigin = (origin) => {
   if (!origin) return true; // Direct server-to-server or test requests
+  const normalizedOrigin = origin.replace(/\/+$/, '');
   const allowed = getAllowedOrigins();
-  if (allowed.includes(origin)) return true;
-
-  // Allow Vercel preview branch deployments dynamically
-  try {
-    const parsed = new URL(origin);
-    if (parsed.hostname.endsWith('.vercel.app')) {
-      return true;
-    }
-  } catch {
-    // Malformed origin
-  }
-
-  // Prevent total lockout if production environment variables are not yet seeded
-  if (process.env.NODE_ENV === 'production' && allowed.length === 0) {
-    return true;
-  }
-
-  return false;
+  return allowed.includes(normalizedOrigin);
 };
 
 const getOriginFromReferer = (referer) => {
