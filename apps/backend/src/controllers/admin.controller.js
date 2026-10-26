@@ -3108,7 +3108,7 @@ export const logoutAdmin = async (req, res) => {
     }
 
     if (token) {
-      revokeToken(token);
+      await revokeToken(token);
     }
 
     clearAdminAuthCookie(res);

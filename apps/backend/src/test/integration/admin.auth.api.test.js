@@ -25,8 +25,8 @@ describe('Admin Authentication & Cookie Security (Integration Tests)', () => {
     password: 'Thinkwires@2026',
   };
 
-  beforeEach(() => {
-    clearRevocationStore();
+  beforeEach(async () => {
+    await clearRevocationStore();
   });
 
   describe('POST /api/admin/auth/login', () => {
@@ -196,7 +196,7 @@ describe('Admin Authentication & Cookie Security (Integration Tests)', () => {
       );
 
       // Revoke the token
-      revokeToken(validToken);
+      await revokeToken(validToken);
 
       const res = await api
         .get('/api/admin/auth/me')

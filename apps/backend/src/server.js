@@ -2,6 +2,7 @@ import app from './app.js';
 import { connectDB, sequelize } from './configs/db.js';
 import { connectMongoDB, disconnectMongoDB } from './configs/mongodb.js';
 import config from './configs/dotenv.js';
+import { closeRedis } from './configs/redis.js';
 import { getJwtSecret } from './utils/auth.util.js';
 
 const PORT = config.PORT || 5000;
@@ -66,6 +67,8 @@ const startServer = async () => {
           await sequelize.close();
           console.log('[PostgreSQL] Connection closed.');
         }
+        await closeRedis();
+        console.log('[Redis] Connection closed.');
       } catch (err) {
         console.error('[Server] Error during database shutdown:', err.message);
       }
