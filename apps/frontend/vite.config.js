@@ -31,11 +31,17 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks(id) {
-          if (id.includes('node_modules')) {
-            if (id.includes('three')) return 'vendor-three';
-            if (id.includes('recharts')) return 'vendor-charts';
-            if (id.includes('framer-motion')) return 'vendor-motion';
-            if (id.includes('react') || id.includes('@reduxjs'))
+          const normalizedId = id.replace(/\\/g, '/');
+          if (normalizedId.includes('/node_modules/')) {
+            if (normalizedId.includes('/three/')) return 'vendor-three';
+            if (normalizedId.includes('/recharts/')) return 'vendor-charts';
+            if (normalizedId.includes('/framer-motion/'))
+              return 'vendor-motion';
+            if (
+              normalizedId.includes('/react/') ||
+              normalizedId.includes('/react-dom/') ||
+              normalizedId.includes('/@reduxjs/')
+            )
               return 'vendor-react';
           }
         },
