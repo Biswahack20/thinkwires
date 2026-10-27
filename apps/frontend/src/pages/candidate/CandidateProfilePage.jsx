@@ -211,6 +211,8 @@ const CandidateProfilePage = () => {
     document.title = 'Candidate Profile & Preferences | Thinkwires';
 
     if (user) {
+      // Synchronize editable form state when authenticated user profile data loads or changes from Redux
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setFormData({
         name: user.name || '',
         phone: user.phone || '',

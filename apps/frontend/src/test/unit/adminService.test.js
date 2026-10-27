@@ -106,7 +106,7 @@ describe('adminService Security & Session Management (Unit Tests)', () => {
 
   describe('adminApi Network Client (Credentials & CSRF)', () => {
     it('login sends credentials: "include" and handles response without storing token in localStorage', async () => {
-      const mockFetch = vi.spyOn(global, 'fetch').mockResolvedValueOnce({
+      const mockFetch = vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce({
         ok: true,
         status: 200,
         json: async () => ({
@@ -140,7 +140,7 @@ describe('adminService Security & Session Management (Unit Tests)', () => {
       setAdminSession({ id: '1', role: 'admin' });
       setCsrfToken('logout-csrf-token');
 
-      const mockFetch = vi.spyOn(global, 'fetch').mockResolvedValueOnce({
+      const mockFetch = vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce({
         ok: true,
         status: 200,
         json: async () => ({ success: true }),
@@ -161,7 +161,7 @@ describe('adminService Security & Session Management (Unit Tests)', () => {
     });
 
     it('getMe calls /api/admin/auth/me with credentials: "include" to restore session', async () => {
-      const mockFetch = vi.spyOn(global, 'fetch').mockResolvedValueOnce({
+      const mockFetch = vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce({
         ok: true,
         status: 200,
         json: async () => ({
@@ -191,7 +191,7 @@ describe('adminService Security & Session Management (Unit Tests)', () => {
     it('state-changing CRUD requests automatically inject X-CSRF-Token and credentials: "include"', async () => {
       setCsrfToken('active-csrf-token-abc');
 
-      const mockFetch = vi.spyOn(global, 'fetch').mockResolvedValueOnce({
+      const mockFetch = vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce({
         ok: true,
         status: 200,
         json: async () => ({ success: true, employee: { id: 'emp-1' } }),
@@ -212,7 +212,7 @@ describe('adminService Security & Session Management (Unit Tests)', () => {
       setAdminSession({ id: 'expired-user', role: 'admin' });
       expect(isAdminAuthenticated()).toBe(true);
 
-      vi.spyOn(global, 'fetch').mockResolvedValueOnce({
+      vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce({
         ok: false,
         status: 401,
         json: async () => ({ error: 'Session expired' }),
