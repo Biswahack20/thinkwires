@@ -678,8 +678,8 @@ const RequisitionsView = () => {
           </div>
         </div>
 
-        {/* Requisitions Table */}
-        <div style={{ overflowX: 'auto' }}>
+        {/* Requisitions Table (Desktop: >768px) */}
+        <div className="RequisitionsTable" style={{ overflowX: 'auto' }}>
           <table className="tw-table">
             <thead>
               <tr>
@@ -961,7 +961,7 @@ const RequisitionsView = () => {
                       {/* Urgency & SLA */}
                       <td data-label="Urgency & SLA">
                         {isImmediate ? (
-                          <span className="tw-sla-pill urgent">5-Hour SLA</span>
+                           <span className="tw-sla-pill urgent">5-Hour SLA</span>
                         ) : reqItem.deploymentUrgency === 'within_14_days' ? (
                           <span className="tw-sla-pill warning">14-Day SLA</span>
                         ) : (
@@ -1121,6 +1121,285 @@ const RequisitionsView = () => {
               )}
             </tbody>
           </table>
+        </div>
+
+        {/* Requisitions Card List (Mobile: <=768px) */}
+        <div className="RequisitionsCardList">
+          {loading ? (
+            <div className="RequisitionsCardList-empty">
+              Loading client requisitions...
+            </div>
+          ) : filteredRequisitions.length === 0 ? (
+            <div className="RequisitionsCardList-empty">
+              <div style={{ marginBottom: '0.5rem', fontWeight: 600 }}>
+                No client requisitions found in this view.
+              </div>
+              <div style={{ fontSize: '0.8rem', color: '#94A3B8' }}>
+                Try adjusting your search query or status tab filter.
+              </div>
+            </div>
+          ) : (
+            filteredRequisitions.map((reqItem) => {
+              const skillsList =
+                Array.isArray(reqItem.requiredSkills) &&
+                reqItem.requiredSkills.length > 0
+                  ? reqItem.requiredSkills
+                  : Array.isArray(reqItem.skills)
+                    ? reqItem.skills
+                    : [];
+
+              const isInbound =
+                reqItem.status === 'Inbound Request' ||
+                reqItem.status === 'Inbound Requisition';
+
+              const isApproved =
+                reqItem.status === 'Open' ||
+                reqItem.status === 'Approved' ||
+                reqItem.status === 'In Progress';
+
+              const displayId =
+                reqItem.jobId ||
+                `REQ-${(reqItem.id || '').toString().slice(-6)}`;
+
+              const isImmediate =
+                reqItem.deploymentUrgency === 'immediate' ||
+                reqItem.priority === 'Urgent';
+
+              return (
+                <div
+                  key={reqItem.id || reqItem._id}
+                  className="RequisitionCard"
+                >
+                  {/* Card Header: Role & ID */}
+                  <div className="RequisitionCard-header">
+                    <div className="RequisitionCard-topRow">
+                      <span
+                        style={{
+                          fontSize: '0.68rem',
+                          fontWeight: 700,
+                          padding: '0.15rem 0.45rem',
+                          borderRadius: '4px',
+                          backgroundColor: '#EDE9FE',
+                          color: '#6D28D9',
+                          border: '1px solid #DDD6FE',
+                        }}
+                      >
+                        {displayId}
+                      </span>
+                      {/* Status */}
+                      {isInbound ? (
+                        <span
+                          className="tw-badge inbound-request"
+                          style={{
+                            backgroundColor: '#EDE9FE',
+                            color: '#6D28D9',
+                            border: '1px solid #DDD6FE',
+                            fontWeight: 700,
+                          }}
+                        >
+                          Inbound Review
+                        </span>
+                      ) : isApproved ? (
+                        <span
+                          className="tw-badge open"
+                          style={{
+                            backgroundColor: '#DCFCE7',
+                            color: '#15803D',
+                            border: '1px solid #BBF7D0',
+                            fontWeight: 700,
+                          }}
+                        >
+                          Approved & Active
+                        </span>
+                      ) : (
+                        <span
+                          className={`tw-badge ${String(reqItem.status || '').toLowerCase().replace(/\s+/g, '-')}`}
+                        >
+                          {reqItem.status || 'Active'}
+                        </span>
+                      )}
+                    </div>
+
+                    <h3 className="RequisitionCard-role">{reqItem.title}</h3>
+
+                    {/* Client Name & Contact */}
+                    <div className="RequisitionCard-clientRow">
+                      <BuildingIcon size={14} color="#64748B" />
+                      <span>{reqItem.client || 'Enterprise Partner'}</span>
+                    </div>
+
+                    {(reqItem.contactPerson || reqItem.contactEmail || reqItem.contactPhone) && (
+                      <div className="RequisitionCard-clientDetails">
+                        {reqItem.contactPerson && (
+                          <span style={{ fontWeight: 500, color: '#334155' }}>
+                            Contact: {reqItem.contactPerson}
+                          </span>
+                        )}
+                        <div style={{ display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
+                          {reqItem.contactEmail && (
+                            <a
+                              href={`mailto:${reqItem.contactEmail}`}
+                              style={{ color: '#2563EB', textDecoration: 'none' }}
+                            >
+                              {reqItem.contactEmail}
+                            </a>
+                          )}
+                          {reqItem.contactPhone && (
+                            <a
+                              href={`tel:${reqItem.contactPhone}`}
+                              style={{ color: '#64748B', textDecoration: 'none' }}
+                            >
+                              📞 {reqItem.contactPhone}
+                            </a>
+                          )}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Grid for Headcount, Budget, SLA, and Work Mode */}
+                  <div className="RequisitionCard-detailsGrid">
+                    <div className="RequisitionCard-detailItem">
+                      <span className="RequisitionCard-detailLabel">Headcount</span>
+                      <span className="RequisitionCard-detailValue">
+                        {reqItem.openingsCount || reqItem.openings || 1} Positions ({reqItem.engagementModel || 'Staff Augmentation'})
+                      </span>
+                    </div>
+
+                    <div className="RequisitionCard-detailItem">
+                      <span className="RequisitionCard-detailLabel">Budget</span>
+                      <span className="RequisitionCard-detailValue">
+                        {reqItem.budget || reqItem.salary || 'Competitive'}
+                      </span>
+                    </div>
+
+                    <div className="RequisitionCard-detailItem">
+                      <span className="RequisitionCard-detailLabel">SLA & Urgency</span>
+                      <span className="RequisitionCard-detailValue">
+                        {isImmediate ? (
+                          <span className="tw-sla-pill urgent" style={{ display: 'inline-block', fontSize: '0.65rem' }}>5-Hour SLA</span>
+                        ) : reqItem.deploymentUrgency === 'within_14_days' ? (
+                          <span className="tw-sla-pill warning" style={{ display: 'inline-block', fontSize: '0.65rem' }}>14-Day SLA</span>
+                        ) : (
+                          <span className="tw-sla-pill normal" style={{ display: 'inline-block', fontSize: '0.65rem' }}>Flexible SLA</span>
+                        )}
+                      </span>
+                    </div>
+
+                    <div className="RequisitionCard-detailItem">
+                      <span className="RequisitionCard-detailLabel">Location & Mode</span>
+                      <span className="RequisitionCard-detailValue">
+                        {reqItem.workMode || 'Remote'}
+                        {reqItem.seniority ? ` • ${reqItem.seniority}` : ''}
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Skills */}
+                  {skillsList.length > 0 && (
+                    <div className="RequisitionCard-skills">
+                      {skillsList.map((sk, idx) => (
+                        <span
+                          key={idx}
+                          style={{
+                            fontSize: '0.67rem',
+                            padding: '0.12rem 0.4rem',
+                            borderRadius: '4px',
+                            backgroundColor: '#EDE9FE',
+                            color: '#6D28D9',
+                            fontWeight: 600,
+                          }}
+                        >
+                          {sk}
+                        </span>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Card Actions */}
+                  <div className="RequisitionCard-actions">
+                    {/* Approve Mandate */}
+                    {isInbound && (
+                      <button
+                        className="tw-btn-primary"
+                        onClick={() => openApproveModal(reqItem)}
+                        title="Review and approve client mandate for candidate sourcing"
+                        style={{
+                          padding: '0.28rem 0.65rem',
+                          fontSize: '0.75rem',
+                          background: '#008F68',
+                          borderColor: '#007A58',
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '0.25rem',
+                        }}
+                      >
+                        <CheckIcon size={12} />
+                        <span>Approve</span>
+                      </button>
+                    )}
+
+                    {/* Link to active job requirement if already approved */}
+                    {isApproved && (
+                      <Link
+                        to={`/admin/jobs?search=${encodeURIComponent(reqItem.client || reqItem.title)}`}
+                        className="tw-btn-secondary"
+                        title="View active recruitment posting in Job Requirements"
+                        style={{
+                          padding: '0.28rem 0.65rem',
+                          fontSize: '0.72rem',
+                          textDecoration: 'none',
+                          whiteSpace: 'nowrap',
+                        }}
+                      >
+                        View in Jobs →
+                      </Link>
+                    )}
+
+                    {/* AI Candidate Matching */}
+                    <button
+                      className="tw-btn-secondary"
+                      onClick={() => setMatchModalRequisition(reqItem)}
+                      title="Benchmark active candidates against this requisition"
+                      style={{
+                        padding: '0.28rem 0.65rem',
+                        fontSize: '0.72rem',
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '0.25rem',
+                        borderColor: '#C7D2FE',
+                        color: '#4338CA',
+                        backgroundColor: '#EEF2FF',
+                      }}
+                    >
+                      <SparklesIcon size={12} color="#4F46E5" />
+                      <span>Match</span>
+                    </button>
+
+                    {/* Edit */}
+                    <button
+                      className="tw-action-icon-btn"
+                      onClick={() => openEditModal(reqItem)}
+                      title="Edit Requisition Details"
+                    >
+                      <EditIcon size={14} />
+                    </button>
+
+                    {/* Delete / Archive */}
+                    <button
+                      className="tw-action-icon-btn delete"
+                      onClick={() =>
+                        setDeleteConfirmId(reqItem.id || reqItem._id)
+                      }
+                      title="Archive Requisition"
+                    >
+                      <TrashIcon size={14} />
+                    </button>
+                  </div>
+                </div>
+              );
+            })
+          )}
         </div>
       </div>
 
