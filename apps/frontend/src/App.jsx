@@ -14,6 +14,7 @@ import PayrollPage from './pages/PayrollPage';
 import EorPage from './pages/EorPage';
 import StaffAugmentationPage from './pages/StaffAugmentationPage';
 import PermanentStaffingPage from './pages/PermanentStaffingPage';
+import ServicesPage from './pages/ServicesPage';
 import FindTalentPage from './pages/FindTalentPage';
 import LegalPage from './pages/LegalPage';
 import NotFoundPage from './pages/NotFoundPage';
@@ -145,7 +146,7 @@ function App() {
           <Route path="/hire-talent" element={<FindTalentPage />} />
 
           {/* Services Routes */}
-          <Route path="/services" element={<StaffAugmentationPage />} />
+          <Route path="/services" element={<ServicesPage />} />
           <Route
             path="/services/staff-augmentation"
             element={<StaffAugmentationPage />}
