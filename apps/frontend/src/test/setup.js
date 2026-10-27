@@ -31,14 +31,14 @@ Object.defineProperty(window, 'matchMedia', {
 });
 
 // Polyfill ResizeObserver
-global.ResizeObserver = class ResizeObserver {
+globalThis.ResizeObserver = class ResizeObserver {
   observe() {}
   unobserve() {}
   disconnect() {}
 };
 
 // Polyfill IntersectionObserver
-global.IntersectionObserver = class IntersectionObserver {
+globalThis.IntersectionObserver = class IntersectionObserver {
   constructor(callback) {
     this.callback = callback;
   }
