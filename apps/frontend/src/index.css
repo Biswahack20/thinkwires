@@ -27119,3 +27119,139 @@ body {
     max-width: none;
   }
 }
+
+/* ==========================================================================
+   Issue #120: RequisitionsView Responsive Table and Mobile Card List
+   ========================================================================== */
+.RequisitionsTable {
+  display: block;
+  width: 100%;
+}
+
+.RequisitionsCardList {
+  display: none;
+  flex-direction: column;
+  gap: 1rem;
+  width: 100%;
+}
+
+.RequisitionCard {
+  background: #ffffff;
+  border: 1px solid var(--tw-border, #e2e8f0);
+  border-radius: var(--tw-radius-lg, 12px);
+  padding: 1.15rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.RequisitionCard-header {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.RequisitionCard-topRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.RequisitionCard-role {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #0f172a;
+  line-height: 1.35;
+  margin: 0;
+  word-break: break-word;
+}
+
+.RequisitionCard-clientRow {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #1e293b;
+}
+
+.RequisitionCard-clientDetails {
+  font-size: 0.76rem;
+  color: #64748b;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.RequisitionCard-detailsGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.65rem 0.85rem;
+  background-color: #f8fafc;
+  padding: 0.75rem 0.85rem;
+  border-radius: 8px;
+  border: 1px solid #f1f5f9;
+}
+
+.RequisitionCard-detailItem {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.RequisitionCard-detailLabel {
+  font-size: 0.68rem;
+  font-weight: 700;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.RequisitionCard-detailValue {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #0f172a;
+  word-break: break-word;
+}
+
+.RequisitionCard-skills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  align-items: center;
+}
+
+.RequisitionCard-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  padding-top: 0.75rem;
+  border-top: 1px dashed #e2e8f0;
+  flex-wrap: wrap;
+}
+
+.RequisitionsCardList-empty {
+  text-align: center;
+  padding: 2.5rem 1rem;
+  color: #64748b;
+  background: #ffffff;
+  border: 1px solid var(--tw-border, #e2e8f0);
+  border-radius: var(--tw-radius-lg, 12px);
+}
+
+@media (max-width: 768px) {
+  .RequisitionsTable {
+    display: none !important;
+  }
+
+  .RequisitionsCardList {
+    display: flex !important;
+  }
+}
