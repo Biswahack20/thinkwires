@@ -190,6 +190,7 @@ function App() {
           <Route path="/security" element={<LegalPage />} />
           <Route path="/compliance" element={<LegalPage />} />
           <Route path="/cookies" element={<LegalPage />} />
+          <Route path="/legal" element={<LegalPage />} />
 
           {/* Thinkwires Admin Portal Login */}
           <Route path="/admin/login" element={<AdminLoginPage />} />
