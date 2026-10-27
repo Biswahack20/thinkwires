@@ -15,10 +15,9 @@ const LegalPage = () => {
     return 'privacy';
   };
 
-  const [activeTab, setActiveTab] = useState(getInitialTab);
+  const [activeTab, setActiveTab] = useState(() => getInitialTab());
 
   useEffect(() => {
-    setActiveTab(getInitialTab());
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [location.pathname]);
 
