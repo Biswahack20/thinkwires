@@ -67,7 +67,7 @@ export default {
   MONGODB_URI: resolveMongoUri(),
   REDIS_URL: process.env.REDIS_URL || 'redis://localhost:6379',
   AI_SERVICE_URL: process.env.AI_SERVICE_URL || 'http://localhost:8000',
-  JWT_SECRET: process.env.JWT_SECRET || 'thinkwires_default_jwt_secret_change_in_production',
+  JWT_SECRET: process.env.JWT_SECRET,
   COOKIE_SAME_SITE: process.env.COOKIE_SAME_SITE,
   ALLOWED_ORIGINS: process.env.ALLOWED_ORIGINS,
 };

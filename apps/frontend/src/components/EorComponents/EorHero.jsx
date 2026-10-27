@@ -287,9 +287,9 @@ const EorHero = ({ data }) => {
                     color: 'var(--color-emerald-accent, #22c55e)',
                   }}
                 >
-                  call
+                  mail
                 </span>
-                Direct line: {complianceDeck.hotline}
+                HR Advisory Desk: hr@thinkwires.com
               </span>
               <span
                 style={{

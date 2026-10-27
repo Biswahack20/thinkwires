@@ -77,15 +77,15 @@ const StaffAugConsultation = ({ data }) => {
 
                 <div className="point-item">
                   <span className="material-symbols-outlined emerald">
-                    chat
+                    mail
                   </span>
                   <div>
-                    <h4 className="point-head">WhatsApp &amp; Direct Phone</h4>
+                    <h4 className="point-head">Advisory &amp; Talent Desk</h4>
                     <a
-                      href={`tel:${(hotline || '').replace(/[^0-9+]/g, '')}`}
+                      href="mailto:hr@thinkwires.com"
                       className="hotline-link"
                     >
-                      {hotline || '+91 89205 55626'}
+                      hr@thinkwires.com
                     </a>
                   </div>
                 </div>

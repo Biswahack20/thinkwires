@@ -423,7 +423,7 @@ const GlobalJobApplicationForm = ({ isOpen, onClose, jobData = {} }) => {
       }
     } catch {
       setError(
-        'Network error connecting to ThinkWires application service. Please try again.'
+        'Network error connecting to Thinkwires application service. Please try again.'
       );
     } finally {
       setSubmitting(false);
@@ -1179,7 +1179,7 @@ const GlobalJobApplicationForm = ({ isOpen, onClose, jobData = {} }) => {
               >
                 Privacy Policy
               </Link>
-              . I consent to ThinkWires storing and processing my application
+              . I consent to Thinkwires storing and processing my application
               details and resume for recruitment and placement purposes.
             </label>
           </div>

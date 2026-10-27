@@ -3,7 +3,7 @@ import pino from 'pino';
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
 /**
- * High-performance Structured Pino Logger for ThinkWires Backend
+ * High-performance Structured Pino Logger for Thinkwires Backend
  * - In development: uses pino-pretty for clean, human-readable colorized console logs
  * - In production: uses high-speed structured JSON logs with ISO timestamps
  */

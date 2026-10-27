@@ -52,10 +52,10 @@ const AboutHero = ({ data, stats = [] }) => {
   const [imgError, setImgError] = useState(false);
 
   const {
-    badge = 'About ThinkWires • Transforming Global IT Talent Delivery',
+    badge = 'About Thinkwires • Transforming Global IT Talent Delivery',
     heading = 'Bridging Enterprise Innovation with',
     headingHighlight = 'Borderless Tech Talent',
-    description = 'Founded in 2022 as a premier workforce advisor and staffing aggregator, ThinkWires connects high-growth enterprises with specialized engineering talent and compliant Employer of Record (EOR) infrastructure across India, the US, and Canada.',
+    description = 'Founded in 2022 as a premier workforce advisor and staffing aggregator, Thinkwires connects high-growth enterprises with specialized engineering talent and compliant Employer of Record (EOR) infrastructure across India, the US, and Canada.',
     heroImage = STITCH_HERO_IMG,
     heroImageAlt = 'Global Talent Grid across India, USA, and Canada',
   } = data || {};
@@ -77,7 +77,7 @@ const AboutHero = ({ data, stats = [] }) => {
   return (
     <section
       className="AboutHero-section"
-      aria-label="About ThinkWires Overview"
+      aria-label="About Thinkwires Overview"
     >
       {/* Ambient Radial Background Glows matching Stitch */}
       <div className="AboutHero-glowPrimary" aria-hidden="true" />

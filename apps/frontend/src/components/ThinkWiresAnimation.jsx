@@ -5,8 +5,21 @@ import { TextGeometry } from 'three/addons/geometries/TextGeometry.js';
 
 const ThinkWiresAnimation = () => {
   const mountRef = useRef(null);
+  const [isSmallScreen, setIsSmallScreen] = React.useState(() => {
+    if (typeof window === 'undefined') return false;
+    return window.innerWidth <= 480;
+  });
+
+  React.useEffect(() => {
+    const handleResize = () => {
+      setIsSmallScreen(window.innerWidth <= 480);
+    };
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
+    if (isSmallScreen) return;
     if (!mountRef.current) return;
 
     const container = mountRef.current;
@@ -632,7 +645,137 @@ const ThinkWiresAnimation = () => {
       }
       renderer.dispose();
     };
-  }, []);
+  }, [isSmallScreen]);
+
+  if (isSmallScreen) {
+    return (
+      <div
+        className="ThinkWiresMobileFallback absolute inset-0 w-full h-full pointer-events-none z-50 flex items-center justify-center overflow-hidden"
+        data-testid="thinkwires-mobile-fallback"
+        aria-hidden="true"
+      >
+        <div className="tw-mobile-hero-art">
+          <svg
+            className="tw-mobile-hero-svg"
+            viewBox="0 0 340 340"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <defs>
+              <radialGradient id="twHeroGlow" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stopColor="#0284c7" stopOpacity="0.28" />
+                <stop offset="60%" stopColor="#10b981" stopOpacity="0.08" />
+                <stop offset="100%" stopColor="#004b87" stopOpacity="0" />
+              </radialGradient>
+              <linearGradient id="twCoreGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#004b87" />
+                <stop offset="50%" stopColor="#0284c7" />
+                <stop offset="100%" stopColor="#10b981" />
+              </linearGradient>
+            </defs>
+
+            {/* Glowing Backdrop Circle */}
+            <circle cx="170" cy="170" r="150" fill="url(#twHeroGlow)" />
+
+            {/* Outer Orbital Ring */}
+            <circle
+              className="tw-mobile-ring tw-mobile-ring-outer"
+              cx="170"
+              cy="170"
+              r="130"
+              stroke="#0284c7"
+              strokeWidth="1.2"
+              strokeDasharray="4 8"
+              strokeOpacity="0.35"
+            />
+
+            {/* Middle Orbital Ring */}
+            <circle
+              className="tw-mobile-ring tw-mobile-ring-mid"
+              cx="170"
+              cy="170"
+              r="95"
+              stroke="#10b981"
+              strokeWidth="1.2"
+              strokeDasharray="6 6"
+              strokeOpacity="0.45"
+            />
+
+            {/* Inner Ring */}
+            <circle
+              className="tw-mobile-ring tw-mobile-ring-inner"
+              cx="170"
+              cy="170"
+              r="60"
+              stroke="#38bdf8"
+              strokeWidth="1.5"
+              strokeDasharray="3 5"
+              strokeOpacity="0.55"
+            />
+
+            {/* Connecting Wire Arcs */}
+            <path
+              d="M 50 170 Q 170 80 290 170"
+              stroke="#38bdf8"
+              strokeWidth="1"
+              strokeOpacity="0.4"
+              fill="none"
+            />
+            <path
+              d="M 170 50 Q 260 170 170 290"
+              stroke="#34d399"
+              strokeWidth="1"
+              strokeOpacity="0.4"
+              fill="none"
+            />
+            <path
+              d="M 75 105 Q 170 170 265 235"
+              stroke="#60a5fa"
+              strokeWidth="1"
+              strokeOpacity="0.35"
+              fill="none"
+            />
+
+            {/* Dynamic Signal Nodes */}
+            <circle className="tw-mobile-node tw-node-1" cx="50" cy="170" r="4.5" fill="#0284c7" />
+            <circle className="tw-mobile-node tw-node-2" cx="290" cy="170" r="4.5" fill="#10b981" />
+            <circle className="tw-mobile-node tw-node-3" cx="170" cy="50" r="4.5" fill="#38bdf8" />
+            <circle className="tw-mobile-node tw-node-4" cx="170" cy="290" r="4.5" fill="#22c55e" />
+            <circle className="tw-mobile-node tw-node-5" cx="105" cy="105" r="3.5" fill="#004b87" />
+            <circle className="tw-mobile-node tw-node-6" cx="235" cy="235" r="3.5" fill="#059669" />
+
+            {/* Central ThinkWires Core */}
+            <circle cx="170" cy="170" r="28" fill="url(#twCoreGrad)" />
+            <circle
+              className="tw-mobile-core-pulse"
+              cx="170"
+              cy="170"
+              r="34"
+              stroke="#38bdf8"
+              strokeWidth="1.5"
+              strokeOpacity="0.6"
+              fill="none"
+            />
+            <path
+              d="M 160 170 L 167 177 L 180 163"
+              stroke="#ffffff"
+              strokeWidth="3"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            />
+          </svg>
+
+          {/* Orbiting Tech Chips */}
+          <div className="tw-mobile-tech-chips">
+            <span className="tw-mobile-chip tw-chip-top">SAP</span>
+            <span className="tw-mobile-chip tw-chip-right">AI</span>
+            <span className="tw-mobile-chip tw-chip-bottom">CLOUD</span>
+            <span className="tw-mobile-chip tw-chip-left">REACT</span>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div

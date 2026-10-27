@@ -63,6 +63,18 @@ try {
 
 const isMongoActive = () => mongoose.connection.readyState === 1;
 
+const VALID_ENTITY_TYPES = new Set([
+  'Employee',
+  'Candidate',
+  'Client',
+  'Job',
+  'Placement',
+  'CMS',
+  'Security',
+  'Security RBAC',
+  'System',
+]);
+
 // Helper to log activities
 const logActivity = async (
   action,
@@ -72,10 +84,16 @@ const logActivity = async (
   user = { name: 'Admin User', role: 'admin' },
   badgeColor = '#008F68'
 ) => {
+  const resolvedEntityType = VALID_ENTITY_TYPES.has(entityType)
+    ? entityType
+    : entityType && typeof entityType === 'string' && entityType.toLowerCase().includes('security')
+      ? 'Security RBAC'
+      : 'Employee';
+
   const newAct = {
     id: `act_${Date.now()}`,
     action,
-    entityType,
+    entityType: resolvedEntityType,
     entityId: String(entityId),
     description,
     user,
@@ -90,8 +108,8 @@ const logActivity = async (
     try {
       await Activity.create({
         action,
-        entityType,
-        entityId,
+        entityType: resolvedEntityType,
+        entityId: String(entityId),
         description,
         user,
         badgeColor,
@@ -159,6 +177,13 @@ export const getDashboardOverview = async (req, res) => {
     const openRequirements = jobs.filter(
       (j) => j.status === 'Open' || j.status === 'In Progress'
     ).length;
+    const inboundRequisitions = jobs.filter(
+      (j) =>
+        j.isRequisition === true ||
+        j.status === 'Inbound Request' ||
+        j.status === 'Inbound Requisition' ||
+        j.source === 'Client Inbound Requisition'
+    );
     const candidatePipelineCount = candidates.length;
 
     // Calculate revenue metrics based on period
@@ -291,6 +316,10 @@ export const getDashboardOverview = async (req, res) => {
         activePlacements,
         totalClients,
         openRequirements,
+        inboundRequisitionsCount: inboundRequisitions.length,
+        pendingRequisitionsSla: inboundRequisitions.filter(
+          (r) => r.status === 'Inbound Request' || r.status === 'Inbound Requisition'
+        ).length,
         totalRevenue,
         estimatedCost,
         grossMargin,
@@ -303,6 +332,7 @@ export const getDashboardOverview = async (req, res) => {
         placementsVsTargets,
         performanceTrends,
       },
+      inboundRequisitions: inboundRequisitions.slice(0, 8),
       recentPlacements: placements.slice(0, 5),
       recentActivity: activities.slice(0, 8),
       announcements: announcements.slice(0, 3),
@@ -1249,7 +1279,8 @@ export const deleteClient = async (req, res) => {
 // ============================================================================
 export const getJobs = async (req, res) => {
   try {
-    const { search, priority, status, industry, jobMode } = req.query;
+    const { search, priority, status, industry, jobMode, type, category } =
+      req.query;
 
     let items = [];
     if (isMongoActive()) {
@@ -1258,6 +1289,8 @@ export const getJobs = async (req, res) => {
         query.$or = [
           { title: { $regex: search, $options: 'i' } },
           { client: { $regex: search, $options: 'i' } },
+          { contactPerson: { $regex: search, $options: 'i' } },
+          { contactEmail: { $regex: search, $options: 'i' } },
           { description: { $regex: search, $options: 'i' } },
           { requirements: { $regex: search, $options: 'i' } },
           { requiredSkills: { $in: [new RegExp(search, 'i')] } },
@@ -1268,8 +1301,58 @@ export const getJobs = async (req, res) => {
           { location: { $regex: search, $options: 'i' } },
         ];
       }
+
+      const reqCriteria = [
+        { isRequisition: true },
+        { category: 'Client Requisition' },
+        { source: 'Client Inbound Requisition' },
+        { status: 'Inbound Request' },
+        { status: 'Inbound Requisition' },
+        { jobId: { $regex: '^REQ-', $options: 'i' } },
+      ];
+
+      if (type === 'requisitions') {
+        if (status && status !== 'All') {
+          if (status === 'Inbound Request' || status === 'inbound') {
+            query.status = { $in: ['Inbound Request', 'Inbound Requisition'] };
+          } else if (status === 'Approved') {
+            query.status = { $in: ['Approved', 'Open', 'In Progress'] };
+          } else {
+            query.status = status;
+          }
+        }
+        query.$or = reqCriteria;
+      } else if (type === 'jobs') {
+        if (!status || status === 'All') {
+          query.status = { $nin: ['Inbound Request', 'Inbound Requisition'] };
+        } else if (status === 'Open') {
+          query.status = { $in: ['Open', 'Approved'] };
+        } else {
+          query.status = status;
+        }
+      } else {
+        // Standard legacy / general query
+        if (status && status !== 'All') {
+          if (status === 'Inbound Request' || status === 'inbound') {
+            query.$or = reqCriteria;
+          } else if (status === 'Open') {
+            query.status = { $in: ['Open', 'Approved'] };
+          } else {
+            query.status = status;
+          }
+        }
+      }
+
+      if (category && category !== 'All') {
+        if (category === 'Client Requisition') {
+          query.$or = reqCriteria;
+        } else if (category === 'Internal') {
+          query.isRequisition = { $ne: true };
+          query.category = { $ne: 'Client Requisition' };
+        }
+      }
+
       if (priority && priority !== 'All') query.priority = priority;
-      if (status && status !== 'All') query.status = status;
       if (industry && industry !== 'All') query.industry = industry;
       if (jobMode && jobMode !== 'All') query.jobMode = jobMode;
 
@@ -1282,6 +1365,9 @@ export const getJobs = async (req, res) => {
           match =
             j.title?.toLowerCase().includes(s) ||
             j.client?.toLowerCase().includes(s) ||
+            (j.contactPerson && j.contactPerson.toLowerCase().includes(s)) ||
+            (j.contactEmail && j.contactEmail.toLowerCase().includes(s)) ||
+            (j.jobId && String(j.jobId).toLowerCase().includes(s)) ||
             (j.description && j.description.toLowerCase().includes(s)) ||
             (j.requirements && j.requirements.toLowerCase().includes(s)) ||
             (j.industry && j.industry.toLowerCase().includes(s)) ||
@@ -1291,9 +1377,61 @@ export const getJobs = async (req, res) => {
             (j.requiredSkills &&
               j.requiredSkills.some((sk) => sk.toLowerCase().includes(s)));
         }
+
+        const isReqRecord =
+          j.isRequisition === true ||
+          j.category === 'Client Requisition' ||
+          j.source === 'Client Inbound Requisition' ||
+          j.status === 'Inbound Request' ||
+          j.status === 'Inbound Requisition' ||
+          (j.jobId && String(j.jobId).startsWith('REQ-'));
+
+        if (match && type === 'requisitions') {
+          match = isReqRecord;
+          if (match && status && status !== 'All') {
+            if (status === 'Inbound Request' || status === 'inbound') {
+              match =
+                j.status === 'Inbound Request' ||
+                j.status === 'Inbound Requisition';
+            } else if (status === 'Approved') {
+              match =
+                j.status === 'Approved' ||
+                j.status === 'Open' ||
+                j.status === 'In Progress';
+            } else {
+              match = j.status === status;
+            }
+          }
+        } else if (match && type === 'jobs') {
+          if (!status || status === 'All') {
+            match =
+              j.status !== 'Inbound Request' &&
+              j.status !== 'Inbound Requisition';
+          } else if (status === 'Open') {
+            match = j.status === 'Open' || j.status === 'Approved';
+          } else {
+            match = j.status === status;
+          }
+        } else if (match && status && status !== 'All') {
+          if (status === 'Inbound Request' || status === 'inbound') {
+            match = isReqRecord;
+          } else if (status === 'Open') {
+            match = j.status === 'Open' || j.status === 'Approved';
+          } else {
+            match = j.status === status;
+          }
+        }
+
+        if (match && category && category !== 'All') {
+          if (category === 'Client Requisition') {
+            match = isReqRecord;
+          } else if (category === 'Internal') {
+            match = !isReqRecord;
+          }
+        }
+
         if (match && priority && priority !== 'All')
           match = j.priority === priority;
-        if (match && status && status !== 'All') match = j.status === status;
         if (match && industry && industry !== 'All')
           match = j.industry === industry;
         if (match && jobMode && jobMode !== 'All')
@@ -1328,15 +1466,22 @@ export const createJob = async (req, res) => {
       budget,
       description,
       requirements,
+      isRequisition,
+      type,
+      contactPerson,
+      contactEmail,
+      contactPhone,
+      engagementModel,
+      seniority,
+      deploymentUrgency,
+      budgetEnvelope,
     } = req.body;
 
     if (!title || !client) {
-      return res
-        .status(400)
-        .json({
-          success: false,
-          error: 'Job title and client name are required.',
-        });
+      return res.status(400).json({
+        success: false,
+        error: 'Job title and client name are required.',
+      });
     }
 
     const skillsArray = Array.isArray(requiredSkills)
@@ -1354,8 +1499,17 @@ export const createJob = async (req, res) => {
         : location ||
           (workMode === 'Work From Home' ? 'Remote (India/US)' : 'Hybrid');
 
+    const isClientReq =
+      Boolean(isRequisition) ||
+      type === 'requisition' ||
+      status === 'Inbound Request' ||
+      status === 'Inbound Requisition';
+
     const newJob = {
-      id: `job_${Date.now()}`,
+      id: isClientReq ? `job_req_${Date.now()}` : `job_${Date.now()}`,
+      jobId: isClientReq
+        ? req.body.jobId || `REQ-${Date.now().toString().slice(-6)}`
+        : `JOB-${Date.now().toString().slice(-5)}`,
       title,
       client,
       industry: industry || 'Information Technology & Cloud',
@@ -1366,52 +1520,67 @@ export const createJob = async (req, res) => {
       noticePeriod: noticePeriod || 'Immediate',
       noticePeriodOther: noticePeriodOther || '',
       requiredSkills: skillsArray,
+      skills: skillsArray,
       experienceRequired: Number(experienceRequired) || 3,
       openingsCount: Number(openingsCount) || 1,
       fulfilledCount: 0,
       priority: priority || 'Medium',
-      status: status || 'Open',
+      status: status || (isClientReq ? 'Inbound Request' : 'Open'),
       budget: budget || 'Competitive Market Rate',
       description: description || '',
       requirements: requirements || '',
+      isRequisition: isClientReq,
+      category: isClientReq ? 'Client Requisition' : 'Internal Opening',
+      source: isClientReq ? 'Client Mandate' : 'Internal ATS',
+      contactPerson: contactPerson || '',
+      contactEmail: contactEmail || '',
+      contactPhone: contactPhone || '',
+      engagementModel: engagementModel || 'Staff Augmentation',
+      seniority: seniority || 'Senior',
+      deploymentUrgency: deploymentUrgency || 'immediate',
+      budgetEnvelope: budgetEnvelope || '',
       createdAt: new Date().toISOString(),
     };
 
     inMemoryData.jobs.unshift(newJob);
 
     if (isMongoActive()) {
-      const doc = await JobRequirement.create({
-        title: newJob.title,
-        client: newJob.client,
-        industry: newJob.industry,
-        jobMode: newJob.jobMode,
-        workMode: newJob.workMode,
-        officeLocation: newJob.officeLocation,
-        location: newJob.location,
-        noticePeriod: newJob.noticePeriod,
-        noticePeriodOther: newJob.noticePeriodOther,
-        requiredSkills: newJob.requiredSkills,
-        experienceRequired: newJob.experienceRequired,
-        openingsCount: newJob.openingsCount,
-        fulfilledCount: 0,
-        priority: newJob.priority,
-        status: newJob.status,
-        budget: newJob.budget,
-        description: newJob.description,
-        requirements: newJob.requirements,
-        jobId: newJob.id,
-      });
+      const doc = await JobRequirement.create(newJob);
       newJob._id = doc._id;
       newJob.id = String(doc._id);
     }
 
+    // Auto-register client if new
+    if (client) {
+      const existingClient = (inMemoryData.clients || []).find(
+        (c) => c.companyName?.toLowerCase() === client.toLowerCase()
+      );
+      if (!existingClient) {
+        const newClientRecord = {
+          id: `cli_${Date.now()}`,
+          companyName: client,
+          industry: newJob.industry,
+          tier: 'Enterprise Partner',
+          contactPerson: contactPerson || 'Hiring Lead',
+          email: contactEmail || '',
+          phone: contactPhone || '',
+          activeDeployments: 0,
+          status: 'Active',
+        };
+        inMemoryData.clients = inMemoryData.clients || [];
+        inMemoryData.clients.unshift(newClientRecord);
+      }
+    }
+
     await logActivity(
-      'Staffing Requisition Posted',
+      isClientReq
+        ? 'Staffing Requisition Created'
+        : 'Job Requirement Posted',
       'Job',
       newJob.id,
-      `Requisition created: ${title} for ${client} (${newJob.industry}).`,
+      `${isClientReq ? 'Client Requisition' : 'Job requirement'} created: ${title} for ${client} (${newJob.industry}).`,
       req.user,
-      '#D97706'
+      isClientReq ? '#7C3AED' : '#D97706'
     );
 
     res
@@ -1442,33 +1611,66 @@ export const updateJob = async (req, res) => {
       updates.location = updates.officeLocation;
     }
 
+    inMemoryData.jobs = inMemoryData.jobs || [];
     const idx = inMemoryData.jobs.findIndex(
-      (j) => j.id === id || String(j._id) === id
+      (j) => j.id === id || String(j._id) === id || j.jobId === id
     );
     if (idx !== -1) {
+      const prevStatus = inMemoryData.jobs[idx].status;
       inMemoryData.jobs[idx] = {
         ...inMemoryData.jobs[idx],
         ...updates,
         updatedAt: new Date().toISOString(),
       };
+      if (
+        (prevStatus === 'Inbound Request' ||
+          prevStatus === 'Inbound Requisition') &&
+        (updates.status === 'Open' || updates.status === 'Approved')
+      ) {
+        logActivity(
+          'Staffing Requisition Approved',
+          'Job',
+          id,
+          `Client requisition "${inMemoryData.jobs[idx].title}" for ${inMemoryData.jobs[idx].client} approved and opened for active recruitment.`,
+          req.user,
+          '#008F68'
+        ).catch(() => {});
+      }
     }
 
+    let updatedJob = null;
     if (isMongoActive()) {
       const query = mongoose.Types.ObjectId.isValid(id)
-        ? { _id: id }
-        : { jobId: id };
+        ? { $or: [{ _id: id }, { id }, { jobId: id }] }
+        : { $or: [{ id }, { jobId: id }] };
       const {
         id: _ignoreId,
         _id: _ignoreUnderscoreId,
         ...cleanUpdates
       } = updates;
-      await JobRequirement.findOneAndUpdate(query, cleanUpdates, { new: true });
+      updatedJob = await JobRequirement.findOneAndUpdate(query, cleanUpdates, {
+        new: true,
+      }).lean();
+
+      if (
+        updatedJob &&
+        (updates.status === 'Open' || updates.status === 'Approved')
+      ) {
+        logActivity(
+          'Staffing Requisition Approved',
+          'Job',
+          id,
+          `Client requisition "${updatedJob.title}" for ${updatedJob.client} approved and opened for active recruitment.`,
+          req.user,
+          '#008F68'
+        ).catch(() => {});
+      }
     }
 
     res.json({
       success: true,
       message: 'Job requirement updated successfully',
-      job: inMemoryData.jobs[idx],
+      job: updatedJob || (idx !== -1 ? inMemoryData.jobs[idx] : updates),
     });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
@@ -1479,14 +1681,14 @@ export const deleteJob = async (req, res) => {
   try {
     const { id } = req.params;
 
-    inMemoryData.jobs = inMemoryData.jobs.filter(
-      (j) => j.id !== id && String(j._id) !== id
+    inMemoryData.jobs = (inMemoryData.jobs || []).filter(
+      (j) => j.id !== id && String(j._id) !== id && j.jobId !== id
     );
 
     if (isMongoActive()) {
       const query = mongoose.Types.ObjectId.isValid(id)
-        ? { _id: id }
-        : { jobId: id };
+        ? { $or: [{ _id: id }, { id }, { jobId: id }] }
+        : { $or: [{ id }, { jobId: id }] };
       await JobRequirement.findOneAndDelete(query);
     }
 
@@ -1506,6 +1708,149 @@ export const deleteJob = async (req, res) => {
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
   }
+};
+
+/**
+ * Persist incoming enterprise requisition from Find Talent intake portal
+ * Seamlessly stores in both MongoDB and in-memory demo data with activity logging
+ */
+export const recordInboundRequisition = async (reqData = {}) => {
+  const {
+    engagementModel,
+    targetRole,
+    headcount,
+    seniority,
+    techStack,
+    deploymentUrgency,
+    workArrangement,
+    budgetEnvelope,
+    fullName,
+    corporateEmail,
+    company,
+    phone,
+    jobDescription,
+  } = reqData;
+
+  const reqId = `job_req_${Date.now()}`;
+  const displayJobId = `REQ-${Date.now().toString().slice(-6)}`;
+
+  const budgetMap = {
+    bracket_1: '$5,000 - $8,000 / mo',
+    bracket_2: '$8,000 - $12,000 / mo',
+    bracket_3: '$12,000 - $18,000 / mo',
+    bracket_4: '$18,000+ / mo',
+  };
+  const resolvedBudget =
+    budgetMap[budgetEnvelope] || budgetEnvelope || 'Competitive Envelope';
+
+  const priorityMap = {
+    immediate: 'Urgent',
+    within_14_days: 'High',
+    flexible: 'Medium',
+  };
+  const resolvedPriority =
+    priorityMap[deploymentUrgency] ||
+    (deploymentUrgency === 'Immediate' ? 'Urgent' : 'High');
+
+  const workModeMap = {
+    remote_global: 'Remote',
+    hybrid: 'Hybrid',
+    onsite: 'Onsite',
+  };
+  const resolvedWorkMode =
+    workModeMap[workArrangement] || workArrangement || 'Remote';
+
+  const skillsArray = Array.isArray(techStack)
+    ? techStack
+    : typeof techStack === 'string'
+      ? techStack
+          .split(',')
+          .map((s) => s.trim())
+          .filter(Boolean)
+      : [];
+
+  const newRequisition = {
+    id: reqId,
+    jobId: displayJobId,
+    title: targetRole || 'Senior Specialized Engineer',
+    client: company || 'Enterprise Partner',
+    contactPerson: fullName || 'Enterprise Hiring Manager',
+    contactEmail: corporateEmail || '',
+    contactPhone: phone || '',
+    engagementModel: engagementModel || 'Staff Augmentation',
+    seniority: seniority || 'Senior',
+    requiredSkills: skillsArray,
+    skills: skillsArray,
+    experienceRequired:
+      seniority === 'principal' ? 8 : seniority === 'senior' ? 5 : 3,
+    openingsCount: Number(headcount) || 1,
+    fulfilledCount: 0,
+    location:
+      resolvedWorkMode === 'Remote' ? 'Remote (Global)' : 'Hybrid / Onsite',
+    workMode: resolvedWorkMode,
+    priority: resolvedPriority,
+    deploymentUrgency: deploymentUrgency || 'immediate',
+    status: 'Inbound Request',
+    budget: resolvedBudget,
+    budgetEnvelope: budgetEnvelope || 'bracket_2',
+    description:
+      jobDescription ||
+      `Enterprise talent mandate for ${headcount || 1}x ${targetRole} (${seniority || 'Senior'}) by ${company} (${fullName} - ${corporateEmail}). 5-Hour Candidate Dossier SLA active.`,
+    requirements: `Required Technologies: ${skillsArray.join(', ')}. Deployment model: ${engagementModel}.`,
+    category: 'Client Requisition',
+    source: 'Client Inbound Requisition',
+    isRequisition: true,
+    postedDate: new Date().toISOString().split('T')[0],
+    createdAt: new Date().toISOString(),
+  };
+
+  inMemoryData.jobs = inMemoryData.jobs || [];
+  inMemoryData.jobs.unshift(newRequisition);
+
+  if (isMongoActive()) {
+    try {
+      const doc = await JobRequirement.create(newRequisition);
+      newRequisition._id = doc._id;
+    } catch (err) {
+      console.warn(
+        'Could not persist inbound requisition to Mongo:',
+        err.message
+      );
+    }
+  }
+
+  // Ensure client exists in clients list
+  if (company) {
+    const existingClient = (inMemoryData.clients || []).find(
+      (c) => c.companyName?.toLowerCase() === company.toLowerCase()
+    );
+    if (!existingClient) {
+      const newClientRecord = {
+        id: `cli_${Date.now()}`,
+        companyName: company,
+        industry: 'Enterprise Software & Technology',
+        tier: 'Tier 1 Enterprise Lead',
+        contactPerson: fullName || 'Hiring Lead',
+        email: corporateEmail || '',
+        phone: phone || '',
+        activeDeployments: 0,
+        status: 'Active',
+      };
+      inMemoryData.clients = inMemoryData.clients || [];
+      inMemoryData.clients.unshift(newClientRecord);
+    }
+  }
+
+  await logActivity(
+    'Staffing Requisition Inbound Request',
+    'Job',
+    newRequisition.id,
+    `Inbound candidate requisition received from ${company} (${fullName}) for ${newRequisition.openingsCount}x ${newRequisition.title}. Urgency: ${newRequisition.priority}.`,
+    { name: fullName || 'Enterprise Client', role: 'client' },
+    '#7C3AED'
+  );
+
+  return newRequisition;
 };
 
 // ============================================================================
@@ -1758,7 +2103,7 @@ export const createCmsPage = async (req, res) => {
       slug: cleanSlug,
       category: category || 'Website Page',
       content,
-      metaTitle: metaTitle || `${title} — ThinkWires`,
+      metaTitle: metaTitle || `${title} — Thinkwires`,
       metaDescription: metaDescription || '',
       ogImage: ogImage || '/images/about-hero.jpg',
       data: req.body.data || {},
@@ -2048,7 +2393,7 @@ export const createCmsArticle = async (req, res) => {
         typeof author === 'object'
           ? author
           : {
-              name: author || req.user?.name || 'ThinkWires Editorial',
+              name: author || req.user?.name || 'Thinkwires Editorial',
               role: 'Staff Contributor',
             },
       category: category || 'Industry Insights',
@@ -2352,7 +2697,7 @@ export const getSeoSettings = async (req, res) => {
       success: true,
       globalSeo: {
         siteName:
-          'ThinkWires — Tech Manpower Supply & Global Staffing Aggregator',
+          'Thinkwires — Tech Manpower Supply & Global Staffing Aggregator',
         defaultMetaDescription:
           'Enterprise IT manpower supply, specialized tech staffing, and compliant cross-border Employer of Record (EOR) infrastructure.',
         canonicalBaseUrl: 'https://thinkwires.com',
@@ -2682,12 +3027,18 @@ export const loginAdmin = async (req, res) => {
 
     // Verify Password using cryptographically secure bcrypt
     let isMatch = false;
-    if (user.password) {
-      if (user.password.startsWith('$2a$') || user.password.startsWith('$2b$')) {
-        isMatch = await comparePassword(password, user.password);
+    const userPassword =
+      user.password ||
+      (!isMongoActive() && process.env.NODE_ENV !== 'production'
+        ? 'Thinkwires@2026'
+        : null);
+
+    if (userPassword) {
+      if (userPassword.startsWith('$2a$') || userPassword.startsWith('$2b$')) {
+        isMatch = await comparePassword(password, userPassword);
       } else if (process.env.NODE_ENV !== 'production' && !isMongoActive()) {
         // Safe equality comparison only for offline local development demo seed
-        isMatch = password === user.password;
+        isMatch = password === userPassword;
       }
     }
 
@@ -2716,7 +3067,7 @@ export const loginAdmin = async (req, res) => {
       'Admin Logged In',
       'Security RBAC',
       user.email,
-      `${user.name} logged into ThinkWires Administrative Portal as ${user.role.toUpperCase()}.`,
+      `${user.name} logged into Thinkwires Administrative Portal as ${user.role.toUpperCase()}.`,
       { name: user.name, role: user.role },
       '#10B981'
     );
@@ -2757,7 +3108,7 @@ export const logoutAdmin = async (req, res) => {
     }
 
     if (token) {
-      revokeToken(token);
+      await revokeToken(token);
     }
 
     clearAdminAuthCookie(res);

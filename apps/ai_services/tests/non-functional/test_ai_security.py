@@ -85,3 +85,54 @@ def test_massive_payload_handling(client):
     data = res.json()
     assert data["success"] is True
     assert "Python" in data["skills"]
+
+
+def test_cors_wildcard_not_present_in_origins():
+    """
+    Ensures wildcard '*' is never present in allowed CORS origins.
+    """
+    from app.config import settings
+    assert "*" not in settings.CORS_ORIGINS
+    assert len(settings.CORS_ORIGINS) > 0
+
+
+def test_cors_preflight_blocks_untrusted_origin(client):
+    """
+    Ensures untrusted/malicious origins do not receive Access-Control-Allow-Origin headers.
+    """
+    res = client.options(
+        "/api/health",
+        headers={
+            "Origin": "https://malicious-attacker.com",
+            "Access-Control-Request-Method": "GET",
+        },
+    )
+    assert res.headers.get("access-control-allow-origin") is None
+
+
+def test_cors_preflight_allows_trusted_origin(client):
+    """
+    Ensures legitimate origins in the allowlist receive proper CORS headers.
+    """
+    res = client.options(
+        "/api/health",
+        headers={
+            "Origin": "http://localhost:5173",
+            "Access-Control-Request-Method": "GET",
+        },
+    )
+    assert res.headers.get("access-control-allow-origin") == "http://localhost:5173"
+
+
+def test_cors_env_parsing_and_wildcard_filtering(monkeypatch):
+    """
+    Ensures CORS_ORIGINS environment variable is parsed correctly and wildcard '*' is filtered out.
+    """
+    import os
+    from app.config import Settings
+    monkeypatch.setenv("CORS_ORIGINS", "https://app.thinkwires.com, *, http://localhost:3000, ")
+    test_settings = Settings()
+    assert "*" not in test_settings.CORS_ORIGINS
+    assert "https://app.thinkwires.com" in test_settings.CORS_ORIGINS
+    assert "http://localhost:3000" in test_settings.CORS_ORIGINS
+    assert len(test_settings.CORS_ORIGINS) == 2

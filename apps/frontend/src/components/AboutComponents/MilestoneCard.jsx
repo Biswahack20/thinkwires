@@ -1,7 +1,7 @@
 import React from 'react';
 
 /**
- * Reusable MilestoneCard component for ThinkWires Growth & Evolution 2x2 grid.
+ * Reusable MilestoneCard component for Thinkwires Growth & Evolution 2x2 grid.
  *
  * @param {Object} props
  * @param {Object} props.item Milestone data object from mockdata.json

@@ -25,7 +25,7 @@ const FindTalentPage = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    document.title = 'Find Talent & Hire Pre-Vetted Engineers | ThinkWires';
+    document.title = 'Find Talent & Hire Pre-Vetted Engineers | Thinkwires';
     if (status === 'idle') {
       dispatch(fetchFindTalentData());
     }

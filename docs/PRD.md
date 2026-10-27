@@ -312,7 +312,7 @@ To guide development, here are the primary user stories for our main user types:
 
 ### 4.6 Candidate Terms Agreement and Legal Compliance
 
-- **Mandatory Terms & Conditions Agreement:** Prior to submitting any job application, candidates must review and accept the ThinkWires Terms of Service (`/terms-of-service`) and Candidate Privacy Policy (`/privacy-policy`).
+- **Mandatory Terms & Conditions Agreement:** Prior to submitting any job application, candidates must review and accept the Thinkwires Terms of Service (`/terms-of-service`) and Candidate Privacy Policy (`/privacy-policy`).
 - **Audit Timestamp:** Submissions record `agreedToTerms: true` and an ISO timestamp `agreedAt`.
 - **Application Withdrawal:** Candidates maintain sovereign control over their active applications, with the ability to withdraw submissions directly from their dashboard (`POST /api/candidate/applications/:id/withdraw`).
 

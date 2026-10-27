@@ -12,7 +12,7 @@ const About = () => {
             <span className="material-symbols-outlined text-[16px]">
               corporate_fare
             </span>
-            <span>About ThinkWires</span>
+            <span>About Thinkwires</span>
           </div>
 
           <h2 className="About-title">
@@ -21,7 +21,7 @@ const About = () => {
 
           <p className="About-description">
             Established in 2022 and operating as a premier Private Limited
-            workforce advisory, ThinkWires provides equal access to high-impact
+            workforce advisory, Thinkwires provides equal access to high-impact
             career opportunities while transforming enterprise talent deployment
             across India, the United States, and Canada.
           </p>

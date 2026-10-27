@@ -23,7 +23,7 @@ const StaffAugComparison = ({ data }) => {
                     <span className="material-symbols-outlined">star</span>
                     <span>Staff Augmentation</span>
                   </div>
-                  <span className="sub">ThinkWires Core</span>
+                  <span className="sub">Thinkwires Core</span>
                 </th>
                 <th>
                   <span>Dedicated Tech Pods</span>

@@ -231,7 +231,7 @@ const PagesManager = () => {
         <div className="tw-table-toolbar">
           <h2 className="tw-card-title">All Website Pages ({pages.length})</h2>
           <span style={{ fontSize: '0.8rem', color: '#64748B' }}>
-            Instant publishing engine connected to ThinkWires routes
+            Instant publishing engine connected to Thinkwires routes
           </span>
         </div>
 
@@ -681,7 +681,7 @@ const PagesManager = () => {
                             metaTitle: e.target.value,
                           })
                         }
-                        placeholder="ThinkWires — Transforming Global Tech Talent"
+                        placeholder="Thinkwires — Transforming Global Tech Talent"
                       />
                     </div>
 

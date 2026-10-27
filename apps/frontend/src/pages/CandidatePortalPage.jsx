@@ -27,7 +27,7 @@ const CandidatePortalPage = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    document.title = 'Candidate Portal & Vetted Talent Network | ThinkWires';
+    document.title = 'Candidate Portal & Vetted Talent Network | Thinkwires';
     if (status === 'idle') {
       dispatch(fetchCandidatePortalData());
     }

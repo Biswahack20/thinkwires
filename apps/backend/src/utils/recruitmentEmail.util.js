@@ -9,7 +9,7 @@ import nodemailer from 'nodemailer';
  * - SMTP_USER
  * - SMTP_PASS
  * - RECRUITMENT_NOTIFICATION_EMAIL (destination HR / recruitment address)
- * - EMAIL_FROM (sender address, e.g. "ThinkWires Recruitment <careers@thinkwires.com>")
+ * - EMAIL_FROM (sender address, e.g. "Thinkwires Recruitment <careers@thinkwires.com>")
  */
 let transporter = null;
 
@@ -87,7 +87,7 @@ export const buildRecruitmentEmailHtml = (data) => {
     <tr>
       <td style="padding: 24px 28px; background: linear-gradient(135deg, #003399 0%, #1e40af 100%); color: #ffffff;">
         <p style="margin: 0 0 6px 0; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: #93c5fd;">
-          ThinkWires Recruitment Intake Engine
+          Thinkwires Recruitment Intake Engine
         </p>
         <h1 style="margin: 0 0 8px 0; font-size: 20px; font-weight: 700; line-height: 1.3; color: #ffffff;">
           Submit Candidate for - ${escapeHtml(jobTitle)}
@@ -230,7 +230,7 @@ export const buildRecruitmentEmailHtml = (data) => {
     <!-- FOOTER -->
     <tr>
       <td style="padding: 16px 28px; background-color: #f8fafc; border-top: 1px solid #e2e8f0; text-align: center; font-size: 11px; color: #64748b;">
-        ThinkWires Automated Candidate Dispatch System • This email was generated upon verified candidate application.
+        Thinkwires Automated Candidate Dispatch System • This email was generated upon verified candidate application.
       </td>
     </tr>
 
@@ -268,11 +268,11 @@ export const sendRecruitmentNotificationEmail = async (
       process.env.RECRUITMENT_NOTIFICATION_EMAIL ||
       process.env.RECRUITMENT_EMAIL ||
       process.env.ADMIN_NOTIFICATION_EMAIL ||
-      'careers@thinkwires.com';
+      'hr@thinkwires.com';
 
     const fromAddress =
       process.env.EMAIL_FROM ||
-      `"ThinkWires Talent Engine" <${process.env.SMTP_USER || 'careers@thinkwires.com'}>`;
+      `"Thinkwires Talent Engine" <${process.env.SMTP_USER || 'hr@thinkwires.com'}>`;
 
     const subject =
       `Submit Candidate for - ${applicationData.jobTitle || 'Technical Specialist'} [${applicationData.firstName || ''} ${applicationData.lastName || ''}]`.trim();

@@ -24,7 +24,7 @@ const ContactPage = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
     document.title =
-      'Contact Us | ThinkWires - Connect with Enterprise Staffing Directors';
+      'Contact Us | Thinkwires - Connect with Enterprise Staffing Directors';
 
     // Update meta description
     let metaDesc = document.querySelector('meta[name="description"]');
@@ -34,7 +34,7 @@ const ContactPage = () => {
       document.head.appendChild(metaDesc);
     }
     metaDesc.content =
-      'Connect with ThinkWires staffing directors for specialized SAP, AEM, Cloud, and engineering squads. Receive pre-vetted candidate dossiers within 5 business hours.';
+      'Connect with Thinkwires staffing directors for specialized SAP, AEM, Cloud, and engineering squads. Receive pre-vetted candidate dossiers within 5 business hours.';
 
     dispatch(fetchContactData());
   }, [dispatch]);

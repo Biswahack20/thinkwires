@@ -4,7 +4,7 @@ import SectionBadge from '../common/SectionBadge';
 
 const ContactHero = ({ data }) => {
   const {
-    badge = 'Contact ThinkWires • We Respond Within 5 Hours',
+    badge = 'Contact Thinkwires • We Respond Within 5 Hours',
     heading = "Let's Build Your",
     headingHighlight = 'Next Engineering Squad.',
     description = 'Our staffing directors are ready. Reach out and receive pre-vetted profiles in under 5 hours.',

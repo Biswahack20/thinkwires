@@ -1,12 +1,12 @@
-# ThinkWires Backend Architecture and API Documentation (BackendDocs.md)
+# Thinkwires Backend Architecture and API Documentation (BackendDocs.md)
 
-This document is the authoritative guide to the **ThinkWires Backend Core** (`apps/backend`). It details the server lifecycle, dual-persistence database strategy, connection resilience, authentication protocols, middleware pipeline, database migrations, and a comprehensive REST API endpoint reference designed for both human engineers and AI agent workflows.
+This document is the authoritative guide to the **Thinkwires Backend Core** (`apps/backend`). It details the server lifecycle, dual-persistence database strategy, connection resilience, authentication protocols, middleware pipeline, database migrations, and a comprehensive REST API endpoint reference designed for both human engineers and AI agent workflows.
 
 ---
 
 ## 1. Architectural Overview and Design Philosophy
 
-The ThinkWires backend is an **Express 5 API Gateway** written in modern ES Modules (`type: "module"`). It powers the ThinkWires platform with authentication, candidate portal workflows, enterprise staffing operations, recruitment email dispatching, and an integrated Content Management System (CMS).
+The Thinkwires backend is an **Express 5 API Gateway** written in modern ES Modules (`type: "module"`). It powers the Thinkwires platform with authentication, candidate portal workflows, enterprise staffing operations, recruitment email dispatching, and an integrated Content Management System (CMS).
 
 ```
                             ┌────────────────────────────────────────┐
@@ -357,7 +357,7 @@ SMTP_PORT=587
 SMTP_USER=careers@thinkwires.com
 SMTP_PASS=your_app_password
 SMTP_SECURE=false
-EMAIL_FROM="ThinkWires Recruitment" <careers@thinkwires.com>
+EMAIL_FROM="Thinkwires Recruitment" <careers@thinkwires.com>
 RECRUITMENT_NOTIFICATION_EMAIL=recruitment@thinkwires.com
 ```
 
@@ -377,7 +377,7 @@ RECRUITMENT_NOTIFICATION_EMAIL=recruitment@thinkwires.com
 
 ## 8. Backend Automated Testing Architecture & Quality Assurance
 
-ThinkWires Backend utilizes **Vitest** paired with **Supertest** for testing. Following project conventions, all backend test suites, fixtures, helpers, and mocks are organized inside `apps/backend/src/test/`.
+Thinkwires Backend utilizes **Vitest** paired with **Supertest** for testing. Following project conventions, all backend test suites, fixtures, helpers, and mocks are organized inside `apps/backend/src/test/`.
 
 ### 8.1 The 5-Layer Testing Taxonomy
 

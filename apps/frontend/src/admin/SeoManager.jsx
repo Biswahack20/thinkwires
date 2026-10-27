@@ -289,7 +289,7 @@ const SeoManager = () => {
                     }}
                   >
                     {formData.metaDescription ||
-                      'Deploy pre-vetted engineers, specialized IT squads, and Employer of Record infrastructure with ThinkWires.'}
+                      'Deploy pre-vetted engineers, specialized IT squads, and Employer of Record infrastructure with Thinkwires.'}
                   </div>
                 </div>
 

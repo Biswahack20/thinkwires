@@ -2,9 +2,9 @@ import React, { useState, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import logo from '../../assets/logo/logo.png';
-import ApplyModal from './ApplyModal';
+import QuickApplyModal from './QuickApplyModal';
 import { useTheme } from '../../useTheme';
-import { GlobeIcon, MailIcon, PhoneIcon } from '../../admin/AdminIcons';
+import { GlobeIcon, MailIcon } from '../../admin/AdminIcons';
 
 const Navbar = () => {
   const [isApplyModalOpen, setIsApplyModalOpen] = useState(false);
@@ -61,11 +61,6 @@ const Navbar = () => {
               <span>info@thinkwires.com</span>
             </a>
 
-            <a href="tel:+918722555828" className="Navbar-topBarItem">
-              <PhoneIcon size={13} color="currentColor" />
-              <span>+91 87225 55828</span>
-            </a>
-
             <button
               type="button"
               onClick={toggleTheme}
@@ -93,8 +88,8 @@ const Navbar = () => {
         {/* Main Navigation */}
         <nav className="Navbar-mainNav" aria-label="Main navigation">
           <div className="Navbar-logoContainer">
-            <Link to="/" onClick={closeMobileMenu} aria-label="ThinkWires Home">
-              <img src={logo} alt="ThinkWires Logo" className="Navbar-logo" />
+            <Link to="/" onClick={closeMobileMenu} aria-label="Thinkwires Home">
+              <img src={logo} alt="Thinkwires Logo" className="Navbar-logo" />
             </Link>
           </div>
 
@@ -348,7 +343,7 @@ const Navbar = () => {
         </nav>
       </header>
 
-      <ApplyModal
+      <QuickApplyModal
         isOpen={isApplyModalOpen}
         onClose={() => setIsApplyModalOpen(false)}
         roleTitle="General Engineering Candidate Pool"

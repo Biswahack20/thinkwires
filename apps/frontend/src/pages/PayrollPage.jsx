@@ -22,7 +22,7 @@ const PayrollPage = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
     document.title =
-      'Payroll Outsourcing Services | ThinkWires - 100% Statutory Compliance';
+      'Payroll Outsourcing Services | Thinkwires - 100% Statutory Compliance';
     if (status === 'idle') {
       dispatch(fetchPayrollData());
     }

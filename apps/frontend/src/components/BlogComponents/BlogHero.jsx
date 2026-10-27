@@ -8,7 +8,7 @@ const BlogHero = ({ children }) => {
         <div className="BlogHero-topBar">
           <div className="BlogHero-badge">
             <span className="BlogHero-badgePulse" />
-            <span>ThinkWires Strategic Intelligence • Vol. 2026 Edition</span>
+            <span>Thinkwires Strategic Intelligence • Vol. 2026 Edition</span>
           </div>
 
           <div className="BlogHero-peerMeta">

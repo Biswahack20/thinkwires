@@ -63,7 +63,7 @@ export const fallbackPayrollData = {
   },
   pillarsSection: {
     eyebrow: 'End-to-End Governance',
-    heading: 'Four Pillars of ThinkWires Institutional Payroll Management',
+    heading: 'Four Pillars of Thinkwires Institutional Payroll Management',
     description:
       'We combine statutory domain mastery with state-of-the-art computational infrastructure to insulate your organization from regulatory penalties, computational leakage, and operational drag.',
     pillars: [
@@ -103,7 +103,7 @@ export const fallbackPayrollData = {
   },
   beneficiariesSection: {
     eyebrow: 'Architected For Scale',
-    heading: 'Who Benefits From ThinkWires Payroll Outsourcing?',
+    heading: 'Who Benefits From Thinkwires Payroll Outsourcing?',
     description:
       'From fast-moving venture startups to multi-entity foreign subsidiaries, our payroll model dynamically flexes around headcount and regulatory jurisdictions.',
     segments: [
@@ -161,7 +161,7 @@ export const fallbackPayrollData = {
     eyebrow: 'Enterprise Operational Capabilities',
     heading: 'Engineered For Zero Friction, Maximum Accuracy',
     description:
-      'Every touchpoint in the ThinkWires payroll framework is backed by an iron-clad SLA, robust banking APIs, and proactive regulatory filings.',
+      'Every touchpoint in the Thinkwires payroll framework is backed by an iron-clad SLA, robust banking APIs, and proactive regulatory filings.',
     features: [
       {
         icon: 'gavel',
@@ -211,15 +211,14 @@ export const fallbackPayrollData = {
   },
   consultationSection: {
     eyebrow: 'Enterprise Consultation',
-    heading: 'Get Started with ThinkWires HR Today!',
+    heading: 'Get Started with Thinkwires HR Today!',
     description:
-      'Avoid payroll errors, compliance risks, and time-consuming internal administration. Partner with ThinkWires HR and experience seamless, institutional payroll management.',
+      'Avoid payroll errors, compliance risks, and time-consuming internal administration. Partner with Thinkwires HR and experience seamless, institutional payroll management.',
     hqDetails: {
       title: 'Direct Corporate Headquarters',
       address:
         'Plot No. 20, Block H-1/A, Sector 63, Noida, Uttar Pradesh 201301',
-      hotline: '+91 89205 55626',
-      email: 'contact@thinkwires.com',
+      email: 'hr@thinkwires.com',
       hours: '09:00 AM – 19:00 PM IST (Mon–Sat)',
       regions: ['United States', 'Canada Hub', 'India Central'],
     },

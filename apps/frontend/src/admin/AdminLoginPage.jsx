@@ -120,7 +120,7 @@ const AdminLoginPage = () => {
             >
               <img
                 src={logo}
-                alt="ThinkWires Logo"
+                alt="Thinkwires Logo"
                 style={{ height: '36px', width: 'auto', display: 'block' }}
               />
             </div>

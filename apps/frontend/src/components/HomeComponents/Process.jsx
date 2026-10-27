@@ -29,7 +29,7 @@ const DEFAULT_STEPS = [
     numberColor: '#22c55e',
     title: 'Seamless Onboarding & Scale',
     description:
-      'Our talent integrates immediately into your Slack, Jira, and Git repositories. ThinkWires oversees performance continuity, payroll, and scaling adjustments.',
+      'Our talent integrates immediately into your Slack, Jira, and Git repositories. Thinkwires oversees performance continuity, payroll, and scaling adjustments.',
     delivery: 'Delivery: Instant Sprint Participation',
     iconBg: '#22c55e',
     iconColor: '#ffffff',

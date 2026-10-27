@@ -1110,3 +1110,27 @@ export const LogoutIcon = ({
     <line x1="21" y1="12" x2="9" y2="12" />
   </svg>
 );
+
+export const ClockIcon = ({
+  size = 16,
+  color = 'currentColor',
+  className = '',
+  strokeWidth = 2,
+  style,
+}) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke={color}
+    strokeWidth={strokeWidth}
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className={className}
+    style={style}
+  >
+    <circle cx="12" cy="12" r="10" />
+    <polyline points="12 6 12 12 16 14" />
+  </svg>
+);

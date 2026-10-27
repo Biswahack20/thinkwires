@@ -153,7 +153,7 @@ const ScreeningAssessmentModal = ({
 
   return (
     <div
-      className="tw-modal-backdrop"
+      className="tw-modal-backdrop ScreeningAssessmentModal-overlay"
       data-lenis-prevent="true"
       style={{
         position: 'fixed',
@@ -169,7 +169,7 @@ const ScreeningAssessmentModal = ({
       }}
     >
       <div
-        className="tw-modal-card"
+        className="tw-modal-card ScreeningAssessmentModal-card"
         data-lenis-prevent="true"
         onWheel={(e) => e.stopPropagation()}
         style={{
@@ -188,6 +188,7 @@ const ScreeningAssessmentModal = ({
       >
         {/* Modal Header */}
         <div
+          className="ScreeningAssessmentModal-header"
           style={{
             padding: '1.25rem 1.75rem',
             background: 'linear-gradient(135deg, #0F172A 0%, #1E293B 100%)',
@@ -220,6 +221,7 @@ const ScreeningAssessmentModal = ({
               </span>
             </div>
             <h2
+              className="ScreeningAssessmentModal-title"
               style={{
                 fontSize: '1.25rem',
                 fontWeight: 700,
@@ -234,6 +236,7 @@ const ScreeningAssessmentModal = ({
           <div style={{ display: 'flex', alignItems: 'center', gap: '1rem' }}>
             {!result && (
               <div
+                className="ScreeningAssessmentModal-timer"
                 style={{
                   display: 'flex',
                   alignItems: 'center',
@@ -290,7 +293,7 @@ const ScreeningAssessmentModal = ({
         </div>
 
         {/* Modal Body */}
-        <div style={{ flex: 1, overflowY: 'auto', padding: '1.75rem' }}>
+        <div className="ScreeningAssessmentModal-body" style={{ flex: 1, overflowY: 'auto', padding: '1.75rem' }}>
           {loading ? (
             <div
               style={{
@@ -718,6 +721,7 @@ const ScreeningAssessmentModal = ({
         {/* Modal Footer Controls */}
         {!result && !loading && (
           <div
+            className="ScreeningAssessmentModal-footer"
             style={{
               padding: '1rem 1.75rem',
               background: '#F8FAFC',

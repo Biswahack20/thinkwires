@@ -88,7 +88,7 @@ const BlogManager = () => {
       slug: art.slug || '',
       summary: art.summary || '',
       body: art.body || '',
-      authorName: art.author?.name || 'ThinkWires Editorial',
+      authorName: art.author?.name || 'Thinkwires Editorial',
       authorRole: art.author?.role || 'Staff Contributor',
       category: art.category || 'Industry Insights',
       featuredImageUrl:

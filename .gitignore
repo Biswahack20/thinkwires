@@ -39,6 +39,10 @@ out/
 # OS Files
 .DS_Store
 Thumbs.db
+ehthumbs.db
+[Dd]esktop.ini
+$RECYCLE.BIN/
+*.directory
 
 # Logs
 logs

@@ -1,12 +1,12 @@
-# ThinkWires Frontend Architecture and Documentation (FrontendDocs.md)
+# Thinkwires Frontend Architecture and Documentation (FrontendDocs.md)
 
-This document is the definitive guide to the **ThinkWires Frontend Application** (`apps/frontend`). It provides comprehensive architectural, state management, routing, component, and design system documentation engineered for both human developers and autonomous AI agents.
+This document is the definitive guide to the **Thinkwires Frontend Application** (`apps/frontend`). It provides comprehensive architectural, state management, routing, component, and design system documentation engineered for both human developers and autonomous AI agents.
 
 ---
 
 ## 1. Executive Summary and Tech Stack
 
-The ThinkWires frontend is a high-performance **React 19 Single-Page Application (SPA)** bundled with **Vite**. It provides a unified, responsive interface serving three distinct user cohorts:
+The Thinkwires frontend is a high-performance **React 19 Single-Page Application (SPA)** bundled with **Vite**. It provides a unified, responsive interface serving three distinct user cohorts:
 
 1. **Public Visitors and Corporate Clients**: Interactive landing pages, service breakdowns (Staff Augmentation, Permanent Staffing, Payroll, EOR), talent bench browsing, and job board.
 2. **Candidates (Job Seekers and Bench Talent)**: Protected portal for profile management, job applications with resume uploads, Terms & Conditions consent, proctored assessments, and application pipeline tracking with withdrawal support.
@@ -310,7 +310,7 @@ Output directory: `apps/frontend/dist/`
 
 ## 9. Automation Testing Architecture & Quality Assurance
 
-ThinkWires frontend features a comprehensive, 5-tier automated testing architecture powered by **Vitest**, **React Testing Library**, **Mock Service Worker (MSW)**, and **Playwright**.
+Thinkwires frontend features a comprehensive, 5-tier automated testing architecture powered by **Vitest**, **React Testing Library**, **Mock Service Worker (MSW)**, and **Playwright**.
 
 ### 9.1. The 5-Tier Testing Taxonomy
 
@@ -327,8 +327,8 @@ All test files are organized in `apps/frontend/src/test/`:
 
 ### 9.2. Test Helper Infrastructure
 
-- **`renderWithProviders(ui, options)`** ([src/test/test-utils.jsx](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/frontend/src/test/test-utils.jsx)): Wraps tested components in an isolated Redux store, the application's `ThemeProvider`, and a React Router `MemoryRouter`. Returns initialized `userEvent` alongside standard Testing Library utilities.
-- **Global Environment Mocks** ([src/test/setup.js](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/frontend/src/test/setup.js)): Provides polyfills and mocks for `window.matchMedia`, `ResizeObserver`, `IntersectionObserver`, `scrollTo`, and `HTMLCanvasElement.getContext` (preventing DOM crashes from Three.js 3D canvas rendering).
+- **`renderWithProviders(ui, options)`** ([src/test/test-utils.jsx](file:///c:/Users/Tanjil%20Alam/Desktop/Thinkwires/thinkwires/apps/frontend/src/test/test-utils.jsx)): Wraps tested components in an isolated Redux store, the application's `ThemeProvider`, and a React Router `MemoryRouter`. Returns initialized `userEvent` alongside standard Testing Library utilities.
+- **Global Environment Mocks** ([src/test/setup.js](file:///c:/Users/Tanjil%20Alam/Desktop/Thinkwires/thinkwires/apps/frontend/src/test/setup.js)): Provides polyfills and mocks for `window.matchMedia`, `ResizeObserver`, `IntersectionObserver`, `scrollTo`, and `HTMLCanvasElement.getContext` (preventing DOM crashes from Three.js 3D canvas rendering).
 - **MSW Lifecycle Hooks**: Automatically intercepts network requests during integration testing, resets handlers after each test, and closes cleanly after execution.
 
 ### 9.3. Test Execution Commands

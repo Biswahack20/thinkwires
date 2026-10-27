@@ -1,4 +1,4 @@
-# ThinkWires Frontend
+# Thinkwires Frontend
 
 [![React](https://img.shields.io/badge/React-19.x-61DAFB.svg?style=flat&logo=react&logoColor=black)](https://react.dev/)
 [![Vite](https://img.shields.io/badge/Vite-8.x-646CFF.svg?style=flat&logo=vite&logoColor=white)](https://vite.dev/)
@@ -524,7 +524,7 @@ All variables must be prefixed with `VITE_` to be included in the browser bundle
 | :-------------------------- | :------ | :---------------------- | :--------------------------------------------------------------------------------- | :-------: |
 | `VITE_API_URL`              | String  | `http://localhost:5000` | Base URL of the Express.js API Gateway. All REST calls use this as the base.       |  **Yes**  |
 | `VITE_APP_ENV`              | String  | `development`           | Runtime environment: `development`, `staging`, or `production`.                    | Optional  |
-| `VITE_APP_NAME`             | String  | `ThinkWires`            | Human-readable app name for browser title tags.                                    | Optional  |
+| `VITE_APP_NAME`             | String  | `Thinkwires`            | Human-readable app name for browser title tags.                                    | Optional  |
 | `VITE_ENABLE_DEBUG_LOGGING` | Boolean | `true`                  | Log all API request/response details to the browser console (DevTools).            | Optional  |
 | `VITE_ENABLE_MOCK_API`      | Boolean | `false`                 | Use local fixture data instead of real HTTP calls. Enables offline UI development. | Optional  |
 | `VITE_POSTHOG_KEY`          | String  | _(empty)_               | PostHog project API key for production analytics.                                  | Optional  |

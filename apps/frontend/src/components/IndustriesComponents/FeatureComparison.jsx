@@ -11,7 +11,7 @@ const FeatureComparison = () => {
     'Why Industry-Specific Staffing Protects Enterprise Velocity';
   const subtitle =
     comp?.subtitle ||
-    'Commodity staffing agencies forward generic resumes without technical screening. ThinkWires deploys calibrated engineering pods vetted by veteran domain architects.';
+    'Commodity staffing agencies forward generic resumes without technical screening. Thinkwires deploys calibrated engineering pods vetted by veteran domain architects.';
 
   const generalist = comp?.generalistCard || {
     title: 'Generalist Staffing',
@@ -40,7 +40,7 @@ const FeatureComparison = () => {
   };
 
   const thinkWires = comp?.thinkWiresCard || {
-    title: 'ThinkWires Pods',
+    title: 'Thinkwires Pods',
     subtitle: 'Domain-Calibrated Teams',
     tierBadge: 'Enterprise Tier',
     points: [
@@ -140,7 +140,7 @@ const FeatureComparison = () => {
             </div>
           </ScrollReveal>
 
-          {/* Card: ThinkWires Pods */}
+          {/* Card: Thinkwires Pods */}
           <ScrollReveal direction="right">
             <div className="FeatureComparison-card FeatureComparison-card--positive">
               <div className="FeatureComparison-cardTop">

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useOutletContext } from 'react-router-dom';
+import { useOutletContext, useSearchParams, useLocation, Link } from 'react-router-dom';
 import { adminApi } from './adminService';
 import {
   PlusIcon,
@@ -252,16 +252,23 @@ const renderWorkModeBadge = (wm, officeLoc, loc) => {
   );
 };
 
-const JobsView = () => {
+const JobsView = ({ defaultFilter }) => {
   const { showToast, activeRole } = useOutletContext();
+  const [searchParams, setSearchParams] = useSearchParams();
+  const location = useLocation();
+
+  const initialStatus =
+    defaultFilter || searchParams.get('status') || 'All';
+
   const [jobs, setJobs] = useState([]);
   const [clients, setClients] = useState([]);
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState('');
   const [priorityFilter, setPriorityFilter] = useState('All');
-  const [statusFilter, setStatusFilter] = useState('All');
+  const [statusFilter, setStatusFilter] = useState(initialStatus);
   const [industryFilter, setIndustryFilter] = useState('All');
   const [jobModeFilter, setJobModeFilter] = useState('All');
+  const [categoryFilter, setCategoryFilter] = useState('All');
 
   const [modalOpen, setModalOpen] = useState(false);
   const [editingJob, setEditingJob] = useState(null);
@@ -299,6 +306,8 @@ const JobsView = () => {
         status: statusFilter,
         industry: industryFilter,
         jobMode: jobModeFilter,
+        category: categoryFilter,
+        type: 'jobs',
       })
       .then((res) => {
         setJobs(res.jobs || []);
@@ -313,7 +322,14 @@ const JobsView = () => {
   useEffect(() => {
     fetchJobs();
     adminApi.getClients().then((res) => setClients(res.clients || []));
-  }, [search, priorityFilter, statusFilter, industryFilter, jobModeFilter]);
+  }, [
+    search,
+    priorityFilter,
+    statusFilter,
+    industryFilter,
+    jobModeFilter,
+    categoryFilter,
+  ]);
 
   const openAddModal = () => {
     if (activeRole === 'viewer') {
@@ -485,9 +501,8 @@ const JobsView = () => {
         <div className="tw-view-title-group">
           <h1>Staffing Requisitions & Job Requirements</h1>
           <p className="tw-view-subtitle">
-            Manage client orders with industry classification, employment modes
-            (Permanent, Contract, C2H), work locations, and notice period
-            constraints.
+            Manage active client job requirements, employment modes (Permanent,
+            Contract, C2H), office locations, and notice period constraints.
           </p>
         </div>
 
@@ -501,7 +516,7 @@ const JobsView = () => {
           }}
         >
           <PlusIcon size={15} />
-          <span>Post Requisition</span>
+          <span>Post Job Requirement</span>
         </button>
       </div>
 
@@ -522,6 +537,17 @@ const JobsView = () => {
               onChange={(e) => setSearch(e.target.value)}
               style={{ width: '230px' }}
             />
+
+            <select
+              className="tw-filter-select"
+              value={categoryFilter}
+              onChange={(e) => setCategoryFilter(e.target.value)}
+              style={{ maxWidth: '170px' }}
+            >
+              <option value="All">All Job Sources</option>
+              <option value="Client Requisition">Client Requisitions</option>
+              <option value="Internal">Internal Openings</option>
+            </select>
 
             <select
               className="tw-filter-select"
@@ -565,7 +591,15 @@ const JobsView = () => {
             <select
               className="tw-filter-select"
               value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
+              onChange={(e) => {
+                const val = e.target.value;
+                setStatusFilter(val);
+                if (val !== 'All') {
+                  setSearchParams({ status: val });
+                } else {
+                  setSearchParams({});
+                }
+              }}
             >
               <option value="All">All Statuses</option>
               <option value="Open">Open</option>
@@ -647,12 +681,46 @@ const JobsView = () => {
                       <td>
                         <div
                           style={{
-                            fontWeight: 600,
-                            color: '#0F172A',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '0.45rem',
                             marginBottom: '0.25rem',
+                            flexWrap: 'wrap',
                           }}
                         >
-                          {job.title}
+                          <span
+                            style={{
+                              fontWeight: 600,
+                              color: '#0F172A',
+                            }}
+                          >
+                            {job.title}
+                          </span>
+                          {(job.isRequisition ||
+                            job.category === 'Client Requisition' ||
+                            job.source === 'Client Inbound Requisition' ||
+                            (job.jobId && String(job.jobId).startsWith('REQ-'))) && (
+                            <Link
+                              to={`/admin/requisitions?search=${encodeURIComponent(job.client || job.title)}`}
+                              style={{
+                                fontSize: '0.65rem',
+                                fontWeight: 700,
+                                textTransform: 'uppercase',
+                                padding: '0.12rem 0.45rem',
+                                borderRadius: '4px',
+                                backgroundColor: '#EDE9FE',
+                                color: '#6D28D9',
+                                border: '1px solid #DDD6FE',
+                                textDecoration: 'none',
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: '0.25rem',
+                              }}
+                              title="Mandate originated from Client Requisition. Click to view SLA desk."
+                            >
+                              <span>Mandate: {job.jobId || 'REQ'}</span>
+                            </Link>
+                          )}
                         </div>
                         <div
                           style={{
@@ -711,15 +779,38 @@ const JobsView = () => {
                         <div style={{ fontWeight: 600, color: '#1E293B' }}>
                           {job.client || 'Enterprise Client'}
                         </div>
-                        <div
-                          style={{
-                            fontSize: '0.72rem',
-                            color: '#64748B',
-                            marginTop: '0.15rem',
-                          }}
-                        >
-                          Verified Client
-                        </div>
+                        {job.contactPerson && (
+                          <div
+                            style={{
+                              fontSize: '0.75rem',
+                              color: '#475569',
+                              marginTop: '0.1rem',
+                            }}
+                          >
+                            {job.contactPerson}
+                          </div>
+                        )}
+                        {job.contactEmail ? (
+                          <div
+                            style={{
+                              fontSize: '0.7rem',
+                              color: '#2563EB',
+                              marginTop: '0.1rem',
+                            }}
+                          >
+                            {job.contactEmail}
+                          </div>
+                        ) : (
+                          <div
+                            style={{
+                              fontSize: '0.72rem',
+                              color: '#64748B',
+                              marginTop: '0.15rem',
+                            }}
+                          >
+                            Verified Client
+                          </div>
+                        )}
                       </td>
 
                       <td>
@@ -805,8 +896,36 @@ const JobsView = () => {
                       <td style={{ textAlign: 'right' }}>
                         <div
                           className="tw-action-btn-group"
-                          style={{ justifyContent: 'flex-end' }}
+                          style={{ justifyContent: 'flex-end', alignItems: 'center' }}
                         >
+                          {(job.status === 'Inbound Request' ||
+                            job.status === 'Inbound Requisition') && (
+                            <button
+                              className="tw-btn-primary"
+                              onClick={() => {
+                                adminApi
+                                  .updateJob(job.id || job._id, { status: 'Open' })
+                                  .then(() => {
+                                    showToast(
+                                      `Requisition "${job.title}" approved and opened.`
+                                    );
+                                    fetchJobs();
+                                  })
+                                  .catch((err) =>
+                                    showToast(`Update failed: ${err.message}`)
+                                  );
+                              }}
+                              title="Approve and open mandate"
+                              style={{
+                                padding: '0.2rem 0.5rem',
+                                fontSize: '0.7rem',
+                                background: '#008F68',
+                                marginRight: '0.25rem',
+                              }}
+                            >
+                              Approve
+                            </button>
+                          )}
                           <button
                             className="tw-action-icon-btn"
                             onClick={() => openEditModal(job)}

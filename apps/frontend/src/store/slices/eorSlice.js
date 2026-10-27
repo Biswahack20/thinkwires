@@ -7,7 +7,7 @@ export const fallbackEorData = {
     badge: 'GLOBAL EMPLOYER OF RECORD (EOR) • 100% REGULATORY COMPLIANCE',
     heading: 'Make Contract & Global Hiring Effortless With a Modern EOR',
     description:
-      'Deploy, manage, and pay contingent engineering talent locally and internationally through ThinkWires on-demand EOR platform without foreign entity setup or compliance risk.',
+      'Deploy, manage, and pay contingent engineering talent locally and internationally through Thinkwires on-demand EOR platform without foreign entity setup or compliance risk.',
     badges: [
       { icon: 'bolt', text: '5-Day Fast-Track Onboarding' },
       { icon: 'domain_disabled', text: 'Zero Foreign Entity Needed' },
@@ -27,7 +27,7 @@ export const fallbackEorData = {
         {
           icon: 'gavel',
           title: 'Legal Employer Liability',
-          desc: '100% Absorbed by ThinkWires EOR',
+          desc: '100% Absorbed by Thinkwires EOR',
           status: 'Active Shield',
           statusType: 'emerald',
         },
@@ -46,7 +46,7 @@ export const fallbackEorData = {
           statusType: 'emerald',
         },
       ],
-      hotline: '+91 89205 55626',
+      email: 'hr@thinkwires.com',
       slaText: '24/7 SLAs',
     },
   },
@@ -66,7 +66,7 @@ export const fallbackEorData = {
     description1:
       'When expanding engineering squads or engaging high-caliber contractors, an Employer of Record (EOR) acts as the official legal employer for contingent talent while your engineering leads maintain 100% operational command.',
     description2:
-      'ThinkWires assumes complete institutional responsibility: background checks, mandatory insurance coverage, compliant tax withholdings, local labor law compliance, and tier-1 benefits. This safeguards your enterprise against misclassification liabilities and bureaucratic gridlock.',
+      'Thinkwires assumes complete institutional responsibility: background checks, mandatory insurance coverage, compliant tax withholdings, local labor law compliance, and tier-1 benefits. This safeguards your enterprise against misclassification liabilities and bureaucratic gridlock.',
     highlights: [
       {
         icon: 'verified_user',
@@ -90,7 +90,7 @@ export const fallbackEorData = {
       },
     ],
     separationModel: {
-      title: 'The ThinkWires EOR Separation Model',
+      title: 'The Thinkwires EOR Separation Model',
       clientDirects: {
         title: 'You Direct (Day-to-Day)',
         points: [
@@ -101,7 +101,7 @@ export const fallbackEorData = {
         ],
       },
       thinkWiresManages: {
-        title: 'ThinkWires Employs (Legal)',
+        title: 'Thinkwires Employs (Legal)',
         points: [
           'Local Employment Contract',
           'Monthly Payroll & Direct Deposit',
@@ -140,7 +140,7 @@ export const fallbackEorData = {
         tag: 'Candidate Attraction Edge',
         title: 'Enterprise Employee Benefits',
         description:
-          "Succeed in today's fiercely competitive talent landscape. ThinkWires bundles executive-grade healthcare and wellness coverage with high-touch support, providing contingent hires with enterprise security and giving your firm an unparalleled hiring advantage.",
+          "Succeed in today's fiercely competitive talent landscape. Thinkwires bundles executive-grade healthcare and wellness coverage with high-touch support, providing contingent hires with enterprise security and giving your firm an unparalleled hiring advantage.",
         bullets: [
           'Universal PTO eligibility across any state or province',
           'Predictable, fixed monthly copays for healthcare and outpatient coverage',
@@ -170,7 +170,7 @@ export const fallbackEorData = {
         tag: 'Precision Payroll',
         title: 'Tax Retention & Statutory Filings',
         description:
-          'Maintain uncompromising payroll compliance across tightly governed tax authorities. ThinkWires experts handle multi-level liabilities so you avoid double taxation risks and penalty exposures.',
+          'Maintain uncompromising payroll compliance across tightly governed tax authorities. Thinkwires experts handle multi-level liabilities so you avoid double taxation risks and penalty exposures.',
         bullets: [
           'Administration of multi-level tax liabilities (EPF, ESI, TDS, W-2, 1099)',
           'Real-time tracking of legislative and labor statute updates',
@@ -184,7 +184,7 @@ export const fallbackEorData = {
   },
   comparisonSection: {
     eyebrow: 'Strategic Advantage',
-    heading: 'Why Partner with ThinkWires EOR?',
+    heading: 'Why Partner with Thinkwires EOR?',
     description:
       'Establishing a foreign subsidiary drains financial capital and consumes executive attention. Compare the traditional route against our agile EOR framework.',
     rows: [
@@ -205,14 +205,14 @@ export const fallbackEorData = {
       {
         factor: 'Local Corporate Governance',
         traditional: 'Resident directors, local bank accounts, annual filings',
-        eor: '100% Handled by ThinkWires',
+        eor: '100% Handled by Thinkwires',
         eorIcon: 'shield',
         eorColor: 'emerald-accent',
       },
       {
         factor: 'Compliance & Labor Defense',
         traditional: 'Direct company legal exposure',
-        eor: 'ThinkWires assumes legal liability',
+        eor: 'Thinkwires assumes legal liability',
         eorIcon: 'verified_user',
         eorColor: 'tertiary-container',
       },
@@ -239,29 +239,29 @@ export const fallbackEorData = {
     sidebar: {
       title: 'Need tailored contract clauses?',
       desc: 'Our legal counsel configures customized service level agreements and master services contracts for high-compliance sectors.',
-      phone: '+91 89205 55626',
-      actionText: 'Speak directly with Legal Operations',
+      email: 'hr@thinkwires.com',
+      actionText: 'Email HR & Legal Operations',
     },
     items: [
       {
         question: 'What are the benefits of partnering with an EOR?',
         answer:
-          'Working with an Employer of Record (EOR) provides clear advantages: simplified compliance, minimized risk, improved HR processes, access to global talent, and greater workforce flexibility. ThinkWires absorbs local labor law liabilities, files statutory taxes, and provisions comprehensive benefits so you scale without administrative overhead.',
+          'Working with an Employer of Record (EOR) provides clear advantages: simplified compliance, minimized risk, improved HR processes, access to global talent, and greater workforce flexibility. Thinkwires absorbs local labor law liabilities, files statutory taxes, and provisions comprehensive benefits so you scale without administrative overhead.',
       },
       {
         question: 'How can EOR help my business grow internationally?',
         answer:
-          'An EOR drives business growth through local expertise, strict compliance, streamlined payroll and benefits, and effective risk management. Instead of spending 6–9 months and $50k+ creating regional legal subsidiaries in India, North America, or the GCC, ThinkWires enables day-five deployment of verified engineering teams using our existing legal infrastructure.',
+          'An EOR drives business growth through local expertise, strict compliance, streamlined payroll and benefits, and effective risk management. Instead of spending 6–9 months and $50k+ creating regional legal subsidiaries in India, North America, or the GCC, Thinkwires enables day-five deployment of verified engineering teams using our existing legal infrastructure.',
       },
       {
         question: 'How do I pick the right EOR partner for my business?',
         answer:
-          'Choosing the ideal EOR partner entails evaluating their physical regional presence, technology portal capabilities, multi-currency processing rails, responsiveness of candidate support, and verified compliance certifications (such as ISO 27001 and SOC 2 Type II). ThinkWires pairs on-the-ground presence in Noida HQ, San Francisco, and Toronto with 24/7 dedicated account directors.',
+          'Choosing the ideal EOR partner entails evaluating their physical regional presence, technology portal capabilities, multi-currency processing rails, responsiveness of candidate support, and verified compliance certifications (such as ISO 27001 and SOC 2 Type II). Thinkwires pairs on-the-ground presence in Noida HQ, San Francisco, and Toronto with 24/7 dedicated account directors.',
       },
       {
         question: 'How does IP ownership and non-disclosure work under an EOR?',
         answer:
-          'Intellectual Property ownership is strictly guarded via bi-lateral and tri-partite employment contracts. Under ThinkWires EOR covenants, all contractor inventions, source code, patents, and technical artifacts are automatically assigned directly to your company upon creation, supported by strict institutional NDAs valid in international jurisdictions.',
+          'Intellectual Property ownership is strictly guarded via bi-lateral and tri-partite employment contracts. Under Thinkwires EOR covenants, all contractor inventions, source code, patents, and technical artifacts are automatically assigned directly to your company upon creation, supported by strict institutional NDAs valid in international jurisdictions.',
       },
     ],
   },
@@ -273,7 +273,7 @@ export const fallbackEorData = {
     benefits: [
       'Guaranteed 5-Hour SLA Business Response',
       'SOC 2 Type II • ISO 27001 Certified Infrastructure',
-      'Instant WhatsApp Connect: +91 89205 55626',
+      'Direct HR Advisory: hr@thinkwires.com',
     ],
     hq: 'Corporate Headquarters: Sector 62, Electronic City, Noida, UP 201309 • Operations in Silicon Valley & Toronto',
   },

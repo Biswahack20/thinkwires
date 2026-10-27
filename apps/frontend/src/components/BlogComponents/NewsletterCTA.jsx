@@ -28,7 +28,7 @@ const NewsletterCTA = ({ isSubmitted = false, onSubmit }) => {
 
             <p className="NewsletterCTA-figmaSubtitle">
               Join over 4,800 CTOs, VPs of Engineering, and People Leaders
-              receiving ThinkWires unvarnished quarterly compensation,
+              receiving Thinkwires unvarnished quarterly compensation,
               time-to-hire, and skill scarcity reports.
             </p>
 

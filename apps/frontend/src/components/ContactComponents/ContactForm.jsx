@@ -121,7 +121,7 @@ const ContactForm = ({ formConfig }) => {
           <h3 className="ContactForm-successTitle">Message Received!</h3>
           <p className="ContactForm-successMsg">
             {submitMessage ||
-              'Thank you! A ThinkWires staffing director will respond within 5 business hours.'}
+              'Thank you! A Thinkwires staffing director will respond within 5 business hours.'}
           </p>
           <button onClick={handleReset} className="ContactForm-resetBtn">
             Send Another Message

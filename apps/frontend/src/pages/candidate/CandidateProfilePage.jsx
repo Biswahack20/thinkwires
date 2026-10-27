@@ -208,7 +208,7 @@ const CandidateProfilePage = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    document.title = 'Candidate Profile & Preferences | ThinkWires';
+    document.title = 'Candidate Profile & Preferences | Thinkwires';
 
     if (user) {
       // Synchronize editable form state when authenticated user profile data loads or changes from Redux

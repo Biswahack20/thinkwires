@@ -153,6 +153,7 @@ const JobSpecModal = ({ job, onClose, onApply }) => {
 
   return (
     <div
+      className="JobSpecModal-overlay"
       data-lenis-prevent="true"
       style={{
         position: 'fixed',
@@ -173,6 +174,7 @@ const JobSpecModal = ({ job, onClose, onApply }) => {
       onClick={onClose}
     >
       <div
+        className="JobSpecModal-card"
         data-lenis-prevent="true"
         onWheel={(e) => e.stopPropagation()}
         style={{
@@ -193,6 +195,7 @@ const JobSpecModal = ({ job, onClose, onApply }) => {
       >
         {/* Modal Header */}
         <div
+          className="JobSpecModal-header"
           style={{
             padding: '1.5rem 1.75rem 1.25rem 1.75rem',
             borderBottom: '1px solid #F1F5F9',
@@ -355,6 +358,7 @@ const JobSpecModal = ({ job, onClose, onApply }) => {
 
         {/* Modal Scrollable Body */}
         <div
+          className="JobSpecModal-body"
           data-lenis-prevent="true"
           onWheel={(e) => e.stopPropagation()}
           style={{
@@ -392,7 +396,7 @@ const JobSpecModal = ({ job, onClose, onApply }) => {
               <strong style={{ color: '#0F172A' }}>
                 Client Partner Confidentiality:
               </strong>{' '}
-              ThinkWires exclusively represents verified Tier-1 enterprise
+              Thinkwires exclusively represents verified Tier-1 enterprise
               organizations and global technology centers. Exact client legal
               entity names and project NDA specifics are shared during the
               direct technical round.
@@ -779,7 +783,7 @@ const JobSpecModal = ({ job, onClose, onApply }) => {
               >
                 speed
               </span>
-              ThinkWires Direct Intake Protocol
+              Thinkwires Direct Intake Protocol
             </div>
             <p
               style={{
@@ -799,6 +803,7 @@ const JobSpecModal = ({ job, onClose, onApply }) => {
 
         {/* Modal Action Footer */}
         <div
+          className="JobSpecModal-footer"
           style={{
             padding: '1rem 1.75rem',
             borderTop: '1px solid #F1F5F9',

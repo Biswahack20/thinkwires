@@ -1,5 +1,5 @@
 /**
- * ThinkWires Design System — Central Theme Configuration
+ * Thinkwires Design System — Central Theme Configuration
  *
  * This file exports all design tokens as a JavaScript object,
  * making them available for use in JS-driven styling logic,
@@ -7,7 +7,7 @@
  *
  * ─── How the Design System Works ──────────────────────────────────────────────
  *
- * ThinkWires uses a THREE-LAYER styling architecture:
+ * Thinkwires uses a THREE-LAYER styling architecture:
  *
  *   1. CSS Custom Properties (`index.css`)
  *      The source of truth. All design tokens are defined as CSS variables

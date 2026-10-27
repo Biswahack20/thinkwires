@@ -28,7 +28,7 @@ const BenchPage = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
     document.title =
-      'Talent Cloud Bench Explorer | ThinkWires - Pre-Vetted Tech Talent & Dossiers';
+      'Talent Cloud Bench Explorer | Thinkwires - Pre-Vetted Tech Talent & Dossiers';
     if (status === 'idle') {
       dispatch(fetchBenchData());
     }

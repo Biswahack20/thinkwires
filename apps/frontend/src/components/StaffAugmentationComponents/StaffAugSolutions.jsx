@@ -49,7 +49,7 @@ const StaffAugSolutions = ({ data }) => {
           ))}
         </div>
 
-        {/* Spotlight Banner: People4People + ThinkWires Workforce Governance */}
+        {/* Spotlight Banner: People4People + Thinkwires Workforce Governance */}
         {spotlight && spotlight.title && (
           <ScrollReveal direction="up" distance={60}>
             <div className="StaffAug-spotlightBanner">

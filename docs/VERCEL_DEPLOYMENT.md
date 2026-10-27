@@ -1,6 +1,6 @@
-# Vercel Deployment Guide for ThinkWires
+# Vercel Deployment Guide for Thinkwires
 
-This guide provides step-by-step instructions to deploy the ThinkWires platform on **Vercel**.
+This guide provides step-by-step instructions to deploy the Thinkwires platform on **Vercel**.
 
 ---
 
@@ -23,7 +23,7 @@ This guide provides step-by-step instructions to deploy the ThinkWires platform 
                    Browser / Client Cache                               (Mongoose)                     (Sequelize)
 ```
 
-ThinkWires is designed with relative API routes (`/api/...`), so all API calls and authentication cookies remain **same-origin**, eliminating cross-site cookie and CORS issues.
+Thinkwires is designed with relative API routes (`/api/...`), so all API calls and authentication cookies remain **same-origin**, eliminating cross-site cookie and CORS issues.
 
 ---
 
@@ -55,6 +55,7 @@ Go to **Project Settings → Environment Variables** and add:
 | `OPENAI_API_KEY` | `sk-...` | Optional: OpenAI key for LLM assessment generator |
 | `OPENAI_MODEL` | `gpt-4o-mini` | Optional: Model name |
 | `COOKIE_SAME_SITE` | `lax` | Cookie SameSite attribute |
+| `ALLOWED_ORIGINS` | `https://your-app.vercel.app` | Comma-separated list of exact trusted frontend URLs for CORS and CSRF |
 
 ### Step 4: Click Deploy
 Vercel will:
@@ -73,7 +74,7 @@ Vercel will:
 Deploy the backend on Render, Railway, Fly.io, or an Ubuntu VPS (e.g., `https://api.yourdomain.com` or `https://thinkwires-backend.onrender.com`).
 
 ### Step 2: Configure Proxy Rewrites in `vercel.json`
-Edit [vercel.json](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/vercel.json) (or [apps/frontend/vercel.json](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/frontend/vercel.json)):
+Edit [vercel.json](file:///c:/Users/Tanjil%20Alam/Desktop/Thinkwires/thinkwires/vercel.json) (or [apps/frontend/vercel.json](file:///c:/Users/Tanjil%20Alam/Desktop/Thinkwires/thinkwires/apps/frontend/vercel.json)):
 
 ```json
 {
@@ -114,7 +115,7 @@ Edit [vercel.json](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/
    ```json
    {
      "status": "healthy",
-     "service": "ThinkWires Enterprise Core Backend",
+     "service": "Thinkwires Enterprise Core Backend",
      "version": "1.0.0",
      "environment": "production",
      "databases": {
@@ -135,7 +136,7 @@ Edit [vercel.json](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/
 
 ### Issue 1: "Cannot GET /candidate/profile" (404 on refresh)
 - **Cause**: Client-side routing not redirected to `index.html`.
-- **Solution**: Ensure [vercel.json](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/vercel.json) contains `"source": "/(.*)", "destination": "/index.html"` as the last rewrite rule.
+- **Solution**: Ensure [vercel.json](file:///c:/Users/Tanjil%20Alam/Desktop/Thinkwires/thinkwires/vercel.json) contains `"source": "/(.*)", "destination": "/index.html"` as the last rewrite rule.
 
 ### Issue 2: MongoDB connection timeout on Serverless
 - **Cause**: MongoDB Atlas IP Whitelist blocks Vercel serverless IPs.

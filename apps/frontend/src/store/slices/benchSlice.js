@@ -8,7 +8,7 @@ export const fallbackBenchData = {
     liveRepoBadge: '142 PRE-VETTED TALENTS ON ACTIVE BENCH',
     title: 'Engineers on the Bench. Available to Deploy in 48 Hours.',
     subtitle:
-      'Bypass the 60-day hiring cycle. Access active ThinkWires senior contractors, fully vetted with verified code commits, system design scores, and instant contract execution.',
+      'Bypass the 60-day hiring cycle. Access active Thinkwires senior contractors, fully vetted with verified code commits, system design scores, and instant contract execution.',
     slaCard: {
       tag: '48-HOUR SLA ASSURANCE',
       title: 'Instant Pod Matching & Zero-Friction EOR Onboarding',
@@ -291,7 +291,7 @@ export const fallbackBenchData = {
       icon: 'rule',
       title: 'Architect Rubric Scorecard',
       description:
-        '60-minute recorded system design session evaluated by ThinkWires Principal Reviewers against CAP theorem, caching, and resiliency.',
+        '60-minute recorded system design session evaluated by Thinkwires Principal Reviewers against CAP theorem, caching, and resiliency.',
       highlight: 'Standardized 100-pt Scale',
     },
     {

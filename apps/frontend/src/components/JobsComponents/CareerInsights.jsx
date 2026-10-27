@@ -20,7 +20,7 @@ const CareerInsights = () => {
       tag: 'Campus Drive',
       title: 'From Classroom to Career: Empowering 250+ Next-Gen Tech...',
       snippet:
-        'Recap of ThinkWires landmark hiring drive in Dehradun, selecting high-potential graduate talent across Cloud and Full-Stack cohorts.',
+        'Recap of Thinkwires landmark hiring drive in Dehradun, selecting high-potential graduate talent across Cloud and Full-Stack cohorts.',
       image:
         'https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=800&q=80',
     },

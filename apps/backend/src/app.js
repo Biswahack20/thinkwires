@@ -1,3 +1,4 @@
+import helmet from 'helmet';
 import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
@@ -20,11 +21,25 @@ const app = express();
 
 app.disable('x-powered-by');
 
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: ["'self'"],
+        styleSrc: ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'],
+        fontSrc: ["'self'", 'https://fonts.gstatic.com'],
+        imgSrc: ["'self'", 'data:', 'https:'],
+        connectSrc: ["'self'"],
+      },
+    },
+    crossOriginResourcePolicy: { policy: 'cross-origin' },
+    referrerPolicy: { policy: 'strict-origin-when-cross-origin' },
+  })
+);
+
 app.use((req, res, next) => {
-  res.setHeader('X-Content-Type-Options', 'nosniff');
-  res.setHeader('X-Frame-Options', 'SAMEORIGIN');
   res.setHeader('X-XSS-Protection', '1; mode=block');
-  res.setHeader('Referrer-Policy', 'strict-origin-when-cross-origin');
   next();
 });
 
@@ -62,7 +77,7 @@ app.get('/api/health', (req, res) => {
 
   res.status(200).json({
     status: 'healthy',
-    service: 'ThinkWires Enterprise Core Backend',
+    service: 'Thinkwires Enterprise Core Backend',
     version: '1.0.0',
     timestamp: new Date().toISOString(),
     uptime: Math.floor(process.uptime()),
@@ -92,14 +107,18 @@ const possibleDistPaths = [
   path.resolve(process.cwd(), 'dist'),
 ];
 
-const resolvedDist = possibleDistPaths.find((p) => fs.existsSync(p));
+const resolvedDist =
+  process.env.NODE_ENV !== 'test'
+    ? possibleDistPaths.find((p) => fs.existsSync(p))
+    : null;
 
 if (resolvedDist) {
   app.use(
     express.static(resolvedDist, {
       maxAge: '1d',
       setHeaders: (res, filePath) => {
-        if (filePath.includes('/assets/')) {
+        const normalizedPath = filePath.replace(/\\/g, '/');
+        if (normalizedPath.includes('/assets/')) {
           res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
         }
       },
@@ -119,15 +138,8 @@ if (resolvedDist) {
   });
 } else {
   app.get('/', (req, res) => {
-    res.json({
-      service: 'ThinkWires Enterprise API',
-      status: 'operational',
-      environment: process.env.NODE_ENV || 'development',
-      health: '/api/health',
-      docs: '/api/docs',
-    });
+    res.send('API is running...');
   });
 }
 
 export default app;
-

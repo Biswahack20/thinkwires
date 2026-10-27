@@ -39,7 +39,7 @@ export const seedDatabase = async () => {
     .toLowerCase()
     .trim();
   const adminPassword =
-    process.env.INITIAL_SUPERADMIN_PASSWORD || 'ThinkWires@Admin2026!';
+    process.env.INITIAL_SUPERADMIN_PASSWORD || 'Thinkwires@Admin2026!';
   const defaultHashedPassword = await hashPassword(adminPassword);
 
   if (mongoose.connection.readyState === 1) {
@@ -162,7 +162,7 @@ export const seedDatabase = async () => {
           badgeColor: art.badgeColor || '',
           subCategory: art.subCategory || '',
           telemetry: art.telemetry || null,
-          author: art.author || { name: 'ThinkWires Editorial' },
+          author: art.author || { name: 'Thinkwires Editorial' },
           category: art.category || 'Market Report',
           publishedAt: art.publishedAt || new Date().toISOString(),
           readTime: art.readTime || '5 min read',
@@ -180,8 +180,8 @@ export const seedDatabase = async () => {
       slug: 'home',
       category: 'Core Website',
       content:
-        'ThinkWires enterprise-grade IT manpower supply and workforce advisory.',
-      metaTitle: 'ThinkWires — Tech Staffing & Borderless Engineering Squads',
+        'Thinkwires enterprise-grade IT manpower supply and workforce advisory.',
+      metaTitle: 'Thinkwires — Tech Staffing & Borderless Engineering Squads',
       metaDescription:
         'Deploy top engineering talent and compliant global workforce infrastructure.',
       data: {
@@ -203,7 +203,7 @@ export const seedDatabase = async () => {
       category: 'Core Website',
       content:
         'Founded in 2022 as a premier workforce advisor and staffing aggregator.',
-      metaTitle: 'About ThinkWires — Global Tech Talent Advisory',
+      metaTitle: 'About Thinkwires — Global Tech Talent Advisory',
       metaDescription:
         'Connecting high-growth enterprises with specialized engineering talent.',
       data: mockData.aboutData || {},
@@ -214,8 +214,8 @@ export const seedDatabase = async () => {
       slug: 'contact',
       category: 'Core Website',
       content:
-        'Connect with ThinkWires Staffing Directors across India, USA, and Canada.',
-      metaTitle: 'Contact ThinkWires — Global Office Locations & Inquiries',
+        'Connect with Thinkwires Staffing Directors across India, USA, and Canada.',
+      metaTitle: 'Contact Thinkwires — Global Office Locations & Inquiries',
       metaDescription:
         'Get in touch for enterprise tech staffing and talent augmentation.',
       data: mockData.contactData || {},
@@ -239,7 +239,7 @@ export const seedDatabase = async () => {
       category: 'Workforce Services',
       content:
         'Compliant multi-currency payroll administration across borderless tech hubs.',
-      metaTitle: 'Global Payroll Management — ThinkWires',
+      metaTitle: 'Global Payroll Management — Thinkwires',
       metaDescription: 'Streamlined international tech payroll infrastructure.',
       data: mockData.payrollData || {},
       status: 'published',
@@ -250,7 +250,7 @@ export const seedDatabase = async () => {
       category: 'Workforce Services',
       content:
         'Compliant international employment without setting up local legal entities.',
-      metaTitle: 'Employer of Record (EOR) — ThinkWires',
+      metaTitle: 'Employer of Record (EOR) — Thinkwires',
       metaDescription:
         'Hire legally anywhere in India and North America without subsidiary overhead.',
       data: mockData.eorData || {},
@@ -262,7 +262,7 @@ export const seedDatabase = async () => {
       category: 'Workforce Services',
       content:
         'Scale engineering squads rapidly with verified contract talent.',
-      metaTitle: 'IT Staff Augmentation — ThinkWires',
+      metaTitle: 'IT Staff Augmentation — Thinkwires',
       metaDescription:
         'High-velocity technical team extension with strict SLAs.',
       data: mockData.staffAugmentationData || {},
@@ -274,7 +274,7 @@ export const seedDatabase = async () => {
       category: 'Workforce Services',
       content:
         'Direct-hire technical recruiting and executive leadership search.',
-      metaTitle: 'Permanent Staffing & Executive Search — ThinkWires',
+      metaTitle: 'Permanent Staffing & Executive Search — Thinkwires',
       metaDescription:
         'Targeted executive search for mission-critical engineering roles.',
       data: mockData.permanentStaffingData || {},
@@ -286,7 +286,7 @@ export const seedDatabase = async () => {
       category: 'Client Portal',
       content:
         'Submit specialized engineering requisitions with 5-hour SLA response.',
-      metaTitle: 'Hire Top Tech Talent — ThinkWires',
+      metaTitle: 'Hire Top Tech Talent — Thinkwires',
       metaDescription:
         'Post engineering requisitions and get matching candidate profiles within hours.',
       data: mockData.findTalentData || {},
@@ -298,7 +298,7 @@ export const seedDatabase = async () => {
       category: 'Candidate Experience',
       content:
         'Manage applications, track interviews, and submit monthly timesheets.',
-      metaTitle: 'Candidate Portal — ThinkWires',
+      metaTitle: 'Candidate Portal — Thinkwires',
       metaDescription:
         'Candidate dashboard for timesheets, career tracking, and onboarding.',
       data: mockData.candidatePortalData || {},
@@ -310,7 +310,7 @@ export const seedDatabase = async () => {
       category: 'Core Website',
       content:
         'Specialized talent delivery across Fintech, Healthtech, SaaS, and Enterprise AI.',
-      metaTitle: 'Industry Talent Corridors — ThinkWires',
+      metaTitle: 'Industry Talent Corridors — Thinkwires',
       metaDescription: 'Domain-specialized tech recruitment pipelines.',
       data: mockData.industriesPageData || {},
       status: 'published',

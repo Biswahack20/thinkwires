@@ -168,7 +168,23 @@ const adminFetch = async (endpoint, options = {}) => {
 
   // Attach anti-CSRF token to all state-changing requests
   if (['POST', 'PUT', 'PATCH', 'DELETE'].includes(method)) {
-    const csrfToken = getCsrfToken();
+    let csrfToken = getCsrfToken();
+    if (!csrfToken) {
+      try {
+        const tokenRes = await fetch(`${API_BASE}/auth/csrf-token`, {
+          credentials: 'include',
+        });
+        if (tokenRes.ok) {
+          const data = await tokenRes.json();
+          if (data && data.csrfToken) {
+            setCsrfToken(data.csrfToken);
+            csrfToken = data.csrfToken;
+          }
+        }
+      } catch {
+        // Fallback gracefully
+      }
+    }
     if (csrfToken) {
       headers['X-CSRF-Token'] = csrfToken;
     }
@@ -390,12 +406,16 @@ export const adminApi = {
     return json;
   },
 
-  // Jobs
+  // Jobs & Requisitions
   async getJobs(params = {}) {
     const query = new URLSearchParams(params).toString();
     const res = await adminFetch(`/jobs${query ? `?${query}` : ''}`);
     if (!res.ok) throw new Error(`HTTP error ${res.status}`);
     return res.json();
+  },
+
+  async getRequisitions(params = {}) {
+    return this.getJobs({ ...params, type: 'requisitions' });
   },
 
   async createJob(data) {
@@ -408,6 +428,15 @@ export const adminApi = {
     return json;
   },
 
+  async createRequisition(data) {
+    return this.createJob({
+      ...data,
+      isRequisition: true,
+      category: 'Client Requisition',
+      source: 'Client Mandate',
+    });
+  },
+
   async updateJob(id, data) {
     const res = await adminFetch(`/jobs/${id}`, {
       method: 'PUT',
@@ -416,6 +445,13 @@ export const adminApi = {
     const json = await res.json();
     if (!res.ok) throw new Error(json.error || `HTTP error ${res.status}`);
     return json;
+  },
+
+  async approveRequisition(id, updates = {}) {
+    return this.updateJob(id, {
+      status: 'Approved',
+      ...updates,
+    });
   },
 
   async deleteJob(id) {

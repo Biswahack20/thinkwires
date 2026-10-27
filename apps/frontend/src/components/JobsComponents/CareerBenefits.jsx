@@ -166,7 +166,7 @@ const CareerBenefits = () => {
               COMPREHENSIVE ENGINEERING CARE
             </div>
             <h2 className="CareerBenefits-headingTitle">
-              Why Build Your Career With ThinkWires?
+              Why Build Your Career With Thinkwires?
             </h2>
             <p className="CareerBenefits-headingSub">
               We prioritize individual engineer wellness, career velocity, and

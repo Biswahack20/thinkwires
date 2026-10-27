@@ -219,7 +219,7 @@ const JobPage = () => {
 
           <div className="section-divider-line" />
 
-          {/* Why Build Your Career With ThinkWires Section (Redux Dynamic Data) */}
+          {/* Why Build Your Career With Thinkwires Section (Redux Dynamic Data) */}
           <CareerBenefits />
 
           <div className="section-divider-line" />

@@ -53,6 +53,8 @@ const AdminLayout = () => {
   const [dbStatus, setDbStatus] = useState('In-Memory Resilient Demo');
   const [isMongo, setIsMongo] = useState(false);
   const [toastMessage, setToastMessage] = useState(null);
+  const [pendingRequisitionsCount, setPendingRequisitionsCount] =
+    useState(null);
 
   const markAllAnnouncementsAsRead = () => {
     const allIds = announcements.map(
@@ -132,6 +134,16 @@ const AdminLayout = () => {
         if (data && data.databaseMode) setDbStatus(data.databaseMode);
         if (data && data.isMongoActive !== undefined)
           setIsMongo(data.isMongoActive);
+        if (data && data.kpis && data.kpis.pendingRequisitionsSla !== undefined) {
+          setPendingRequisitionsCount(data.kpis.pendingRequisitionsSla);
+        } else if (data && data.kpis && data.kpis.inboundRequisitionsCount !== undefined) {
+          setPendingRequisitionsCount(data.kpis.inboundRequisitionsCount);
+        } else if (data && data.inboundRequisitions) {
+          const pending = data.inboundRequisitions.filter(
+            (r) => r.status === 'Inbound Request' || r.status === 'Inbound Requisition'
+          ).length;
+          setPendingRequisitionsCount(pending > 0 ? pending : data.inboundRequisitions.length);
+        }
       })
       .catch((err) =>
         console.warn('Could not fetch topbar stats:', err.message)
@@ -201,6 +213,16 @@ const AdminLayout = () => {
           {
             group: 'MANPOWER & RECRUITMENT',
             items: [
+              {
+                label: 'Requisition Requests',
+                path: '/admin/requisitions',
+                icon: <FileTextIcon size={18} />,
+                badge:
+                  pendingRequisitionsCount !== null &&
+                  pendingRequisitionsCount > 0
+                    ? String(pendingRequisitionsCount)
+                    : null,
+              },
               {
                 label: 'Employees',
                 path: '/admin/employees',
@@ -381,10 +403,10 @@ const AdminLayout = () => {
           <Link
             to={isCmsAdmin ? '/admin/cms' : '/admin'}
             className="tw-brand"
-            title="ThinkWires Admin"
+            title="Thinkwires Admin"
           >
             <div className="tw-brand-logo-wrap">
-              <img src={logo} alt="ThinkWires" className="tw-brand-logo-img" />
+              <img src={logo} alt="Thinkwires" className="tw-brand-logo-img" />
             </div>
           </Link>
           <button
@@ -623,7 +645,7 @@ const AdminLayout = () => {
             <Link
               to="/"
               className="tw-exit-link"
-              title="Open Public ThinkWires Website"
+              title="Open Public Thinkwires Website"
               target="_blank"
               rel="noopener noreferrer"
             >

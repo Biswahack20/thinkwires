@@ -2,14 +2,17 @@ import crypto from 'crypto';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import config from '../configs/dotenv.js';
+import { getRedisClient } from '../configs/redis.js';
 
 const INSECURE_DEFAULT_SECRETS = new Set([
   'your_jwt_secret_here',
   'super_secret_jwt_key_here',
   'your_secure_random_jwt_secret',
+  'your_secure_random_jwt_secret_here',
   'default_secret',
   'secret',
   'changeme',
+  'thinkwires_default_jwt_secret_change_in_production',
 ]);
 
 export const getJwtSecret = () => {
@@ -102,7 +105,8 @@ export const hashResetToken = (rawToken) => {
 
 export const setAuthCookie = (res, token) => {
   const isProduction = process.env.NODE_ENV === 'production';
-  const sameSite = process.env.COOKIE_SAME_SITE || 'lax';
+  const sameSite =
+    process.env.COOKIE_SAME_SITE || (isProduction ? 'strict' : 'lax');
   res.cookie('thinkwires_candidate_jwt', token, {
     httpOnly: true,
     secure: isProduction,
@@ -114,7 +118,8 @@ export const setAuthCookie = (res, token) => {
 
 export const clearAuthCookie = (res) => {
   const isProduction = process.env.NODE_ENV === 'production';
-  const sameSite = process.env.COOKIE_SAME_SITE || 'lax';
+  const sameSite =
+    process.env.COOKIE_SAME_SITE || (isProduction ? 'strict' : 'lax');
   res.cookie('thinkwires_candidate_jwt', '', {
     httpOnly: true,
     secure: isProduction,
@@ -143,19 +148,51 @@ export const generateAdminToken = (user) => {
 
 const revokedTokens = new Set();
 
-export const revokeToken = (token) => {
+export const revokeToken = async (token) => {
   if (token && typeof token === 'string') {
     revokedTokens.add(token);
+    try {
+      const redis = await getRedisClient();
+      if (redis) {
+        await redis.set(`revoked:${token}`, '1', { EX: 7 * 24 * 60 * 60 });
+      }
+    } catch (err) {
+      console.error('[Redis] Failed to persist revoked token:', err.message);
+    }
   }
 };
 
-export const isTokenRevoked = (token) => {
+export const isTokenRevoked = async (token) => {
   if (!token || typeof token !== 'string') return false;
-  return revokedTokens.has(token);
+  if (revokedTokens.has(token)) return true;
+  try {
+    const redis = await getRedisClient();
+    if (redis) {
+      const isRevoked = Boolean(await redis.get(`revoked:${token}`));
+      if (isRevoked) {
+        revokedTokens.add(token);
+        return true;
+      }
+    }
+  } catch (err) {
+    console.error('[Redis] Failed to query revoked token from Redis:', err.message);
+  }
+  return false;
 };
 
-export const clearRevocationStore = () => {
+export const clearRevocationStore = async () => {
   revokedTokens.clear();
+  try {
+    const redis = await getRedisClient();
+    if (redis) {
+      const keys = await redis.keys('revoked:*');
+      if (keys.length > 0) {
+        await redis.del(keys);
+      }
+    }
+  } catch (err) {
+    console.error('[Redis] Failed to clear revocation store from Redis:', err.message);
+  }
 };
 
 export const verifyAdminToken = (token) => {
@@ -173,7 +210,8 @@ export const ADMIN_COOKIE_MAX_AGE = 7 * 24 * 60 * 60 * 1000;
 
 export const setAdminAuthCookie = (res, token) => {
   const isProduction = process.env.NODE_ENV === 'production';
-  const sameSite = process.env.COOKIE_SAME_SITE || 'lax';
+  const sameSite =
+    process.env.COOKIE_SAME_SITE || (isProduction ? 'strict' : 'lax');
   res.cookie(ADMIN_COOKIE_NAME, token, {
     httpOnly: true,
     secure: isProduction,
@@ -185,7 +223,8 @@ export const setAdminAuthCookie = (res, token) => {
 
 export const clearAdminAuthCookie = (res) => {
   const isProduction = process.env.NODE_ENV === 'production';
-  const sameSite = process.env.COOKIE_SAME_SITE || 'lax';
+  const sameSite =
+    process.env.COOKIE_SAME_SITE || (isProduction ? 'strict' : 'lax');
   res.cookie(ADMIN_COOKIE_NAME, '', {
     httpOnly: true,
     secure: isProduction,

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { fetchOpenings } from '../../store/slices/homeSlice';
-import ApplyModal from '../common/ApplyModal';
+import QuickApplyModal from '../common/QuickApplyModal';
 import SectionBadge from '../common/SectionBadge';
 import JobSpecModal from '../JobsComponents/JobSpecModal';
 
@@ -20,16 +20,6 @@ const Openings = () => {
     }
   }, [dispatch, status.openings]);
 
-  const [activeFilter, setActiveFilter] = useState('all');
-
-  const filters = [
-    { key: 'all', label: `All Roles (${openings?.length || 0})` },
-    { key: 'SAP & Enterprise', label: 'SAP & Enterprise' },
-    { key: 'Full Stack & AEM', label: 'Full Stack & AEM' },
-    { key: 'Platform Architecture', label: 'Platform Architecture' },
-    { key: 'PLM & Systems', label: 'PLM & Systems' },
-  ];
-
   // Sort by latest posted date (descending), then priority
   const sortedOpenings = [...openings].sort((a, b) => {
     const timeA = new Date(a.postedDate || 0).getTime();
@@ -38,78 +28,11 @@ const Openings = () => {
     return (a.priority || 99) - (b.priority || 99);
   });
 
-  const filteredOpenings = sortedOpenings.filter((job) => {
-    if (activeFilter === 'all' || activeFilter.startsWith('All Roles')) return true;
-    if (activeFilter === 'SAP & Enterprise') {
-      return (
-        job.title?.toLowerCase().includes('sap') ||
-        (job.skills &&
-          job.skills.some(
-            (s) =>
-              s.toLowerCase().includes('sap') ||
-              s.toLowerCase().includes('abap')
-          ))
-      );
-    }
-    if (activeFilter === 'Full Stack & AEM') {
-      return (
-        job.title?.toLowerCase().includes('aem') ||
-        job.title?.toLowerCase().includes('full stack') ||
-        (job.skills &&
-          job.skills.some(
-            (s) =>
-              s.toLowerCase().includes('aem') ||
-              s.toLowerCase().includes('react')
-          ))
-      );
-    }
-    if (activeFilter === 'Platform Architecture') {
-      return (
-        job.title?.toLowerCase().includes('architect') ||
-        (job.skills &&
-          job.skills.some(
-            (s) =>
-              s.toLowerCase().includes('ach') ||
-              s.toLowerCase().includes('platform')
-          ))
-      );
-    }
-    if (activeFilter === 'PLM & Systems') {
-      return (
-        job.title?.toLowerCase().includes('plm') ||
-        job.title?.toLowerCase().includes('teamcenter') ||
-        (job.skills &&
-          job.skills.some(
-            (s) =>
-              s.toLowerCase().includes('plm') ||
-              s.toLowerCase().includes('bmide')
-          ))
-      );
-    }
-    return true;
-  });
-
   // Display ONLY the latest 4 job role application cards
-  const displayOpenings = filteredOpenings.slice(0, 4);
+  const displayOpenings = sortedOpenings.slice(0, 4);
 
   const handleApplyClick = (job) => {
-    const jobId = job.id || job._id || 'general-pool';
-    const empType =
-      job.jobMode || job.employmentType || job.type || 'Permanent';
-    const postDate = job.postedDate
-      ? new Date(job.postedDate).toLocaleDateString('en-US', {
-          month: 'short',
-          day: 'numeric',
-          year: 'numeric',
-        })
-      : job.postingDate || 'Active Mandate';
-    const targetApplyUrl = `/jobs/${encodeURIComponent(jobId)}/apply?title=${encodeURIComponent(job.title || '')}&department=${encodeURIComponent(job.department || 'Engineering')}&location=${encodeURIComponent(job.location || 'Remote')}&employmentType=${encodeURIComponent(empType)}&postingDate=${encodeURIComponent(postDate)}`;
-
-    if (isAuthenticated) {
-      setSelectedJob(job);
-    } else {
-      navigate(`/login?redirect=${encodeURIComponent(targetApplyUrl)}`);
-    }
+    setSelectedJob(job);
   };
 
   return (
@@ -160,17 +83,7 @@ const Openings = () => {
           </div>
         </div>
 
-        <div className={'Openings-filters'}>
-          {filters.map((f) => (
-            <button
-              key={f.key}
-              onClick={() => setActiveFilter(f.key)}
-              className={`${'Openings-filterBtn'} ${activeFilter === f.key ? 'Openings-active' : ''}`}
-            >
-              {f.label}
-            </button>
-          ))}
-        </div>
+
 
         {status.openings === 'loading' ? (
           <div
@@ -308,10 +221,17 @@ const Openings = () => {
                         View Job Spec
                       </button>
                       <button
+                        type="button"
                         onClick={() => handleApplyClick(job)}
                         className={'Openings-applyBtn'}
                       >
-                        Apply Now
+                        <span
+                          className="material-symbols-outlined"
+                          style={{ fontSize: '16px' }}
+                        >
+                          bolt
+                        </span>
+                        <span>Quick Apply</span>
                       </button>
                     </div>
                   </div>
@@ -375,12 +295,13 @@ const Openings = () => {
             </div>
           </div>
           <button
+            type="button"
             onClick={() =>
               handleApplyClick({
                 title: 'General Engineering Candidate Pool',
                 jobId: 'general-pool',
-                department: 'Engineering',
-                location: 'Remote',
+                department: 'Global Talent Cloud',
+                location: 'Remote / Hybrid',
                 employmentType: 'Permanent',
                 postingDate: new Date().toLocaleDateString('en-US', {
                   month: 'short',
@@ -391,7 +312,7 @@ const Openings = () => {
             }
             className={'Openings-uploadBtn'}
           >
-            Upload CV / Profile
+            Quick Apply / Upload CV
           </button>
         </div>
       </div>
@@ -407,7 +328,7 @@ const Openings = () => {
         />
       )}
 
-      <ApplyModal
+      <QuickApplyModal
         isOpen={!!selectedJob}
         onClose={() => setSelectedJob(null)}
         jobData={selectedJob}

@@ -33,7 +33,7 @@ import CandidateProfilePage from './pages/candidate/CandidateProfilePage';
 import CandidateApplicationsPage from './pages/candidate/CandidateApplicationsPage';
 import JobApplyPage from './pages/candidate/JobApplyPage';
 
-// ThinkWires Admin Dashboard & CMS Modules (Code-split with React.lazy)
+// Thinkwires Admin Dashboard & CMS Modules (Code-split with React.lazy)
 const AdminLayout = lazy(() => import('./admin/AdminLayout'));
 const AdminLoginPage = lazy(() => import('./admin/AdminLoginPage'));
 const AdminDashboard = lazy(() => import('./admin/AdminDashboard'));
@@ -41,6 +41,7 @@ const EmployeesView = lazy(() => import('./admin/EmployeesView'));
 const CandidatesView = lazy(() => import('./admin/CandidatesView'));
 const ClientsView = lazy(() => import('./admin/ClientsView'));
 const JobsView = lazy(() => import('./admin/JobsView'));
+const RequisitionsView = lazy(() => import('./admin/RequisitionsView'));
 const PlacementsView = lazy(() => import('./admin/PlacementsView'));
 const CmsDashboard = lazy(() => import('./admin/CmsDashboard'));
 const PagesManager = lazy(() => import('./admin/PagesManager'));
@@ -73,7 +74,7 @@ function App() {
               fontWeight: 600,
             }}
           >
-            Loading ThinkWires...
+            Loading Thinkwires...
           </div>
         }
       >
@@ -204,10 +205,10 @@ function App() {
           <Route path="/compliance" element={<LegalPage />} />
           <Route path="/cookies" element={<LegalPage />} />
 
-          {/* ThinkWires Admin Portal Login */}
+          {/* Thinkwires Admin Portal Login */}
           <Route path="/admin/login" element={<AdminLoginPage />} />
 
-          {/* ThinkWires Admin Dashboard & CMS */}
+          {/* Thinkwires Admin Dashboard & CMS */}
           <Route
             path="/admin"
             element={
@@ -217,6 +218,7 @@ function App() {
             }
           >
             <Route index element={<AdminDashboard />} />
+            <Route path="requisitions" element={<RequisitionsView />} />
             <Route path="employees" element={<EmployeesView />} />
             <Route path="candidates" element={<CandidatesView />} />
             <Route path="clients" element={<ClientsView />} />

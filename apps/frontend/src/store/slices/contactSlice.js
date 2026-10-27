@@ -7,7 +7,7 @@ const API_BASE =
 
 export const fallbackContactData = {
   hero: {
-    badge: 'Contact ThinkWires • We Respond Within 5 Hours',
+    badge: 'Contact Thinkwires • We Respond Within 5 Hours',
     breadcrumbs: [
       { label: 'Home', href: '/' },
       { label: 'Contact Us', href: '/contact' },
@@ -24,8 +24,8 @@ export const fallbackContactData = {
       city: 'Noida, India',
       address: 'Plot No. 20, Block H-1/A, Sector 63',
       cityLine: 'Noida, Uttar Pradesh 201301',
-      phones: ['+91 (120) 450-8800', '+91 89205 55626'],
-      email: 'connect@thinkwires.com',
+      phones: [],
+      email: 'info@thinkwires.com',
       hours: 'Mon – Fri, 9:00 AM – 7:00 PM IST',
       coverageTag: 'India Talent Operations',
       mapEmbedUrl: '',
@@ -36,8 +36,8 @@ export const fallbackContactData = {
       city: 'United States',
       address: 'Remote-First Operations',
       cityLine: 'EST / PST Coverage',
-      phones: ['+1 (800) 555-0120'],
-      email: 'us@thinkwires.com',
+      phones: [],
+      email: 'info@thinkwires.com',
       hours: 'Mon – Fri, 8:00 AM – 6:00 PM EST',
       coverageTag: 'US & Canada EOR Corridor',
       mapEmbedUrl: '',
@@ -47,24 +47,24 @@ export const fallbackContactData = {
     {
       id: 'ch-1',
       icon: 'mail',
-      title: 'Email Us',
-      detail: 'connect@thinkwires.com',
-      sublabel: 'General inquiries & partnerships',
-      href: 'mailto:connect@thinkwires.com',
+      title: 'Company Information',
+      detail: 'info@thinkwires.com',
+      sublabel: 'General inquiries & company information',
+      href: 'mailto:info@thinkwires.com',
     },
     {
       id: 'ch-2',
-      icon: 'phone',
-      title: 'Call Direct',
-      detail: '+91 (120) 450-8800',
-      sublabel: 'Mon-Fri 9AM–7PM IST',
-      href: 'tel:+911204508800',
+      icon: 'mail',
+      title: 'HR & Talent Desk',
+      detail: 'hr@thinkwires.com',
+      sublabel: 'Client staffing & candidate inquiries',
+      href: 'mailto:hr@thinkwires.com',
     },
     {
       id: 'ch-3',
       icon: 'linkedin',
       title: 'LinkedIn',
-      detail: 'ThinkWires',
+      detail: 'Thinkwires',
       sublabel: 'Follow for talent insights',
       href: 'https://linkedin.com/company/thinkwires',
     },
@@ -214,7 +214,7 @@ export const submitContactMessage = createAsyncThunk(
       return {
         success: true,
         message:
-          'Thank you for reaching out! A ThinkWires staffing director will respond within 5 business hours.',
+          'Thank you for reaching out! A Thinkwires staffing director will respond within 5 business hours.',
       };
     }
   }

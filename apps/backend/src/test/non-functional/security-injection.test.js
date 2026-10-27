@@ -82,4 +82,42 @@ describe('Adversarial & Injection Defense (Non-Functional Tests)', () => {
       expect(jwtCookie).toMatch(/SameSite=(Lax|Strict)/i);
     });
   });
+
+  describe('Security Headers & Content-Security-Policy', () => {
+    it('sets Content-Security-Policy and protective HTTP headers on responses', async () => {
+      const res = await api.get('/api/health');
+
+      expect(res.status).toBe(200);
+      expect(res.headers['content-security-policy']).toBeDefined();
+      expect(res.headers['content-security-policy']).toContain(
+        "default-src 'self'"
+      );
+      expect(res.headers['content-security-policy']).toContain(
+        'https://fonts.googleapis.com'
+      );
+      expect(res.headers['content-security-policy']).toContain(
+        'https://fonts.gstatic.com'
+      );
+      expect(res.headers['x-content-type-options']).toBe('nosniff');
+      expect(res.headers['x-frame-options']).toBe('SAMEORIGIN');
+    });
+  });
+
+  describe('Error Message Information Leakage Defense', () => {
+    it('does not leak internal exception error.message on login failure', async () => {
+      const res = await api.post('/api/auth/login').send({
+        email: { $gt: '' },
+        password: 'Password123!',
+      });
+
+      expect(res.status).toBe(500);
+      expect(res.body.success).toBe(false);
+      expect(res.body.error).not.toMatch(
+        /toLowerCase|TypeError|Mongoose|ReferenceError|is not a function/i
+      );
+      expect(res.body.error).toBe(
+        'An error occurred during login. Please try again.'
+      );
+    });
+  });
 });

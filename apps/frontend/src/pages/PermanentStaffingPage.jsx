@@ -26,7 +26,7 @@ const PermanentStaffingPage = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    document.title = 'Permanent Staffing & Executive Search | ThinkWires';
+    document.title = 'Permanent Staffing & Executive Search | Thinkwires';
     if (status === 'idle') {
       dispatch(fetchPermanentStaffingData());
     }

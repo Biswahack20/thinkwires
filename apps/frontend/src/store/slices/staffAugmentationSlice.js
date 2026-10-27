@@ -54,7 +54,7 @@ export const fallbackStaffAugmentationData = {
   ],
   solutions: {
     eyebrow: 'Our Solutions',
-    heading: 'On-Demand Talent Solutions by ThinkWires',
+    heading: 'On-Demand Talent Solutions by Thinkwires',
     description:
       'We provide enterprise solutions that are fast, business-focused, and tailored to mission-critical engineering initiatives.',
     pillars: [
@@ -87,7 +87,7 @@ export const fallbackStaffAugmentationData = {
       badge: 'Workforce Governance Framework',
       title: 'People4People • Turnkey Workforce Management',
       description:
-        'People4People by ThinkWires delivers rigorous third-party contingent workforce administration. From contract compliance and hardware provision to bi-weekly velocity reporting and instant replacement guarantees, we manage workforce operations so your engineering leads can focus on shipping.',
+        'People4People by Thinkwires delivers rigorous third-party contingent workforce administration. From contract compliance and hardware provision to bi-weekly velocity reporting and instant replacement guarantees, we manage workforce operations so your engineering leads can focus on shipping.',
       bullets: [
         'Automated Performance Audits',
         'No-Questions-Asked Replacements',
@@ -104,7 +104,7 @@ export const fallbackStaffAugmentationData = {
     eyebrow: 'Key Benefits',
     heading: 'Strategic Advantages of Technical Staff Augmentation',
     description:
-      'Discover why high-growth enterprises leverage ThinkWires talent augmentation to de-risk engineering roadmaps and accelerate feature delivery.',
+      'Discover why high-growth enterprises leverage Thinkwires talent augmentation to de-risk engineering roadmaps and accelerate feature delivery.',
     cards: [
       {
         icon: 'account_balance_wallet',
@@ -191,7 +191,7 @@ export const fallbackStaffAugmentationData = {
   },
   comparison: {
     eyebrow: 'Compare Engagement Models',
-    heading: 'Why Augment Your Tech Teams With ThinkWires?',
+    heading: 'Why Augment Your Tech Teams With Thinkwires?',
     description:
       'Compare models to choose the right delivery structure for your engineering roadmap.',
     rows: [
@@ -238,7 +238,7 @@ export const fallbackStaffAugmentationData = {
       question:
         'What is staff augmentation and how does it differ from traditional hiring?',
       answer:
-        'Staff augmentation is a flexible hiring model where you add skilled technical specialists directly to your existing internal team on a project basis. Unlike traditional hiring, it allows you to scale up capacity quickly without long-term severance commitments, costly benefits packages, or multi-month recruitment delays. You maintain full operational control over daily sprints and technical direction, while ThinkWires manages HR, compliance, payroll, and infrastructure support.',
+        'Staff augmentation is a flexible hiring model where you add skilled technical specialists directly to your existing internal team on a project basis. Unlike traditional hiring, it allows you to scale up capacity quickly without long-term severance commitments, costly benefits packages, or multi-month recruitment delays. You maintain full operational control over daily sprints and technical direction, while Thinkwires manages HR, compliance, payroll, and infrastructure support.',
     },
     {
       question: 'How quickly can you provide staff augmentation resources?',
@@ -268,7 +268,7 @@ export const fallbackStaffAugmentationData = {
     heading: 'Schedule a Workforce Strategy Call',
     description:
       'Speak directly with an Enterprise Talent Partner to calibrate your tech stack needs, budget constraints, and delivery timelines.',
-    hotline: '+91 89205 55626',
+    email: 'hr@thinkwires.com',
     hubs: 'Noida Sector 63 (India) • San Francisco • Austin • Toronto',
     sla: '5-Hour Response SLA',
     certifications:

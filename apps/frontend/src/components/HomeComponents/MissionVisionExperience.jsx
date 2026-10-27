@@ -5,7 +5,7 @@ import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
  * MissionVisionExperience Component
  * "Where Purpose Meets Possibility"
  * 
- * An interactive, orbital corporate visual narrative connecting ThinkWires'
+ * An interactive, orbital corporate visual narrative connecting Thinkwires'
  * present-day Mission with its ambitious long-term Vision, joined through a
  * central Purpose Orb and anchored by a scroll-aware narrative milestone sequence.
  */
@@ -83,7 +83,7 @@ const CONTENT_DATA = {
     primaryStatement:
       'To build the premier bilateral talent cloud where geographical boundaries dissolve, empowering global leaders and engineers to collaborate seamlessly.',
     expandedDetails:
-      'By combining automated AI-driven skills mapping with deep human advisory, ThinkWires is transforming distributed engineering into a dependable, borderless standard of modern software excellence.',
+      'By combining automated AI-driven skills mapping with deep human advisory, Thinkwires is transforming distributed engineering into a dependable, borderless standard of modern software excellence.',
     impactMetrics: [
       { label: 'Active Corridors', value: '3 Continents' },
       { label: 'AI Match Accuracy', value: '99.2%' },
@@ -343,7 +343,7 @@ const MissionVisionExperience = ({ className = '' }) => {
                 ? 'is-bias-vision'
                 : ''
             }`}
-            aria-label="ThinkWires Central Purpose Orbital System"
+            aria-label="Thinkwires Central Purpose Orbital System"
           >
             {/* Orbital Rings with Rotating Geometry */}
             <div className="MVE-orbitalStage" aria-hidden="true">

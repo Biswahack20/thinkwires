@@ -152,10 +152,10 @@ const Footer = () => {
       <div className={'Footer-container'}>
         <div className={'Footer-topSection'}>
           <div className={'Footer-brandCol'}>
-            <Link to="/" className={'Footer-logo'} aria-label="ThinkWires Home">
+            <Link to="/" className={'Footer-logo'} aria-label="Thinkwires Home">
               <img
                 src={logoImg}
-                alt="ThinkWires"
+                alt="Thinkwires"
                 className={'Footer-logoImg'}
               />
             </Link>
@@ -267,7 +267,7 @@ const Footer = () => {
           <div>
             <h4 className={'Footer-colTitle'}>CORPORATE OFFICE</h4>
             <div className={'Footer-address'}>
-              ThinkWires Global Corp
+              Thinkwires Global Corp
               <br />
               Plot No 20, Block H-1/A,
               <br />
@@ -276,9 +276,6 @@ const Footer = () => {
               Pradesh 201301
             </div>
             <div className={'Footer-contactInfo'}>
-              <a href="tel:+918920555826" className={'Footer-contactLink'}>
-                <IconPhone /> +91 89205 55826
-              </a>
               <a
                 href="mailto:info@thinkwires.com"
                 className={'Footer-contactLink'}
@@ -297,7 +294,7 @@ const Footer = () => {
 
         <div className={'Footer-bottomSection'}>
           <div className={'Footer-copyright'}>
-            &copy; 2026 ThinkWires. All rights reserved. Precision Staffing
+            &copy; 2026 Thinkwires. All rights reserved. Precision Staffing
             &amp; Global Talent Architecture
           </div>
           <div className={'Footer-bottomLinks'}>

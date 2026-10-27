@@ -3,7 +3,15 @@ import logging
 from typing import List
 from dotenv import load_dotenv
 
-# Load environment configuration from .env file
+# Load environment configuration (apps/ai_services/.env first, then root .env if present)
+_app_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+_local_env = os.path.join(_app_dir, ".env")
+_root_env = os.path.join(os.path.dirname(os.path.dirname(_app_dir)), ".env")
+
+if os.path.exists(_local_env):
+    load_dotenv(_local_env)
+if os.path.exists(_root_env):
+    load_dotenv(_root_env)
 load_dotenv()
 
 class Settings:
@@ -18,13 +26,22 @@ class Settings:
     DEBUG: bool = os.getenv("DEBUG", "false").lower() in ("true", "1", "yes")
 
     # CORS Allowed Origins
-    CORS_ORIGINS: List[str] = [
+    _DEFAULT_CORS_ORIGINS: List[str] = [
         "http://localhost:5173",
         "http://localhost:5000",
         "http://127.0.0.1:5173",
         "http://127.0.0.1:5000",
-        "*",
     ]
+
+    @property
+    def CORS_ORIGINS(self) -> List[str]:
+        env_origins = os.getenv("CORS_ORIGINS", "")
+        parsed = [
+            origin.strip()
+            for origin in env_origins.split(",")
+            if origin.strip() and origin.strip() != "*"
+        ]
+        return parsed or self._DEFAULT_CORS_ORIGINS
 
     # OpenAI LLM integration
     OPENAI_API_KEY: str = os.getenv("OPENAI_API_KEY", "").strip()

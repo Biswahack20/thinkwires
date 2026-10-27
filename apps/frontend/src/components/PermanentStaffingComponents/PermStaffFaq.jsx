@@ -33,7 +33,7 @@ const PermStaffFaq = ({ faqs = [] }) => {
                 <h4>Guaranteed Protection</h4>
               </div>
               <p>
-                Every permanent mandate executed by ThinkWires includes our
+                Every permanent mandate executed by Thinkwires includes our
                 comprehensive 90-day replacement commitment backed by formal
                 corporate SLA.
               </p>

@@ -1,6 +1,6 @@
-# ThinkWires Staffing and Workforce Solutions
+# Thinkwires Staffing and Workforce Solutions
 
-ThinkWires is an enterprise technical manpower supply, global staffing, and talent management platform connecting three primary ecosystems:
+Thinkwires is an enterprise technical manpower supply, global staffing, and talent management platform connecting three primary ecosystems:
 
 1. **Clients (Enterprises & Startups)**: Sourcing pre-vetted engineering talent, managing staff augmentation, payroll outsourcing, and Employer of Record (EOR) operations.
 2. **Candidates (Job Seekers & Bench Talent)**: Browsing technical mandates, applying with resumes, agreeing to Terms & Conditions and Privacy Policies, tracking application pipelines, taking proctored screening assessments, and maintaining professional profiles.
@@ -136,16 +136,28 @@ AI_SERVICE_URL=http://localhost:8000
 
 ### 4. Set Up AI Microservice (Python Virtual Environment)
 
+You can automatically set up the virtual environment and dependencies for your operating system (Windows, Linux, macOS) by running:
+
 ```bash
+npm run setup:ai
+```
+
+Alternatively, set it up manually:
+
+**Windows (PowerShell / Command Prompt):**
+```powershell
 cd apps/ai_services
 python -m venv venv
-
-# Windows PowerShell
 .\venv\Scripts\activate
+pip install -r requirements.txt
+cd ../..
+```
 
-# macOS / Linux
+**Linux / macOS (Bash / Zsh):**
+```bash
+cd apps/ai_services
+python3 -m venv venv
 source venv/bin/activate
-
 pip install -r requirements.txt
 cd ../..
 ```

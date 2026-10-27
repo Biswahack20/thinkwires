@@ -52,7 +52,7 @@ export const secureFetch = async (url, options = {}) => {
           errorNotificationHandler({
             type: 'error',
             title: 'Server Error',
-            message: 'ThinkWires core services encountered an internal issue. Our engineering team has been notified.',
+            message: 'Thinkwires core services encountered an internal issue. Our engineering team has been notified.',
           });
         }
       }
@@ -71,7 +71,7 @@ export const secureFetch = async (url, options = {}) => {
         errorNotificationHandler({
           type: 'error',
           title: 'Connection Offline',
-          message: 'Unable to reach ThinkWires API server. Please check your network connection.',
+          message: 'Unable to reach Thinkwires API server. Please check your network connection.',
         });
       }
     }
