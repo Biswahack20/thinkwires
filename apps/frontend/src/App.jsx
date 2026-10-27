@@ -18,6 +18,7 @@ import FindTalentPage from './pages/FindTalentPage';
 import LegalPage from './pages/LegalPage';
 import NotFoundPage from './pages/NotFoundPage';
 import ScrollAnimationManager from './components/common/ScrollAnimationManager';
+import LoadingSpinner from './components/common/LoadingSpinner';
 import ProtectedRoute from './components/common/ProtectedRoute';
 import GlobalErrorBoundary from './components/common/GlobalErrorBoundary';
 
@@ -62,22 +63,7 @@ function App() {
   return (
     <BrowserRouter>
       <ScrollAnimationManager />
-      <Suspense
-        fallback={
-          <div
-            style={{
-              minHeight: '100vh',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: '#008F68',
-              fontWeight: 600,
-            }}
-          >
-            Loading Thinkwires...
-          </div>
-        }
-      >
+      <Suspense fallback={<LoadingSpinner />}>
         <Routes>
           {/* Public Website Pages (Browsed freely without any auth gates) */}
           <Route path="/" element={<HomePage />} />
