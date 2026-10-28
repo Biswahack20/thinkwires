@@ -136,3 +136,36 @@ def test_cors_env_parsing_and_wildcard_filtering(monkeypatch):
     assert "https://app.thinkwires.com" in test_settings.CORS_ORIGINS
     assert "http://localhost:3000" in test_settings.CORS_ORIGINS
     assert len(test_settings.CORS_ORIGINS) == 2
+
+
+def test_documentation_endpoints_disabled_in_production(monkeypatch):
+    """
+    Ensures /docs, /redoc, and /openapi.json are disabled (404) when DEBUG is False.
+    """
+    from fastapi.testclient import TestClient
+    from app.main import create_app
+
+    monkeypatch.setattr("app.main.settings.DEBUG", False)
+    prod_app = create_app()
+    prod_client = TestClient(prod_app)
+
+    assert prod_client.get("/docs").status_code == 404
+    assert prod_client.get("/redoc").status_code == 404
+    assert prod_client.get("/openapi.json").status_code == 404
+
+
+def test_documentation_endpoints_enabled_in_debug(monkeypatch):
+    """
+    Ensures /docs, /redoc, and /openapi.json are accessible (200) when DEBUG is True.
+    """
+    from fastapi.testclient import TestClient
+    from app.main import create_app
+
+    monkeypatch.setattr("app.main.settings.DEBUG", True)
+    debug_app = create_app()
+    debug_client = TestClient(debug_app)
+
+    assert debug_client.get("/docs").status_code == 200
+    assert debug_client.get("/redoc").status_code == 200
+    assert debug_client.get("/openapi.json").status_code == 200
+

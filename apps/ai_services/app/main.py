@@ -9,9 +9,9 @@ def create_app() -> FastAPI:
         title=settings.APP_TITLE,
         description=settings.APP_DESCRIPTION,
         version=settings.APP_VERSION,
-        docs_url="/docs",
-        redoc_url="/redoc",
-        openapi_url="/openapi.json",
+        docs_url="/docs" if settings.DEBUG else None,
+        redoc_url="/redoc" if settings.DEBUG else None,
+        openapi_url="/openapi.json" if settings.DEBUG else None,
     )
 
     # Configure CORS middleware
