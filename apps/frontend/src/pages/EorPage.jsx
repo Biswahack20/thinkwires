@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchEorData, fallbackEorData } from '../store/slices/eorSlice';
 import Navbar from '../components/common/Navbar';
@@ -20,8 +21,6 @@ const EorPage = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    document.title =
-      'Employer of Record (EOR) Services | Thinkwires - Compliant Global Staffing';
     if (status === 'idle') {
       dispatch(fetchEorData());
     }
@@ -29,6 +28,32 @@ const EorPage = () => {
 
   return (
     <div className="EorPage-wrapper">
+      <Helmet>
+        <title>Employer of Record (EOR) | Thinkwires — Compliant Global Hiring</title>
+        <meta
+          name="description"
+          content="Legally hire remote engineers across 150+ countries without establishing foreign legal entities. 100% compliant local contracts and benefits."
+        />
+        <meta
+          property="og:title"
+          content="Employer of Record (EOR) Services | Thinkwires"
+        />
+        <meta
+          property="og:description"
+          content="Legally hire remote engineers across 150+ countries without establishing foreign legal entities. 100% compliant local contracts and benefits."
+        />
+        <meta property="og:image" content="https://thinkwires.com/og-image.jpg" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta
+          name="twitter:title"
+          content="Employer of Record (EOR) Services | Thinkwires"
+        />
+        <meta
+          name="twitter:description"
+          content="Legally hire remote engineers across 150+ countries without establishing foreign legal entities."
+        />
+        <meta name="twitter:image" content="https://thinkwires.com/og-image.jpg" />
+      </Helmet>
       <Navbar />
       <main className="EorPage-main">
         <EorHero data={eorData.hero} />

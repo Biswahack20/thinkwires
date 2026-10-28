@@ -20,6 +20,7 @@ import permanentStaffingReducer from '../store/slices/permanentStaffingSlice';
 import findTalentReducer from '../store/slices/findTalentSlice';
 import candidatePortalReducer from '../store/slices/candidatePortalSlice';
 
+import { HelmetProvider } from 'react-helmet-async';
 import { ThemeProvider } from '../ThemeProvider';
 
 /**
@@ -62,9 +63,11 @@ export function renderWithProviders(
     return (
       <Provider store={store}>
         <ThemeProvider>
-          <MemoryRouter initialEntries={initialEntries}>
-            {children}
-          </MemoryRouter>
+          <HelmetProvider>
+            <MemoryRouter initialEntries={initialEntries}>
+              {children}
+            </MemoryRouter>
+          </HelmetProvider>
         </ThemeProvider>
       </Provider>
     );

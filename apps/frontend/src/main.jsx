@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import { Provider } from 'react-redux';
+import { HelmetProvider } from 'react-helmet-async';
 import { store } from './store';
 import { ThemeProvider } from './ThemeProvider';
 import GlobalErrorBoundary from './components/common/GlobalErrorBoundary';
@@ -14,7 +15,9 @@ ReactDOM.createRoot(document.getElementById('root')).render(
       <Provider store={store}>
         <ThemeProvider>
           <GlobalErrorProvider>
-            <App />
+            <HelmetProvider>
+              <App />
+            </HelmetProvider>
           </GlobalErrorProvider>
         </ThemeProvider>
       </Provider>

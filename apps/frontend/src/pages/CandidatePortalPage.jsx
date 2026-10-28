@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   fetchCandidatePortalData,
@@ -27,7 +28,6 @@ const CandidatePortalPage = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    document.title = 'Candidate Portal & Vetted Talent Network | Thinkwires';
     if (status === 'idle') {
       dispatch(fetchCandidatePortalData());
     }
@@ -35,6 +35,32 @@ const CandidatePortalPage = () => {
 
   return (
     <div className="CandidatePortalPage-wrapper">
+      <Helmet>
+        <title>Candidate Portal | Thinkwires</title>
+        <meta
+          name="description"
+          content="Manage your candidate profile, resume ATS scoring, interview schedules, and active job applications."
+        />
+        <meta
+          property="og:title"
+          content="Candidate Portal | Thinkwires"
+        />
+        <meta
+          property="og:description"
+          content="Manage your candidate profile, resume ATS scoring, interview schedules, and active job applications."
+        />
+        <meta property="og:image" content="https://thinkwires.com/og-image.jpg" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta
+          name="twitter:title"
+          content="Candidate Portal | Thinkwires"
+        />
+        <meta
+          name="twitter:description"
+          content="Manage your candidate profile and active job applications."
+        />
+        <meta name="twitter:image" content="https://thinkwires.com/og-image.jpg" />
+      </Helmet>
       <Navbar />
       <main className="CandidatePortalPage-main">
         <div className="CandidatePortal-pageContainer">

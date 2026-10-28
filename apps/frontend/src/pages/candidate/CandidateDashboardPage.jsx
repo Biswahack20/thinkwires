@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { logoutUser } from '../../store/slices/authSlice';
@@ -19,7 +20,6 @@ const CandidateDashboardPage = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    document.title = 'Candidate Dashboard | Thinkwires';
 
     const fetchDashboard = async () => {
       try {
@@ -58,6 +58,26 @@ const CandidateDashboardPage = () => {
 
   return (
     <div className="tw-candidate-shell">
+      <Helmet>
+        <title>Dashboard | Thinkwires Candidate Portal</title>
+        <meta
+          name="description"
+          content="Overview of your applied jobs, screening assessments, fit scores, and interview requests."
+        />
+        <meta property="og:title" content="Candidate Dashboard | Thinkwires" />
+        <meta
+          property="og:description"
+          content="Overview of your applied jobs, screening assessments, fit scores, and interview requests."
+        />
+        <meta property="og:image" content="https://thinkwires.com/og-image.jpg" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Candidate Dashboard | Thinkwires" />
+        <meta
+          name="twitter:description"
+          content="Overview of your applied jobs and screening assessments."
+        />
+        <meta name="twitter:image" content="https://thinkwires.com/og-image.jpg" />
+      </Helmet>
       <Navbar />
 
       <main className="tw-portal-container">

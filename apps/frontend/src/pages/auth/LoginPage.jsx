@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { loginUser, clearAuthError } from '../../store/slices/authSlice';
@@ -86,6 +87,26 @@ const LoginPage = () => {
 
   return (
     <div className="tw-split-auth-page">
+      <Helmet>
+        <title>Sign In | Thinkwires Candidate & Client Portal</title>
+        <meta
+          name="description"
+          content="Log in to your Thinkwires account to access candidate job applications, ATS assessments, and hiring pipelines."
+        />
+        <meta property="og:title" content="Sign In to Thinkwires" />
+        <meta
+          property="og:description"
+          content="Log in to your Thinkwires account to access candidate job applications, ATS assessments, and hiring pipelines."
+        />
+        <meta property="og:image" content="https://thinkwires.com/og-image.jpg" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Sign In to Thinkwires" />
+        <meta
+          name="twitter:description"
+          content="Log in to your Thinkwires account to access candidate job applications and ATS assessments."
+        />
+        <meta name="twitter:image" content="https://thinkwires.com/og-image.jpg" />
+      </Helmet>
       <Navbar />
 
       <main className="tw-split-main">

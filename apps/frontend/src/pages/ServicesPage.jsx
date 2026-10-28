@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 import Navbar from '../components/common/Navbar';
 import Footer from '../components/common/Footer';
@@ -63,11 +64,36 @@ const SERVICES = [
 const ServicesPage = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
-    document.title = 'Our Services | Thinkwires — Workforce & Talent Solutions';
   }, []);
 
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: '#faf8ff', fontFamily: "'Plus Jakarta Sans', system-ui, sans-serif" }}>
+      <Helmet>
+        <title>Workforce Services & Solutions | Thinkwires</title>
+        <meta
+          name="description"
+          content="Comprehensive talent solutions: IT staff augmentation, permanent staffing, executive search, global payroll management, and employer of record (EOR)."
+        />
+        <meta
+          property="og:title"
+          content="Workforce Solutions & Services | Thinkwires"
+        />
+        <meta
+          property="og:description"
+          content="Comprehensive talent solutions: IT staff augmentation, permanent staffing, executive search, global payroll management, and employer of record (EOR)."
+        />
+        <meta property="og:image" content="https://thinkwires.com/og-image.jpg" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta
+          name="twitter:title"
+          content="Workforce Solutions & Services | Thinkwires"
+        />
+        <meta
+          name="twitter:description"
+          content="Comprehensive talent solutions: IT staff augmentation, permanent staffing, payroll, and EOR."
+        />
+        <meta name="twitter:image" content="https://thinkwires.com/og-image.jpg" />
+      </Helmet>
       <Navbar />
 
       <main style={{ flex: 1 }}>

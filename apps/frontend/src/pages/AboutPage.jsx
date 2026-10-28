@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchAboutData, fallbackAboutData } from '../store/slices/aboutSlice';
 import Navbar from '../components/common/Navbar';
@@ -21,8 +22,6 @@ const AboutPage = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    document.title =
-      'About Us | Thinkwires — Borderless Tech Talent & Workforce Advisory';
     if (status === 'idle') {
       dispatch(fetchAboutData());
     }
@@ -30,6 +29,32 @@ const AboutPage = () => {
 
   return (
     <div className="AboutPage-wrapper">
+      <Helmet>
+        <title>About Us | Thinkwires — Borderless Tech Talent & Workforce Advisory</title>
+        <meta
+          name="description"
+          content="Learn about Thinkwires, our aggregator model, executive leadership, and mission to deliver borderless engineering talent across the globe."
+        />
+        <meta
+          property="og:title"
+          content="About Thinkwires — Global Workforce Advisory"
+        />
+        <meta
+          property="og:description"
+          content="Learn about Thinkwires, our aggregator model, executive leadership, and mission to deliver borderless engineering talent across the globe."
+        />
+        <meta property="og:image" content="https://thinkwires.com/og-image.jpg" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta
+          name="twitter:title"
+          content="About Thinkwires — Global Workforce Advisory"
+        />
+        <meta
+          name="twitter:description"
+          content="Learn about Thinkwires, our aggregator model, executive leadership, and mission to deliver borderless engineering talent across the globe."
+        />
+        <meta name="twitter:image" content="https://thinkwires.com/og-image.jpg" />
+      </Helmet>
       <Navbar />
       <main className="AboutPage-main" id="main-content">
         {/* 1. Hero Section with Integrated Key Value Metrics Bar (Stitch Screen 4f907a13785d4a6b9bd9c0cdfa784466) */}

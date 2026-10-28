@@ -1,4 +1,5 @@
 import React, { useState, useEffect, Suspense, lazy } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { useSelector, useDispatch } from 'react-redux';
 
 import Navbar from '../components/common/Navbar';
@@ -100,6 +101,32 @@ const BlogPage = () => {
 
   return (
     <div className="BlogPage-wrapper">
+      <Helmet>
+        <title>Insights & Blog | Thinkwires — Tech Talent & Engineering Trends</title>
+        <meta
+          name="description"
+          content="Explore insights, hiring strategies, engineering culture, and global workforce intelligence from the Thinkwires engineering team."
+        />
+        <meta
+          property="og:title"
+          content="Engineering Insights & Tech Trends | Thinkwires"
+        />
+        <meta
+          property="og:description"
+          content="Explore insights, hiring strategies, engineering culture, and global workforce intelligence from the Thinkwires engineering team."
+        />
+        <meta property="og:image" content="https://thinkwires.com/og-image.jpg" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta
+          name="twitter:title"
+          content="Engineering Insights & Tech Trends | Thinkwires"
+        />
+        <meta
+          name="twitter:description"
+          content="Explore insights, hiring strategies, engineering culture, and global workforce intelligence from the Thinkwires engineering team."
+        />
+        <meta name="twitter:image" content="https://thinkwires.com/og-image.jpg" />
+      </Helmet>
       <Navbar />
 
       <main className="BlogPage-main">
