@@ -142,10 +142,12 @@ body {
     'Helvetica Neue',
     sans-serif;
   background-color: var(--color-background);
-  background-image: linear-gradient(180deg,
-      #ffffff 0%,
-      #faf8ff 50%,
-      #f3f2fe 100%);
+  background-image: linear-gradient(
+    180deg,
+    #ffffff 0%,
+    #faf8ff 50%,
+    #f3f2fe 100%
+  );
   background-attachment: fixed;
   color: var(--color-on-background);
 }
@@ -635,7 +637,8 @@ body {
 }
 
 @keyframes twMobilePulse {
-  0%, 100% {
+  0%,
+  100% {
     transform: scale(1);
     opacity: 0.6;
   }
@@ -646,7 +649,8 @@ body {
 }
 
 @keyframes twMobileCorePulse {
-  0%, 100% {
+  0%,
+  100% {
     transform: scale(1);
     opacity: 0.4;
   }
@@ -657,7 +661,8 @@ body {
 }
 
 @keyframes twMobileFloat {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0);
   }
   50% {
@@ -690,12 +695,24 @@ body {
   animation: twMobilePulse 2.5s ease-in-out infinite;
 }
 
-.tw-node-1 { animation-delay: 0s; }
-.tw-node-2 { animation-delay: 0.6s; }
-.tw-node-3 { animation-delay: 1.2s; }
-.tw-node-4 { animation-delay: 1.8s; }
-.tw-node-5 { animation-delay: 0.3s; }
-.tw-node-6 { animation-delay: 0.9s; }
+.tw-node-1 {
+  animation-delay: 0s;
+}
+.tw-node-2 {
+  animation-delay: 0.6s;
+}
+.tw-node-3 {
+  animation-delay: 1.2s;
+}
+.tw-node-4 {
+  animation-delay: 1.8s;
+}
+.tw-node-5 {
+  animation-delay: 0.3s;
+}
+.tw-node-6 {
+  animation-delay: 0.9s;
+}
 
 .tw-mobile-tech-chips {
   position: absolute;
@@ -1747,7 +1764,6 @@ body {
 
 /* Responsive */
 @media (max-width: 1200px) {
-
   .StatsJourney-statsGrid,
   .StatsJourney-timelineGrid {
     grid-template-columns: repeat(2, 1fr);
@@ -2434,6 +2450,10 @@ body {
   opacity: 0.85;
 }
 
+.Navbar-mobileThemeToggle {
+  display: none;
+}
+
 .Navbar-mainNav {
   background-color: var(--color-surface);
   padding: 0.75rem 2rem;
@@ -2749,7 +2769,7 @@ body {
   gap: 1rem;
 }
 
-.ApplyModal-row>* {
+.ApplyModal-row > * {
   flex: 1;
 }
 
@@ -3643,6 +3663,31 @@ textarea {
     justify-content: center;
   }
 
+  .Navbar-mobileThemeToggle {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.625rem;
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border-radius: var(--rounded-full);
+    border: 1px solid var(--color-outline-variant);
+    background-color: var(--color-surface-container-low);
+    color: var(--color-on-surface);
+    font-size: 0.875rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition:
+      background-color 0.2s ease,
+      border-color 0.2s ease,
+      color 0.2s ease;
+  }
+
+  .Navbar-mobileThemeToggle:hover {
+    background-color: var(--color-surface-container-high);
+    border-color: var(--color-outline);
+  }
+
   .Navbar-userIconBtn {
     align-self: center;
     margin-top: 0.25rem;
@@ -3699,7 +3744,7 @@ textarea {
    -------------------------------------------------------------------------- */
 @media (max-width: 768px) {
   .Navbar-topBar {
-    padding: 0.4rem 1rem;
+    display: none;
   }
 
   .Hero-heroSection {
@@ -3909,19 +3954,6 @@ textarea {
    4. SMALL TABLETS & LARGE MOBILE (<= 640px)
    -------------------------------------------------------------------------- */
 @media (max-width: 640px) {
-  .Navbar-topBar {
-    flex-wrap: wrap;
-    gap: 0.35rem 0.75rem;
-    justify-content: space-between;
-    padding: 0.35rem 0.75rem;
-    font-size: 0.6875rem;
-  }
-
-  .Navbar-topBarLeft,
-  .Navbar-topBarRight {
-    gap: 0.75rem;
-  }
-
   .Navbar-mainNav {
     padding: 0.5rem 1rem;
   }
@@ -4101,8 +4133,8 @@ textarea {
    -------------------------------------------------------------------------- */
 @media (max-width: 480px) {
   /* Global Modal & Dialog Overflow & Min-Height Guards */
-  [role="dialog"],
-  [role="alertdialog"],
+  [role='dialog'],
+  [role='alertdialog'],
   .ApplyModal-content,
   .QuickApplyModal-card,
   .ScreeningAssessmentModal-card,
@@ -4310,11 +4342,6 @@ textarea {
    6. EXTRA-SMALL MOBILE PHONES (<= 380px)
    -------------------------------------------------------------------------- */
 @media (max-width: 380px) {
-  .Navbar-topBarRight a[href^='mailto:'] {
-    display: none;
-    /* Keep phone + theme toggle on <=380px to prevent overflow */
-  }
-
   .Navbar-logoContainer {
     width: 135px;
     height: 40px;
@@ -4355,9 +4382,11 @@ textarea {
 .JobsHero-heroContainer {
   padding: 4.5rem 1.5rem 5rem 1.5rem;
   background:
-    radial-gradient(circle at 50% 30%,
+    radial-gradient(
+      circle at 50% 30%,
       rgba(37, 99, 235, 0.22) 0%,
-      rgba(10, 17, 40, 0.98) 75%),
+      rgba(10, 17, 40, 0.98) 75%
+    ),
     #0a1128;
   text-align: center;
   position: relative;
@@ -5027,9 +5056,11 @@ textarea {
 /* --- TalentBench --- */
 .TalentBench-section {
   padding: 5rem 1.5rem;
-  background: linear-gradient(180deg,
-      var(--color-surface-container-low) 0%,
-      var(--color-background) 100%);
+  background: linear-gradient(
+    180deg,
+    var(--color-surface-container-low) 0%,
+    var(--color-background) 100%
+  );
 }
 
 .TalentBench-container {
@@ -6463,11 +6494,13 @@ textarea {
 .section-divider-line {
   width: 100%;
   height: 2px;
-  background: linear-gradient(90deg,
-      rgba(226, 232, 240, 0.3) 0%,
-      #cbd5e1 20%,
-      #cbd5e1 80%,
-      rgba(226, 232, 240, 0.3) 100%);
+  background: linear-gradient(
+    90deg,
+    rgba(226, 232, 240, 0.3) 0%,
+    #cbd5e1 20%,
+    #cbd5e1 80%,
+    rgba(226, 232, 240, 0.3) 100%
+  );
   border: none;
   margin: 0;
   padding: 0;
@@ -6794,9 +6827,11 @@ textarea {
 .FeaturedArticle-imageOverlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg,
-      rgba(15, 23, 42, 0.15) 0%,
-      rgba(15, 23, 42, 0.45) 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(15, 23, 42, 0.15) 0%,
+    rgba(15, 23, 42, 0.45) 100%
+  );
   z-index: 1;
 }
 
@@ -8135,9 +8170,11 @@ textarea {
 .BlogCard-imageOverlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg,
-      rgba(0, 0, 0, 0) 50%,
-      rgba(0, 0, 0, 0.3) 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0) 50%,
+    rgba(0, 0, 0, 0.3) 100%
+  );
 }
 
 .BlogCard-categoryBadge {
@@ -8551,9 +8588,11 @@ textarea {
 .NewsletterCTA-card {
   position: relative;
   background:
-    linear-gradient(135deg,
+    linear-gradient(
+      135deg,
       rgba(37, 99, 235, 0.1) 0%,
-      rgba(139, 92, 246, 0.1) 100%),
+      rgba(139, 92, 246, 0.1) 100%
+    ),
     var(--color-surface-container-lowest);
   border: 1px solid var(--color-outline-variant);
   border-radius: 28px;
@@ -8901,9 +8940,11 @@ textarea {
   width: 24rem;
   height: 24rem;
   border-radius: 9999px;
-  background: radial-gradient(circle,
-      rgba(59, 130, 246, 0.12) 0%,
-      transparent 70%);
+  background: radial-gradient(
+    circle,
+    rgba(59, 130, 246, 0.12) 0%,
+    transparent 70%
+  );
   filter: blur(48px);
   pointer-events: none;
 }
@@ -8915,9 +8956,11 @@ textarea {
   width: 20rem;
   height: 20rem;
   border-radius: 9999px;
-  background: radial-gradient(circle,
-      rgba(34, 197, 94, 0.08) 0%,
-      transparent 70%);
+  background: radial-gradient(
+    circle,
+    rgba(34, 197, 94, 0.08) 0%,
+    transparent 70%
+  );
   filter: blur(48px);
   pointer-events: none;
 }
@@ -9102,9 +9145,11 @@ textarea {
   position: absolute;
   inset: 0.5rem;
   border-radius: 0.75rem;
-  background: linear-gradient(180deg,
-      rgba(15, 23, 42, 0.05) 0%,
-      rgba(15, 23, 42, 0.75) 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(15, 23, 42, 0.05) 0%,
+    rgba(15, 23, 42, 0.75) 100%
+  );
   pointer-events: none;
 }
 
@@ -9583,9 +9628,11 @@ textarea {
   width: 24rem;
   height: 24rem;
   border-radius: 9999px;
-  background: radial-gradient(circle,
-      rgba(37, 99, 235, 0.16) 0%,
-      transparent 70%);
+  background: radial-gradient(
+    circle,
+    rgba(37, 99, 235, 0.16) 0%,
+    transparent 70%
+  );
   filter: blur(48px);
   pointer-events: none;
 }
@@ -9685,9 +9732,11 @@ textarea {
 .Philosophy-imageOverlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg,
-      transparent 40%,
-      rgba(15, 23, 42, 0.6) 100%);
+  background: linear-gradient(
+    180deg,
+    transparent 40%,
+    rgba(15, 23, 42, 0.6) 100%
+  );
 }
 
 .Philosophy-imageTag {
@@ -10197,9 +10246,11 @@ textarea {
   width: 26rem;
   height: 26rem;
   border-radius: 9999px;
-  background: radial-gradient(circle,
-      rgba(37, 99, 235, 0.18) 0%,
-      transparent 70%);
+  background: radial-gradient(
+    circle,
+    rgba(37, 99, 235, 0.18) 0%,
+    transparent 70%
+  );
   filter: blur(52px);
   pointer-events: none;
 }
@@ -10725,7 +10776,6 @@ textarea {
 }
 
 @keyframes pulseDot {
-
   0%,
   100% {
     transform: scale(1);
@@ -11516,7 +11566,6 @@ textarea {
 
 /* ========================  MOBILE  (max-width: 768px) ======================== */
 @media (max-width: 768px) {
-
   /* --- Hero --- */
   .ContactHero-section {
     padding: 3rem 1rem 3.5rem;
@@ -11992,9 +12041,11 @@ textarea {
   left: -5%;
   width: 25rem;
   height: 25rem;
-  background: radial-gradient(circle,
-      rgba(34, 197, 94, 0.15) 0%,
-      transparent 70%);
+  background: radial-gradient(
+    circle,
+    rgba(34, 197, 94, 0.15) 0%,
+    transparent 70%
+  );
 }
 
 .IndustriesHero-bgGlow--right {
@@ -12002,9 +12053,11 @@ textarea {
   right: -5%;
   width: 30rem;
   height: 30rem;
-  background: radial-gradient(circle,
-      rgba(37, 99, 235, 0.25) 0%,
-      transparent 70%);
+  background: radial-gradient(
+    circle,
+    rgba(37, 99, 235, 0.25) 0%,
+    transparent 70%
+  );
 }
 
 .IndustriesHero-container {
@@ -12474,9 +12527,11 @@ textarea {
   right: 0;
   width: 30rem;
   height: 30rem;
-  background: radial-gradient(circle,
-      rgba(37, 99, 235, 0.05) 0%,
-      transparent 70%);
+  background: radial-gradient(
+    circle,
+    rgba(37, 99, 235, 0.05) 0%,
+    transparent 70%
+  );
 }
 
 .FeatureComparison-bgBlob--bottom {
@@ -12484,9 +12539,11 @@ textarea {
   left: 0;
   width: 30rem;
   height: 30rem;
-  background: radial-gradient(circle,
-      rgba(34, 197, 94, 0.05) 0%,
-      transparent 70%);
+  background: radial-gradient(
+    circle,
+    rgba(34, 197, 94, 0.05) 0%,
+    transparent 70%
+  );
 }
 
 .FeatureComparison-container {
@@ -12989,9 +13046,11 @@ textarea {
   left: -5%;
   width: 25rem;
   height: 25rem;
-  background: radial-gradient(circle,
-      rgba(37, 99, 235, 0.2) 0%,
-      transparent 70%);
+  background: radial-gradient(
+    circle,
+    rgba(37, 99, 235, 0.2) 0%,
+    transparent 70%
+  );
 }
 
 .CapabilityBriefing-bgGlow--right {
@@ -12999,9 +13058,11 @@ textarea {
   right: 0;
   width: 25rem;
   height: 25rem;
-  background: radial-gradient(circle,
-      rgba(34, 197, 94, 0.15) 0%,
-      transparent 70%);
+  background: radial-gradient(
+    circle,
+    rgba(34, 197, 94, 0.15) 0%,
+    transparent 70%
+  );
 }
 
 .CapabilityBriefing-container {
@@ -13685,7 +13746,6 @@ textarea {
 }
 
 @media (min-width: 1024px) {
-
   .BenchHero-container,
   .BenchExplorer-container,
   .BenchDossierFeatures-container,
@@ -13699,9 +13759,11 @@ textarea {
 .BenchHero-section {
   padding: 5rem 0 3.5rem;
   background:
-    radial-gradient(circle at 50% 0%,
+    radial-gradient(
+      circle at 50% 0%,
       rgba(14, 165, 233, 0.15) 0%,
-      rgba(8, 12, 20, 0) 70%),
+      rgba(8, 12, 20, 0) 70%
+    ),
     #080c14;
   border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
@@ -13739,7 +13801,6 @@ textarea {
 }
 
 @keyframes benchPulse {
-
   0%,
   100% {
     opacity: 1;
@@ -14763,9 +14824,11 @@ textarea {
 
 /* Booking Card & Form */
 .BenchDrawer-bookingCard {
-  background: linear-gradient(135deg,
-      rgba(14, 165, 233, 0.1) 0%,
-      rgba(15, 23, 42, 0.85) 100%);
+  background: linear-gradient(
+    135deg,
+    rgba(14, 165, 233, 0.1) 0%,
+    rgba(15, 23, 42, 0.85) 100%
+  );
   border: 1px solid rgba(56, 189, 248, 0.3);
   border-radius: 14px;
   padding: 1.5rem;
@@ -15151,9 +15214,11 @@ textarea {
 }
 
 .BenchCta-card {
-  background: linear-gradient(135deg,
-      rgba(15, 23, 42, 0.9) 0%,
-      rgba(2, 6, 23, 0.95) 100%);
+  background: linear-gradient(
+    135deg,
+    rgba(15, 23, 42, 0.9) 0%,
+    rgba(2, 6, 23, 0.95) 100%
+  );
   border: 1px solid rgba(56, 189, 248, 0.3);
   border-radius: 20px;
   padding: 3.5rem 3rem;
@@ -15311,7 +15376,6 @@ textarea {
 
 /* ========================  MOBILE  (max-width: 768px) ======================== */
 @media (max-width: 768px) {
-
   /* --- Page Root --- */
   .BenchHero-container,
   .BenchExplorer-container,
@@ -15710,7 +15774,6 @@ textarea {
 
 /* ====================  EXTRA-SMALL PHONES  (max-width: 480px) ==================== */
 @media (max-width: 480px) {
-
   .BenchHero-container,
   .BenchExplorer-container,
   .BenchDossierFeatures-container,
@@ -15963,10 +16026,12 @@ textarea {
   right: 0;
   width: 580px;
   height: 580px;
-  background: radial-gradient(circle,
-      rgba(29, 78, 216, 0.14) 0%,
-      rgba(37, 99, 235, 0.04) 65%,
-      transparent 75%);
+  background: radial-gradient(
+    circle,
+    rgba(29, 78, 216, 0.14) 0%,
+    rgba(37, 99, 235, 0.04) 65%,
+    transparent 75%
+  );
 }
 
 .NewHero-glowTeal {
@@ -15974,10 +16039,12 @@ textarea {
   left: -8rem;
   width: 450px;
   height: 450px;
-  background: radial-gradient(circle,
-      rgba(111, 251, 190, 0.2) 0%,
-      rgba(34, 197, 94, 0.05) 60%,
-      transparent 75%);
+  background: radial-gradient(
+    circle,
+    rgba(111, 251, 190, 0.2) 0%,
+    rgba(34, 197, 94, 0.05) 60%,
+    transparent 75%
+  );
 }
 
 /* Container */
@@ -16036,7 +16103,6 @@ textarea {
 }
 
 @keyframes newHeroPing {
-
   75%,
   100% {
     transform: scale(2.4);
@@ -16095,10 +16161,12 @@ textarea {
 }
 
 .NewHero-gradientText {
-  background: linear-gradient(135deg,
-      var(--color-primary, #0037b0) 0%,
-      var(--color-cobalt-bright, #2563eb) 45%,
-      var(--color-tertiary-container, #006a48) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--color-primary, #0037b0) 0%,
+    var(--color-cobalt-bright, #2563eb) 45%,
+    var(--color-tertiary-container, #006a48) 100%
+  );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -16129,9 +16197,11 @@ textarea {
   gap: 0.5rem;
   padding: 0.875rem 1.75rem;
   border-radius: var(--rounded-lg, 0.75rem);
-  background: linear-gradient(135deg,
-      var(--color-primary, #0037b0) 0%,
-      var(--color-primary-container, #1d4ed8) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--color-primary, #0037b0) 0%,
+    var(--color-primary-container, #1d4ed8) 100%
+  );
   color: #ffffff;
   font-size: 0.9375rem;
   font-weight: 700;
@@ -16143,9 +16213,11 @@ textarea {
 }
 
 .NewHero-btnPrimary:hover {
-  background: linear-gradient(135deg,
-      var(--color-cobalt-bright, #2563eb) 0%,
-      var(--color-primary, #0037b0) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--color-cobalt-bright, #2563eb) 0%,
+    var(--color-primary, #0037b0) 100%
+  );
   transform: translateY(-2px);
   box-shadow: 0 8px 22px rgba(29, 78, 216, 0.38);
 }
@@ -16275,10 +16347,12 @@ textarea {
 .NewHero-imageGradientOverlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg,
-      rgba(15, 23, 42, 0.2) 0%,
-      rgba(15, 23, 42, 0.45) 50%,
-      rgba(15, 23, 42, 0.94) 100%);
+  background: linear-gradient(
+    180deg,
+    rgba(15, 23, 42, 0.2) 0%,
+    rgba(15, 23, 42, 0.45) 50%,
+    rgba(15, 23, 42, 0.94) 100%
+  );
   pointer-events: none;
   z-index: 2;
 }
@@ -16455,7 +16529,6 @@ textarea {
 }
 
 @keyframes newHeroPulse {
-
   0%,
   100% {
     opacity: 1;
@@ -16610,9 +16683,11 @@ textarea {
 
 .NewHero-progressBarFill {
   height: 100%;
-  background: linear-gradient(90deg,
-      var(--color-primary, #0037b0),
-      var(--color-cobalt-bright, #2563eb));
+  background: linear-gradient(
+    90deg,
+    var(--color-primary, #0037b0),
+    var(--color-cobalt-bright, #2563eb)
+  );
   border-radius: 9999px;
   animation: progressFill 5s linear forwards;
 }
@@ -16774,9 +16849,11 @@ textarea {
   gap: 0.5rem;
   padding: 0.95rem 1.5rem;
   border-radius: var(--rounded-md, 0.625rem);
-  background: linear-gradient(135deg,
-      var(--color-primary, #0037b0) 0%,
-      var(--color-primary-container, #1d4ed8) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--color-primary, #0037b0) 0%,
+    var(--color-primary-container, #1d4ed8) 100%
+  );
   color: #ffffff;
   font-size: 0.9375rem;
   font-weight: 700;
@@ -16788,9 +16865,11 @@ textarea {
 }
 
 .NewHero-searchBtn:hover {
-  background: linear-gradient(135deg,
-      var(--color-cobalt-bright, #2563eb) 0%,
-      var(--color-primary, #0037b0) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--color-cobalt-bright, #2563eb) 0%,
+    var(--color-primary, #0037b0) 100%
+  );
   transform: translateY(-2px);
   box-shadow: 0 8px 20px rgba(29, 78, 216, 0.35);
 }
@@ -16927,16 +17006,20 @@ textarea {
   width: 100%;
   overflow: hidden;
   padding: 0.5rem 0 1rem 0;
-  mask-image: linear-gradient(to right,
-      transparent 0%,
-      black 8%,
-      black 92%,
-      transparent 100%);
-  -webkit-mask-image: linear-gradient(to right,
-      transparent 0%,
-      black 8%,
-      black 92%,
-      transparent 100%);
+  mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 8%,
+    black 92%,
+    transparent 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 8%,
+    black 92%,
+    transparent 100%
+  );
 }
 
 .TechStack-carouselTrack {
@@ -17043,16 +17126,20 @@ textarea {
   }
 
   .TechStack-carouselWrapper {
-    mask-image: linear-gradient(to right,
-        transparent 0%,
-        black 5%,
-        black 95%,
-        transparent 100%);
-    -webkit-mask-image: linear-gradient(to right,
-        transparent 0%,
-        black 5%,
-        black 95%,
-        transparent 100%);
+    mask-image: linear-gradient(
+      to right,
+      transparent 0%,
+      black 5%,
+      black 95%,
+      transparent 100%
+    );
+    -webkit-mask-image: linear-gradient(
+      to right,
+      transparent 0%,
+      black 5%,
+      black 95%,
+      transparent 100%
+    );
   }
 
   .TechStack-gridCard {
@@ -17110,9 +17197,11 @@ textarea {
   width: 24rem;
   height: 24rem;
   border-radius: 9999px;
-  background: radial-gradient(circle,
-      rgba(59, 130, 246, 0.2) 0%,
-      transparent 70%);
+  background: radial-gradient(
+    circle,
+    rgba(59, 130, 246, 0.2) 0%,
+    transparent 70%
+  );
   filter: blur(80px);
   pointer-events: none;
 }
@@ -17124,9 +17213,11 @@ textarea {
   width: 30rem;
   height: 30rem;
   border-radius: 9999px;
-  background: radial-gradient(circle,
-      rgba(34, 197, 94, 0.12) 0%,
-      transparent 70%);
+  background: radial-gradient(
+    circle,
+    rgba(34, 197, 94, 0.12) 0%,
+    transparent 70%
+  );
   filter: blur(100px);
   pointer-events: none;
 }
@@ -17186,7 +17277,6 @@ textarea {
 }
 
 @keyframes pulseDot {
-
   0%,
   100% {
     opacity: 1;
@@ -18212,9 +18302,11 @@ textarea {
 .Eor-separationOverlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg,
-      transparent 40%,
-      rgba(15, 23, 42, 0.85) 100%);
+  background: linear-gradient(
+    180deg,
+    transparent 40%,
+    rgba(15, 23, 42, 0.85) 100%
+  );
   display: flex;
   align-items: flex-end;
   padding: 1rem;
@@ -18292,9 +18384,11 @@ textarea {
   margin-top: 2rem;
   padding: 1.75rem;
   border-radius: 0.75rem;
-  background: linear-gradient(90deg,
-      var(--color-surface-container, #ededf9) 0%,
-      var(--color-surface-container-low, #f3f2fe) 100%);
+  background: linear-gradient(
+    90deg,
+    var(--color-surface-container, #ededf9) 0%,
+    var(--color-surface-container-low, #f3f2fe) 100%
+  );
   display: flex;
   flex-direction: column;
   gap: 1.25rem;
@@ -18423,10 +18517,12 @@ textarea {
 .StaffAug-heroSection {
   position: relative;
   overflow: hidden;
-  background: linear-gradient(180deg,
-      var(--color-surface-container-low, #f3f2fe) 0%,
-      var(--color-surface, #faf8ff) 60%,
-      var(--color-background, #faf8ff) 100%);
+  background: linear-gradient(
+    180deg,
+    var(--color-surface-container-low, #f3f2fe) 0%,
+    var(--color-surface, #faf8ff) 60%,
+    var(--color-background, #faf8ff) 100%
+  );
   padding: 3rem 0 4.5rem 0;
 }
 
@@ -18532,10 +18628,12 @@ textarea {
 }
 
 .StaffAug-headlineGradient {
-  background: linear-gradient(135deg,
-      var(--color-primary, #0037b0) 0%,
-      var(--color-cobalt-bright, #2563eb) 50%,
-      var(--color-emerald-accent, #22c55e) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--color-primary, #0037b0) 0%,
+    var(--color-cobalt-bright, #2563eb) 50%,
+    var(--color-emerald-accent, #22c55e) 100%
+  );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -18697,9 +18795,11 @@ textarea {
 
 .StaffAug-sparkline .sparkline-fill {
   height: 100%;
-  background: linear-gradient(90deg,
-      var(--color-primary, #0037b0),
-      var(--color-cobalt-bright, #2563eb));
+  background: linear-gradient(
+    90deg,
+    var(--color-primary, #0037b0),
+    var(--color-cobalt-bright, #2563eb)
+  );
   border-radius: 9999px;
   transition: width 0.8s ease;
 }
@@ -19794,9 +19894,11 @@ textarea {
   position: relative;
   overflow: hidden;
   padding: 3.5rem 0 5rem 0;
-  background: linear-gradient(180deg,
-      var(--color-surface-container-low, #f3f2fe) 0%,
-      var(--color-surface, #faf8ff) 100%);
+  background: linear-gradient(
+    180deg,
+    var(--color-surface-container-low, #f3f2fe) 0%,
+    var(--color-surface, #faf8ff) 100%
+  );
 }
 
 .PermStaff-ambientGlow {
@@ -19806,10 +19908,12 @@ textarea {
   transform: translateX(-50%);
   width: 980px;
   height: 480px;
-  background: radial-gradient(circle,
-      rgba(29, 78, 216, 0.15) 0%,
-      rgba(59, 130, 246, 0.05) 50%,
-      transparent 80%);
+  background: radial-gradient(
+    circle,
+    rgba(29, 78, 216, 0.15) 0%,
+    rgba(59, 130, 246, 0.05) 50%,
+    transparent 80%
+  );
   filter: blur(80px);
   pointer-events: none;
 }
@@ -20563,9 +20667,11 @@ textarea {
   right: 0;
   width: 20rem;
   height: 20rem;
-  background: radial-gradient(circle,
-      rgba(29, 78, 216, 0.08) 0%,
-      transparent 70%);
+  background: radial-gradient(
+    circle,
+    rgba(29, 78, 216, 0.08) 0%,
+    transparent 70%
+  );
   filter: blur(60px);
   pointer-events: none;
 }
@@ -20966,10 +21072,12 @@ textarea {
 .FindTalent-heroSection {
   position: relative;
   overflow: hidden;
-  background: linear-gradient(180deg,
-      var(--color-surface-container-low, #f3f2fe) 0%,
-      var(--color-surface, #faf8ff) 60%,
-      var(--color-background, #faf8ff) 100%);
+  background: linear-gradient(
+    180deg,
+    var(--color-surface-container-low, #f3f2fe) 0%,
+    var(--color-surface, #faf8ff) 60%,
+    var(--color-background, #faf8ff) 100%
+  );
   padding: 3rem 0 4rem 0;
 }
 
@@ -23951,7 +24059,8 @@ html.lenis {
 }
 
 /* When JS animation manager is active, below-the-fold unrevealed elements start subtle */
-html.tw-scroll-anim-ready .tw-scroll-reveal:not(.tw-revealed):not(.tw-revealed-done) {
+html.tw-scroll-anim-ready
+  .tw-scroll-reveal:not(.tw-revealed):not(.tw-revealed-done) {
   opacity: 0;
   transform: translateY(32px);
   will-change: opacity, transform;
@@ -24008,7 +24117,8 @@ html.tw-scroll-anim-ready .tw-scroll-reveal.tw-stagger-4 {
   }
 
   .tw-scroll-reveal,
-  html.tw-scroll-anim-ready .tw-scroll-reveal:not(.tw-revealed):not(.tw-revealed-done),
+  html.tw-scroll-anim-ready
+    .tw-scroll-reveal:not(.tw-revealed):not(.tw-revealed-done),
   html.tw-scroll-anim-ready .tw-scroll-reveal.tw-revealed,
   .tw-revealed-done {
     opacity: 1 !important;
@@ -24019,9 +24129,9 @@ html.tw-scroll-anim-ready .tw-scroll-reveal.tw-stagger-4 {
 
 /* --- 4. Print Overrides: Guarantee full visibility --- */
 @media print {
-
   .tw-scroll-reveal,
-  html.tw-scroll-anim-ready .tw-scroll-reveal:not(.tw-revealed):not(.tw-revealed-done),
+  html.tw-scroll-anim-ready
+    .tw-scroll-reveal:not(.tw-revealed):not(.tw-revealed-done),
   html.tw-scroll-anim-ready .tw-scroll-reveal.tw-revealed,
   .tw-revealed-done {
     opacity: 1 !important;
@@ -24409,9 +24519,11 @@ textarea {
   right: 0;
   width: 90px;
   height: 90px;
-  background: radial-gradient(circle at top right,
-      rgba(56, 189, 248, 0.25),
-      transparent 70%);
+  background: radial-gradient(
+    circle at top right,
+    rgba(56, 189, 248, 0.25),
+    transparent 70%
+  );
   pointer-events: none;
   opacity: 0;
   transition: opacity 0.4s ease;
@@ -24493,9 +24605,11 @@ textarea {
   width: 300px;
   height: 300px;
   border-radius: 50%;
-  background: radial-gradient(circle,
-      rgba(56, 189, 248, 0.12),
-      transparent 70%);
+  background: radial-gradient(
+    circle,
+    rgba(56, 189, 248, 0.12),
+    transparent 70%
+  );
   pointer-events: none;
 }
 
@@ -24570,7 +24684,6 @@ textarea {
    TABLET  (max-width: 1024px)
    ========================================================================== */
 @media (max-width: 1024px) {
-
   /* --- Payroll --- */
   .Payroll-heroSection {
     padding-top: 4rem;
@@ -24655,7 +24768,6 @@ textarea {
    MOBILE  (max-width: 768px)
    ========================================================================== */
 @media (max-width: 768px) {
-
   /* ─── PAYROLL ──────────────────────────────────────────────────────────── */
   .Payroll-heroSection {
     padding-top: 3rem;
@@ -25056,7 +25168,6 @@ textarea {
    EXTRA-SMALL PHONES  (max-width: 480px)
    ========================================================================== */
 @media (max-width: 480px) {
-
   /* ─── PAYROLL ──────────────────────────────────────────────────────────── */
   .Payroll-heroSection {
     padding-top: 2.5rem;
@@ -25237,7 +25348,6 @@ textarea {
    VERY SMALL PHONES  (max-width: 380px)
    ========================================================================== */
 @media (max-width: 380px) {
-
   /* Payroll */
   .Payroll-heroHeadline {
     font-size: 1.4rem;
@@ -25597,9 +25707,11 @@ body {
   left: 0;
   right: 0;
   height: 3px;
-  background: linear-gradient(90deg,
-      var(--color-primary, #0037b0),
-      var(--color-cobalt-glow, #3b82f6));
+  background: linear-gradient(
+    90deg,
+    var(--color-primary, #0037b0),
+    var(--color-cobalt-glow, #3b82f6)
+  );
   border-radius: 16px 16px 0 0;
   opacity: 0;
   transition: opacity 0.25s ease;
@@ -25612,18 +25724,22 @@ body {
 /* ── Distinct 2026+ Future Initiative Card ─────────────────────────────── */
 .MilestoneCard--future {
   background:
-    linear-gradient(135deg,
+    linear-gradient(
+      135deg,
       rgba(34, 197, 94, 0.03) 0%,
-      rgba(0, 55, 176, 0.02) 100%),
+      rgba(0, 55, 176, 0.02) 100%
+    ),
     #ffffff;
   border-color: rgba(34, 197, 94, 0.4);
   border-style: dashed;
 }
 
 .MilestoneCard--future::before {
-  background: linear-gradient(90deg,
-      var(--color-emerald-accent, #22c55e),
-      var(--color-cobalt-glow, #3b82f6));
+  background: linear-gradient(
+    90deg,
+    var(--color-emerald-accent, #22c55e),
+    var(--color-cobalt-glow, #3b82f6)
+  );
 }
 
 .MilestoneCard--future:hover {
@@ -25635,9 +25751,11 @@ body {
 
 [data-theme='dark'] .MilestoneCard--future {
   background:
-    linear-gradient(135deg,
+    linear-gradient(
+      135deg,
       rgba(34, 197, 94, 0.05) 0%,
-      rgba(0, 55, 176, 0.05) 100%),
+      rgba(0, 55, 176, 0.05) 100%
+    ),
     #242731;
   border-color: rgba(34, 197, 94, 0.35);
 }
@@ -25891,7 +26009,11 @@ body {
 .MVE-ambientGradient--left {
   width: 460px;
   height: 460px;
-  background: radial-gradient(circle, rgba(37, 99, 235, 0.22) 0%, transparent 70%);
+  background: radial-gradient(
+    circle,
+    rgba(37, 99, 235, 0.22) 0%,
+    transparent 70%
+  );
   top: 15%;
   left: -8%;
 }
@@ -25899,7 +26021,11 @@ body {
 .MVE-ambientGradient--center {
   width: 520px;
   height: 520px;
-  background: radial-gradient(circle, rgba(0, 55, 176, 0.18) 0%, transparent 75%);
+  background: radial-gradient(
+    circle,
+    rgba(0, 55, 176, 0.18) 0%,
+    transparent 75%
+  );
   top: 25%;
   left: 50%;
   transform: translateX(-50%);
@@ -25908,7 +26034,11 @@ body {
 .MVE-ambientGradient--right {
   width: 480px;
   height: 480px;
-  background: radial-gradient(circle, rgba(34, 197, 94, 0.16) 0%, transparent 70%);
+  background: radial-gradient(
+    circle,
+    rgba(34, 197, 94, 0.16) 0%,
+    transparent 70%
+  );
   top: 20%;
   right: -8%;
 }
@@ -25916,7 +26046,10 @@ body {
 .MVE-gridOverlay {
   position: absolute;
   inset: 0;
-  background-image: radial-gradient(rgba(100, 116, 139, 0.12) 1px, transparent 1px);
+  background-image: radial-gradient(
+    rgba(100, 116, 139, 0.12) 1px,
+    transparent 1px
+  );
   background-size: 28px 28px;
   opacity: 0.6;
 }
@@ -25988,7 +26121,12 @@ body {
 }
 
 .MVE-headingGradient {
-  background: linear-gradient(135deg, var(--color-primary, #0037b0) 0%, var(--color-cobalt-glow, #3b82f6) 60%, var(--color-emerald-accent, #22c55e) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--color-primary, #0037b0) 0%,
+    var(--color-cobalt-glow, #3b82f6) 60%,
+    var(--color-emerald-accent, #22c55e) 100%
+  );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -26413,7 +26551,12 @@ body {
   width: 174px;
   height: 174px;
   border-radius: 50%;
-  background: radial-gradient(circle at 35% 30%, #ffffff 0%, #f1f5f9 60%, #e2e8f0 100%);
+  background: radial-gradient(
+    circle at 35% 30%,
+    #ffffff 0%,
+    #f1f5f9 60%,
+    #e2e8f0 100%
+  );
   border: 1px solid rgba(255, 255, 255, 0.9);
   box-shadow:
     0 12px 30px -4px rgba(15, 23, 42, 0.12),
@@ -26430,7 +26573,12 @@ body {
 }
 
 [data-theme='dark'] .MVE-coreGlobe {
-  background: radial-gradient(circle at 35% 30%, #1e293b 0%, #0f172a 75%, #020617 100%);
+  background: radial-gradient(
+    circle at 35% 30%,
+    #1e293b 0%,
+    #0f172a 75%,
+    #020617 100%
+  );
   border-color: rgba(255, 255, 255, 0.15);
   box-shadow:
     0 16px 36px -4px rgba(0, 0, 0, 0.6),
@@ -26456,7 +26604,11 @@ body {
   position: absolute;
   inset: -15px;
   border-radius: 50%;
-  background: radial-gradient(circle, rgba(37, 99, 235, 0.2) 0%, transparent 70%);
+  background: radial-gradient(
+    circle,
+    rgba(37, 99, 235, 0.2) 0%,
+    transparent 70%
+  );
   filter: blur(12px);
   z-index: -1;
   pointer-events: none;
@@ -26466,7 +26618,11 @@ body {
   width: 36px;
   height: 36px;
   border-radius: 50%;
-  background: linear-gradient(135deg, var(--color-primary, #0037b0), var(--color-cobalt-glow, #3b82f6));
+  background: linear-gradient(
+    135deg,
+    var(--color-primary, #0037b0),
+    var(--color-cobalt-glow, #3b82f6)
+  );
   display: flex;
   align-items: center;
   justify-content: center;
@@ -26972,7 +27128,6 @@ body {
 
 /* Prefers Reduced Motion */
 @media (prefers-reduced-motion: reduce) {
-
   .MVE-orbitRing--outer,
   .MVE-orbitRing--mid {
     animation: none !important;
