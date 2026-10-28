@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { registerUser, clearAuthError } from '../../store/slices/authSlice';
@@ -148,6 +149,26 @@ const RegisterPage = () => {
 
   return (
     <div className="tw-split-auth-page">
+      <Helmet>
+        <title>Create an Account | Thinkwires Talent Network</title>
+        <meta
+          name="description"
+          content="Join the Thinkwires global talent network, upload your resume, receive AI-matched job alerts, and showcase your engineering skills."
+        />
+        <meta property="og:title" content="Register for Thinkwires" />
+        <meta
+          property="og:description"
+          content="Join the Thinkwires global talent network, upload your resume, receive AI-matched job alerts, and showcase your engineering skills."
+        />
+        <meta property="og:image" content="https://thinkwires.com/og-image.jpg" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Register for Thinkwires" />
+        <meta
+          name="twitter:description"
+          content="Join the Thinkwires global talent network and receive AI-matched job alerts."
+        />
+        <meta name="twitter:image" content="https://thinkwires.com/og-image.jpg" />
+      </Helmet>
       <Navbar />
 
       <main className="tw-split-main">

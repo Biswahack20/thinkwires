@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { updateProfile } from '../../store/slices/authSlice';
@@ -310,6 +311,26 @@ const CandidateProfilePage = () => {
 
   return (
     <div className="tw-candidate-shell">
+      <Helmet>
+        <title>My Profile | Thinkwires Candidate Portal</title>
+        <meta
+          name="description"
+          content="Edit your professional experience, technical skills, resume, and portfolio details."
+        />
+        <meta property="og:title" content="Candidate Profile | Thinkwires" />
+        <meta
+          property="og:description"
+          content="Edit your professional experience, technical skills, resume, and portfolio details."
+        />
+        <meta property="og:image" content="https://thinkwires.com/og-image.jpg" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Candidate Profile | Thinkwires" />
+        <meta
+          name="twitter:description"
+          content="Edit your professional experience, technical skills, and resume."
+        />
+        <meta name="twitter:image" content="https://thinkwires.com/og-image.jpg" />
+      </Helmet>
       <Navbar />
 
       <main className="tw-portal-container">

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { Link, useSearchParams, useNavigate } from 'react-router-dom';
 import Navbar from '../../components/common/Navbar';
 import Footer from '../../components/common/Footer';
@@ -73,6 +74,26 @@ const ResetPasswordPage = () => {
 
   return (
     <div className="tw-auth-page">
+      <Helmet>
+        <title>Reset Password | Thinkwires</title>
+        <meta
+          name="description"
+          content="Enter your new secure password to restore access to your Thinkwires account."
+        />
+        <meta property="og:title" content="Reset Password | Thinkwires" />
+        <meta
+          property="og:description"
+          content="Enter your new secure password to restore access to your Thinkwires account."
+        />
+        <meta property="og:image" content="https://thinkwires.com/og-image.jpg" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Reset Password | Thinkwires" />
+        <meta
+          name="twitter:description"
+          content="Enter your new secure password to restore access to your Thinkwires account."
+        />
+        <meta name="twitter:image" content="https://thinkwires.com/og-image.jpg" />
+      </Helmet>
       <Navbar />
 
       <main className="tw-auth-container">

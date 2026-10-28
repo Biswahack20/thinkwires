@@ -1,4 +1,5 @@
 import React from 'react';
+import { Helmet } from 'react-helmet-async';
 import { Link, useNavigate } from 'react-router-dom';
 import Navbar from '../components/common/Navbar';
 import Footer from '../components/common/Footer';
@@ -8,6 +9,32 @@ const NotFoundPage = () => {
 
   return (
     <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+      <Helmet>
+        <title>Page Not Found (404) | Thinkwires</title>
+        <meta
+          name="description"
+          content="The page you are looking for does not exist or has been moved. Explore active tech roles or talent solutions on Thinkwires."
+        />
+        <meta
+          property="og:title"
+          content="404 - Page Not Found | Thinkwires"
+        />
+        <meta
+          property="og:description"
+          content="The page you are looking for does not exist or has been moved."
+        />
+        <meta property="og:image" content="https://thinkwires.com/og-image.jpg" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta
+          name="twitter:title"
+          content="404 - Page Not Found | Thinkwires"
+        />
+        <meta
+          name="twitter:description"
+          content="The page you are looking for does not exist or has been moved."
+        />
+        <meta name="twitter:image" content="https://thinkwires.com/og-image.jpg" />
+      </Helmet>
       <Navbar />
 
       <main

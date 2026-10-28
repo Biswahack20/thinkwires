@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   fetchFindTalentData,
@@ -25,7 +26,6 @@ const FindTalentPage = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    document.title = 'Find Talent & Hire Pre-Vetted Engineers | Thinkwires';
     if (status === 'idle') {
       dispatch(fetchFindTalentData());
     }
@@ -33,6 +33,32 @@ const FindTalentPage = () => {
 
   return (
     <div className="FindTalentPage-wrapper">
+      <Helmet>
+        <title>Hire Tech Talent | Thinkwires — Request Talent Pipeline</title>
+        <meta
+          name="description"
+          content="Tell us your hiring requirements and receive matched, verified senior engineer profiles with transparent rates within 48 hours."
+        />
+        <meta
+          property="og:title"
+          content="Hire Top Tech Talent | Thinkwires"
+        />
+        <meta
+          property="og:description"
+          content="Tell us your hiring requirements and receive matched, verified senior engineer profiles with transparent rates within 48 hours."
+        />
+        <meta property="og:image" content="https://thinkwires.com/og-image.jpg" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta
+          name="twitter:title"
+          content="Hire Top Tech Talent | Thinkwires"
+        />
+        <meta
+          name="twitter:description"
+          content="Tell us your hiring requirements and receive matched, verified senior engineer profiles within 48 hours."
+        />
+        <meta name="twitter:image" content="https://thinkwires.com/og-image.jpg" />
+      </Helmet>
       <Navbar />
       <main className="FindTalentPage-main">
         <FindTalentHero data={data.hero} />

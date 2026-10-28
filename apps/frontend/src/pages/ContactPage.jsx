@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   fetchContactData,
@@ -23,24 +24,37 @@ const ContactPage = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    document.title =
-      'Contact Us | Thinkwires - Connect with Enterprise Staffing Directors';
-
-    // Update meta description
-    let metaDesc = document.querySelector('meta[name="description"]');
-    if (!metaDesc) {
-      metaDesc = document.createElement('meta');
-      metaDesc.name = 'description';
-      document.head.appendChild(metaDesc);
-    }
-    metaDesc.content =
-      'Connect with Thinkwires staffing directors for specialized SAP, AEM, Cloud, and engineering squads. Receive pre-vetted candidate dossiers within 5 business hours.';
-
     dispatch(fetchContactData());
   }, [dispatch]);
 
   return (
     <div className="ContactPage-wrapper">
+      <Helmet>
+        <title>Contact Us | Thinkwires — Connect with Enterprise Staffing Directors</title>
+        <meta
+          name="description"
+          content="Connect with Thinkwires staffing directors for specialized SAP, AEM, Cloud, and engineering squads. Receive pre-vetted candidate dossiers within 5 business hours."
+        />
+        <meta
+          property="og:title"
+          content="Contact Us | Thinkwires"
+        />
+        <meta
+          property="og:description"
+          content="Connect with Thinkwires staffing directors for specialized SAP, AEM, Cloud, and engineering squads. Receive pre-vetted candidate dossiers within 5 business hours."
+        />
+        <meta property="og:image" content="https://thinkwires.com/og-image.jpg" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta
+          name="twitter:title"
+          content="Contact Us | Thinkwires"
+        />
+        <meta
+          name="twitter:description"
+          content="Connect with Thinkwires staffing directors for specialized SAP, AEM, Cloud, and engineering squads."
+        />
+        <meta name="twitter:image" content="https://thinkwires.com/og-image.jpg" />
+      </Helmet>
       <Navbar />
 
       <main className="ContactPage-main">

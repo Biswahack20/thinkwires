@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { useLocation, Link } from 'react-router-dom';
 import Navbar from '../components/common/Navbar';
 import Footer from '../components/common/Footer';
@@ -86,6 +87,32 @@ const LegalPage = () => {
         backgroundColor: 'var(--color-surface, #f8fafc)',
       }}
     >
+      <Helmet>
+        <title>Legal, Privacy & Compliance | Thinkwires</title>
+        <meta
+          name="description"
+          content="Thinkwires privacy policies, terms of service, data security standards, GDPR compliance, and cookie management guidelines."
+        />
+        <meta
+          property="og:title"
+          content="Legal & Compliance | Thinkwires"
+        />
+        <meta
+          property="og:description"
+          content="Thinkwires privacy policies, terms of service, data security standards, GDPR compliance, and cookie management guidelines."
+        />
+        <meta property="og:image" content="https://thinkwires.com/og-image.jpg" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta
+          name="twitter:title"
+          content="Legal & Compliance | Thinkwires"
+        />
+        <meta
+          name="twitter:description"
+          content="Thinkwires privacy policies, terms of service, data security standards, and GDPR compliance."
+        />
+        <meta name="twitter:image" content="https://thinkwires.com/og-image.jpg" />
+      </Helmet>
       <Navbar />
 
       <main className="LegalPage-main">

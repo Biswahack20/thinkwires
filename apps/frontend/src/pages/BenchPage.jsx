@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchBenchData } from '../store/slices/benchSlice';
 import Navbar from '../components/common/Navbar';
@@ -27,8 +28,6 @@ const BenchPage = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    document.title =
-      'Talent Cloud Bench Explorer | Thinkwires - Pre-Vetted Tech Talent & Dossiers';
     if (status === 'idle') {
       dispatch(fetchBenchData());
     }
@@ -202,6 +201,32 @@ const BenchPage = () => {
 
   return (
     <div className="BenchPage-root">
+      <Helmet>
+        <title>Talent Cloud & Ready Bench | Thinkwires</title>
+        <meta
+          name="description"
+          content="Deploy pre-vetted, immediate-joiner senior software engineers and cloud architects from the Thinkwires Talent Cloud within 48 hours."
+        />
+        <meta
+          property="og:title"
+          content="Ready Talent Bench & Talent Cloud | Thinkwires"
+        />
+        <meta
+          property="og:description"
+          content="Deploy pre-vetted, immediate-joiner senior software engineers and cloud architects from the Thinkwires Talent Cloud within 48 hours."
+        />
+        <meta property="og:image" content="https://thinkwires.com/og-image.jpg" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta
+          name="twitter:title"
+          content="Ready Talent Bench & Talent Cloud | Thinkwires"
+        />
+        <meta
+          name="twitter:description"
+          content="Deploy pre-vetted, immediate-joiner senior software engineers and cloud architects from the Thinkwires Talent Cloud."
+        />
+        <meta name="twitter:image" content="https://thinkwires.com/og-image.jpg" />
+      </Helmet>
       <Navbar />
 
       <main className="BenchPage-main">

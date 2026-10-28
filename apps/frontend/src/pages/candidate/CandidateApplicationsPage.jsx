@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { Link, useSearchParams } from 'react-router-dom';
 import Navbar from '../../components/common/Navbar';
 import Footer from '../../components/common/Footer';
@@ -93,6 +94,26 @@ const CandidateApplicationsPage = () => {
 
   return (
     <div className="tw-candidate-shell">
+      <Helmet>
+        <title>My Applications | Thinkwires Candidate Portal</title>
+        <meta
+          name="description"
+          content="Track real-time status and hiring milestones for all your submitted job applications."
+        />
+        <meta property="og:title" content="My Applications | Thinkwires" />
+        <meta
+          property="og:description"
+          content="Track real-time status and hiring milestones for all your submitted job applications."
+        />
+        <meta property="og:image" content="https://thinkwires.com/og-image.jpg" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="My Applications | Thinkwires" />
+        <meta
+          name="twitter:description"
+          content="Track real-time status and hiring milestones for all your submitted job applications."
+        />
+        <meta name="twitter:image" content="https://thinkwires.com/og-image.jpg" />
+      </Helmet>
       <Navbar />
 
       <main className="tw-portal-container">

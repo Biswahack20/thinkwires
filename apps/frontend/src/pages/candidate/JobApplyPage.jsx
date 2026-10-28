@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { useParams, useNavigate, useSearchParams } from 'react-router-dom';
 import Navbar from '../../components/common/Navbar';
 import Footer from '../../components/common/Footer';
@@ -33,6 +34,26 @@ const JobApplyPage = () => {
 
   return (
     <div className="tw-candidate-shell">
+      <Helmet>
+        <title>{`Apply for ${jobData.title} | Thinkwires Career Portal`}</title>
+        <meta
+          name="description"
+          content={`Submit your resume and assessment responses for the ${jobData.title} role at Thinkwires.`}
+        />
+        <meta property="og:title" content={`Apply for ${jobData.title} | Thinkwires`} />
+        <meta
+          property="og:description"
+          content={`Submit your resume and assessment responses for the ${jobData.title} role at Thinkwires.`}
+        />
+        <meta property="og:image" content="https://thinkwires.com/og-image.jpg" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={`Apply for ${jobData.title} | Thinkwires`} />
+        <meta
+          name="twitter:description"
+          content={`Submit your resume and assessment responses for the ${jobData.title} role at Thinkwires.`}
+        />
+        <meta name="twitter:image" content="https://thinkwires.com/og-image.jpg" />
+      </Helmet>
       <Navbar />
       <GlobalJobApplicationForm
         isOpen={true}

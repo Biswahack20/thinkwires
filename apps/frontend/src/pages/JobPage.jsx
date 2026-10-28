@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback, Suspense, lazy } from 'react';
+import { Helmet } from 'react-helmet-async';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { fetchOpenings } from '../store/slices/homeSlice';
@@ -136,6 +137,26 @@ const JobPage = () => {
 
   return (
     <div className="JobPage-wrapper">
+      <Helmet>
+        <title>Jobs | Thinkwires — Global Talent Cloud</title>
+        <meta
+          name="description"
+          content="Browse 500+ active engineering and tech roles across India, USA, and Canada. Apply directly with AI-driven ATS screening."
+        />
+        <meta property="og:title" content="Hot Jobs | Thinkwires" />
+        <meta
+          property="og:description"
+          content="Browse 500+ active engineering and tech roles across India, USA, and Canada. Apply directly with AI-driven ATS screening."
+        />
+        <meta property="og:image" content="https://thinkwires.com/og-image.jpg" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content="Hot Jobs | Thinkwires" />
+        <meta
+          name="twitter:description"
+          content="Browse 500+ active engineering and tech roles across India, USA, and Canada."
+        />
+        <meta name="twitter:image" content="https://thinkwires.com/og-image.jpg" />
+      </Helmet>
       <Navbar />
 
       <main className="JobPage-main">
