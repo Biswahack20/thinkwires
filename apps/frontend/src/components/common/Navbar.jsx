@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import logo from '../../assets/logo/logo.png';
@@ -11,7 +11,6 @@ const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isServicesOpen, setIsServicesOpen] = useState(false);
   const { theme, toggleTheme } = useTheme();
-  const logoRef = useRef(null);
   const location = useLocation();
   const navigate = useNavigate();
   const { isAuthenticated, user } = useSelector((state) => state.auth);
@@ -66,6 +65,7 @@ const Navbar = () => {
               onClick={toggleTheme}
               className="Navbar-topBarItem Navbar-themeToggle"
               aria-label="Toggle Theme"
+              data-testid="desktop-theme-toggle"
             >
               <svg
                 width="14"
@@ -304,6 +304,30 @@ const Navbar = () => {
                 className="Navbar-btnOutline"
               >
                 Quick Apply
+              </button>
+
+              <button
+                type="button"
+                onClick={toggleTheme}
+                className="Navbar-mobileThemeToggle"
+                aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
+                data-testid="mobile-theme-toggle"
+              >
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  aria-hidden="true"
+                >
+                  <circle cx="12" cy="12" r="10" />
+                  <path d="M12 2a10 10 0 0 0 0 20V2z" fill="currentColor" />
+                </svg>
+                <span>{theme === 'dark' ? 'Light Mode' : 'Dark Mode'}</span>
               </button>
 
               <button
