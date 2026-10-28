@@ -12,7 +12,6 @@ import {
   setSelectedCategory,
   setCurrentPage,
   toggleBookmark,
-  setNewsletterSubmitted,
   fetchArticles,
   fetchFeaturedArticle,
   fetchResearchers,
