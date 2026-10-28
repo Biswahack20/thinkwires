@@ -4,7 +4,7 @@ import fs from 'fs';
 
 // Vercel serverless runtime has a read-only filesystem; only /tmp is writable
 const uploadDir = process.env.VERCEL
-  ? path.resolve('/tmp', 'resumes')
+  ? path.resolve('/tmp', 'uploads', 'resumes')
   : path.resolve(process.cwd(), 'uploads/resumes');
 
 if (!fs.existsSync(uploadDir)) {
@@ -22,7 +22,9 @@ const storage = multer.diskStorage({
   filename: (req, file, cb) => {
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
     const rawExt = path.extname(file.originalname || '').toLowerCase();
-    const safeExt = ['.pdf', '.doc', '.docx'].includes(rawExt) ? rawExt : '.pdf';
+    const safeExt = ['.pdf', '.doc', '.docx'].includes(rawExt)
+      ? rawExt
+      : '.pdf';
     const rawBase = path.basename(file.originalname || 'resume', rawExt);
     const sanitizedBase = rawBase.replace(/[^a-zA-Z0-9_-]/g, '_').slice(0, 50);
     cb(null, `${sanitizedBase}-${uniqueSuffix}${safeExt}`);
@@ -44,7 +46,17 @@ const fileFilter = (req, file, cb) => {
 
   // Guard against double-extensions (e.g. payload.php.pdf)
   const lowerName = (file.originalname || '').toLowerCase();
-  const dangerousPatterns = ['.html', '.htm', '.svg', '.js', '.exe', '.sh', '.php', '.bat', '.py'];
+  const dangerousPatterns = [
+    '.html',
+    '.htm',
+    '.svg',
+    '.js',
+    '.exe',
+    '.sh',
+    '.php',
+    '.bat',
+    '.py',
+  ];
   if (dangerousPatterns.some((pattern) => lowerName.includes(pattern))) {
     return cb(new Error('Potentially unsafe file format detected.'), false);
   }
@@ -60,7 +72,10 @@ const fileFilter = (req, file, cb) => {
   };
 
   const validMimes = extensionMimeMap[ext] || [];
-  if (validMimes.includes(file.mimetype) || file.mimetype === 'application/octet-stream') {
+  if (
+    validMimes.includes(file.mimetype) ||
+    file.mimetype === 'application/octet-stream'
+  ) {
     cb(null, true);
   } else {
     cb(

@@ -3,6 +3,12 @@
   "buildCommand": "npm run build:frontend",
   "outputDirectory": "apps/frontend/dist",
   "cleanUrls": true,
+  "functions": {
+    "api/index.js": {
+      "includeFiles": "apps/backend/src/seeds/**",
+      "maxDuration": 15
+    }
+  },
   "headers": [
     {
       "source": "/assets/(.*)",
@@ -34,15 +40,23 @@
         },
         {
           "key": "Content-Security-Policy",
-          "value": "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self';"
+          "value": "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: https:; connect-src 'self' https:;"
         }
       ]
     }
   ],
   "rewrites": [
     {
+      "source": "/api",
+      "destination": "/api/index.js"
+    },
+    {
       "source": "/api/(.*)",
-      "destination": "/api"
+      "destination": "/api/index.js"
+    },
+    {
+      "source": "/uploads/(.*)",
+      "destination": "/api/index.js"
     },
     {
       "source": "/(.*)",
