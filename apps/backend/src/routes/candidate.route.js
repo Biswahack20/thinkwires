@@ -29,6 +29,10 @@ const parseResumeRateLimiter = rateLimit({
   max: 15,
   standardHeaders: true,
   legacyHeaders: false,
+  validate: {
+    xForwardedForHeader: false,
+    forwardedHeader: false,
+  },
   message: {
     success: false,
     error:

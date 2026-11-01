@@ -20,6 +20,9 @@ const __dirname = path.dirname(__filename);
 
 const app = express();
 
+// Trust reverse proxy (Render, Vercel, Cloudflare, AWS ALB) for accurate client IP in req.ip
+app.set('trust proxy', 1);
+
 app.disable('x-powered-by');
 
 app.use(

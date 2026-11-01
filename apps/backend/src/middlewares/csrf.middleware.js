@@ -8,10 +8,12 @@ export const generateCsrfToken = () => {
 
 export const setCsrfCookie = (res, token) => {
   const isProduction = process.env.NODE_ENV === 'production';
+  const sameSite =
+    process.env.COOKIE_SAME_SITE || (isProduction ? 'none' : 'lax');
   res.cookie(CSRF_COOKIE_NAME, token, {
     httpOnly: false, // Must be readable by client JS for double-submit header
     secure: isProduction,
-    sameSite: isProduction ? 'strict' : 'lax',
+    sameSite,
     path: '/',
     maxAge: 7 * 24 * 60 * 60 * 1000,
   });
@@ -19,10 +21,12 @@ export const setCsrfCookie = (res, token) => {
 
 export const clearCsrfCookie = (res) => {
   const isProduction = process.env.NODE_ENV === 'production';
+  const sameSite =
+    process.env.COOKIE_SAME_SITE || (isProduction ? 'none' : 'lax');
   res.cookie(CSRF_COOKIE_NAME, '', {
     httpOnly: false,
     secure: isProduction,
-    sameSite: isProduction ? 'strict' : 'lax',
+    sameSite,
     expires: new Date(0),
     path: '/',
   });
@@ -87,13 +91,25 @@ export const adminCsrfProtection = (req, res, next) => {
     return next();
   }
 
-  // Exempt unauthenticated initial login to establish session
-  const isLoginRoute = req.path === '/auth/login' || req.originalUrl?.endsWith('/auth/login');
-  const hasAdminCookie = Boolean(req.cookies && req.cookies.thinkwires_admin_jwt);
+  // Exempt login to establish session, and logout to guarantee unconditional signout
+  const isAuthRoute =
+    req.path === '/auth/login' ||
+    req.path === '/auth/logout' ||
+    req.originalUrl?.endsWith('/auth/login') ||
+    req.originalUrl?.endsWith('/auth/logout');
 
-  if (isLoginRoute && !hasAdminCookie) {
+  if (isAuthRoute) {
     return next();
   }
+
+  const hasAdminCookie = Boolean(
+    req.cookies && req.cookies.thinkwires_admin_jwt
+  );
+  const hasAdminTokenHeader = Boolean(
+    (req.headers.authorization &&
+      req.headers.authorization.startsWith('Bearer ')) ||
+      req.headers['x-admin-token']
+  );
 
   const origin = req.headers.origin;
   const referer = req.headers.referer;
@@ -105,6 +121,12 @@ export const adminCsrfProtection = (req, res, next) => {
       error: 'Cross-site request blocked: Untrusted origin or referer.',
       origin: effectiveOrigin,
     });
+  }
+
+  // Requests using custom Authorization Bearer or x-admin-token headers cannot be forged via CSRF
+  // (browsers require CORS preflight and never attach custom headers to cross-site requests).
+  if (hasAdminTokenHeader) {
+    return next();
   }
 
   if (hasAdminCookie) {

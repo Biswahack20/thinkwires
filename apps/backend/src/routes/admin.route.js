@@ -70,6 +70,10 @@ const adminLoginRateLimiter = rateLimit({
   max: 10,
   standardHeaders: true,
   legacyHeaders: false,
+  validate: {
+    xForwardedForHeader: false,
+    forwardedHeader: false,
+  },
   message: {
     success: false,
     error:

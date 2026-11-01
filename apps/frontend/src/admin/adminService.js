@@ -3,16 +3,31 @@ import { getApiBaseUrl } from '../utils/apiConfig.js';
 // Admin and CMS API Client with Secure Dual-Mode Authentication (HttpOnly Cookie + Bearer Token) & Anti-CSRF
 const getAdminApiBase = () => `${getApiBaseUrl()}/admin`;
 
-// In-memory Anti-CSRF Token state
+// In-memory & Persistent Anti-CSRF Token state
 let currentCsrfToken = null;
 
 export const setCsrfToken = (token) => {
   currentCsrfToken = token || null;
+  try {
+    if (typeof localStorage !== 'undefined') {
+      if (token) localStorage.setItem('tw_csrf_token', token);
+      else localStorage.removeItem('tw_csrf_token');
+    }
+  } catch {
+    // Ignore restricted environments
+  }
 };
 
 export const getCsrfToken = () => {
   if (currentCsrfToken) return currentCsrfToken;
   try {
+    if (typeof localStorage !== 'undefined') {
+      const stored = localStorage.getItem('tw_csrf_token');
+      if (stored) {
+        currentCsrfToken = stored;
+        return currentCsrfToken;
+      }
+    }
     if (typeof document !== 'undefined' && document.cookie) {
       const match = document.cookie.match(
         /(?:^|;\s*)thinkwires_csrf_token=([^;]+)/
@@ -101,6 +116,7 @@ export const clearAdminSession = () => {
       localStorage.removeItem('tw_admin_token');
       localStorage.removeItem('tw_admin_user');
       localStorage.removeItem('tw_admin_role');
+      localStorage.removeItem('tw_csrf_token');
     }
     if (typeof sessionStorage !== 'undefined') {
       sessionStorage.removeItem('tw_admin_token');

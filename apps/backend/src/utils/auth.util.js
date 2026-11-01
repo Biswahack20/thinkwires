@@ -225,18 +225,14 @@ export const clearAdminAuthCookie = (res) => {
   const isProduction = process.env.NODE_ENV === 'production';
   const sameSite =
     process.env.COOKIE_SAME_SITE || (isProduction ? 'none' : 'lax');
-  res.cookie(ADMIN_COOKIE_NAME, '', {
+  const opts = {
     httpOnly: true,
     secure: isProduction,
     sameSite,
     expires: new Date(0),
-    path: ADMIN_COOKIE_PATH,
-  });
-  res.cookie(ADMIN_COOKIE_NAME, '', {
-    httpOnly: true,
-    secure: isProduction,
-    sameSite,
-    expires: new Date(0),
-    path: '/',
-  });
+    maxAge: 0,
+  };
+  res.cookie(ADMIN_COOKIE_NAME, '', { ...opts, path: ADMIN_COOKIE_PATH });
+  res.cookie(ADMIN_COOKIE_NAME, '', { ...opts, path: '/api' });
+  res.cookie(ADMIN_COOKIE_NAME, '', { ...opts, path: '/' });
 };

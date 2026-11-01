@@ -74,6 +74,10 @@ const publicSubmissionRateLimiter = rateLimit({
   max: 30, // limit each IP to 30 submissions per 15 minutes
   standardHeaders: true,
   legacyHeaders: false,
+  validate: {
+    xForwardedForHeader: false,
+    forwardedHeader: false,
+  },
   message: {
     success: false,
     error: 'Too many requests from this network. Please wait a few minutes before submitting again.',

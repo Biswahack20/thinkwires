@@ -18,6 +18,10 @@ const authRateLimiter = rateLimit({
   max: 20, // limit each IP to 20 attempts per window
   standardHeaders: true,
   legacyHeaders: false,
+  validate: {
+    xForwardedForHeader: false,
+    forwardedHeader: false,
+  },
   message: {
     success: false,
     error:
