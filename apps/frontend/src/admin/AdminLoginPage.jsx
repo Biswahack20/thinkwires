@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
-import { adminApi, isAdminAuthenticated, getAdminRole } from './adminService';
+import { adminApi, isAdminAuthenticated, getAdminRole, getAdminUser, getAdminToken } from './adminService';
 import { ShieldIcon, LockIcon } from './AdminIcons';
 import logo from '../assets/logo/logo.png';
 import './admin.css';
@@ -17,6 +17,11 @@ const AdminLoginPage = () => {
 
   // If already authenticated via HttpOnly cookie session, redirect to appropriate admin module
   useEffect(() => {
+    // If user explicitly signed out, do not auto-redirect
+    if (location.state?.loggedOut || (!getAdminToken() && !getAdminUser())) {
+      return;
+    }
+
     let isMounted = true;
     adminApi
       .getMe()
@@ -35,7 +40,7 @@ const AdminLoginPage = () => {
     return () => {
       isMounted = false;
     };
-  }, [navigate]);
+  }, [navigate, location.state]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

@@ -155,9 +155,11 @@ const AdminLayout = () => {
       await adminApi.logout();
     } catch (err) {
       console.warn('Logout notice:', err.message);
+    } finally {
+      clearAdminSession();
     }
     showToast('Signed out of admin portal');
-    navigate('/admin/login', { replace: true });
+    navigate('/admin/login', { replace: true, state: { loggedOut: true } });
   };
 
   const showToast = (msg) => {
