@@ -15000,6 +15000,69 @@ textarea {
   color: #38bdf8;
 }
 
+/* Quick Notice Period Toggles (Issue #166) */
+.BenchFilter-quickTogglesRow {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  margin-bottom: 1.25rem;
+  flex-wrap: wrap;
+}
+
+.BenchFilter-quickTogglesLabel {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #38bdf8;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.BenchFilter-quickTogglesLabel .material-symbols-outlined {
+  font-size: 1.1rem;
+}
+
+.BenchFilter-quickTogglesGroup {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.BenchFilter-quickToggleBtn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.4rem 0.85rem;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #cbd5e1;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.BenchFilter-quickToggleBtn .material-symbols-outlined {
+  font-size: 1rem;
+}
+
+.BenchFilter-quickToggleBtn:hover {
+  background: rgba(56, 189, 248, 0.1);
+  border-color: rgba(56, 189, 248, 0.3);
+  color: #ffffff;
+}
+
+.BenchFilter-quickToggleBtn.is-active {
+  background: rgba(56, 189, 248, 0.2);
+  border-color: #38bdf8;
+  color: #38bdf8;
+  box-shadow: 0 0 12px rgba(56, 189, 248, 0.25);
+}
+
 /* Dropdown Filters Row */
 .BenchFilter-dropdownRow {
   display: flex;

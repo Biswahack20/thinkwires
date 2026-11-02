@@ -46,6 +46,9 @@ const BenchFilterBar = ({ totalCount }) => {
   ];
   const defaultNoticePeriods = [
     'All Notice Periods',
+    'Immediate (48h)',
+    'Within 7 Days',
+    'Within 15 Days',
     '30 Days',
     'Immediate',
     '60 Days',
@@ -127,6 +130,40 @@ const BenchFilterBar = ({ totalCount }) => {
             </button>
           );
         })}
+      </div>
+
+      {/* Quick Notice Period Toggles (Issue #166) */}
+      <div className="BenchFilter-quickTogglesRow">
+        <span className="BenchFilter-quickTogglesLabel">
+          <span className="material-symbols-outlined">bolt</span>
+          <span>Fast Deployment:</span>
+        </span>
+        <div className="BenchFilter-quickTogglesGroup">
+          {[
+            { label: 'Immediate (48h)', icon: 'bolt' },
+            { label: 'Within 7 Days', icon: 'speed' },
+            { label: 'Within 15 Days', icon: 'calendar_today' },
+          ].map((item) => {
+            const isActive = activeNoticePeriod === item.label;
+            return (
+              <button
+                key={item.label}
+                type="button"
+                className={`BenchFilter-quickToggleBtn ${isActive ? 'is-active' : ''}`}
+                onClick={() =>
+                  dispatch(
+                    setActiveNoticePeriod(
+                      isActive ? 'All Notice Periods' : item.label
+                    )
+                  )
+                }
+              >
+                <span className="material-symbols-outlined">{item.icon}</span>
+                <span>{item.label}</span>
+              </button>
+            );
+          })}
+        </div>
       </div>
 
       {/* Secondary Dropdown Filter Bar */}

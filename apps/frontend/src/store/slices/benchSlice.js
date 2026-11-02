@@ -64,6 +64,9 @@ export const fallbackBenchData = {
     ],
     noticePeriod: [
       'All Notice Periods',
+      'Immediate (48h)',
+      'Within 7 Days',
+      'Within 15 Days',
       '30 Days',
       'Immediate',
       '60 Days',
@@ -152,8 +155,8 @@ export const fallbackBenchData = {
       location: 'Hyderabad / Remote Global',
       score: 96,
       assessmentScore: 96,
-      noticePeriod: '30 Days',
-      urgency: '30 Days',
+      noticePeriod: 'Within 7 Days',
+      urgency: 'Within 7 Days',
       engagementType: 'full-time',
       expectedSalary: '₹26 - ₹32 LPA',
       pricing: {
@@ -244,8 +247,8 @@ export const fallbackBenchData = {
       location: 'Chennai / Remote',
       score: 94,
       assessmentScore: 94,
-      noticePeriod: '30 Days',
-      urgency: '30 Days',
+      noticePeriod: 'Within 15 Days',
+      urgency: 'Within 15 Days',
       engagementType: 'full-time',
       expectedSalary: '₹20 - ₹25 LPA',
       pricing: {
@@ -294,8 +297,8 @@ export const fallbackBenchData = {
       location: 'Pan-India (Full US Shift)',
       score: 99,
       assessmentScore: 99,
-      noticePeriod: '30 Days',
-      urgency: '30 Days',
+      noticePeriod: 'Immediate (48h)',
+      urgency: 'Immediate (48h)',
       engagementType: 'full-time',
       expectedSalary: '₹28 - ₹34 LPA',
       pricing: {
@@ -344,8 +347,8 @@ export const fallbackBenchData = {
       location: 'Gurugram / Remote',
       score: 95,
       assessmentScore: 95,
-      noticePeriod: '60 Days',
-      urgency: '60 Days',
+      noticePeriod: '30 Days',
+      urgency: '30 Days',
       engagementType: 'contract',
       expectedSalary: '15 LPA',
       pricing: {
