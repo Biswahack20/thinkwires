@@ -208,7 +208,7 @@ const BenchDossierDrawer = () => {
 
     const printRisks = gapsAndRisks.length > 0 ? gapsAndRisks : [
       `Notice period: ${selectedTalent.noticePeriod || selectedTalent.urgency || 'Immediate'} deployment timeline to be scheduled.`,
-      `Hourly rate: ${selectedTalent.hourlyRate}/hr within enterprise engagement scope.`,
+      `Pricing / Rate: ${selectedTalent.rateDisplay || selectedTalent.pricing?.rateDisplay || (selectedTalent.hourlyRate ? `${selectedTalent.hourlyRate}` : 'Rate on request')} within enterprise engagement scope.`,
       `Standard client live technical interview recommended for domain alignment.`
     ];
 
@@ -581,7 +581,11 @@ const BenchDossierDrawer = () => {
                 </span>
                 <span>•</span>
                 <span className="BenchDrawer-rateHighlight">
-                  {selectedTalent.hourlyRate}/hr
+                  {selectedTalent.rateDisplay ||
+                    selectedTalent.pricing?.rateDisplay ||
+                    (selectedTalent.hourlyRate
+                      ? `${selectedTalent.hourlyRate}${selectedTalent.hourlyRate.includes('/') || selectedTalent.hourlyRate.includes('mo') || selectedTalent.hourlyRate.includes('LPA') ? '' : '/hr'}`
+                      : 'Competitive Rate')}
                 </span>
               </div>
             </div>
