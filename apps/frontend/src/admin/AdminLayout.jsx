@@ -29,6 +29,7 @@ import {
   ExternalLinkIcon,
   LogoutIcon,
   CheckIcon,
+  BookOpenIcon,
 } from './AdminIcons';
 import './admin.css';
 
@@ -310,6 +311,18 @@ const AdminLayout = () => {
           },
         ]
       : []),
+
+    {
+      group: 'INTELLIGENCE & ARCHITECTURE',
+      items: [
+        {
+          label: 'System Docs & Workflows',
+          path: '/admin/docs',
+          icon: <BookOpenIcon size={18} />,
+          badge: 'Live',
+        },
+      ],
+    },
   ];
 
   // User Profile metadata based on authenticated user

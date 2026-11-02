@@ -1134,3 +1134,28 @@ export const ClockIcon = ({
     <polyline points="12 6 12 12 16 14" />
   </svg>
 );
+
+
+export const BookOpenIcon = ({
+  size = 18,
+  color = 'currentColor',
+  className = '',
+  strokeWidth = 2,
+  style,
+}) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke={color}
+    strokeWidth={strokeWidth}
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className={className}
+    style={style}
+  >
+    <path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z" />
+    <path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z" />
+  </svg>
+);
