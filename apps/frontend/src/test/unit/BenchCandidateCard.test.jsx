@@ -1,6 +1,6 @@
 import React from 'react';
 import { describe, it, expect } from 'vitest';
-import { screen } from '@testing-library/react';
+import { screen, fireEvent } from '@testing-library/react';
 import { renderWithProviders } from '../test-utils';
 import BenchCandidateCard from '../../components/BenchComponents/BenchCandidateCard';
 
@@ -70,3 +70,65 @@ describe('BenchCandidateCard Pricing Display (Issue #165)', () => {
     expect(screen.queryByText(/\/ hr/i)).not.toBeInTheDocument();
   });
 });
+
+describe('BenchCandidateCard Avatar Integration (Issue #174)', () => {
+  it('renders candidate avatar image when avatarUrl is present', () => {
+    const talentWithAvatar = {
+      id: 'TW-AVATAR-01',
+      code: 'TW-CAND-AV1',
+      role: 'Lead Cloud Infrastructure Architect',
+      initials: 'AR',
+      avatarUrl: '/avatars/presets/tech-engineer-1.svg',
+      skills: ['AWS', 'Kubernetes'],
+      score: 98,
+    };
+
+    renderWithProviders(<BenchCandidateCard talent={talentWithAvatar} />);
+
+    const img = screen.getByRole('img', { name: /TW-CAND-AV1/i });
+    expect(img).toBeInTheDocument();
+    expect(img).toHaveAttribute('src', '/avatars/presets/tech-engineer-1.svg');
+    expect(img).toHaveClass('BenchCard-avatarImg');
+  });
+
+  it('falls back to stylized initials badge when avatarUrl is omitted', () => {
+    const talentWithoutAvatar = {
+      id: 'TW-NO-AVATAR-01',
+      code: 'TW-CAND-NOAV',
+      role: 'Senior Staff Engineer',
+      initials: 'VK',
+      skills: ['Go', 'Distributed Systems'],
+      score: 95,
+    };
+
+    renderWithProviders(<BenchCandidateCard talent={talentWithoutAvatar} />);
+
+    expect(screen.queryByRole('img')).not.toBeInTheDocument();
+    expect(screen.getByText('VK')).toBeInTheDocument();
+  });
+
+  it('gracefully falls back to initials badge when avatar image fails to load', () => {
+    const talentWithBrokenAvatar = {
+      id: 'TW-BROKEN-AV-01',
+      code: 'TW-CAND-BROKEN',
+      role: 'Staff Generative AI Engineer',
+      initials: 'SM',
+      avatarUrl: '/avatars/broken-image.png',
+      skills: ['PyTorch', 'vLLM'],
+      score: 97,
+    };
+
+    renderWithProviders(<BenchCandidateCard talent={talentWithBrokenAvatar} />);
+
+    const img = screen.getByRole('img', { name: /TW-CAND-BROKEN/i });
+    expect(img).toBeInTheDocument();
+
+    // Trigger image error
+    fireEvent.error(img);
+
+    // Should switch to initials badge
+    expect(screen.queryByRole('img')).not.toBeInTheDocument();
+    expect(screen.getByText('SM')).toBeInTheDocument();
+  });
+});
+
