@@ -21,6 +21,12 @@ const BenchCandidateCard = ({ talent }) => {
     urgency,
     noticePeriod,
     hourlyRate,
+    pricing,
+    rateNum,
+    ratePeriod,
+    rateDisplay,
+    engagementType,
+    expectedSalary,
     proofQuote,
     skills = [],
     initials = 'TW',
@@ -29,6 +35,18 @@ const BenchCandidateCard = ({ talent }) => {
   const resolvedNotice = noticePeriod || (urgency && urgency.includes('Immediate') ? 'Immediate' : urgency || '30 Days');
   const is30Days = typeof resolvedNotice === 'string' && (resolvedNotice === '30 Days' || resolvedNotice === '30-day' || resolvedNotice.toLowerCase().includes('30'));
   const isImmediate = (urgency && urgency.includes('Immediate')) || (typeof resolvedNotice === 'string' && resolvedNotice.toLowerCase().includes('immediate'));
+
+  const displayRateNum =
+    pricing?.rateNum ||
+    rateNum ||
+    (engagementType === 'contract'
+      ? '₹1.75 L'
+      : expectedSalary || (hourlyRate && !hourlyRate.includes('$') && !hourlyRate.includes('5,500') ? hourlyRate : '₹18 - ₹22 LPA'));
+
+  const displayRatePeriod =
+    pricing?.ratePeriod ||
+    ratePeriod ||
+    (engagementType === 'contract' ? '/ mo + tax' : '(Expected)');
 
   return (
     <div className="BenchCard-card">
@@ -83,8 +101,8 @@ const BenchCandidateCard = ({ talent }) => {
           </div>
         </div>
         <div className="BenchCard-rateBox">
-          <span className="BenchCard-rateNum">{hourlyRate}</span>
-          <span className="BenchCard-ratePeriod">/ hr</span>
+          <span className="BenchCard-rateNum">{displayRateNum}</span>
+          <span className="BenchCard-ratePeriod">{displayRatePeriod}</span>
         </div>
       </div>
 
