@@ -46,7 +46,8 @@
     "pino": "^10.4.0",
     "pino-pretty": "^13.2.0",
     "redis": "^6.3.0",
-    "sequelize": "^6.37.8"
+    "sequelize": "^6.37.8",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "supertest": "^7.3.1",

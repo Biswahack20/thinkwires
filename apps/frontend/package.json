@@ -32,7 +32,8 @@
     "react-redux": "^9.3.0",
     "react-router-dom": "^7.18.4",
     "recharts": "^3.10.1",
-    "three": "^0.186.1"
+    "three": "^0.186.1",
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.14.0",
