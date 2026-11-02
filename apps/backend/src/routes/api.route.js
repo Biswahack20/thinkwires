@@ -16,7 +16,7 @@ import { loadSeedJson } from '../utils/seedLoader.js';
 import rateLimit from 'express-rate-limit';
 import requireAuth from '../middlewares/auth.middleware.js';
 import { recordInboundRequisition } from '../controllers/admin.controller.js';
-import { calculateCandidatePricing } from '../utils/pricing.utils.js';
+import { calculateCandidatePricing, parseNoticeDays } from '../utils/pricing.utils.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -1362,15 +1362,45 @@ router.get('/bench/talents', async (req, res) => {
   }
 
   const noticePeriodQuery = req.query.noticePeriod;
-  if (noticePeriodQuery && noticePeriodQuery !== 'All Notice' && noticePeriodQuery !== 'All') {
+  const minScore = req.query.minScore ? parseInt(req.query.minScore, 10) : 85;
+
+  // Issue #166: Notice Period & AI Score Benchmark Strictness
+  // - Candidates with notice periods > 15 days filtered out by default, and scores < 85%.
+  if (!noticePeriodQuery || noticePeriodQuery === 'All Notice Periods' || noticePeriodQuery === 'All Notice' || noticePeriodQuery === 'All') {
+    if (req.query.strict !== 'false' && req.query.all !== 'true') {
+      filtered = filtered.filter((t) => {
+        const days = parseNoticeDays(t.noticePeriod || t.urgency || t.availability);
+        const score = typeof t.assessmentScore === 'number' && !isNaN(t.assessmentScore) ? t.assessmentScore : (t.score || 0);
+        return days <= 15 && score >= minScore;
+      });
+    }
+  } else {
     const target = noticePeriodQuery.toString().toLowerCase().trim();
     filtered = filtered.filter((t) => {
-      const np = (t.noticePeriod || '').toString().toLowerCase().trim();
+      const np = (t.noticePeriod || t.urgency || '').toString().toLowerCase().trim();
+      const days = parseNoticeDays(np);
+
+      if (target.includes('48h') || target === 'immediate (48h)' || target === 'immediate') {
+        return days <= 2 || np.includes('immediate') || np.includes('24h') || np.includes('48h');
+      }
+      if (target.includes('7') || target.includes('week')) {
+        return days <= 7;
+      }
+      if (target.includes('15') || target.includes('2 weeks')) {
+        return days <= 15;
+      }
       if (target === '30 days' || target === '30' || target === '30-day') {
         return np === '30 days' || np === '30' || np === '30-day' || np.includes('30');
       }
       return np === target || np.includes(target);
     });
+
+    if (req.query.strict !== 'false' && req.query.all !== 'true' && !req.query.includeUnscored) {
+      filtered = filtered.filter((t) => {
+        const score = typeof t.assessmentScore === 'number' && !isNaN(t.assessmentScore) ? t.assessmentScore : (t.score || 0);
+        return score >= minScore;
+      });
+    }
   }
 
   if (experience && experience !== 'All Experience' && experience !== 'All') {
@@ -1381,26 +1411,15 @@ router.get('/bench/talents', async (req, res) => {
     filtered = filtered.filter((t) => t.location === location);
   }
 
-  if (sort === 'AI Assessment' || !sort || sort === 'Highest Score') {
-    if (sort === 'AI Assessment') {
-      filtered.sort((a, b) => {
-        const scoreA = typeof a.assessmentScore === 'number' && !isNaN(a.assessmentScore) ? a.assessmentScore : -Infinity;
-        const scoreB = typeof b.assessmentScore === 'number' && !isNaN(b.assessmentScore) ? b.assessmentScore : -Infinity;
-        return scoreB - scoreA;
-      });
-    } else {
-      filtered.sort((a, b) => b.score - a.score);
-    }
-  } else if (sort === 'Fastest Availability') {
-    const urgencyOrder = {
-      'Immediate (24-48h)': 1,
-      'Within 1 Week': 2,
-      'Within 2 Weeks': 3,
-    };
-    filtered.sort(
-      (a, b) =>
-        (urgencyOrder[a.urgency] || 99) - (urgencyOrder[b.urgency] || 99)
-    );
+  // Sorting: Default ordered with Immediate / 48-Hour availability at the top (Issue #166)
+  if (sort === 'AI Assessment') {
+    filtered.sort((a, b) => {
+      const scoreA = typeof a.assessmentScore === 'number' && !isNaN(a.assessmentScore) ? a.assessmentScore : -Infinity;
+      const scoreB = typeof b.assessmentScore === 'number' && !isNaN(b.assessmentScore) ? b.assessmentScore : -Infinity;
+      return scoreB - scoreA;
+    });
+  } else if (sort === 'Highest Score') {
+    filtered.sort((a, b) => b.score - a.score);
   } else if (sort === 'Lowest Rate') {
     filtered.sort((a, b) => {
       const rateA =
@@ -1412,6 +1431,19 @@ router.get('/bench/talents', async (req, res) => {
         parseInt((b.hourlyRate || '').replace(/[^0-9]/g, ''), 10) ||
         0;
       return rateA - rateB;
+    });
+  } else {
+    // Default or 'Fastest Availability' or 'Notice Period':
+    // Immediate / 48-Hour availability at the top, followed by 7d, 15d, and descending score
+    filtered.sort((a, b) => {
+      const daysA = parseNoticeDays(a.noticePeriod || a.urgency || a.availability);
+      const daysB = parseNoticeDays(b.noticePeriod || b.urgency || b.availability);
+      if (daysA !== daysB) {
+        return daysA - daysB;
+      }
+      const scoreA = typeof a.assessmentScore === 'number' && !isNaN(a.assessmentScore) ? a.assessmentScore : (a.score || 0);
+      const scoreB = typeof b.assessmentScore === 'number' && !isNaN(b.assessmentScore) ? b.assessmentScore : (b.score || 0);
+      return scoreB - scoreA;
     });
   }
 

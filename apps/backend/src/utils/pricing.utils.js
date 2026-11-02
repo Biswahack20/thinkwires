@@ -141,3 +141,37 @@ export function calculateCandidatePricing(candidate = {}) {
     };
   }
 }
+
+/**
+ * Parses notice period string to days.
+ * Issue #166: Talent Cloud Notice Period Sorting & Benchmark Strictness
+ *
+ * @param {string|number} str
+ * @returns {number} number of days (0 for Immediate/48h)
+ */
+export function parseNoticeDays(str = '') {
+  if (typeof str === 'number') return str;
+  if (!str) return 0;
+  const s = str.toString().toLowerCase().trim();
+  if (
+    s.includes('immediate') ||
+    s.includes('24h') ||
+    s.includes('48h') ||
+    s.includes('ready')
+  ) {
+    return 0;
+  }
+  const match = s.match(/\d+/);
+  if (match) {
+    const num = parseInt(match[0], 10);
+    if (s.includes('week')) {
+      return num * 7;
+    }
+    if (s.includes('month')) {
+      return num * 30;
+    }
+    return num;
+  }
+  return 999;
+}
+
