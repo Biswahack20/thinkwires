@@ -16,6 +16,7 @@ import { loadSeedJson } from '../utils/seedLoader.js';
 import rateLimit from 'express-rate-limit';
 import requireAuth from '../middlewares/auth.middleware.js';
 import { recordInboundRequisition } from '../controllers/admin.controller.js';
+import { calculateCandidatePricing, parseNoticeDays } from '../utils/pricing.utils.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -1026,7 +1027,9 @@ router.get('/bench', async (req, res) => {
           availability: c.noticePeriod || 'Immediate (24-48h)',
           urgency: c.noticePeriod || 'Immediate (24-48h)',
           noticePeriod: c.noticePeriod || '30 Days',
-          hourlyRate: c.expectedSalary || '$65 - $80',
+          expectedSalary: c.expectedSalary,
+          workMode: c.workMode,
+          engagementType: c.workMode === 'Full-Time Looking' ? 'full-time' : 'contract',
           engineeringProof:
             c.bio ||
             `Cleared Thinkwires technical screening assessment (${c.assessmentScore || 90}%).`,
@@ -1041,48 +1044,66 @@ router.get('/bench', async (req, res) => {
     }
   }
 
-  const normalizedTalents = rawCandidates.map((c) => ({
-    id: c.id,
-    code: c.id || c.code,
-    role: c.title || c.role,
-    title: c.title || c.role,
-    initials: c.initials || 'TW',
-    specialty:
-      c.specialty === 'genai'
-        ? 'GenAI & LLMs'
-        : c.specialty === 'cloud'
-          ? 'Cloud & DevOps'
-          : c.specialty === 'sap'
-            ? 'SAP & Enterprise'
-            : c.specialty === 'systems'
-              ? 'Systems & Distributed'
-              : c.specialty === 'data'
-                ? 'Data & Analytics'
-                : c.specialty || 'Engineering',
-    experienceLevel:
-      c.seniorityTier === 'staff'
-        ? 'Staff/Principal (10+y)'
-        : c.seniorityTier === 'senior'
-          ? 'Senior (6-9y)'
-          : 'Lead (8+y)',
-    yearsExp: c.experience || `${c.years || 8}+ Yrs Exp`,
-    location: c.location || 'Remote Global',
-    score: c.technicalRating || c.score || 96,
-    assessmentScore:
-      c.assessmentScore !== undefined && c.assessmentScore !== null
-        ? c.assessmentScore
-        : c.dossier?.rubric?.systemDesign
-          ? parseInt(c.dossier.rubric.systemDesign) || null
-          : c.rubric?.systemDesign || null,
-    fitScore: c.fitScore,
-    urgency: c.availability || c.urgency || 'Immediate (24-48h)',
-    noticePeriod: c.noticePeriod || (c.urgency === 'immediate' || (c.availability && c.availability.includes('Immediate')) ? 'Immediate' : '30 Days'),
-    hourlyRate: c.hourlyRate || '$55 - $75',
-    proofQuote:
-      c.engineeringProof ||
-      c.proofQuote ||
-      'Architected and scaled production enterprise systems with zero downtime.',
-    skills: c.skills || [],
+  const normalizedTalents = rawCandidates.map((c) => {
+    const pricing = calculateCandidatePricing(c);
+    return {
+      id: c.id,
+      code: c.id || c.code,
+      role: c.title || c.role,
+      title: c.title || c.role,
+      initials: c.initials || 'TW',
+      specialty:
+        c.specialty === 'genai'
+          ? 'GenAI & LLMs'
+          : c.specialty === 'cloud'
+            ? 'Cloud & DevOps'
+            : c.specialty === 'sap'
+              ? 'SAP & Enterprise'
+              : c.specialty === 'systems'
+                ? 'Systems & Distributed'
+                : c.specialty === 'data'
+                  ? 'Data & Analytics'
+                  : c.specialty || 'Engineering',
+      experienceLevel:
+        c.seniorityTier === 'staff'
+          ? 'Staff/Principal (10+y)'
+          : c.seniorityTier === 'senior'
+            ? 'Senior (6-9y)'
+            : 'Lead (8+y)',
+      yearsExp: c.experience || `${c.years || 8}+ Yrs Exp`,
+      location: c.location || 'Remote Global',
+      score: c.technicalRating || c.score || 96,
+      assessmentScore:
+        c.assessmentScore !== undefined && c.assessmentScore !== null
+          ? c.assessmentScore
+          : c.dossier?.rubric?.systemDesign
+            ? parseInt(c.dossier.rubric.systemDesign) || null
+            : c.rubric?.systemDesign || null,
+      fitScore: c.fitScore,
+      urgency: c.availability || c.urgency || 'Immediate (24-48h)',
+      noticePeriod:
+        c.noticePeriod ||
+        (c.urgency === 'immediate' ||
+        (c.availability && c.availability.includes('Immediate'))
+          ? 'Immediate'
+          : '30 Days'),
+      engagementType: pricing.engagementType,
+      expectedSalary: pricing.expectedSalary,
+      pricing,
+      rateNum: pricing.rateNum,
+      ratePeriod: pricing.ratePeriod,
+      rateDisplay: pricing.rateDisplay,
+      hourlyRate:
+        c.hourlyRate &&
+        !c.hourlyRate.includes('$') &&
+        !c.hourlyRate.includes('5,500')
+          ? c.hourlyRate
+          : pricing.rateDisplay,
+      proofQuote:
+        c.engineeringProof ||
+        c.proofQuote ||
+        'Architected and scaled production enterprise systems with zero downtime.',
+      skills: c.skills || [],
     rubric: c.dossier?.rubric
       ? {
           systemDesign: parseInt(c.dossier.rubric.systemDesign) || 98,
@@ -1098,7 +1119,8 @@ router.get('/bench', async (req, res) => {
         },
     bio: c.dossier?.evaluatorNotes || c.bio,
     dossier: c.dossier,
-  }));
+  };
+});
 
   const specialtyFilters = [
     { label: 'All Engineering', count: 142 },
@@ -1233,7 +1255,9 @@ router.get('/bench/talents', async (req, res) => {
           assessmentScore: c.assessmentScore,
           fitScore: c.fitScore,
           availability: 'Immediate (24-48h)',
-          hourlyRate: c.expectedSalary || '$65 - $80',
+          expectedSalary: c.expectedSalary,
+          workMode: c.workMode,
+          engagementType: c.workMode === 'Full-Time Looking' ? 'full-time' : 'contract',
           engineeringProof:
             c.bio ||
             `Cleared Thinkwires technical screening assessment (${c.assessmentScore || 90}%).`,
@@ -1248,48 +1272,67 @@ router.get('/bench/talents', async (req, res) => {
     }
   }
 
-  let filtered = rawCandidates.map((c) => ({
-    id: c.id,
-    code: c.id || c.code,
-    role: c.title || c.role,
-    title: c.title || c.role,
-    specialty:
-      c.specialty === 'genai'
-        ? 'GenAI & LLMs'
-        : c.specialty === 'cloud'
-          ? 'Cloud & DevOps'
-          : c.specialty === 'sap'
-            ? 'SAP & Enterprise'
-            : c.specialty === 'systems'
-              ? 'Systems & Distributed'
-              : c.specialty === 'data'
-                ? 'Data & Analytics'
-                : c.specialty || 'Engineering',
-    experienceLevel:
-      c.seniorityTier === 'staff'
-        ? 'Staff/Principal (10+y)'
-        : c.seniorityTier === 'senior'
-          ? 'Senior (6-9y)'
-          : 'Lead (8+y)',
-    yearsExp: c.experience || `${c.years || 8}+ Yrs Exp`,
-    location: c.location || 'Remote Global',
-    score: c.technicalRating || c.score || 96,
-    assessmentScore:
-      c.assessmentScore !== undefined && c.assessmentScore !== null
-        ? c.assessmentScore
-        : c.dossier?.rubric?.systemDesign
-          ? parseInt(c.dossier.rubric.systemDesign) || null
-          : c.rubric?.systemDesign || null,
-    fitScore: c.fitScore,
-    urgency: c.availability || c.urgency || 'Immediate (24-48h)',
-    noticePeriod: c.noticePeriod || (c.urgency === 'immediate' || (c.availability && c.availability.includes('Immediate')) ? 'Immediate' : '30 Days'),
-    hourlyRate: c.hourlyRate || '$55 - $75',
-    proofQuote:
-      c.engineeringProof ||
-      c.proofQuote ||
-      'Architected and scaled production enterprise systems.',
-    skills: c.skills || [],
-  }));
+  let filtered = rawCandidates.map((c) => {
+    const pricing = calculateCandidatePricing(c);
+    return {
+      id: c.id,
+      code: c.id || c.code,
+      role: c.title || c.role,
+      title: c.title || c.role,
+      specialty:
+        c.specialty === 'genai'
+          ? 'GenAI & LLMs'
+          : c.specialty === 'cloud'
+            ? 'Cloud & DevOps'
+            : c.specialty === 'sap'
+              ? 'SAP & Enterprise'
+              : c.specialty === 'systems'
+                ? 'Systems & Distributed'
+                : c.specialty === 'data'
+                  ? 'Data & Analytics'
+                  : c.specialty || 'Engineering',
+      experienceLevel:
+        c.seniorityTier === 'staff'
+          ? 'Staff/Principal (10+y)'
+          : c.seniorityTier === 'senior'
+            ? 'Senior (6-9y)'
+            : 'Lead (8+y)',
+      yearsExp: c.experience || `${c.years || 8}+ Yrs Exp`,
+      location: c.location || 'Remote Global',
+      score: c.technicalRating || c.score || 96,
+      assessmentScore:
+        c.assessmentScore !== undefined && c.assessmentScore !== null
+          ? c.assessmentScore
+          : c.dossier?.rubric?.systemDesign
+            ? parseInt(c.dossier.rubric.systemDesign) || null
+            : c.rubric?.systemDesign || null,
+      fitScore: c.fitScore,
+      urgency: c.availability || c.urgency || 'Immediate (24-48h)',
+      noticePeriod:
+        c.noticePeriod ||
+        (c.urgency === 'immediate' ||
+        (c.availability && c.availability.includes('Immediate'))
+          ? 'Immediate'
+          : '30 Days'),
+      engagementType: pricing.engagementType,
+      expectedSalary: pricing.expectedSalary,
+      pricing,
+      rateNum: pricing.rateNum,
+      ratePeriod: pricing.ratePeriod,
+      rateDisplay: pricing.rateDisplay,
+      hourlyRate:
+        c.hourlyRate &&
+        !c.hourlyRate.includes('$') &&
+        !c.hourlyRate.includes('5,500')
+          ? c.hourlyRate
+          : pricing.rateDisplay,
+      proofQuote:
+        c.engineeringProof ||
+        c.proofQuote ||
+        'Architected and scaled production enterprise systems.',
+      skills: c.skills || [],
+    };
+  });
 
   if (q && q.trim()) {
     const query = q.trim().toLowerCase();
@@ -1310,16 +1353,54 @@ router.get('/bench/talents', async (req, res) => {
     filtered = filtered.filter((t) => t.urgency === urgency);
   }
 
+  const { engagementType } = req.query;
+  if (engagementType && engagementType !== 'All' && engagementType !== 'all') {
+    const targetEng = engagementType.toString().toLowerCase().trim();
+    filtered = filtered.filter(
+      (t) => (t.engagementType || '').toLowerCase() === targetEng
+    );
+  }
+
   const noticePeriodQuery = req.query.noticePeriod;
-  if (noticePeriodQuery && noticePeriodQuery !== 'All Notice' && noticePeriodQuery !== 'All') {
+  const minScore = req.query.minScore ? parseInt(req.query.minScore, 10) : 85;
+
+  // Issue #166: Notice Period & AI Score Benchmark Strictness
+  // - Candidates with notice periods > 15 days filtered out by default, and scores < 85%.
+  if (!noticePeriodQuery || noticePeriodQuery === 'All Notice Periods' || noticePeriodQuery === 'All Notice' || noticePeriodQuery === 'All') {
+    if (req.query.strict !== 'false' && req.query.all !== 'true') {
+      filtered = filtered.filter((t) => {
+        const days = parseNoticeDays(t.noticePeriod || t.urgency || t.availability);
+        const score = typeof t.assessmentScore === 'number' && !isNaN(t.assessmentScore) ? t.assessmentScore : (t.score || 0);
+        return days <= 15 && score >= minScore;
+      });
+    }
+  } else {
     const target = noticePeriodQuery.toString().toLowerCase().trim();
     filtered = filtered.filter((t) => {
-      const np = (t.noticePeriod || '').toString().toLowerCase().trim();
+      const np = (t.noticePeriod || t.urgency || '').toString().toLowerCase().trim();
+      const days = parseNoticeDays(np);
+
+      if (target.includes('48h') || target === 'immediate (48h)' || target === 'immediate') {
+        return days <= 2 || np.includes('immediate') || np.includes('24h') || np.includes('48h');
+      }
+      if (target.includes('7') || target.includes('week')) {
+        return days <= 7;
+      }
+      if (target.includes('15') || target.includes('2 weeks')) {
+        return days <= 15;
+      }
       if (target === '30 days' || target === '30' || target === '30-day') {
         return np === '30 days' || np === '30' || np === '30-day' || np.includes('30');
       }
       return np === target || np.includes(target);
     });
+
+    if (req.query.strict !== 'false' && req.query.all !== 'true' && !req.query.includeUnscored) {
+      filtered = filtered.filter((t) => {
+        const score = typeof t.assessmentScore === 'number' && !isNaN(t.assessmentScore) ? t.assessmentScore : (t.score || 0);
+        return score >= minScore;
+      });
+    }
   }
 
   if (experience && experience !== 'All Experience' && experience !== 'All') {
@@ -1330,33 +1411,39 @@ router.get('/bench/talents', async (req, res) => {
     filtered = filtered.filter((t) => t.location === location);
   }
 
-  if (sort === 'AI Assessment' || !sort || sort === 'Highest Score') {
-    if (sort === 'AI Assessment') {
-      filtered.sort((a, b) => {
-        const scoreA = typeof a.assessmentScore === 'number' && !isNaN(a.assessmentScore) ? a.assessmentScore : -Infinity;
-        const scoreB = typeof b.assessmentScore === 'number' && !isNaN(b.assessmentScore) ? b.assessmentScore : -Infinity;
-        return scoreB - scoreA;
-      });
-    } else {
-      filtered.sort((a, b) => b.score - a.score);
-    }
-  } else if (sort === 'Fastest Availability') {
-    const urgencyOrder = {
-      'Immediate (24-48h)': 1,
-      'Within 1 Week': 2,
-      'Within 2 Weeks': 3,
-    };
-    filtered.sort(
-      (a, b) =>
-        (urgencyOrder[a.urgency] || 99) - (urgencyOrder[b.urgency] || 99)
-    );
+  // Sorting: Default ordered with Immediate / 48-Hour availability at the top (Issue #166)
+  if (sort === 'AI Assessment') {
+    filtered.sort((a, b) => {
+      const scoreA = typeof a.assessmentScore === 'number' && !isNaN(a.assessmentScore) ? a.assessmentScore : -Infinity;
+      const scoreB = typeof b.assessmentScore === 'number' && !isNaN(b.assessmentScore) ? b.assessmentScore : -Infinity;
+      return scoreB - scoreA;
+    });
+  } else if (sort === 'Highest Score') {
+    filtered.sort((a, b) => b.score - a.score);
   } else if (sort === 'Lowest Rate') {
     filtered.sort((a, b) => {
       const rateA =
-        parseInt((a.hourlyRate || '').replace(/[^0-9]/g, ''), 10) || 0;
+        a.pricing?.monthlyRate ||
+        parseInt((a.hourlyRate || '').replace(/[^0-9]/g, ''), 10) ||
+        0;
       const rateB =
-        parseInt((b.hourlyRate || '').replace(/[^0-9]/g, ''), 10) || 0;
+        b.pricing?.monthlyRate ||
+        parseInt((b.hourlyRate || '').replace(/[^0-9]/g, ''), 10) ||
+        0;
       return rateA - rateB;
+    });
+  } else {
+    // Default or 'Fastest Availability' or 'Notice Period':
+    // Immediate / 48-Hour availability at the top, followed by 7d, 15d, and descending score
+    filtered.sort((a, b) => {
+      const daysA = parseNoticeDays(a.noticePeriod || a.urgency || a.availability);
+      const daysB = parseNoticeDays(b.noticePeriod || b.urgency || b.availability);
+      if (daysA !== daysB) {
+        return daysA - daysB;
+      }
+      const scoreA = typeof a.assessmentScore === 'number' && !isNaN(a.assessmentScore) ? a.assessmentScore : (a.score || 0);
+      const scoreB = typeof b.assessmentScore === 'number' && !isNaN(b.assessmentScore) ? b.assessmentScore : (b.score || 0);
+      return scoreB - scoreA;
     });
   }
 
@@ -1370,7 +1457,22 @@ router.get('/bench/talents/:id', async (req, res) => {
     (t) => t.id === req.params.id || t.code === req.params.id
   );
   if (talent) {
-    res.json(talent);
+    const pricing = calculateCandidatePricing(talent);
+    res.json({
+      ...talent,
+      engagementType: pricing.engagementType,
+      expectedSalary: pricing.expectedSalary,
+      pricing,
+      rateNum: pricing.rateNum,
+      ratePeriod: pricing.ratePeriod,
+      rateDisplay: pricing.rateDisplay,
+      hourlyRate:
+        talent.hourlyRate &&
+        !talent.hourlyRate.includes('$') &&
+        !talent.hourlyRate.includes('5,500')
+          ? talent.hourlyRate
+          : pricing.rateDisplay,
+    });
   } else {
     res.status(404).json({ error: 'Talent not found' });
   }
