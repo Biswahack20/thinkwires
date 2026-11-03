@@ -1279,6 +1279,19 @@ router.get('/bench/talents', async (req, res) => {
       code: c.id || c.code,
       role: c.title || c.role,
       title: c.title || c.role,
+      avatarUrl: c.avatarUrl || c.avatar || c.photo || null,
+      initials:
+        c.initials ||
+        (c.name
+          ? c.name
+              .split(' ')
+              .map((n) => n[0])
+              .join('')
+              .slice(0, 2)
+              .toUpperCase()
+          : c.code
+          ? c.code.replace(/[^A-Za-z0-9]/g, '').slice(0, 2).toUpperCase()
+          : 'TW'),
       specialty:
         c.specialty === 'genai'
           ? 'GenAI & LLMs'
@@ -1533,6 +1546,7 @@ router.get('/bench/dossier/:id', async (req, res) => {
         code,
         role: targetRole,
         initials: talent?.initials || 'TW',
+        avatarUrl: talent?.avatarUrl || talent?.avatar || talent?.photo || null,
         location: talent?.location || candidate?.location || 'Remote Global',
         experience: talent?.yearsExp || talent?.experience || `${candidate?.experience || 5}+ Yrs Exp`,
         noticePeriod: talent?.noticePeriod || candidate?.noticePeriod || 'Immediate',

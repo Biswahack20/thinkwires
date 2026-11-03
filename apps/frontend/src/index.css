@@ -15246,6 +15246,15 @@ textarea {
   font-weight: 800;
   font-size: 1.125rem;
   flex-shrink: 0;
+  overflow: hidden;
+}
+
+.BenchCard-avatarImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: inherit;
+  display: block;
 }
 
 .BenchCard-titleWrap {
@@ -15498,6 +15507,43 @@ textarea {
   background: #080c14;
 }
 
+.BenchDrawer-headerTitleWrap {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  flex-wrap: wrap;
+}
+
+.BenchDrawer-headerTitle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: #ffffff;
+  letter-spacing: -0.01em;
+}
+
+.BenchDrawer-headerTitleIcon {
+  font-size: 1.35rem;
+  color: #38bdf8;
+}
+
+.BenchDrawer-headerSubBadge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  background: rgba(56, 189, 248, 0.1);
+  border: 1px solid rgba(56, 189, 248, 0.28);
+  color: #38bdf8;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 0.25rem 0.65rem;
+  border-radius: 9999px;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+}
+
 .BenchDrawer-headerCode {
   display: flex;
   align-items: center;
@@ -15564,6 +15610,15 @@ textarea {
   font-size: 1.35rem;
   font-weight: 800;
   flex-shrink: 0;
+  overflow: hidden;
+}
+
+.BenchDrawer-avatarImg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: inherit;
+  display: block;
 }
 
 .BenchDrawer-profileDetails {
@@ -16675,6 +16730,14 @@ textarea {
   }
 
   .BenchDrawer-headerCode {
+    font-size: 0.65rem;
+  }
+
+  .BenchDrawer-headerTitle {
+    font-size: 1rem;
+  }
+
+  .BenchDrawer-headerSubBadge {
     font-size: 0.65rem;
   }
 
