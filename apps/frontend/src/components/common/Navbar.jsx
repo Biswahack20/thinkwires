@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import logo from '../../assets/logo/logo.png';
@@ -10,15 +10,45 @@ const Navbar = () => {
   const [isApplyModalOpen, setIsApplyModalOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isServicesOpen, setIsServicesOpen] = useState(false);
+  const [isResourcesOpen, setIsResourcesOpen] = useState(false);
   const { theme, toggleTheme } = useTheme();
   const location = useLocation();
   const navigate = useNavigate();
   const { isAuthenticated, user } = useSelector((state) => state.auth);
 
+  const resourcesRef = useRef(null);
+  const resourcesToggleRef = useRef(null);
+
   const closeMobileMenu = () => {
     setIsMobileMenuOpen(false);
     setIsServicesOpen(false);
+    setIsResourcesOpen(false);
   };
+
+  // Close dropdown on outside click or Escape key
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape' && isResourcesOpen) {
+        setIsResourcesOpen(false);
+        if (resourcesToggleRef.current) {
+          resourcesToggleRef.current.focus();
+        }
+      }
+    };
+
+    const handleClickOutside = (e) => {
+      if (resourcesRef.current && !resourcesRef.current.contains(e.target)) {
+        setIsResourcesOpen(false);
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isResourcesOpen]);
 
   const handlePortalClick = (e) => {
     e.preventDefault();
@@ -274,6 +304,103 @@ const Navbar = () => {
                 >
                   Bench Pool
                 </Link>
+              </li>
+
+              <li
+                ref={resourcesRef}
+                className={`Navbar-dropdownContainer ${
+                  isResourcesOpen ? 'Navbar-dropdownOpen' : ''
+                }`}
+              >
+                <div className="Navbar-servicesHeader">
+                  <button
+                    ref={resourcesToggleRef}
+                    type="button"
+                    className={`Navbar-navLink flex items-center gap-1.5 bg-transparent border-0 cursor-pointer p-0 font-inherit ${
+                      ['/resources', '/events', '/faqs', '/policies', '/life-at-thinkwires', '/benefits'].some((p) =>
+                        location.pathname.startsWith(p)
+                      )
+                        ? 'Navbar-active'
+                        : ''
+                    }`}
+                    aria-label="Toggle resources dropdown"
+                    aria-expanded={isResourcesOpen}
+                    aria-haspopup="true"
+                    aria-controls="Navbar-resourcesMenu"
+                    onClick={() => setIsResourcesOpen((prev) => !prev)}
+                  >
+                    <span>Resources</span>
+                    <svg
+                      width="10"
+                      height="6"
+                      viewBox="0 0 12 8"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="1.75"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      aria-hidden="true"
+                      className="transition-transform duration-200"
+                      style={{
+                        transform: isResourcesOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+                      }}
+                    >
+                      <path d="m1 1 5 5 5-5" />
+                    </svg>
+                  </button>
+                </div>
+
+                <div
+                  id="Navbar-resourcesMenu"
+                  className="Navbar-dropdownMenu"
+                  role="menu"
+                  aria-label="Resources"
+                >
+                  <Link
+                    to="/resources/events"
+                    role="menuitem"
+                    className={`Navbar-dropdownItem ${isActive('/resources/events') || isActive('/events')}`}
+                    onClick={closeMobileMenu}
+                  >
+                    Events
+                  </Link>
+
+                  <Link
+                    to="/faqs"
+                    role="menuitem"
+                    className={`Navbar-dropdownItem ${isActive('/faqs') || isActive('/resources/faqs')}`}
+                    onClick={closeMobileMenu}
+                  >
+                    FAQs
+                  </Link>
+
+                  <Link
+                    to="/policies"
+                    role="menuitem"
+                    className={`Navbar-dropdownItem ${isActive('/policies') || isActive('/legal')}`}
+                    onClick={closeMobileMenu}
+                  >
+                    Policies
+                  </Link>
+
+                  <Link
+                    to="/life-at-thinkwires"
+                    role="menuitem"
+                    className={`Navbar-dropdownItem ${isActive('/life-at-thinkwires')}`}
+                    onClick={closeMobileMenu}
+                  >
+                    Life at ThinkWires
+                  </Link>
+
+                  <Link
+                    to="/benefits"
+                    role="menuitem"
+                    className={`Navbar-dropdownItem ${isActive('/benefits')}`}
+                    onClick={closeMobileMenu}
+                  >
+                    Benefits
+                  </Link>
+                </div>
               </li>
 
               <li>

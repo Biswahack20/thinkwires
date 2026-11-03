@@ -102,12 +102,12 @@ let researchers = researchersData ? [...researchersData] : [];
 let bench = benchData
   ? { ...benchData }
   : {
-      statsBadges: [],
-      specialtyFilters: [],
-      talents: [],
-      dossierFeatures: [],
-      vettingGates: [],
-    };
+    statsBadges: [],
+    specialtyFilters: [],
+    talents: [],
+    dossierFeatures: [],
+    vettingGates: [],
+  };
 
 // --- Helper to get home page section from Mongo or fallback ---
 const getHomeSection = async (sectionKey, fallbackValue) => {

@@ -2815,7 +2815,8 @@ body {
   z-index: 50;
 }
 
-.Navbar-dropdownContainer:hover .Navbar-dropdownMenu {
+.Navbar-dropdownContainer:hover .Navbar-dropdownMenu,
+.Navbar-dropdownContainer.Navbar-dropdownOpen .Navbar-dropdownMenu {
   opacity: 1;
   visibility: visible;
   transform: translateY(0);
@@ -3786,7 +3787,8 @@ textarea {
     transition: transform 0.2s ease;
   }
 
-  .Navbar-servicesOpen .Navbar-servicesToggle svg {
+  .Navbar-servicesOpen .Navbar-servicesToggle svg,
+  .Navbar-dropdownOpen .Navbar-dropdownToggle svg {
     transform: rotate(180deg);
   }
 
@@ -3806,7 +3808,8 @@ textarea {
     width: 100%;
   }
 
-  .Navbar-servicesOpen .Navbar-dropdownMenu {
+  .Navbar-servicesOpen .Navbar-dropdownMenu,
+  .Navbar-dropdownOpen .Navbar-dropdownMenu {
     display: block;
   }
 
