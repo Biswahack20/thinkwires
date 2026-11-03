@@ -1,11 +1,12 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo, Suspense, lazy } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { useSelector, useDispatch } from 'react-redux';
 import Navbar from '../components/common/Navbar';
 import Footer from '../components/common/Footer';
-import CTA from '../components/common/CTA';
 import ScrollReveal from '../components/common/ScrollReveal';
+
+const CTA = lazy(() => import('../components/common/CTA'));
 import JobCard from '../components/JobsComponents/JobCard';
 import QuickApplyModal from '../components/common/QuickApplyModal';
 import JobSpecModal from '../components/JobsComponents/JobSpecModal';
@@ -527,7 +528,9 @@ const IndustryDetailPage = () => {
 
         {/* Customer Hiring Form - Placed directly above Footer */}
         <div id="contact-form">
-          <CTA />
+          <Suspense fallback={null}>
+            <CTA />
+          </Suspense>
         </div>
       </main>
 
