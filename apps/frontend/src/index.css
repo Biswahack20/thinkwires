@@ -4549,7 +4549,7 @@ textarea {
 
 /* --- JobsHero --- */
 .JobsHero-heroContainer {
-  padding: 4.5rem 1.5rem 5rem 1.5rem;
+  padding: 4.5rem 1.5rem 2.5rem 1.5rem;
   background:
     radial-gradient(
       circle at 50% 30%,
@@ -4661,6 +4661,10 @@ textarea {
 }
 
 @media (max-width: 768px) {
+  .JobsHero-heroContainer {
+    padding: 3rem 1rem 2rem 1rem;
+  }
+
   .JobsHero-mainTitle {
     font-size: 2.25rem;
   }
