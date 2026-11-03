@@ -16,6 +16,7 @@ import { loadSeedJson } from '../utils/seedLoader.js';
 import rateLimit from 'express-rate-limit';
 import requireAuth from '../middlewares/auth.middleware.js';
 import { recordInboundRequisition } from '../controllers/admin.controller.js';
+import { sendRequisitionNotificationEmail } from '../utils/recruitmentEmail.util.js';
 import { calculateCandidatePricing, parseNoticeDays } from '../utils/pricing.utils.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -927,14 +928,17 @@ router.post('/find-talent/requisition', publicSubmissionRateLimiter, async (req,
     jobDescription,
   } = req.body;
 
-  if (!fullName || !corporateEmail || !company || !targetRole) {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!fullName || !corporateEmail || !emailRegex.test(corporateEmail.trim()) || !targetRole) {
     return res
       .status(400)
       .json({
         error:
-          'Full name, corporate email, company, and target role are required.',
+          'Valid full name, corporate email address, and required target role or skill demand are required.',
       });
   }
+
+  const effectiveCompany = company && company.trim() ? company.trim() : 'Independent Client Inquiry';
 
   logger.info('New Enterprise Talent Requisition Logged:', {
     engagementModel,
@@ -947,16 +951,28 @@ router.post('/find-talent/requisition', publicSubmissionRateLimiter, async (req,
     budgetEnvelope,
     fullName,
     corporateEmail,
-    company,
+    company: effectiveCompany,
     phone,
     jobDescription,
   });
 
+  const requisitionPayload = {
+    ...req.body,
+    company: effectiveCompany,
+  };
+
   let createdRequisition = null;
   try {
-    createdRequisition = await recordInboundRequisition(req.body);
+    createdRequisition = await recordInboundRequisition(requisitionPayload);
   } catch (recErr) {
     logger.warn('Failed to record inbound requisition in admin store:', recErr.message);
+  }
+
+  // Trigger HR notification email to hr@thinkwires.com gracefully
+  try {
+    await sendRequisitionNotificationEmail(requisitionPayload);
+  } catch (emailErr) {
+    logger.warn('Requisition email notification trigger failure (non-blocking):', emailErr.message);
   }
 
   res.json({
