@@ -1,9 +1,14 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { openDrawer } from '../../store/slices/benchSlice';
 
 const BenchCandidateCard = ({ talent }) => {
   const dispatch = useDispatch();
+  const [avatarError, setAvatarError] = useState(false);
+
+  useEffect(() => {
+    setAvatarError(false);
+  }, [talent]);
 
   if (!talent) return null;
 
@@ -21,14 +26,37 @@ const BenchCandidateCard = ({ talent }) => {
     urgency,
     noticePeriod,
     hourlyRate,
+    pricing,
+    rateNum,
+    ratePeriod,
+    rateDisplay,
+    engagementType,
+    expectedSalary,
     proofQuote,
     skills = [],
     initials = 'TW',
+    avatarUrl,
+    avatar,
+    photo,
   } = talent;
+
+  const avatarSrc = avatarUrl || avatar || photo;
 
   const resolvedNotice = noticePeriod || (urgency && urgency.includes('Immediate') ? 'Immediate' : urgency || '30 Days');
   const is30Days = typeof resolvedNotice === 'string' && (resolvedNotice === '30 Days' || resolvedNotice === '30-day' || resolvedNotice.toLowerCase().includes('30'));
   const isImmediate = (urgency && urgency.includes('Immediate')) || (typeof resolvedNotice === 'string' && resolvedNotice.toLowerCase().includes('immediate'));
+
+  const displayRateNum =
+    pricing?.rateNum ||
+    rateNum ||
+    (engagementType === 'contract'
+      ? '₹1.75 L'
+      : expectedSalary || (hourlyRate && !hourlyRate.includes('$') && !hourlyRate.includes('5,500') ? hourlyRate : '₹18 - ₹22 LPA'));
+
+  const displayRatePeriod =
+    pricing?.ratePeriod ||
+    ratePeriod ||
+    (engagementType === 'contract' ? '/ mo + tax' : '(Expected)');
 
   return (
     <div className="BenchCard-card">
@@ -54,8 +82,23 @@ const BenchCandidateCard = ({ talent }) => {
 
       {/* Profile Summary Row */}
       <div className="BenchCard-profileRow">
-        <div className="BenchCard-avatar">
-          <span className="BenchCard-avatarText">{initials}</span>
+        <div
+          className="BenchCard-avatar"
+          style={{
+            overflow: 'hidden',
+            padding: !avatarError && avatarSrc ? 0 : undefined,
+          }}
+        >
+          {!avatarError && avatarSrc ? (
+            <img
+              src={avatarSrc}
+              alt={code || role || 'Candidate Avatar'}
+              className="BenchCard-avatarImg"
+              onError={() => setAvatarError(true)}
+            />
+          ) : (
+            <span className="BenchCard-avatarText">{initials}</span>
+          )}
         </div>
         <div className="BenchCard-titleWrap">
           <h3 className="BenchCard-roleTitle">{role}</h3>
@@ -82,10 +125,12 @@ const BenchCandidateCard = ({ talent }) => {
             </span>
           </div>
         </div>
-        <div className="BenchCard-rateBox">
-          <span className="BenchCard-rateNum">{hourlyRate}</span>
-          <span className="BenchCard-ratePeriod">/ hr</span>
-        </div>
+      </div>
+
+      {/* Pricing Rate Box */}
+      <div className="BenchCard-rateBox">
+        <span className="BenchCard-rateNum">{displayRateNum}</span>
+        <span className="BenchCard-ratePeriod">{displayRatePeriod}</span>
       </div>
 
       {/* Vetting Score Bar */}

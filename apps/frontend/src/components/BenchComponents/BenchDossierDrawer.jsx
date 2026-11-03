@@ -22,6 +22,12 @@ const BenchDossierDrawer = () => {
     notes: '',
   });
 
+  const [avatarError, setAvatarError] = useState(false);
+
+  useEffect(() => {
+    setAvatarError(false);
+  }, [selectedTalent]);
+
   useEffect(() => {
     if (!drawerOpen || !selectedTalent) {
       setLiveDossier(null);
@@ -161,15 +167,14 @@ const BenchDossierDrawer = () => {
 
   const rawSummary = evalReport?.clientSubmissionSummary;
   const clientSummary = Array.isArray(rawSummary) && rawSummary.length > 0
-    ? rawSummary
+    ? rawSummary.slice(0, 4)
     : typeof rawSummary === 'string' && rawSummary.trim().length > 0
     ? [rawSummary]
     : [
         `${selectedTalent.role} with ${selectedTalent.yearsExp || 'senior'} verified experience in distributed systems.`,
-        `Core competencies demonstrated across ${((selectedTalent.skills || []).slice(0, 4)).join(', ')}.`,
+        `Demonstrated technical mastery across ${((selectedTalent.skills || []).slice(0, 4)).join(', ')}.`,
         `Cleared multi-stage Thinkwires system design defenses and live technical audits with ${matchScore}/100 benchmark.`,
         `Available for immediate engagement under 48-hour SLA with full bilateral IP assignment.`,
-        `Recommendation: High-priority technical interview for core architecture or pod lead requisitions.`,
       ];
 
   const handlePrintBlindDossier = () => {
@@ -208,7 +213,7 @@ const BenchDossierDrawer = () => {
 
     const printRisks = gapsAndRisks.length > 0 ? gapsAndRisks : [
       `Notice period: ${selectedTalent.noticePeriod || selectedTalent.urgency || 'Immediate'} deployment timeline to be scheduled.`,
-      `Hourly rate: ${selectedTalent.hourlyRate}/hr within enterprise engagement scope.`,
+      `Pricing / Rate: ${selectedTalent.rateDisplay || selectedTalent.pricing?.rateDisplay || (selectedTalent.hourlyRate ? `${selectedTalent.hourlyRate}` : 'Rate on request')} within enterprise engagement scope.`,
       `Standard client live technical interview recommended for domain alignment.`
     ];
 
@@ -469,11 +474,19 @@ const BenchDossierDrawer = () => {
       >
         {/* Top Bar with Close Button */}
         <div className="BenchDrawer-header">
-          <div className="BenchDrawer-headerCode">
-            <span className="material-symbols-outlined BenchDrawer-badgeIcon">
-              lock
+          <div className="BenchDrawer-headerTitleWrap">
+            <div className="BenchDrawer-headerTitle">
+              <span className="material-symbols-outlined BenchDrawer-headerTitleIcon">
+                how_to_reg
+              </span>
+              <span>Book Candidate</span>
+            </div>
+            <span className="BenchDrawer-headerSubBadge">
+              <span className="material-symbols-outlined" style={{ fontSize: '0.85rem' }}>
+                verified
+              </span>
+              Technical Dossier & Verification Audit
             </span>
-            <span>BLIND TECHNICAL SCREENING | CANDIDATE AUDIT</span>
           </div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
             <button
@@ -518,15 +531,16 @@ const BenchDossierDrawer = () => {
               className="BenchDrawer-avatar"
               style={{
                 overflow: 'hidden',
-                padding: selectedTalent.avatarUrl ? 0 : undefined,
-                background: selectedTalent.avatarUrl ? '#F1F5F9' : undefined,
+                padding: !avatarError && (selectedTalent.avatarUrl || selectedTalent.avatar || selectedTalent.photo) ? 0 : undefined,
+                background: !avatarError && (selectedTalent.avatarUrl || selectedTalent.avatar || selectedTalent.photo) ? '#F1F5F9' : undefined,
               }}
             >
-              {selectedTalent.avatarUrl ? (
+              {!avatarError && (selectedTalent.avatarUrl || selectedTalent.avatar || selectedTalent.photo) ? (
                 <img
-                  src={selectedTalent.avatarUrl}
-                  alt={selectedTalent.code}
-                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                  src={selectedTalent.avatarUrl || selectedTalent.avatar || selectedTalent.photo}
+                  alt={selectedTalent.code || 'Candidate Avatar'}
+                  className="BenchDrawer-avatarImg"
+                  onError={() => setAvatarError(true)}
                 />
               ) : (
                 selectedTalent.initials || 'TW'
@@ -581,7 +595,11 @@ const BenchDossierDrawer = () => {
                 </span>
                 <span>•</span>
                 <span className="BenchDrawer-rateHighlight">
-                  {selectedTalent.hourlyRate}/hr
+                  {selectedTalent.rateDisplay ||
+                    selectedTalent.pricing?.rateDisplay ||
+                    (selectedTalent.hourlyRate
+                      ? `${selectedTalent.hourlyRate}${selectedTalent.hourlyRate.includes('/') || selectedTalent.hourlyRate.includes('mo') || selectedTalent.hourlyRate.includes('LPA') ? '' : '/hr'}`
+                      : 'Competitive Rate')}
                 </span>
               </div>
             </div>
@@ -696,11 +714,11 @@ const BenchDossierDrawer = () => {
             </div>
           </div>
 
-          {/* 5-Line Client Submission Summary */}
+          {/* Executive Candidate Summary (3-4 Line Briefing) */}
           <div className="BenchDrawer-cardSection">
             <h4 className="BenchDrawer-sectionTitle">
               <span className="material-symbols-outlined">summarize</span>{' '}
-              5-Line Client Submission Summary
+              Executive Candidate Summary (3-4 Line Briefing)
             </h4>
             <div
               style={{

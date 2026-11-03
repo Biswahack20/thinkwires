@@ -69,7 +69,7 @@ const BenchPage = () => {
       result = result.filter((t) => t.urgency === activeUrgency);
     }
 
-    // Notice Period filter
+    // Notice Period filter (Issue #166)
     if (
       activeNoticePeriod &&
       activeNoticePeriod !== 'All Notice Periods' &&
@@ -78,12 +78,60 @@ const BenchPage = () => {
     ) {
       const filterTarget = activeNoticePeriod.toString().toLowerCase().trim();
       result = result.filter((t) => {
-        // Read raw notice period from candidate data
-        const raw = t.noticePeriod !== undefined && t.noticePeriod !== null
-          ? t.noticePeriod
-          : t.urgency;
+        const raw =
+          t.noticePeriod !== undefined && t.noticePeriod !== null
+            ? t.noticePeriod
+            : t.urgency;
 
         if (raw === undefined || raw === null) return false;
+
+        const str = raw.toString().toLowerCase().trim();
+        const getDays = (val) => {
+          if (typeof val === 'number') return val;
+          if (!val) return 0;
+          const s = val.toString().toLowerCase().trim();
+          if (
+            s.includes('immediate') ||
+            s.includes('24h') ||
+            s.includes('48h') ||
+            s.includes('ready')
+          )
+            return 0;
+          const m = s.match(/\d+/);
+          if (m) {
+            const n = parseInt(m[0], 10);
+            if (s.includes('week')) return n * 7;
+            if (s.includes('month')) return n * 30;
+            return n;
+          }
+          return 999;
+        };
+
+        const days = getDays(raw);
+
+        // Immediate (48h) toggle
+        if (
+          filterTarget.includes('48h') ||
+          filterTarget === 'immediate (48h)' ||
+          filterTarget === 'immediate'
+        ) {
+          return (
+            days <= 2 ||
+            str.includes('immediate') ||
+            str.includes('24h') ||
+            str.includes('48h')
+          );
+        }
+
+        // Within 7 Days toggle
+        if (filterTarget.includes('7') || filterTarget.includes('week')) {
+          return days <= 7;
+        }
+
+        // Within 15 Days toggle
+        if (filterTarget.includes('15') || filterTarget.includes('2 weeks')) {
+          return days <= 15;
+        }
 
         // If filtering by 30 days
         if (
@@ -94,20 +142,22 @@ const BenchPage = () => {
           filterTarget === 'within 30 days' ||
           filterTarget === '30-day notice'
         ) {
-          // Exact numerical representation 30
           if (typeof raw === 'number') {
             return raw === 30;
           }
-          const str = raw.toString().toLowerCase().trim();
-          // Avoid matching 60 days or 90 days or 300 days
           if (str.includes('60') || str.includes('90') || str.includes('15')) {
             return false;
           }
-          return str === '30' || str === '30 days' || str === '30-day' || str === '30 days notice' || str.includes('30');
+          return (
+            str === '30' ||
+            str === '30 days' ||
+            str === '30-day' ||
+            str === '30 days notice' ||
+            str.includes('30')
+          );
         }
 
-        // Generic matching for other options like 'Immediate', '60 Days', etc.
-        const str = raw.toString().toLowerCase().trim();
+        // Generic matching for other options like '60 Days', etc.
         return str === filterTarget || str.includes(filterTarget);
       });
     }

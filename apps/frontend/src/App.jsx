@@ -55,6 +55,7 @@ const MediaLibrary = lazy(() => import('./admin/MediaLibrary'));
 const SeoManager = lazy(() => import('./admin/SeoManager'));
 const AnnouncementsManager = lazy(() => import('./admin/AnnouncementsManager'));
 const SystemMembersView = lazy(() => import('./admin/SystemMembersView'));
+const DocsView = lazy(() => import('./admin/DocsView'));
 
 function App() {
   const dispatch = useDispatch();
@@ -228,6 +229,7 @@ function App() {
               path="cms/announcements"
               element={<AnnouncementsManager />}
             />
+            <Route path="docs" element={<DocsView />} />
           </Route>
 
           {/* 404 Dedicated Fallback */}
