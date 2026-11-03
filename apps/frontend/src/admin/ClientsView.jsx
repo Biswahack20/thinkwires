@@ -50,8 +50,25 @@ const ClientsView = () => {
   };
 
   useEffect(() => {
-    fetchClients();
-  }, [search, industryFilter, statusFilter]);
+    let isMounted = true;
+    adminApi
+      .getClients({ search, industry: industryFilter, status: statusFilter })
+      .then((res) => {
+        if (isMounted) {
+          setClients(res.clients || []);
+          setLoading(false);
+        }
+      })
+      .catch((err) => {
+        if (isMounted) {
+          setLoading(false);
+          showToast(`Failed to load clients: ${err.message}`);
+        }
+      });
+    return () => {
+      isMounted = false;
+    };
+  }, [search, industryFilter, statusFilter, showToast]);
 
   const openAddModal = () => {
     if (activeRole === 'viewer') {

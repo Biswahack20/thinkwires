@@ -144,8 +144,29 @@ const EmployeesView = () => {
   };
 
   useEffect(() => {
-    fetchEmployees();
-  }, [search, availability, status, roleFilter, page]);
+    let isMounted = true;
+    adminApi
+      .getEmployees({ search, availability, status, page, limit: 10 })
+      .then((res) => {
+        if (!isMounted) return;
+        let list = res.employees || [];
+        if (roleFilter !== 'All') {
+          list = list.filter((e) => (e.role || 'employee') === roleFilter);
+        }
+        setEmployees(list);
+        setPagination(res.pagination || { total: list.length, totalPages: 1 });
+        setLoading(false);
+      })
+      .catch((err) => {
+        if (isMounted) {
+          setLoading(false);
+          showToast(`Failed to load employees: ${err.message}`);
+        }
+      });
+    return () => {
+      isMounted = false;
+    };
+  }, [search, availability, status, roleFilter, page, showToast]);
 
   const openAddModal = () => {
     if (activeRole === 'viewer') {

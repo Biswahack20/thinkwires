@@ -55,8 +55,26 @@ const AdminDashboard = () => {
   };
 
   useEffect(() => {
-    fetchStats(period);
-  }, [period]);
+    let isMounted = true;
+    adminApi
+      .getDashboardStats(period)
+      .then((res) => {
+        if (isMounted) {
+          setData(res);
+          setLoading(false);
+        }
+      })
+      .catch((err) => {
+        console.error('Failed to load stats:', err);
+        if (isMounted) {
+          setLoading(false);
+          showToast(`Error: ${err.message}`);
+        }
+      });
+    return () => {
+      isMounted = false;
+    };
+  }, [period, showToast]);
 
   useEffect(() => {
     adminApi

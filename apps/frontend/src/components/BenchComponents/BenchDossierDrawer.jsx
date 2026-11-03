@@ -12,7 +12,6 @@ const BenchDossierDrawer = () => {
     useSelector((state) => state.bench);
 
   const [liveDossier, setLiveDossier] = useState(null);
-  const [loadingDossier, setLoadingDossier] = useState(false);
 
   const [formData, setFormData] = useState({
     workEmail: '',
@@ -23,20 +22,21 @@ const BenchDossierDrawer = () => {
   });
 
   const [avatarError, setAvatarError] = useState(false);
+  const [prevSelectedTalent, setPrevSelectedTalent] = useState(selectedTalent);
 
-  useEffect(() => {
+  if (prevSelectedTalent !== selectedTalent) {
+    setPrevSelectedTalent(selectedTalent);
     setAvatarError(false);
-  }, [selectedTalent]);
+    setLiveDossier(null);
+  }
 
   useEffect(() => {
     if (!drawerOpen || !selectedTalent) {
-      setLiveDossier(null);
       return;
     }
 
     let isMounted = true;
     const talentId = selectedTalent.id || selectedTalent._id || selectedTalent.code;
-    setLoadingDossier(true);
 
     fetch(`/api/bench/dossier/${talentId}`)
       .then((res) => {
@@ -50,9 +50,6 @@ const BenchDossierDrawer = () => {
       })
       .catch(() => {
         // Fallback gracefully to talent properties
-      })
-      .finally(() => {
-        if (isMounted) setLoadingDossier(false);
       });
 
     return () => {

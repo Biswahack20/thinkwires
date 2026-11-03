@@ -52,8 +52,25 @@ const BlogManager = () => {
   };
 
   useEffect(() => {
-    fetchArticles();
-  }, [search, statusFilter]);
+    let isMounted = true;
+    adminApi
+      .getCmsArticles({ search, status: statusFilter })
+      .then((res) => {
+        if (isMounted) {
+          setArticles(res.articles || []);
+          setLoading(false);
+        }
+      })
+      .catch((err) => {
+        if (isMounted) {
+          setLoading(false);
+          showToast(`Failed to load articles: ${err.message}`);
+        }
+      });
+    return () => {
+      isMounted = false;
+    };
+  }, [search, statusFilter, showToast]);
 
   const openAddModal = () => {
     if (activeRole === 'viewer') {

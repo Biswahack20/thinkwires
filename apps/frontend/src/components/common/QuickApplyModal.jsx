@@ -59,11 +59,15 @@ const QuickApplyModal = ({ isOpen, onClose, jobData = {}, roleTitle = '' }) => {
   }, [jobData, roleTitle]);
 
   // Form State
-  const [fullName, setFullName] = useState('');
-  const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');
-  const [experienceYears, setExperienceYears] = useState('');
-  const [skills, setSkills] = useState('');
+  const [fullName, setFullName] = useState(() => (isAuthenticated && user?.name) || '');
+  const [email, setEmail] = useState(() => (isAuthenticated && user?.email) || '');
+  const [phone, setPhone] = useState(() => (isAuthenticated && user?.phone) || '');
+  const [experienceYears, setExperienceYears] = useState(() => (isAuthenticated && user?.experience ? String(user.experience) : ''));
+  const [skills, setSkills] = useState(() => {
+    if (!isAuthenticated || !user) return '';
+    if (Array.isArray(user.technicalSkills)) return user.technicalSkills.join(', ');
+    return user.skills || '';
+  });
   const [noticePeriod, setNoticePeriod] = useState('Immediate');
   const [candidateNote, setCandidateNote] = useState('');
   const [agreedToTerms, setAgreedToTerms] = useState(true);
@@ -85,8 +89,34 @@ const QuickApplyModal = ({ isOpen, onClose, jobData = {}, roleTitle = '' }) => {
   const [success, setSuccess] = useState(false);
   const [submittedAppId, setSubmittedAppId] = useState('');
 
-  // Prefill authenticated candidate details
-  useEffect(() => {
+  // Track modal open transitions & target job changes to reset transient submission state
+  const [prevIsOpen, setPrevIsOpen] = useState(isOpen);
+  const [prevJobId, setPrevJobId] = useState(normalizedJob.jobId);
+  const [prevUser, setPrevUser] = useState(user);
+
+  if (!prevIsOpen && isOpen) {
+    setPrevIsOpen(true);
+    setPrevJobId(normalizedJob.jobId);
+    setError('');
+    setSuccess(false);
+    setSubmittedAppId('');
+    setAutoFillNotice('');
+    if (!isAuthenticated) {
+      setPassword('');
+    }
+  } else if (prevIsOpen && !isOpen) {
+    setPrevIsOpen(false);
+  } else if (prevJobId !== normalizedJob.jobId) {
+    setPrevJobId(normalizedJob.jobId);
+    setError('');
+    setSuccess(false);
+    setSubmittedAppId('');
+    setAutoFillNotice('');
+  }
+
+  // Sync candidate details when user profile loads/changes
+  if (prevUser !== user) {
+    setPrevUser(user);
     if (isAuthenticated && user) {
       if (user.name) setFullName(user.name);
       if (user.email) setEmail(user.email);
@@ -98,20 +128,7 @@ const QuickApplyModal = ({ isOpen, onClose, jobData = {}, roleTitle = '' }) => {
         setSkills(user.skills);
       }
     }
-  }, [isAuthenticated, user]);
-
-  // Reset form when modal opens with new job
-  useEffect(() => {
-    if (isOpen) {
-      setError('');
-      setSuccess(false);
-      setSubmittedAppId('');
-      setAutoFillNotice('');
-      if (!isAuthenticated) {
-        setPassword('');
-      }
-    }
-  }, [isOpen, normalizedJob.jobId, isAuthenticated]);
+  }
 
   // Escape key handler
   useEffect(() => {

@@ -78,8 +78,50 @@ const PagesManager = () => {
   };
 
   useEffect(() => {
-    fetchPages();
-  }, []);
+    let isMounted = true;
+    adminApi
+      .getCmsPages()
+      .then((res) => {
+        if (!isMounted) return;
+        const existingPages = res.pages || [];
+        const industryDefaults = [
+          { title: 'Information Technology', slug: 'information-technology', category: 'Industry Overview' },
+          { title: 'BFSI & Fintech', slug: 'bfsi-and-fintech', category: 'Industry Overview' },
+          { title: 'Healthcare & Life Sciences', slug: 'healthcare-and-life-sciences', category: 'Industry Overview' },
+          { title: 'Engineering & Telecom', slug: 'engineering-and-telecom', category: 'Industry Overview' },
+          { title: 'E-Commerce & Retail', slug: 'e-commerce-and-retail', category: 'Industry Overview' },
+        ]
+          .map((ind) => {
+            const exists = existingPages.some((p) => p.slug === ind.slug);
+            if (exists) return null;
+            return {
+              _id: `virtual-${ind.slug}`,
+              title: ind.title,
+              slug: ind.slug,
+              category: ind.category,
+              status: 'published',
+              content: `Dynamic industry overview and solution catalog for ${ind.title}.`,
+              metaTitle: `${ind.title} | Thinkwires`,
+              metaDescription: `Enterprise workforce solutions and engineering talent for ${ind.title}.`,
+              updatedAt: new Date().toISOString(),
+              isSystemVirtual: true,
+            };
+          })
+          .filter(Boolean);
+
+        setPages([...existingPages, ...industryDefaults]);
+        setLoading(false);
+      })
+      .catch((err) => {
+        if (isMounted) {
+          setLoading(false);
+          showToast(`Failed to load CMS pages: ${err.message}`);
+        }
+      });
+    return () => {
+      isMounted = false;
+    };
+  }, [showToast]);
 
   const openAddModal = () => {
     if (activeRole === 'viewer') {

@@ -34,8 +34,26 @@ const SeoManager = () => {
   };
 
   useEffect(() => {
-    fetchSeo();
-  }, []);
+    let isMounted = true;
+    adminApi
+      .getSeoSettings()
+      .then((res) => {
+        if (isMounted) {
+          setGlobalSeo(res.globalSeo || {});
+          setPageSeo(res.pageSeo || []);
+          setLoading(false);
+        }
+      })
+      .catch((err) => {
+        if (isMounted) {
+          setLoading(false);
+          showToast(`Failed to load SEO settings: ${err.message}`);
+        }
+      });
+    return () => {
+      isMounted = false;
+    };
+  }, [showToast]);
 
   const openEditModal = (item) => {
     if (activeRole === 'viewer') {

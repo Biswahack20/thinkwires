@@ -1,14 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { openDrawer } from '../../store/slices/benchSlice';
 
 const BenchCandidateCard = ({ talent }) => {
   const dispatch = useDispatch();
   const [avatarError, setAvatarError] = useState(false);
+  const [prevTalent, setPrevTalent] = useState(talent);
 
-  useEffect(() => {
+  if (prevTalent !== talent) {
+    setPrevTalent(talent);
     setAvatarError(false);
-  }, [talent]);
+  }
 
   if (!talent) return null;
 

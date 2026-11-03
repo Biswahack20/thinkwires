@@ -44,9 +44,41 @@ const CandidateEvaluationModal = ({ isOpen, onClose, candidateId, showToast }) =
   };
 
   useEffect(() => {
-    if (isOpen && candidateId) {
-      fetchDossier();
-    }
+    if (!isOpen || !candidateId) return;
+    let isMounted = true;
+    adminApi
+      .getCandidateDossier(candidateId)
+      .then((data) => {
+        if (!isMounted) return;
+        if (data.success && (data.dossier || data.candidate)) {
+          const rep = data.dossier?.evaluationReport || data.dossier || {};
+          const cand = data.candidate || {};
+          setDossier({
+            ...rep,
+            ...cand,
+            candidateName: cand.name || rep.candidateName || 'Candidate',
+            candidateEmail: cand.email || rep.candidateEmail || '',
+            candidatePhone: cand.phone || rep.candidatePhone || '',
+            currentRole: cand.jobTitle || cand.currentRole || rep.targetRole || 'Software Professional',
+            jobTitle: cand.jobTitle || rep.targetRole || 'Software Professional',
+            anonymousCode: cand.anonymousCode || rep.anonymousCode || 'TW-CAND',
+            avatarUrl: cand.avatarUrl || rep.avatarUrl || '',
+            evaluationReport: rep,
+          });
+        } else {
+          setError(data.error || 'Evaluation dossier not found.');
+        }
+        setLoading(false);
+      })
+      .catch((err) => {
+        if (isMounted) {
+          setError(err.message || 'Failed to load evaluation dossier.');
+          setLoading(false);
+        }
+      });
+    return () => {
+      isMounted = false;
+    };
   }, [isOpen, candidateId]);
 
   if (!isOpen) return null;

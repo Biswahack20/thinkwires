@@ -5,13 +5,18 @@ const CandidateDossierModal = ({ isOpen, onClose, applicationId, applicationData
   const [dossier, setDossier] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [prevAppId, setPrevAppId] = useState(applicationId);
+
+  if (prevAppId !== applicationId) {
+    setPrevAppId(applicationId);
+    setLoading(true);
+    setError('');
+  }
 
   useEffect(() => {
     if (!isOpen || !applicationId) return;
 
     let isMounted = true;
-    setLoading(true);
-    setError('');
 
     const apiBase = getApiBaseUrl();
     fetch(`${apiBase}/candidate/applications/${applicationId}/dossier`, {
