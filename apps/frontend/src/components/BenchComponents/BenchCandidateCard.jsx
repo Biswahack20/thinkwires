@@ -125,10 +125,12 @@ const BenchCandidateCard = ({ talent }) => {
             </span>
           </div>
         </div>
-        <div className="BenchCard-rateBox">
-          <span className="BenchCard-rateNum">{displayRateNum}</span>
-          <span className="BenchCard-ratePeriod">{displayRatePeriod}</span>
-        </div>
+      </div>
+
+      {/* Pricing Rate Box */}
+      <div className="BenchCard-rateBox">
+        <span className="BenchCard-rateNum">{displayRateNum}</span>
+        <span className="BenchCard-ratePeriod">{displayRatePeriod}</span>
       </div>
 
       {/* Vetting Score Bar */}

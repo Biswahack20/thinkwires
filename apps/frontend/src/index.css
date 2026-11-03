@@ -15185,7 +15185,10 @@ textarea {
 .BenchCard-header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
+  gap: 0.65rem;
+  padding-right: 125px;
+  flex-wrap: wrap;
 }
 
 .BenchCard-codeBadge {
@@ -15260,6 +15263,8 @@ textarea {
 .BenchCard-titleWrap {
   flex: 1;
   min-width: 0;
+  word-break: normal;
+  overflow-wrap: break-word;
 }
 
 .BenchCard-roleTitle {
@@ -15268,6 +15273,9 @@ textarea {
   font-weight: 700;
   margin: 0 0 0.35rem;
   line-height: 1.3;
+  word-break: normal;
+  overflow-wrap: break-word;
+  hyphens: none;
 }
 
 .BenchCard-metaLine {
@@ -15295,6 +15303,9 @@ textarea {
 }
 
 .BenchCard-rateBox {
+  position: absolute;
+  top: 1.75rem;
+  right: 1.75rem;
   text-align: right;
   flex-shrink: 0;
 }
@@ -16557,6 +16568,11 @@ textarea {
     transform: none;
   }
 
+  .BenchCard-header {
+    padding-right: 110px;
+    gap: 0.5rem;
+  }
+
   .BenchCard-profileRow {
     flex-wrap: wrap;
     gap: 0.75rem;
@@ -16870,6 +16886,10 @@ textarea {
     gap: 0.85rem;
   }
 
+  .BenchCard-header {
+    padding-right: 95px;
+  }
+
   .BenchCard-codeBadge {
     font-size: 0.75rem;
   }
@@ -16988,6 +17008,11 @@ textarea {
 
   .BenchCard-card {
     padding: 1rem;
+  }
+
+  .BenchCard-rateBox {
+    top: 1rem;
+    right: 1rem;
   }
 
   .BenchCard-btnSecondary,

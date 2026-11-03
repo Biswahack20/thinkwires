@@ -132,3 +132,67 @@ describe('BenchCandidateCard Avatar Integration (Issue #174)', () => {
   });
 });
 
+describe('BenchCandidateCard Role Title Word Wrapping and RateBox Relocation', () => {
+  const longTitleCandidates = [
+    {
+      id: 'TW-CAND-01',
+      code: 'TW-CAND-01',
+      role: 'Staff Distributed Systems & Payment Platform Engineer',
+      skills: ['Go', 'Kafka'],
+      score: 98,
+      hourlyRate: '₹1.75 L',
+    },
+    {
+      id: 'TW-CAND-02',
+      code: 'TW-CAND-02',
+      role: 'Lead Cloud Infrastructure & Platform Architect',
+      skills: ['AWS', 'Kubernetes'],
+      score: 97,
+      hourlyRate: '₹1.80 L',
+    },
+    {
+      id: 'TW-CAND-03',
+      code: 'TW-CAND-03',
+      role: 'Principal Generative AI & LLM Systems Engineer',
+      skills: ['PyTorch', 'vLLM'],
+      score: 99,
+      hourlyRate: '₹2.10 L',
+    },
+    {
+      id: 'TW-CAND-04',
+      code: 'TW-CAND-04',
+      role: 'Lead SAP ABAP on HANA & S/4 Cloud Specialist',
+      skills: ['SAP', 'HANA'],
+      score: 96,
+      hourlyRate: '₹1.90 L',
+    },
+  ];
+
+  it('renders long candidate role titles without truncation', () => {
+    longTitleCandidates.forEach((candidate) => {
+      const { unmount } = renderWithProviders(
+        <BenchCandidateCard talent={candidate} />
+      );
+      const title = screen.getByRole('heading', { level: 3 });
+      expect(title).toHaveTextContent(candidate.role);
+      expect(title).toHaveClass('BenchCard-roleTitle');
+      unmount();
+    });
+  });
+
+  it('relocates BenchCard-rateBox outside of BenchCard-profileRow to prevent title compression', () => {
+    const { container } = renderWithProviders(
+      <BenchCandidateCard talent={longTitleCandidates[0]} />
+    );
+
+    const profileRow = container.querySelector('.BenchCard-profileRow');
+    const rateBox = container.querySelector('.BenchCard-rateBox');
+
+    expect(profileRow).toBeInTheDocument();
+    expect(rateBox).toBeInTheDocument();
+    // rateBox must NOT be a child of profileRow
+    expect(profileRow.contains(rateBox)).toBe(false);
+  });
+});
+
+
