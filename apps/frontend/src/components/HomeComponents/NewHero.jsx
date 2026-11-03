@@ -306,7 +306,8 @@ const NewHero = ({ onOpenModal }) => {
     <>
       <section
         ref={heroRef}
-        className="NewHero-heroSection"
+        id="hero-section"
+        className="NewHero-heroSection NewHero-section"
         onMouseMove={handleHeroMouseMove}
       >
 
