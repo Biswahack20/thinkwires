@@ -17832,9 +17832,14 @@ textarea {
   font-size: 0.6875rem;
   font-weight: 700;
   text-transform: uppercase;
-  color: var(--color-secondary, #49607e);
+  color: #1e293b;
   letter-spacing: 0.05em;
   margin-bottom: 0.125rem;
+  transition: color 0.2s ease;
+}
+
+[data-theme='dark'] .NewHero-fieldLabel {
+  color: #f8fafc;
 }
 
 .NewHero-fieldInput {
@@ -17843,18 +17848,24 @@ textarea {
   border: none;
   font-size: 0.875rem;
   font-weight: 600;
-  color: var(--color-navy-dark, #0f172a);
+  color: #0f172a;
   outline: none;
   font-family: inherit;
 }
 
 [data-theme='dark'] .NewHero-fieldInput {
-  color: #ffffff;
+  color: #f8fafc;
 }
 
 .NewHero-fieldInput::placeholder {
-  color: var(--color-outline, #747686);
+  color: #475569;
+  opacity: 1;
   font-weight: 400;
+}
+
+[data-theme='dark'] .NewHero-fieldInput::placeholder {
+  color: #94a3b8;
+  opacity: 1;
 }
 
 .NewHero-fieldSelect {
@@ -17863,24 +17874,26 @@ textarea {
   border: none;
   font-size: 0.875rem;
   font-weight: 600;
-  color: var(--color-navy-dark, #0f172a);
+  color: #0f172a;
   outline: none;
   font-family: inherit;
   cursor: pointer;
 }
 
 [data-theme='dark'] .NewHero-fieldSelect {
-  color: #ffffff;
+  color: #f8fafc;
 }
 
 .NewHero-fieldSelect option {
-  background-color: var(--color-surface-container-lowest, #ffffff);
-  color: var(--color-navy-dark, #0f172a);
+  background-color: #ffffff;
+  color: #0f172a;
+  font-weight: 500;
 }
 
 [data-theme='dark'] .NewHero-fieldSelect option {
-  background-color: #1a1b23;
-  color: #ffffff;
+  background-color: #1e293b;
+  color: #f8fafc;
+  font-weight: 500;
 }
 
 .NewHero-searchAction {
