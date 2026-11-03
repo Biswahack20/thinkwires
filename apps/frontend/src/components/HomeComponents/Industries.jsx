@@ -181,12 +181,6 @@ const Industries = () => {
                     backgroundPosition: 'center',
                   }}
                 >
-                  <Link
-                    to={`/industries/${targetSlug}`}
-                    className="Industries-cardOverlayLink"
-                    aria-label={`Explore ${sector.title || sector.name} practice`}
-                  />
-
                   {/* Card Content Top */}
                   <div className="Industries-cardTop">
                     <div className="Industries-cardHeaderRow">
@@ -231,12 +225,22 @@ const Industries = () => {
                     <span className="Industries-carouselPodsCount">
                       Pods: <strong>{sector.podsDeployed || '25+'}</strong>
                     </span>
-                    <span className="Industries-exploreLink">
+                    <a
+                      href="#process"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        const el = document.getElementById('process');
+                        if (el) {
+                          el.scrollIntoView({ behavior: 'smooth' });
+                        }
+                      }}
+                      className="Industries-exploreLink cursor-pointer relative z-10"
+                    >
                       <span>Explore Practice</span>
                       <span className="material-symbols-outlined text-[16px] group-hover:translate-x-1 transition-transform">
                         arrow_forward
                       </span>
-                    </span>
+                    </a>
                   </div>
                 </article>
               );

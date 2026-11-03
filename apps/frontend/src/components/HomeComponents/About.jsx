@@ -27,9 +27,10 @@ const About = () => {
           </p>
 
           <p className="About-description">
-            Beyond engineering staff augmentation, we provide turnkey payroll
-            administration and multilingual talent sourcing across BFSI, Life
-            Sciences, Cloud infrastructure, and advanced manufacturing sectors.
+            Our approach integrates deep technical expertise, a security-focused
+            mindset, and strong industry knowledge to empower organizations to
+            transform operations, enhance business resilience, and build
+            sustainable, future-ready digital capabilities.
           </p>
 
           <div className="About-statsGrid">

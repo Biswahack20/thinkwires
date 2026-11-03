@@ -19,6 +19,8 @@ import ServicesPage from './pages/ServicesPage';
 import FindTalentPage from './pages/FindTalentPage';
 import LegalPage from './pages/LegalPage';
 import NotFoundPage from './pages/NotFoundPage';
+import MissionVisionPage from './pages/MissionVisionPage';
+import ValuesCodeOfConductPage from './pages/ValuesCodeOfConductPage';
 import ScrollAnimationManager from './components/common/ScrollAnimationManager';
 import LoadingSpinner from './components/common/LoadingSpinner';
 import ProtectedRoute from './components/common/ProtectedRoute';
@@ -70,6 +72,8 @@ function App() {
           {/* Public Website Pages (Browsed freely without any auth gates) */}
           <Route path="/" element={<HomePage />} />
           <Route path="/about" element={<AboutPage />} />
+          <Route path="/about/mission-vision" element={<MissionVisionPage />} />
+          <Route path="/about/values" element={<ValuesCodeOfConductPage />} />
           <Route path="/industries" element={<IndustriesPage />} />
           <Route path="/industries/:slug" element={<IndustryDetailPage />} />
           <Route path="/talent-cloud" element={<BenchPage />} />

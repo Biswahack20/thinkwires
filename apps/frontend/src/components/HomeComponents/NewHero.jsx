@@ -309,6 +309,7 @@ const NewHero = ({ onOpenModal }) => {
         className="NewHero-heroSection"
         onMouseMove={handleHeroMouseMove}
       >
+
         {/* OSS Dynamic Mouse-Tracking Spotlight */}
         <motion.div
           style={{
@@ -368,10 +369,15 @@ const NewHero = ({ onOpenModal }) => {
               </motion.h1>
 
               <motion.p variants={itemVariants} className="NewHero-description">
-                Connecting enterprise engineering leaders with high-caliber
-                technical specialists, SAP functional consultants, Cloud
-                architects, and mission-critical tech leads within 48 to 72
-                hours.
+                Connecting enterprise engineering leaders with high-caliber skilled
+                professionals and technology-driven solutions across{' '}
+                <strong className="text-slate-900 font-semibold">Artificial Intelligence (AI)</strong>,{' '}
+                <strong className="text-slate-900 font-semibold">Cloud Computing</strong>,{' '}
+                <strong className="text-slate-900 font-semibold">Cybersecurity</strong>,{' '}
+                <strong className="text-slate-900 font-semibold">Semiconductor</strong>,{' '}
+                <strong className="text-slate-900 font-semibold">Engineering</strong>, and{' '}
+                <strong className="text-slate-900 font-semibold">Digital Transformation</strong> within{' '}
+                <strong className="text-primary font-semibold">48 to 72 hours</strong>.
               </motion.p>
 
               {/* Dual Action CTAs with Motion Physics */}
@@ -380,7 +386,7 @@ const NewHero = ({ onOpenModal }) => {
                 className="NewHero-actionGroup"
               >
                 <motion.a
-                  href="/talent-cloud"
+                  href="/bench"
                   className="NewHero-btnPrimary"
                   onClick={handleHireTalent}
                   whileHover={{ scale: 1.025, y: -2 }}
@@ -389,7 +395,7 @@ const NewHero = ({ onOpenModal }) => {
                   <span className="material-symbols-outlined NewHero-btnIcon">
                     person_add
                   </span>
-                  <span>Hire Top Tech Talent</span>
+                  <span>Deploy Bench Pool</span>
                 </motion.a>
 
                 <motion.a

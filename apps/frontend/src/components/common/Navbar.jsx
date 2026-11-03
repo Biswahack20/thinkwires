@@ -47,18 +47,22 @@ const Navbar = () => {
       <header className="Navbar-navbarContainer">
         {/* Top Bar */}
         <div className="Navbar-topBar">
-          <div className="Navbar-topBarLeft">
-            <div className="Navbar-topBarItem">
+          <div className="Navbar-topBarAnnouncement flex items-center gap-2 flex-1 min-w-0">
+            <span className="Navbar-announcementText truncate">
+              Zero Delay, Total Precision: Deploy Top Bench Talent from Our{' '}
+              <Link to="/bench" className="Navbar-announcementLink font-semibold underline hover:text-blue-300">
+                Bench Pool
+              </Link>{' '}
+              tab — Powered by AI Resume Scoring &amp; Online Test Scores.
+            </span>
+          </div>
+
+          <div className="Navbar-topBarRight">
+            <div className="Navbar-topBarItem Navbar-topBarRegion">
               <GlobeIcon size={13} color="currentColor" />
               <span>India &amp; USA / Canada</span>
             </div>
 
-            <div className="Navbar-topBarItem">
-              Talent is not bound by Borders
-            </div>
-          </div>
-
-          <div className="Navbar-topBarRight">
             <a href="mailto:info@thinkwires.com" className="Navbar-topBarItem">
               <MailIcon size={13} color="currentColor" />
               <span>info@thinkwires.com</span>
@@ -264,11 +268,11 @@ const Navbar = () => {
 
               <li>
                 <Link
-                  to="/talent-cloud"
-                  className={`Navbar-navLink ${isActive('/talent-cloud')}`}
+                  to="/bench"
+                  className={`Navbar-navLink ${isActive('/bench') || isActive('/talent-cloud')}`}
                   onClick={closeMobileMenu}
                 >
-                  Talent Cloud
+                  Bench Pool
                 </Link>
               </li>
 
@@ -299,7 +303,7 @@ const Navbar = () => {
                 className="Navbar-btnPrimary"
                 onClick={closeMobileMenu}
               >
-                Find Talent
+                Employer
               </Link>
 
               <button

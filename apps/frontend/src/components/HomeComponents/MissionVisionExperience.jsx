@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
 
 /**
@@ -110,6 +111,7 @@ const MissionVisionExperience = ({ className = '' }) => {
   const [activeMilestone, setActiveMilestone] = useState(0); // 0 | 1 | 2
   const milestonesRef = useRef(null);
   const prefersReducedMotion = useReducedMotion();
+  const navigate = useNavigate();
 
   // Highlight state derived from hover or active click
   const highlighted = hoveredSide || activeSide;
@@ -324,7 +326,14 @@ const MissionVisionExperience = ({ className = '' }) => {
             </p>
 
             <div className="MVE-wingFooter">
-              <div className="MVE-wingAction">
+              <div
+                className="MVE-wingAction"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  navigate('/about#mission-vision');
+                }}
+                style={{ cursor: 'pointer' }}
+              >
                 <span>View Mission Architecture</span>
                 <span className="material-symbols-outlined MVE-wingArrow" aria-hidden="true">
                   arrow_forward
@@ -430,7 +439,14 @@ const MissionVisionExperience = ({ className = '' }) => {
             </p>
 
             <div className="MVE-wingFooter">
-              <div className="MVE-wingAction">
+              <div
+                className="MVE-wingAction"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  navigate('/about#mission-vision');
+                }}
+                style={{ cursor: 'pointer' }}
+              >
                 <span>View Vision Horizon</span>
                 <span className="material-symbols-outlined MVE-wingArrow" aria-hidden="true">
                   arrow_forward
