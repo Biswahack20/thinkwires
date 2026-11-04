@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { getIndustrySlugByJobSector } from '../../store/slices/industriesSlice';
+import { shareJobOnWhatsApp, downloadJobDescriptionPdf } from '../../utils/jobActions';
 
 const JobCard = ({ job, onApplyClick, onViewSpecClick }) => {
   const industrySlug =
@@ -254,6 +255,63 @@ const JobCard = ({ job, onApplyClick, onViewSpecClick }) => {
           ))}
         </div>
       )}
+
+      {/* Quick Action Share & Download Bar */}
+      <div className="JobCard-shareActionBar flex items-center justify-between gap-2 mt-3 pt-3 border-t border-slate-100">
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            downloadJobDescriptionPdf(job);
+          }}
+          className="JobCard-actionMiniBtn flex items-center gap-1.5 text-xs font-semibold text-slate-600 hover:text-blue-600 bg-slate-50 hover:bg-blue-50 py-1.5 px-2.5 rounded border border-slate-200 transition-colors"
+          title={`Download PDF Job Description for ${job.title}`}
+          aria-label={`Download PDF Job Description for ${job.title}`}
+        >
+          <svg
+            width="13"
+            height="13"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+          </svg>
+          <span>Download JD</span>
+        </button>
+
+        <button
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            shareJobOnWhatsApp(job);
+          }}
+          className="JobCard-actionMiniBtn flex items-center gap-1.5 text-xs font-semibold text-emerald-700 hover:text-emerald-800 bg-emerald-50 hover:bg-emerald-100 py-1.5 px-2.5 rounded border border-emerald-200 transition-colors"
+          title={`Share ${job.title} on WhatsApp`}
+          aria-label={`Share ${job.title} on WhatsApp`}
+        >
+          <svg
+            width="13"
+            height="13"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            aria-hidden="true"
+          >
+            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+          </svg>
+          <span>WhatsApp</span>
+        </button>
+      </div>
 
       {/* Footer Row: View Job Spec & Apply Button */}
       <div className="JobCard-cardFooterRow">
