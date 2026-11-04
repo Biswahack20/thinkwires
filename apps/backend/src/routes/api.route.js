@@ -14,7 +14,7 @@ import aiService from '../services/ai.service.js';
 import { logger } from '../utils/logger.js';
 import { loadSeedJson } from '../utils/seedLoader.js';
 import rateLimit from 'express-rate-limit';
-import requireAuth from '../middlewares/auth.middleware.js';
+import requireAuth, { requireCandidateAuth } from '../middlewares/auth.middleware.js';
 import { recordInboundRequisition } from '../controllers/admin.controller.js';
 import { sendRequisitionNotificationEmail } from '../utils/recruitmentEmail.util.js';
 import { calculateCandidatePricing, parseNoticeDays } from '../utils/pricing.utils.js';
@@ -23,6 +23,21 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const isMongoActive = () => mongoose.connection.readyState === 1;
+
+/**
+ * Sanitize public job descriptions to strip intake metadata, personal contact info, and corporate emails
+ */
+const sanitizeJobDescription = (desc) => {
+  if (!desc || typeof desc !== 'string') return '';
+  return desc
+    // Redact email addresses
+    .replace(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g, '[redacted]')
+    // Redact phone numbers
+    .replace(/(?:\+?\d{1,3}[-.\s]?)?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}/g, '[redacted]')
+    // Remove intake manager signature patterns like "(FullName - email@example.com)"
+    .replace(/\([^)]*@[^)]*\)/g, '')
+    .trim();
+};
 
 // Robustly load mockData across environments (local, tests, monorepo, Vercel Serverless)
 const mockData = loadSeedJson('mockData.json', {}) || {};
@@ -220,7 +235,10 @@ router.get('/openings', async (req, res) => {
   // Populate active postings from MongoDB if available
   if (isMongoActive()) {
     try {
-      const dbJobs = await JobRequirement.find({ status: { $ne: 'Closed' } })
+      const dbJobs = await JobRequirement.find({
+        status: { $in: ['Active', 'Approved', 'Published'] },
+        isRequisition: { $ne: true },
+      })
         .sort({ createdAt: -1 })
         .lean();
       sourceOpenings = (dbJobs || []).map((j) => ({
@@ -245,7 +263,7 @@ router.get('/openings', async (req, res) => {
         jobMode: j.jobMode || 'Permanent',
         workMode: j.workMode || 'Remote',
         noticePeriod: j.noticePeriod || 'Immediate',
-        description: j.description || '',
+        description: sanitizeJobDescription(j.description),
         requirements: j.requirements || '',
         industry: j.industry || 'Information Technology & Cloud',
         skills:
@@ -280,11 +298,21 @@ router.get('/openings', async (req, res) => {
     }
   }
 
-  // Ensure ALL public openings mask client details
-  let filtered = sourceOpenings.map((job) => ({
+  // Issue #202: Exclude unapproved inbound requisitions and closed jobs from public listings
+  const activeJobs = sourceOpenings.filter((job) => {
+    if (job.isRequisition === true) return false;
+    if (job.status && !['Active', 'Approved', 'Published'].includes(job.status)) {
+      return false;
+    }
+    return true;
+  });
+
+  // Ensure ALL public openings mask client details and sanitize descriptions
+  let filtered = activeJobs.map((job) => ({
     ...job,
     company: 'Enterprise Client (Confidential)',
     client: 'Enterprise Client (Confidential)',
+    description: sanitizeJobDescription(job.description),
     requirements: job.requirements || '',
     industry: job.industry || 'Information Technology & Cloud',
   }));
@@ -992,37 +1020,55 @@ router.get('/candidate-portal', async (req, res) => {
   res.json(result);
 });
 
-router.post('/candidate-portal/timesheet', async (req, res) => {
-  const { hours, weekEnding, comments } = req.body;
-  logger.info('⏱️ Candidate Weekly Timesheet Submitted:', {
-    hours,
-    weekEnding,
-    comments,
-  });
+// Issue #204: Require candidate authentication and enforce hour bounds (1 - 168)
+router.post(
+  '/candidate-portal/timesheet',
+  requireCandidateAuth,
+  async (req, res) => {
+    const candidateId = req.candidate?._id || req.candidate?.id;
+    const candidateName = req.candidate?.name || 'Authenticated Candidate';
+    const { hours, weekEnding, comments } = req.body;
 
-  if (isMongoActive()) {
-    try {
-      await Activity.create({
-        action: 'Timesheet Submitted',
-        entityType: 'Placement',
-        entityId: weekEnding || 'Current Week',
-        description: `Weekly timesheet submitted: ${hours || 40} hours logged for week ending ${weekEnding || 'N/A'}. Comments: ${comments || 'None'}`,
-        user: { name: 'Candidate Worker', role: 'candidate' },
-        badgeColor: '#16A34A',
+    const parsedHours = Number(hours);
+    if (!hours || isNaN(parsedHours) || parsedHours <= 0 || parsedHours > 168) {
+      return res.status(400).json({
+        success: false,
+        error: 'Valid logged hours (between 1 and 168) are required.',
       });
-    } catch (err) {
-      logger.warn(
-        'Could not persist timesheet activity to MongoDB:',
-        err.message
-      );
     }
-  }
 
-  res.json({
-    success: true,
-    message:
-      'Weekly timesheet submitted successfully and forwarded to client approval desk.',
-  });
-});
+    logger.info('⏱️ Candidate Weekly Timesheet Submitted:', {
+      candidateId,
+      candidateName,
+      hours: parsedHours,
+      weekEnding,
+      comments,
+    });
+
+    if (isMongoActive()) {
+      try {
+        await Activity.create({
+          action: 'Timesheet Submitted',
+          entityType: 'Placement',
+          entityId: weekEnding || 'Current Week',
+          description: `Weekly timesheet submitted by ${candidateName}: ${parsedHours} hours logged for week ending ${weekEnding || 'N/A'}.${comments ? ` Comments: ${comments}` : ''}`,
+          user: { name: candidateName, role: 'candidate', id: candidateId },
+          badgeColor: '#16A34A',
+        });
+      } catch (err) {
+        logger.warn(
+          'Could not persist timesheet activity to MongoDB:',
+          err.message
+        );
+      }
+    }
+
+    res.json({
+      success: true,
+      message:
+        'Weekly timesheet submitted successfully and forwarded to client approval desk.',
+    });
+  }
+);
 
 export default router;

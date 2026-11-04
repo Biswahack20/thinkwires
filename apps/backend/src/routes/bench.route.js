@@ -563,6 +563,16 @@ router.get('/bench/talents/:id', async (req, res) => {
 router.get('/bench/dossier/:id', async (req, res) => {
   try {
     const { id } = req.params;
+
+    // Issue #203: Reject raw database ObjectIds on public bench endpoint to prevent BOLA / candidate record scraping
+    if (mongoose.isValidObjectId(id)) {
+      return res.status(400).json({
+        success: false,
+        error:
+          'Invalid bench identifier format. Please use standard candidate code.',
+      });
+    }
+
     const benchSource = await getPageDataBySlug('bench', bench);
     const rawCandidates = benchSource.candidates || benchSource.talents || [];
     const talent = rawCandidates.find(
@@ -570,20 +580,19 @@ router.get('/bench/dossier/:id', async (req, res) => {
     );
 
     let application = null;
-    let candidate = null;
 
     if (isMongoActive()) {
-      const isValidId = mongoose.isValidObjectId(id);
-      application = await JobApplication.findOne({
-        $or: [{ anonymousCode: id }, { _id: isValidId ? id : null }],
-      }).lean();
-
-      if (!application && isValidId) {
-        candidate = await Candidate.findById(id).lean();
-      }
+      application = await JobApplication.findOne({ anonymousCode: id }).lean();
     }
 
-    const targetRole = talent?.role || application?.jobTitle || candidate?.currentRole || 'Technical Specialist';
+    if (!talent && !application) {
+      return res.status(404).json({
+        success: false,
+        error: 'Talent dossier not found.',
+      });
+    }
+
+    const targetRole = talent?.role || application?.jobTitle || 'Technical Specialist';
     const code = talent?.code || application?.anonymousCode || id;
 
     let rawDossier = application?.evaluationReport || talent?.dossier;
@@ -591,16 +600,16 @@ router.get('/bench/dossier/:id', async (req, res) => {
       rawDossier = await aiService.evaluateCandidate(
         {
           candidateName: `Candidate ${code}`,
-          skills: talent?.skills || application?.skills || candidate?.technicalSkills || ['React', 'TypeScript', 'Node.js', 'PostgreSQL'],
-          resumeText: talent?.engineeringProof || application?.candidateNote || candidate?.bio || '',
-          experience: talent?.years || candidate?.experience || 5,
-          noticePeriod: talent?.noticePeriod || candidate?.noticePeriod || 'Immediate',
+          skills: talent?.skills || application?.skills || ['React', 'TypeScript', 'Node.js', 'PostgreSQL'],
+          resumeText: talent?.engineeringProof || application?.candidateNote || '',
+          experience: talent?.years || 5,
+          noticePeriod: talent?.noticePeriod || 'Immediate',
         },
         {
           jobTitle: targetRole,
           department: talent?.specialty || application?.department || 'Engineering',
           company: 'Thinkwires Talent Cloud',
-          requiredSkills: talent?.skills || application?.skills || candidate?.technicalSkills || ['React', 'TypeScript', 'Node.js', 'PostgreSQL'],
+          requiredSkills: talent?.skills || application?.skills || ['React', 'TypeScript', 'Node.js', 'PostgreSQL'],
           experienceRequired: 5,
         }
       );
@@ -616,11 +625,11 @@ router.get('/bench/dossier/:id', async (req, res) => {
         role: targetRole,
         initials: talent?.initials || 'TW',
         avatarUrl: talent?.avatarUrl || talent?.avatar || talent?.photo || null,
-        location: talent?.location || candidate?.location || 'Remote Global',
-        experience: talent?.yearsExp || talent?.experience || `${candidate?.experience || 5}+ Yrs Exp`,
-        noticePeriod: talent?.noticePeriod || candidate?.noticePeriod || 'Immediate',
+        location: talent?.location || 'Remote Global',
+        experience: talent?.yearsExp || talent?.experience || '5+ Yrs Exp',
+        noticePeriod: talent?.noticePeriod || 'Immediate',
         hourlyRate: talent?.hourlyRate || '$65 - $85/hr',
-        skills: talent?.skills || application?.skills || candidate?.technicalSkills || [],
+        skills: talent?.skills || application?.skills || [],
       },
       dossier: sanitizedDossier,
     });
@@ -658,18 +667,5 @@ router.post('/bench/book-interview', publicSubmissionRateLimiter, (req, res) => 
     bookingRef: `TW-${Date.now().toString(36).toUpperCase()}`,
   });
 });
-
-// About Page & Corporate Advisory Endpoints
-const aboutDataset = {
-  company: {
-    name: 'Thinkwires',
-    founded: 2022,
-    headquarters:
-      'Plot No. 20, Block H-1/A, Sector 63, Noida, Uttar Pradesh 201301',
-    locations: ['India', 'USA', 'Canada'],
-    eyebrow: 'ABOUT THINKWIRES',
-    headline: 'Connecting Global Ambition with Exceptional Tech Talent.',
-    subheading:
-      'Founded in 2022 as a premier workforce advisor and staffing aggregator, Thinkwires connects high-growth enterprises with specialized engineering talent and compliant Employer of Record (EOR) infrastructure across India, the US, and Canada.',
 
 export default router;

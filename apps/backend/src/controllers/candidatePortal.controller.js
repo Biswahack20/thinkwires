@@ -1,4 +1,5 @@
 import fs from 'fs';
+import path from 'path';
 import crypto from 'crypto';
 import bcrypt from 'bcryptjs';
 import mongoose from 'mongoose';
@@ -7,6 +8,7 @@ import JobApplication from '../models/jobApplication.mongo.model.js';
 import JobRequirement from '../models/job.mongo.model.js';
 import { sendRecruitmentNotificationEmail } from '../utils/recruitmentEmail.util.js';
 import aiService from '../services/ai.service.js';
+import { verifyAdminToken, verifyCandidateToken } from '../utils/auth.util.js';
 
 // Fallback in-memory application store for local development if MongoDB is absent
 const localDevApplications = [];
@@ -236,16 +238,30 @@ export const applyForJob = async (req, res) => {
       });
     }
 
-    const resolvedLastName = (lastName || '').trim();
-    const resolvedFirstName = (firstName || '').trim();
+    const resolvedEmail = (
+      (candidate && candidate.email) ||
+      ''
+    )
+      .trim()
+      .toLowerCase();
+    const resolvedFirstName = (
+      (candidate && candidate.name ? candidate.name.split(' ')[0] : '') ||
+      firstName ||
+      ''
+    ).trim();
+    const resolvedLastName = (
+      (candidate && candidate.name
+        ? candidate.name.split(' ').slice(1).join(' ')
+        : '') ||
+      lastName ||
+      (candidate && candidate.name ? candidate.name.trim() : '') ||
+      ''
+    ).trim();
     const resolvedMobile = (
       mobileNumber ||
       (candidate && candidate.phone) ||
       ''
     ).trim();
-    const resolvedEmail = (email || (candidate && candidate.email) || '')
-      .trim()
-      .toLowerCase();
 
     if (
       !resolvedLastName ||
@@ -309,17 +325,17 @@ export const applyForJob = async (req, res) => {
     // Enforce single active submission per job opening
     if (mongoose.connection.readyState === 1) {
       const existingApplication = await JobApplication.findOne({
-        $or: [
-          { candidate: candidateId, jobId: String(jobId) },
-          { email: resolvedEmail, jobId: String(jobId) },
-        ],
+        candidate: candidateId,
+        jobId: String(jobId),
       });
 
       if (existingApplication) {
         return res.status(409).json({
           success: false,
           error: `You have already applied for "${jobTitle}". Your application is currently under review.`,
-          existingApplication,
+          applicationId: existingApplication._id,
+          appliedAt: existingApplication.createdAt,
+          status: existingApplication.status,
         });
       }
 
@@ -564,7 +580,9 @@ export const applyForJob = async (req, res) => {
         return res.status(409).json({
           success: false,
           error: `You have already applied for "${jobTitle}".`,
-          existingApplication: existing,
+          applicationId: existing._id,
+          appliedAt: existing.createdAt || new Date().toISOString(),
+          status: existing.status || 'Applied',
         });
       }
 
@@ -1153,6 +1171,157 @@ export const removeAvatar = async (req, res) => {
     return res.status(500).json({
       success: false,
       error: 'Failed to reset avatar.',
+    });
+  }
+};
+
+/**
+ * Protected Resume Download Handler (Issue #178)
+ * GET /api/candidate/resume/:filename
+ * GET /uploads/resumes/:filename
+ *
+ * Enforces authentication and authorization:
+ * - Candidate can only download their own resume
+ * - Admin can download any resume
+ * - Unauthenticated users are rejected with 401
+ * - Filename is strictly sanitized against path traversal
+ * - Headers set: Content-Disposition: attachment, X-Content-Type-Options: nosniff
+ */
+export const downloadResume = async (req, res) => {
+  try {
+    const rawFilename = req.params.filename || '';
+    const safeFilename = path.basename(rawFilename);
+
+    // Prevent path traversal
+    if (!safeFilename || safeFilename !== rawFilename || safeFilename.includes('..')) {
+      return res.status(400).json({
+        success: false,
+        error: 'Invalid resume file identifier.',
+      });
+    }
+
+    // Only allow permitted resume extensions
+    const ext = path.extname(safeFilename).toLowerCase();
+    if (!['.pdf', '.doc', '.docx'].includes(ext)) {
+      return res.status(400).json({
+        success: false,
+        error: 'Invalid file format requested.',
+      });
+    }
+
+    // Authenticate principal (Candidate or Admin)
+    let candidatePrincipal = req.candidate || null;
+    let isAdmin = false;
+
+    // Check if candidate is already attached by middleware
+    if (!candidatePrincipal) {
+      const candidateToken =
+        (req.cookies && req.cookies.thinkwires_candidate_jwt) ||
+        (req.headers.authorization &&
+          req.headers.authorization.startsWith('Bearer ') &&
+          req.headers.authorization.split(' ')[1]);
+
+      if (candidateToken) {
+        try {
+          const decoded = verifyCandidateToken(candidateToken);
+          if (decoded && decoded.id && decoded.role === 'candidate') {
+            candidatePrincipal = decoded;
+          }
+        } catch {
+          // Token invalid or expired, continue to check admin token
+        }
+      }
+    }
+
+    // Check if admin is authenticated
+    const adminToken =
+      (req.cookies && req.cookies.thinkwires_admin_jwt) ||
+      (req.headers.authorization &&
+        req.headers.authorization.startsWith('Bearer ') &&
+        req.headers.authorization.split(' ')[1]) ||
+      req.headers['x-admin-token'];
+
+    if (adminToken) {
+      try {
+        const decodedAdmin = verifyAdminToken(adminToken);
+        if (
+          decodedAdmin &&
+          decodedAdmin.email &&
+          ['superadmin', 'admin', 'cms_admin'].includes(
+            (decodedAdmin.role || '').toLowerCase()
+          )
+        ) {
+          isAdmin = true;
+        }
+      } catch {
+        // Admin token invalid
+      }
+    }
+
+    // If neither authenticated candidate nor admin, reject with 401
+    if (!candidatePrincipal && !isAdmin) {
+      return res.status(401).json({
+        success: false,
+        authenticated: false,
+        error: 'Authentication required to access candidate resumes.',
+      });
+    }
+
+    // If authenticated as candidate (and not admin), verify ownership
+    if (!isAdmin && candidatePrincipal) {
+      const candidateId = candidatePrincipal._id || candidatePrincipal.id;
+
+      if (mongoose.connection.readyState === 1) {
+        const [candidateDoc, appDoc] = await Promise.all([
+          Candidate.findOne({
+            _id: candidateId,
+            resumeUrl: { $regex: safeFilename },
+          }).select('_id'),
+          JobApplication.findOne({
+            candidate: candidateId,
+            resumeUrl: { $regex: safeFilename },
+          }).select('_id'),
+        ]);
+
+        if (!candidateDoc && !appDoc) {
+          return res.status(403).json({
+            success: false,
+            error: 'Access forbidden. You may only download your own resume.',
+          });
+        }
+      }
+    }
+
+    const resumesDir = process.env.VERCEL
+      ? path.resolve('/tmp', 'uploads', 'resumes')
+      : path.resolve(process.cwd(), 'uploads/resumes');
+    const filePath = path.resolve(resumesDir, safeFilename);
+
+    if (!fs.existsSync(filePath)) {
+      return res.status(404).json({
+        success: false,
+        error: 'Requested resume document not found.',
+      });
+    }
+
+    // Set strict download and nosniff headers
+    res.setHeader('Content-Disposition', `attachment; filename="${safeFilename}"`);
+    res.setHeader('X-Content-Type-Options', 'nosniff');
+
+    const mimeMap = {
+      '.pdf': 'application/pdf',
+      '.doc': 'application/msword',
+      '.docx':
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    };
+    res.setHeader('Content-Type', mimeMap[ext] || 'application/octet-stream');
+
+    return res.sendFile(filePath);
+  } catch (err) {
+    console.error('Resume download error:', err);
+    return res.status(500).json({
+      success: false,
+      error: 'An internal error occurred while downloading the resume.',
     });
   }
 };
