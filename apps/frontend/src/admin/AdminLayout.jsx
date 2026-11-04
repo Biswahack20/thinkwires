@@ -5,7 +5,6 @@ import {
   adminApi,
   getAdminRole,
   getAdminUser,
-  isAdminAuthenticated,
   clearAdminSession,
 } from './adminService';
 import {
@@ -21,7 +20,6 @@ import {
   ImageIcon,
   SearchIcon,
   BellIcon,
-  LayersIcon,
   ShieldIcon,
   MenuIcon,
   ChevronLeftIcon,

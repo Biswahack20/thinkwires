@@ -6,6 +6,7 @@ import {
   CSRF_COOKIE_NAME,
   generateCsrfToken,
 } from '../../middlewares/csrf.middleware.js';
+import { generateAdminToken } from '../../utils/auth.util.js';
 
 describe('CSRF & Origin Verification (Unit Tests)', () => {
   const origEnv = { ...process.env };
@@ -32,6 +33,17 @@ describe('CSRF & Origin Verification (Unit Tests)', () => {
       expect(isAllowedOrigin('http://localhost:5173')).toBe(true);
       expect(isAllowedOrigin('http://localhost:5000')).toBe(true);
       expect(isAllowedOrigin('http://127.0.0.1:5173')).toBe(true);
+    });
+
+    it('allows dynamic Vite development ports (5174, 5175, 4173) in development mode (Issue #180)', () => {
+      delete process.env.ALLOWED_ORIGINS;
+      process.env.NODE_ENV = 'development';
+
+      expect(isAllowedOrigin('http://localhost:5174')).toBe(true);
+      expect(isAllowedOrigin('http://localhost:5175')).toBe(true);
+      expect(isAllowedOrigin('http://localhost:4173')).toBe(true);
+      expect(isAllowedOrigin('http://127.0.0.1:5174')).toBe(true);
+      expect(isAllowedOrigin('http://127.0.0.1:4173')).toBe(true);
     });
 
     it('rejects arbitrary *.vercel.app subdomains (no wildcard trust)', () => {
@@ -139,6 +151,86 @@ describe('CSRF & Origin Verification (Unit Tests)', () => {
 
       expect(nextCalled).toBe(true);
       expect(res.statusCode).toBe(200);
+    });
+
+    it('exempts requests authenticated with valid Authorization Bearer header per OWASP (Issue #192)', () => {
+      process.env.ALLOWED_ORIGINS = 'https://thinkwires.vercel.app';
+      const mockAdmin = {
+        _id: 'admin_123',
+        email: 'admin@thinkwires.com',
+        name: 'Admin Test',
+        role: 'superadmin',
+      };
+      const token = generateAdminToken(mockAdmin);
+
+      const req = {
+        method: 'POST',
+        path: '/admin/settings',
+        headers: {
+          origin: 'https://thinkwires.vercel.app',
+          authorization: `Bearer ${token}`,
+        },
+        cookies: {},
+      };
+      const res = createMockRes();
+      let nextCalled = false;
+
+      adminCsrfProtection(req, res, () => {
+        nextCalled = true;
+      });
+
+      expect(nextCalled).toBe(true);
+      expect(res.statusCode).toBe(200);
+    });
+
+    it('exempts requests authenticated with valid x-admin-token header per OWASP (Issue #192)', () => {
+      process.env.ALLOWED_ORIGINS = 'https://thinkwires.vercel.app';
+      const mockAdmin = {
+        _id: 'admin_123',
+        email: 'admin@thinkwires.com',
+        name: 'Admin Test',
+        role: 'admin',
+      };
+      const token = generateAdminToken(mockAdmin);
+
+      const req = {
+        method: 'POST',
+        path: '/admin/requisitions/approve',
+        headers: {
+          origin: 'https://thinkwires.vercel.app',
+          'x-admin-token': token,
+        },
+        cookies: {},
+      };
+      const res = createMockRes();
+      let nextCalled = false;
+
+      adminCsrfProtection(req, res, () => {
+        nextCalled = true;
+      });
+
+      expect(nextCalled).toBe(true);
+      expect(res.statusCode).toBe(200);
+    });
+
+    it('exempts /auth/csrf-token and /auth/login endpoints from CSRF check (Issue #192)', () => {
+      const endpoints = ['/auth/login', '/auth/logout', '/auth/csrf-token'];
+      endpoints.forEach((endpoint) => {
+        const req = {
+          method: 'POST',
+          path: endpoint,
+          headers: { origin: 'https://thinkwires.vercel.app' },
+          cookies: {},
+        };
+        const res = createMockRes();
+        let nextCalled = false;
+
+        adminCsrfProtection(req, res, () => {
+          nextCalled = true;
+        });
+
+        expect(nextCalled).toBe(true);
+      });
     });
   });
 });

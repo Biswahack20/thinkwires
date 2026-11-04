@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation, Link } from 'react-router-dom';
-import { adminApi, isAdminAuthenticated, getAdminRole, getAdminUser, getAdminToken } from './adminService';
-import { ShieldIcon, LockIcon } from './AdminIcons';
+import { adminApi, getAdminUser, getAdminToken } from './adminService';
+import { LockIcon } from './AdminIcons';
 import logo from '../assets/logo/logo.png';
 import './admin.css';
 

@@ -44,18 +44,10 @@ export const getCsrfToken = () => {
 };
 
 /**
- * Legacy getter maintained for backwards compatibility.
  * Security: Authentication tokens are strictly server-managed via HttpOnly cookies
- * and are never accessible to client-side scripts.
+ * and are never stored in or readable by client-side scripts (prevents XSS token exfiltration).
  */
 export const getAdminToken = () => {
-  try {
-    if (typeof localStorage !== 'undefined') {
-      return localStorage.getItem('tw_admin_token');
-    }
-  } catch {
-    // Ignore restricted environments
-  }
   return null;
 };
 
@@ -75,10 +67,6 @@ export const getAdminRole = () => {
 };
 
 export const setAdminSession = (param1, param2) => {
-  const token =
-    typeof param1 === 'string'
-      ? param1
-      : param1?.token || param2?.token || null;
   const user =
     param2 && typeof param2 === 'object' && !param2.token
       ? param2
@@ -88,9 +76,6 @@ export const setAdminSession = (param1, param2) => {
 
   try {
     if (typeof localStorage !== 'undefined') {
-      if (token) {
-        localStorage.setItem('tw_admin_token', token);
-      }
       if (user) {
         localStorage.setItem('tw_admin_user', JSON.stringify(user));
         localStorage.setItem(
@@ -245,9 +230,7 @@ export const adminApi = {
     if (json.csrfToken) {
       setCsrfToken(json.csrfToken);
     }
-    if (json.token && json.user) {
-      setAdminSession(json.token, json.user);
-    } else if (json.user) {
+    if (json.user) {
       setAdminSession(json.user);
     }
     return json;
