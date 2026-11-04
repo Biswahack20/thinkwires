@@ -40,6 +40,15 @@ const userMongoSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
+    tokenVersion: {
+      type: Number,
+      default: 0,
+      required: true,
+    },
+    passwordChangedAt: {
+      type: Date,
+      default: Date.now,
+    },
     lastLogin: {
       type: Date,
       default: null,
@@ -55,6 +64,9 @@ userMongoSchema.pre('save', async function (next) {
   if (!this.isModified('password')) {
     return next();
   }
+  // Invalidate previous sessions upon password modification (Issue #197)
+  this.tokenVersion = (this.tokenVersion || 0) + 1;
+  this.passwordChangedAt = new Date();
   // Prevent double-hashing if password is already a bcrypt hash
   if (
     typeof this.password === 'string' &&

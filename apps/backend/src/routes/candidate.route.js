@@ -41,6 +41,23 @@ const parseResumeRateLimiter = rateLimit({
   },
 });
 
+// Throttle job applications to prevent abuse and spam submissions (Issue #187)
+const candidateApplyRateLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 20,
+  standardHeaders: true,
+  legacyHeaders: false,
+  validate: {
+    xForwardedForHeader: false,
+    forwardedHeader: false,
+  },
+  message: {
+    success: false,
+    error:
+      'Too many job applications submitted from this network. Please wait 15 minutes before applying again.',
+  },
+});
+
 const candidateOriginProtection = (req, res, next) => {
   const safeMethods = ['GET', 'HEAD', 'OPTIONS'];
   if (safeMethods.includes(req.method.toUpperCase())) {
@@ -83,7 +100,12 @@ router.use(requireCandidateAuth);
 router.get('/dashboard', getCandidateDashboard);
 router.put('/profile', updateCandidateProfile);
 
-router.post('/apply', resumeUpload.single('resume'), applyForJob);
+router.post(
+  '/apply',
+  candidateApplyRateLimiter,
+  resumeUpload.single('resume'),
+  applyForJob
+);
 router.get('/applications', getMyApplications);
 router.post('/applications/:applicationId/withdraw', withdrawApplication);
 

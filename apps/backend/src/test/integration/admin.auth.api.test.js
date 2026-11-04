@@ -3,6 +3,7 @@ import jwt from 'jsonwebtoken';
 import { api, getAdminAuthCookie } from '../test-helper.js';
 import {
   getJwtSecret,
+  getAdminJwtSecret,
   revokeToken,
   clearRevocationStore,
   ADMIN_COOKIE_NAME,
@@ -172,7 +173,7 @@ describe('Admin Authentication & Cookie Security (Integration Tests)', () => {
     });
 
     it('rejects expired authentication cookie with 401', async () => {
-      const secret = getJwtSecret();
+      const secret = getAdminJwtSecret();
       const expiredToken = jwt.sign(
         {
           id: 'admin-expired',
@@ -193,7 +194,7 @@ describe('Admin Authentication & Cookie Security (Integration Tests)', () => {
     });
 
     it('rejects revoked authentication cookie with 401', async () => {
-      const secret = getJwtSecret();
+      const secret = getAdminJwtSecret();
       const validToken = jwt.sign(
         {
           id: 'admin-revoked',

@@ -46,7 +46,7 @@ const getPageDataBySlug = async (slug, fallback) => {
 const router = express.Router();
 
 // --- Old Contact Form (kept for backward compat) ---
-router.post('/contact', async (req, res) => {
+router.post('/contact', publicSubmissionRateLimiter, async (req, res) => {
   const { email, phone } = req.body;
   if (!email || !phone) {
     return res.status(400).json({ error: 'Email and Phone are required' });

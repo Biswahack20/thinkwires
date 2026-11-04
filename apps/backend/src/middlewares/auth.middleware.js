@@ -94,6 +94,21 @@ export const requireAuth = (
                   'Your administrative account has been deactivated. Please contact your Superadmin.',
               });
             }
+
+            // Issue #197: Validate tokenVersion against database record
+            if (
+              dbUser.tokenVersion !== undefined &&
+              decoded.tokenVersion !== undefined &&
+              decoded.tokenVersion !== dbUser.tokenVersion
+            ) {
+              return res.status(401).json({
+                success: false,
+                authenticated: false,
+                error:
+                  'Session has been invalidated due to a security update or password change. Please log in again.',
+              });
+            }
+
             userObj = {
               id: dbUser._id ? dbUser._id.toString() : dbUser.id,
               name: dbUser.name,
@@ -102,9 +117,23 @@ export const requireAuth = (
               designation: dbUser.designation,
               isActive: dbUser.isActive,
             };
+          } else if (process.env.NODE_ENV === 'production') {
+            return res.status(401).json({
+              success: false,
+              authenticated: false,
+              error: 'Admin user record not found. Access denied.',
+            });
           }
         } catch (dbErr) {
-          console.warn('Admin user DB verification notice:', dbErr.message);
+          console.error('Admin user DB verification notice:', dbErr.message);
+          // Issue #200: Fail-closed in production if authorization check cannot be verified
+          if (process.env.NODE_ENV === 'production') {
+            return res.status(503).json({
+              success: false,
+              error:
+                'Authorization verification service temporarily unavailable. Please retry.',
+            });
+          }
         }
       }
 
@@ -229,6 +258,27 @@ export const requireCandidateAuth = async (req, res, next) => {
           success: false,
           authenticated: false,
           error: 'Candidate account not found or has been deactivated.',
+        });
+      }
+
+      if (candidate.isActive === false) {
+        return res.status(403).json({
+          success: false,
+          error: 'Your candidate account has been deactivated.',
+        });
+      }
+
+      // Issue #197: Validate candidate tokenVersion against database record
+      if (
+        candidate.tokenVersion !== undefined &&
+        decoded.tokenVersion !== undefined &&
+        decoded.tokenVersion !== candidate.tokenVersion
+      ) {
+        return res.status(401).json({
+          success: false,
+          authenticated: false,
+          error:
+            'Session has been invalidated due to a security update or password change. Please log in again.',
         });
       }
     } else {

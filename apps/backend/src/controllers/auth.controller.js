@@ -372,6 +372,8 @@ export const resetPassword = async (req, res) => {
     // Invalidate token immediately to prevent replay attacks
     candidate.resetPasswordToken = null;
     candidate.resetPasswordExpire = null;
+    candidate.tokenVersion = (candidate.tokenVersion || 0) + 1;
+    candidate.passwordChangedAt = new Date();
 
     if (mongoose.connection.readyState === 1) {
       await candidate.save();

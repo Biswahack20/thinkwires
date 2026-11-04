@@ -65,12 +65,7 @@ router.post('/industries', adminAuthGuard, async (req, res) => {
   }
 });
 
-const getMockData = () => loadSeedJson('mockData.json', mockData);
-
 // --- Industries Page Full Dynamic Data (Hero, Sector Tabs, Sectors, Comparison, Case Studies, Briefing) ---
-let currentIndustriesPageData = industriesPageData
-  ? { ...industriesPageData }
-  : {};
 
 router.get('/industries-page', async (req, res) => {
   if (isMongoActive()) {

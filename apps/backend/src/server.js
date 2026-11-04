@@ -91,10 +91,13 @@ const startServer = async () => {
     }, 10000).unref();
   };
 
-  process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
-  process.on('SIGINT', () => gracefulShutdown('SIGINT'));
+  // Use process.once to prevent EventEmitter memory leaks across restarts/workers (Issue #179)
+  process.once('SIGTERM', () => gracefulShutdown('SIGTERM'));
+  process.once('SIGINT', () => gracefulShutdown('SIGINT'));
 
   return server;
 };
+
+export { startServer };
 
 startServer();
