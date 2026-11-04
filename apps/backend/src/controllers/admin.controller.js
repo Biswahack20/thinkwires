@@ -52,6 +52,21 @@ export let inMemoryData = loadSeedJson('adminSeedData.json', {
 
 const isMongoActive = () => mongoose.connection.readyState === 1;
 
+/**
+ * Fail closed in production when MongoDB is disconnected (Issue #196)
+ */
+const requireProductionDb = (res) => {
+  if (!isMongoActive() && process.env.NODE_ENV === 'production') {
+    res.status(503).json({
+      success: false,
+      error: 'Database connection temporarily unavailable. Please retry your request.',
+      retryAfterSeconds: 5,
+    });
+    return false;
+  }
+  return true;
+};
+
 const VALID_ENTITY_TYPES = new Set([
   'Employee',
   'Candidate',
@@ -399,6 +414,7 @@ export const getEmployees = async (req, res) => {
 
 export const createEmployee = async (req, res) => {
   try {
+    if (!requireProductionDb(res)) return;
     const {
       name,
       email,
@@ -519,6 +535,7 @@ export const createEmployee = async (req, res) => {
 
 export const updateEmployee = async (req, res) => {
   try {
+    if (!requireProductionDb(res)) return;
     const { id } = req.params;
     const updates = req.body;
 
@@ -616,6 +633,7 @@ export const updateEmployee = async (req, res) => {
 
 export const deleteEmployee = async (req, res) => {
   try {
+    if (!requireProductionDb(res)) return;
     const { id } = req.params;
 
     inMemoryData.employees = (inMemoryData.employees || []).filter(
@@ -1026,6 +1044,7 @@ export const reEvaluateCandidate = async (req, res) => {
 
 export const createCandidate = async (req, res) => {
   try {
+    if (!requireProductionDb(res)) return;
     const {
       name,
       email,
@@ -1121,6 +1140,7 @@ export const createCandidate = async (req, res) => {
 
 export const updateCandidateStatus = async (req, res) => {
   try {
+    if (!requireProductionDb(res)) return;
     const { id } = req.params;
     const { status } = req.body;
 
@@ -1208,6 +1228,7 @@ export const updateCandidateStatus = async (req, res) => {
 
 export const updateCandidate = async (req, res) => {
   try {
+    if (!requireProductionDb(res)) return;
     const { id } = req.params;
     const updates = req.body;
 
@@ -1261,6 +1282,7 @@ export const updateCandidate = async (req, res) => {
 
 export const deleteCandidate = async (req, res) => {
   try {
+    if (!requireProductionDb(res)) return;
     const { id } = req.params;
 
     inMemoryData.candidates = inMemoryData.candidates.filter(
@@ -1347,6 +1369,7 @@ export const getClients = async (req, res) => {
 
 export const createClient = async (req, res) => {
   try {
+    if (!requireProductionDb(res)) return;
     const {
       companyName,
       contactPerson,
@@ -1409,6 +1432,7 @@ export const createClient = async (req, res) => {
 
 export const updateClient = async (req, res) => {
   try {
+    if (!requireProductionDb(res)) return;
     const { id } = req.params;
     const updates = req.body;
 
@@ -1448,6 +1472,7 @@ export const updateClient = async (req, res) => {
 
 export const deleteClient = async (req, res) => {
   try {
+    if (!requireProductionDb(res)) return;
     const { id } = req.params;
 
     inMemoryData.clients = inMemoryData.clients.filter(
@@ -1648,6 +1673,7 @@ export const getJobs = async (req, res) => {
 
 export const createJob = async (req, res) => {
   try {
+    if (!requireProductionDb(res)) return;
     const {
       title,
       client,
@@ -1797,6 +1823,7 @@ export const createJob = async (req, res) => {
 
 export const updateJob = async (req, res) => {
   try {
+    if (!requireProductionDb(res)) return;
     const { id } = req.params;
     const updates = req.body;
 
@@ -1879,6 +1906,7 @@ export const updateJob = async (req, res) => {
 
 export const deleteJob = async (req, res) => {
   try {
+    if (!requireProductionDb(res)) return;
     const { id } = req.params;
 
     inMemoryData.jobs = (inMemoryData.jobs || []).filter(
@@ -2073,6 +2101,7 @@ export const getPlacements = async (req, res) => {
 
 export const createPlacement = async (req, res) => {
   try {
+    if (!requireProductionDb(res)) return;
     const {
       candidateOrEmployeeName,
       personType,
@@ -2166,6 +2195,7 @@ export const createPlacement = async (req, res) => {
 
 export const updatePlacement = async (req, res) => {
   try {
+    if (!requireProductionDb(res)) return;
     const { id } = req.params;
     const updates = req.body;
 
@@ -2197,6 +2227,7 @@ export const updatePlacement = async (req, res) => {
 
 export const deletePlacement = async (req, res) => {
   try {
+    if (!requireProductionDb(res)) return;
     const { id } = req.params;
 
     inMemoryData.placements = inMemoryData.placements.filter(
@@ -3421,6 +3452,7 @@ export const getSystemMembers = async (req, res) => {
 
 export const createSystemMember = async (req, res) => {
   try {
+    if (!requireProductionDb(res)) return;
     if (req.user?.role !== 'superadmin') {
       return res.status(403).json({
         success: false,
@@ -3567,6 +3599,7 @@ export const createSystemMember = async (req, res) => {
 
 export const updateSystemMember = async (req, res) => {
   try {
+    if (!requireProductionDb(res)) return;
     if (req.user?.role !== 'superadmin') {
       return res.status(403).json({
         success: false,
@@ -3685,6 +3718,7 @@ export const updateSystemMember = async (req, res) => {
 
 export const deleteSystemMember = async (req, res) => {
   try {
+    if (!requireProductionDb(res)) return;
     if (req.user?.role !== 'superadmin') {
       return res.status(403).json({
         success: false,

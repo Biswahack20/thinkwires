@@ -272,6 +272,10 @@ const jobApplicationSchema = new mongoose.Schema(
       enum: ['Not Started', 'In Progress', 'Passed', 'Failed'],
       default: 'Not Started',
     },
+    draftAnswers: {
+      type: mongoose.Schema.Types.Mixed,
+      default: {},
+    },
     screeningPassed: {
       type: Boolean,
       default: null,
