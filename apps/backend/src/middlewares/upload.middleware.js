@@ -131,7 +131,42 @@ const avatarFileFilter = (req, file, cb) => {
       false
     );
   }
-  cb(null, true);
+
+  // Guard against double-extensions (e.g. payload.php.png or script.svg.jpg)
+  const lowerName = (file.originalname || '').toLowerCase();
+  const dangerousPatterns = [
+    '.html',
+    '.htm',
+    '.svg',
+    '.js',
+    '.exe',
+    '.sh',
+    '.php',
+    '.bat',
+    '.py',
+  ];
+  if (dangerousPatterns.some((pattern) => lowerName.includes(pattern))) {
+    return cb(new Error('Potentially unsafe file format detected.'), false);
+  }
+
+  const extensionMimeMap = {
+    '.jpg': ['image/jpeg'],
+    '.jpeg': ['image/jpeg'],
+    '.png': ['image/png'],
+    '.webp': ['image/webp'],
+  };
+
+  const validMimes = extensionMimeMap[ext] || [];
+  if (validMimes.includes(file.mimetype)) {
+    cb(null, true);
+  } else {
+    cb(
+      new Error(
+        'Invalid file content. Uploaded file MIME type does not match the permitted image format.'
+      ),
+      false
+    );
+  }
 };
 
 export const avatarUpload = multer({

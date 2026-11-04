@@ -11,6 +11,8 @@ import adminRoutes from './routes/admin.route.js';
 import authRoutes from './routes/auth.route.js';
 import candidateRoutes from './routes/candidate.route.js';
 import userRoutes from './routes/user.route.js';
+import benchRoutes from './routes/bench.route.js';
+import { downloadResume } from './controllers/candidatePortal.controller.js';
 import { isAllowedOrigin } from './middlewares/csrf.middleware.js';
 import { sequelize } from './configs/db.js';
 import { isRedisConnected } from './configs/redis.js';
@@ -62,14 +64,22 @@ app.use(cookieParser());
 const uploadsDir = process.env.VERCEL
   ? path.resolve('/tmp', 'uploads')
   : path.resolve(process.cwd(), 'uploads');
-if (!fs.existsSync(uploadsDir)) {
-  try {
-    fs.mkdirSync(uploadsDir, { recursive: true });
-  } catch (err) {
-    console.warn('[Server] Could not create uploads directory:', err.message);
+const avatarsDir = path.resolve(uploadsDir, 'avatars');
+const resumesDir = path.resolve(uploadsDir, 'resumes');
+
+[uploadsDir, avatarsDir, resumesDir].forEach((dir) => {
+  if (!fs.existsSync(dir)) {
+    try {
+      fs.mkdirSync(dir, { recursive: true });
+    } catch (err) {
+      console.warn('[Server] Could not create uploads directory:', err.message);
+    }
   }
-}
-app.use('/uploads', express.static(uploadsDir));
+});
+
+// Issue #178: Public static access is restricted strictly to avatar images. Resumes require authentication.
+app.use('/uploads/avatars', express.static(avatarsDir));
+app.get('/uploads/resumes/:filename', downloadResume);
 
 app.get('/api', (req, res) => {
   res.status(200).json({
@@ -113,6 +123,7 @@ app.use('/api/auth', authRoutes);
 app.use('/api/candidate', candidateRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/admin', adminRoutes);
+app.use('/api', benchRoutes);
 app.use('/api', apiRoutes);
 
 // Root entrypoint status for pure API service

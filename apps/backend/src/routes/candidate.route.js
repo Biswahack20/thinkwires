@@ -12,6 +12,7 @@ import {
   uploadAvatar,
   setAvatarPreset,
   removeAvatar,
+  downloadResume,
 } from '../controllers/candidatePortal.controller.js';
 import {
   requireCandidateAuth,
@@ -97,5 +98,6 @@ router.get('/applications/:applicationId/dossier', getApplicationDossier);
 router.post('/avatar/upload', avatarUpload.single('avatar'), uploadAvatar);
 router.put('/avatar/preset', setAvatarPreset);
 router.delete('/avatar', removeAvatar);
+router.get('/resume/:filename', downloadResume);
 
 export default router;

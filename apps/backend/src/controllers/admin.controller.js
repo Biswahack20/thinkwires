@@ -36,7 +36,7 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // In-Memory store initialized from adminSeedData.json for seamless offline demo resilience
-let inMemoryData = loadSeedJson('adminSeedData.json', {
+export let inMemoryData = loadSeedJson('adminSeedData.json', {
   users: [],
   employees: [],
   candidates: [],
@@ -3165,12 +3165,40 @@ export const getCmsStats = async (req, res) => {
 // ============================================================================
 export const getActivities = async (req, res) => {
   try {
+    const role = (req.user?.role || '').toLowerCase();
+    const cmsAllowedEntityTypes = [
+      'Page',
+      'Article',
+      'Media',
+      'Announcement',
+      'CMS',
+    ];
+
+    let query = {};
+    if (role === 'cms_admin') {
+      query = { entityType: { $in: cmsAllowedEntityTypes } };
+    }
+
     let items = [];
     if (isMongoActive()) {
-      items = await Activity.find().sort({ createdAt: -1 }).limit(30).lean();
-      if (items.length === 0) items = inMemoryData.activities;
+      items = await Activity.find(query).sort({ createdAt: -1 }).limit(30).lean();
+      if (items.length === 0) {
+        if (role === 'cms_admin') {
+          items = (inMemoryData.activities || []).filter((a) =>
+            cmsAllowedEntityTypes.includes(a.entityType)
+          );
+        } else {
+          items = inMemoryData.activities || [];
+        }
+      }
     } else {
-      items = inMemoryData.activities;
+      if (role === 'cms_admin') {
+        items = (inMemoryData.activities || []).filter((a) =>
+          cmsAllowedEntityTypes.includes(a.entityType)
+        );
+      } else {
+        items = inMemoryData.activities || [];
+      }
     }
     res.json({ success: true, activities: items });
   } catch (err) {
