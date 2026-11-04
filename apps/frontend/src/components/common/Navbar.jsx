@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import logo from '../../assets/logo/logo.png';
@@ -7,6 +7,7 @@ import { useTheme } from '../../useTheme';
 import { GlobeIcon, MailIcon } from '../../admin/AdminIcons';
 
 const Navbar = () => {
+  const headerRef = useRef(null);
   const [isApplyModalOpen, setIsApplyModalOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isServicesOpen, setIsServicesOpen] = useState(false);
@@ -14,6 +15,49 @@ const Navbar = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { isAuthenticated, user } = useSelector((state) => state.auth);
+
+  // Dynamically calibrate navbar heights to guarantee hero headlines never collide
+  useEffect(() => {
+    const updateNavHeight = () => {
+      if (headerRef.current) {
+        const totalHeight = headerRef.current.offsetHeight;
+        const topBarEl = headerRef.current.querySelector('.Navbar-topBar');
+        const mainNavEl = headerRef.current.querySelector('.Navbar-mainNav');
+        const topBarHeight =
+          topBarEl && window.getComputedStyle(topBarEl).display !== 'none'
+            ? topBarEl.offsetHeight
+            : 0;
+        const mainNavHeight = mainNavEl ? mainNavEl.offsetHeight : totalHeight;
+
+        document.documentElement.style.setProperty(
+          '--nav-height',
+          `${totalHeight}px`
+        );
+        document.documentElement.style.setProperty(
+          '--nav-topbar-height',
+          `${topBarHeight}px`
+        );
+        document.documentElement.style.setProperty(
+          '--nav-main-height',
+          `${mainNavHeight}px`
+        );
+      }
+    };
+
+    updateNavHeight();
+    const ro =
+      typeof ResizeObserver !== 'undefined'
+        ? new ResizeObserver(updateNavHeight)
+        : null;
+    if (ro && headerRef.current) {
+      ro.observe(headerRef.current);
+    }
+    window.addEventListener('resize', updateNavHeight);
+    return () => {
+      ro?.disconnect();
+      window.removeEventListener('resize', updateNavHeight);
+    };
+  }, []);
 
   const closeMobileMenu = () => {
     setIsMobileMenuOpen(false);
@@ -44,7 +88,7 @@ const Navbar = () => {
 
   return (
     <>
-      <header className="Navbar-navbarContainer">
+      <header ref={headerRef} className="Navbar-navbarContainer">
         {/* Top Bar */}
         <div className="Navbar-topBar">
           <div className="Navbar-topBarAnnouncement flex items-center gap-2 flex-1 min-w-0">

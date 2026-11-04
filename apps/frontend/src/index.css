@@ -1,4 +1,9 @@
 :root {
+  /* --- Navigation Heights --- */
+  --nav-topbar-height: 38px;
+  --nav-main-height: 76px;
+  --nav-height: calc(var(--nav-topbar-height) + var(--nav-main-height));
+
   /* --- Typography --- */
   --font-family:
     'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont,
@@ -3912,6 +3917,12 @@ textarea {
    3. TABLETS & MID-SIZE SCREENS (<= 768px)
    -------------------------------------------------------------------------- */
 @media (max-width: 768px) {
+  :root {
+    --nav-topbar-height: 0px;
+    --nav-main-height: 68px;
+    --nav-height: 68px;
+  }
+
   .Navbar-topBar {
     display: none;
   }
@@ -17042,14 +17053,16 @@ textarea {
    Derived from Executive Tech Talent Stitch Design System
    ========================================================================== */
 
-.NewHero-heroSection {
+.NewHero-heroSection,
+.NewHero-section {
   position: relative;
   width: 100%;
   overflow: hidden;
   background-color: var(--color-surface-container-lowest, #ffffff);
-  padding-top: 2rem;
+  padding-top: calc(var(--nav-height, 114px) + 1.5rem);
   padding-bottom: 4rem;
-  transition: background-color 0.25s ease;
+  scroll-margin-top: calc(var(--nav-height, 114px) + 1.5rem);
+  transition: background-color 0.25s ease, padding-top 0.25s ease;
 }
 
 /* Ambient Glow Orbs */
@@ -17936,10 +17949,19 @@ textarea {
    Responsive Overrides
    ========================================================================== */
 
+@media (max-width: 1024px) {
+  .NewHero-heroSection,
+  .NewHero-section {
+    padding-top: calc(var(--nav-height, 108px) + 1.5rem);
+  }
+}
+
 @media (max-width: 768px) {
-  .NewHero-heroSection {
-    padding-top: 1.5rem;
+  .NewHero-heroSection,
+  .NewHero-section {
+    padding-top: calc(var(--nav-height, 68px) + 1.25rem);
     padding-bottom: 2.5rem;
+    scroll-margin-top: calc(var(--nav-height, 68px) + 1.25rem);
   }
 
   .NewHero-slideshowContainer {
