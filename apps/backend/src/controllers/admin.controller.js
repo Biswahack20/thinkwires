@@ -3303,7 +3303,6 @@ export const loginAdmin = async (req, res) => {
     return res.json({
       success: true,
       message: `Welcome back, ${user.name}!`,
-      token,
       csrfToken,
       user: {
         id: user._id ? user._id.toString() : user.id,
@@ -3601,6 +3600,13 @@ export const updateSystemMember = async (req, res) => {
           error: 'Password must be at least 6 characters long.',
         });
     }
+
+    // Invalidate existing sessions if credentials, role, or active status are altered (Issue #197)
+    if (password || role || isActive === false) {
+      updates.$inc = { tokenVersion: 1 };
+      updates.passwordChangedAt = new Date();
+    }
+
     updates.updatedAt = new Date();
 
     let updatedRecord = null;

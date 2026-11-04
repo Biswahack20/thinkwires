@@ -131,11 +131,29 @@ const candidateSchema = new mongoose.Schema(
       type: Boolean,
       default: true,
     },
+    tokenVersion: {
+      type: Number,
+      default: 0,
+      required: true,
+    },
+    passwordChangedAt: {
+      type: Date,
+      default: Date.now,
+    },
   },
   {
     timestamps: true,
   }
 );
+
+// Invalidate tokens upon password change (Issue #197)
+candidateSchema.pre('save', function (next) {
+  if (this.isModified('password')) {
+    this.tokenVersion = (this.tokenVersion || 0) + 1;
+    this.passwordChangedAt = new Date();
+  }
+  next();
+});
 
 // Prevent re-compilation in development
 const Candidate =

@@ -43,6 +43,72 @@ export const getJwtSecret = () => {
   return cleanSecret;
 };
 
+// Cryptographic domain separation for Admin tokens (Issue #199)
+export const getAdminJwtSecret = () => {
+  const secret =
+    config.ADMIN_JWT_SECRET ||
+    process.env.ADMIN_JWT_SECRET ||
+    config.JWT_SECRET ||
+    process.env.JWT_SECRET;
+
+  if (!secret || typeof secret !== 'string' || !secret.trim()) {
+    throw new Error(
+      'FATAL: ADMIN_JWT_SECRET or JWT_SECRET environment variable is missing.'
+    );
+  }
+
+  const cleanSecret = secret.trim();
+  const isProduction =
+    (config.NODE_ENV || process.env.NODE_ENV) === 'production';
+
+  if (INSECURE_DEFAULT_SECRETS.has(cleanSecret.toLowerCase())) {
+    throw new Error(
+      'FATAL: Insecure default ADMIN_JWT_SECRET detected. You must set a unique, cryptographically strong secret.'
+    );
+  }
+
+  if (isProduction && cleanSecret.length < 32) {
+    throw new Error(
+      'FATAL: ADMIN_JWT_SECRET in production must be at least 32 characters long.'
+    );
+  }
+
+  return cleanSecret;
+};
+
+// Cryptographic domain separation for Candidate tokens (Issue #199)
+export const getCandidateJwtSecret = () => {
+  const secret =
+    config.CANDIDATE_JWT_SECRET ||
+    process.env.CANDIDATE_JWT_SECRET ||
+    config.JWT_SECRET ||
+    process.env.JWT_SECRET;
+
+  if (!secret || typeof secret !== 'string' || !secret.trim()) {
+    throw new Error(
+      'FATAL: CANDIDATE_JWT_SECRET or JWT_SECRET environment variable is missing.'
+    );
+  }
+
+  const cleanSecret = secret.trim();
+  const isProduction =
+    (config.NODE_ENV || process.env.NODE_ENV) === 'production';
+
+  if (INSECURE_DEFAULT_SECRETS.has(cleanSecret.toLowerCase())) {
+    throw new Error(
+      'FATAL: Insecure default CANDIDATE_JWT_SECRET detected. You must set a unique, cryptographically strong secret.'
+    );
+  }
+
+  if (isProduction && cleanSecret.length < 32) {
+    throw new Error(
+      'FATAL: CANDIDATE_JWT_SECRET in production must be at least 32 characters long.'
+    );
+  }
+
+  return cleanSecret;
+};
+
 // 12 rounds provides optimal protection against GPU cracking while maintaining sub-100ms request times
 export const hashPassword = async (plainPassword) => {
   if (!plainPassword || typeof plainPassword !== 'string') {
@@ -58,13 +124,14 @@ export const comparePassword = async (plainPassword, hashedPassword) => {
 };
 
 export const generateCandidateToken = (candidate) => {
-  const secret = getJwtSecret();
+  const secret = getCandidateJwtSecret();
   const payload = {
-    id: candidate._id || candidate.id,
+    id: candidate._id ? candidate._id.toString() : candidate.id,
     email: candidate.email,
     name: candidate.name,
     role: 'candidate',
     portal: 'candidate',
+    tokenVersion: candidate.tokenVersion !== undefined ? candidate.tokenVersion : 0,
   };
 
   return jwt.sign(payload, secret, {
@@ -75,7 +142,7 @@ export const generateCandidateToken = (candidate) => {
 
 // Pin algorithm to HS256 to prevent algorithm-substitution attacks (e.g. 'none' or public key confusion)
 export const verifyCandidateToken = (token) => {
-  const secret = getJwtSecret();
+  const secret = getCandidateJwtSecret();
   const decoded = jwt.verify(token, secret, { algorithms: ['HS256'] });
   if (decoded && decoded.portal && decoded.portal !== 'candidate') {
     throw new Error('Invalid token scope for candidate portal.');
@@ -127,16 +194,14 @@ export const clearAuthCookie = (res) => {
     secure,
     sameSite,
     expires: new Date(0),
-    maxAge: 0,
   };
   ['/api/candidate', '/api/auth', '/api', '/'].forEach((p) => {
-    res.cookie('thinkwires_candidate_jwt', '', { ...opts, path: p });
     res.clearCookie('thinkwires_candidate_jwt', { ...opts, path: p });
   });
 };
 
 export const generateAdminToken = (user) => {
-  const secret = getJwtSecret();
+  const secret = getAdminJwtSecret();
   const payload = {
     id: user._id ? user._id.toString() : user.id,
     email: user.email,
@@ -144,6 +209,7 @@ export const generateAdminToken = (user) => {
     role: user.role,
     designation: user.designation || 'System Member',
     portal: 'admin',
+    tokenVersion: user.tokenVersion !== undefined ? user.tokenVersion : 0,
   };
 
   return jwt.sign(payload, secret, {
@@ -186,23 +252,39 @@ export const isTokenRevoked = async (token) => {
   return false;
 };
 
+// Non-blocking cursor iteration using redis.scan (Issue #198)
 export const clearRevocationStore = async () => {
   revokedTokens.clear();
   try {
     const redis = await getRedisClient();
-    if (redis) {
+    if (!redis) return;
+
+    if (typeof redis.scan === 'function') {
+      let cursor = '0';
+      do {
+        const reply = await redis.scan(cursor, {
+          MATCH: 'revoked:*',
+          COUNT: 100,
+        });
+        cursor = String(reply.cursor ?? reply[0] ?? '0');
+        const keys = reply.keys || (Array.isArray(reply[1]) ? reply[1] : []);
+        if (keys && keys.length > 0) {
+          await redis.del(keys);
+        }
+      } while (cursor !== '0');
+    } else if (typeof redis.keys === 'function') {
       const keys = await redis.keys('revoked:*');
-      if (keys.length > 0) {
+      if (keys && keys.length > 0) {
         await redis.del(keys);
       }
     }
   } catch (err) {
-    console.error('[Redis] Failed to clear revocation store from Redis:', err.message);
+    console.error('[Redis] Failed to safely scan and clear revocation store:', err.message);
   }
 };
 
 export const verifyAdminToken = (token) => {
-  const secret = getJwtSecret();
+  const secret = getAdminJwtSecret();
   const decoded = jwt.verify(token, secret, { algorithms: ['HS256'] });
   if (decoded && decoded.portal && decoded.portal !== 'admin') {
     throw new Error('Invalid token scope for admin portal.');
@@ -217,7 +299,7 @@ export const ADMIN_COOKIE_MAX_AGE = 7 * 24 * 60 * 60 * 1000;
 export const setAdminAuthCookie = (res, token) => {
   const isProduction = process.env.NODE_ENV === 'production';
   const sameSite =
-    process.env.COOKIE_SAME_SITE || (isProduction ? 'none' : 'lax');
+    process.env.COOKIE_SAME_SITE || (isProduction ? 'strict' : 'lax');
   const secure = isProduction || sameSite.toLowerCase() === 'none';
   res.cookie(ADMIN_COOKIE_NAME, token, {
     httpOnly: true,
@@ -231,17 +313,15 @@ export const setAdminAuthCookie = (res, token) => {
 export const clearAdminAuthCookie = (res) => {
   const isProduction = process.env.NODE_ENV === 'production';
   const sameSite =
-    process.env.COOKIE_SAME_SITE || (isProduction ? 'none' : 'lax');
+    process.env.COOKIE_SAME_SITE || (isProduction ? 'strict' : 'lax');
   const secure = isProduction || sameSite.toLowerCase() === 'none';
   const opts = {
     httpOnly: true,
     secure,
     sameSite,
     expires: new Date(0),
-    maxAge: 0,
   };
   ['/api/admin', '/api', '/'].forEach((p) => {
-    res.cookie(ADMIN_COOKIE_NAME, '', { ...opts, path: p });
     res.clearCookie(ADMIN_COOKIE_NAME, { ...opts, path: p });
   });
 };

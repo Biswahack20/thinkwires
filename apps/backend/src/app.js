@@ -12,6 +12,10 @@ import authRoutes from './routes/auth.route.js';
 import candidateRoutes from './routes/candidate.route.js';
 import userRoutes from './routes/user.route.js';
 import benchRoutes from './routes/bench.route.js';
+import contactRoutes from './routes/contact.route.js';
+import articlesRoutes from './routes/articles.route.js';
+import industriesRoutes from './routes/industries.route.js';
+import servicesRoutes from './routes/services.route.js';
 import { downloadResume } from './controllers/candidatePortal.controller.js';
 import { isAllowedOrigin } from './middlewares/csrf.middleware.js';
 import { sequelize } from './configs/db.js';
@@ -124,6 +128,10 @@ app.use('/api/candidate', candidateRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/admin', adminRoutes);
 app.use('/api', benchRoutes);
+app.use('/api', contactRoutes);
+app.use('/api', articlesRoutes);
+app.use('/api', industriesRoutes);
+app.use('/api', servicesRoutes);
 app.use('/api', apiRoutes);
 
 // Root entrypoint status for pure API service
