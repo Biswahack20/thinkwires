@@ -32,6 +32,7 @@ describe('NewHero Component Layout & Headline Visibility', () => {
     expect(description).toBeInTheDocument();
   });
 
+describe('NewHero Component CTAs and Search Form', () => {
   it('renders primary CTA linking and redirecting to /talent-cloud', () => {
     mockNavigate.mockClear();
     renderWithProviders(<NewHero />);
@@ -39,6 +40,7 @@ describe('NewHero Component Layout & Headline Visibility', () => {
     const hireBtn = screen.getByRole('link', {
       name: /Deploy Bench Pool|Hire Top Tech Talent/i,
     });
+    const hireBtn = screen.getByRole('link', { name: /Deploy Bench Pool|Hire Top Tech Talent/i });
     expect(hireBtn).toBeInTheDocument();
 
     fireEvent.click(hireBtn);

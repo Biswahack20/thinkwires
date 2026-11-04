@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState, useMemo } from 'react';
+import React, { useMemo } from 'react';
 
 // Original downloaded brand logo images
 import sapLogo from '../../assets/tech-logos/sap.svg';
@@ -46,65 +46,11 @@ const STATIC_TECH_STACK = [
 ];
 
 const TechStack = () => {
-  const trackRef = useRef(null);
-  const [isHovered, setIsHovered] = useState(false);
-
-  // Triple the static items for continuous seamless marquee scroll
+  // Duplicate the static items for seamless continuous CSS marquee scroll
   const marqueeItems = useMemo(
-    () => [...STATIC_TECH_STACK, ...STATIC_TECH_STACK, ...STATIC_TECH_STACK],
+    () => [...STATIC_TECH_STACK, ...STATIC_TECH_STACK],
     []
   );
-
-  // Velocity-reactive scrolling ticker
-  useEffect(() => {
-    const track = trackRef.current;
-    if (!track) return;
-
-    const prefersReducedMotion =
-      window.matchMedia &&
-      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (prefersReducedMotion) return;
-
-    let rafId;
-    let xPos = 0;
-    const baseSpeed = 0.85; // baseline cruise speed
-    let extraVelocity = 0;
-    let lastScrollY = window.scrollY;
-
-    const onScroll = () => {
-      const currentScrollY = window.scrollY;
-      const deltaY = currentScrollY - lastScrollY;
-      lastScrollY = currentScrollY;
-      extraVelocity += Math.min(Math.abs(deltaY) * 0.18, 16);
-    };
-
-    window.addEventListener('scroll', onScroll, { passive: true });
-
-    const animate = () => {
-      const currentBaseSpeed = isHovered ? 0.2 : baseSpeed;
-      const currentSpeed = currentBaseSpeed + extraVelocity;
-
-      extraVelocity *= 0.93;
-      xPos -= currentSpeed;
-
-      const segmentWidth = track.scrollWidth / 3;
-      if (segmentWidth > 0 && Math.abs(xPos) >= segmentWidth) {
-        xPos += segmentWidth;
-      }
-
-      const skew = Math.max(-2.5, Math.min(2.5, -extraVelocity * 0.12));
-      track.style.transform = `translate3d(${xPos}px, 0, 0) skewX(${skew}deg)`;
-
-      rafId = requestAnimationFrame(animate);
-    };
-
-    rafId = requestAnimationFrame(animate);
-
-    return () => {
-      window.removeEventListener('scroll', onScroll);
-      cancelAnimationFrame(rafId);
-    };
-  }, [isHovered]);
 
   return (
     <section
@@ -112,17 +58,9 @@ const TechStack = () => {
       aria-label="Enterprise Tech Stacks"
       style={{ padding: '1.25rem 0 2rem 0' }}
     >
-      {/* Infinite Velocity-Reactive Scrolling Marquee - Authentic Downloaded Brand Logos Only */}
-      <div
-        className="TechStack-carouselWrapper"
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
-      >
-        <div
-          ref={trackRef}
-          className="TechStack-carouselTrack"
-          style={{ animation: 'none' }}
-        >
+      {/* Infinite Scrolling Marquee Carousel with Gradient Fade Masks */}
+      <div className="TechStack-carouselWrapper TechStack-marqueeWrapper">
+        <div className="TechStack-carouselTrack TechStack-marqueeTrack">
           {marqueeItems.map((tech, index) => (
             <div
               key={`${tech.name}-${index}`}
