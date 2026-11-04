@@ -123,4 +123,14 @@ export const disconnectMongoDB = async () => {
   }
 };
 
+/**
+ * Database Architecture Declaration (Issue #186)
+ * MongoDB (Mongoose) is formally designated as the CANONICAL PRIMARY DOCUMENT STORE
+ * (Source of Truth) for all core business entities.
+ */
+export const DATABASE_ARCHITECTURE = {
+  PRIMARY_SOURCE_OF_TRUTH: 'MongoDB (Mongoose)',
+  ROLE: 'Canonical Primary Document Store (ATS, Admin, CMS, Applications)',
+};
+
 export default mongoose;

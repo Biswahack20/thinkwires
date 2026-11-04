@@ -35,7 +35,7 @@ const BlogFilters = ({
               (selectedCategory === 'all' ||
                 selectedCategory === 'All' ||
                 selectedCategory === 'All Insights' ||
-                selectedCategory.startsWith('All Insights')));
+                selectedCategory?.startsWith?.('All Insights')));
 
           return (
             <button
@@ -51,6 +51,9 @@ const BlogFilters = ({
 
       {/* Search Input on Right */}
       <div className="BlogFilters-figmaSearchWrapper">
+        <label htmlFor="blog-search-query" className="sr-only">
+          Filter insights & keywords
+        </label>
         <svg
           className="BlogFilters-figmaSearchIcon"
           width="16"
@@ -64,6 +67,8 @@ const BlogFilters = ({
           <line x1="21" y1="21" x2="16.65" y2="16.65" />
         </svg>
         <input
+          id="blog-search-query"
+          aria-label="Filter insights by keyword"
           type="text"
           className="BlogFilters-figmaSearchInput"
           placeholder="Filter insights & keywords..."

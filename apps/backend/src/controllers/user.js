@@ -26,16 +26,35 @@ export const getProfile = async (req, res) => {
 
     let user = null;
 
+    // 1. Query Canonical Primary Store (MongoDB) (Issue #186)
     if (isMongoActive()) {
       user = userId
         ? await UserMongo.findById(userId).select('-password').lean()
         : await UserMongo.findOne({ email: userEmail.toLowerCase() })
-            .select('-password')
-            .lean();
-    } else {
-      user = userId
-        ? await User.findByPk(userId)
-        : await User.findOne({ where: { email: userEmail.toLowerCase() } });
+          .select('-password')
+          .lean();
+    }
+
+    // 2. Query Secondary Relational Store (PostgreSQL) if absent or offline
+    if (!user) {
+      try {
+        const pgUser = userId
+          ? await User.findByPk(userId)
+          : await User.findOne({ where: { email: userEmail.toLowerCase() } });
+        if (pgUser) {
+          user = typeof pgUser.toJSON === 'function' ? pgUser.toJSON() : pgUser;
+          // Opportunistic sync to MongoDB if active
+          if (isMongoActive() && user.email) {
+            UserMongo.findOneAndUpdate(
+              { email: user.email.toLowerCase() },
+              { $setOnInsert: user },
+              { upsert: true }
+            ).catch(() => { });
+          }
+        }
+      } catch (pgErr) {
+        logger.warn('[DualDB] PostgreSQL lookup non-blocking notice:', pgErr.message);
+      }
     }
 
     if (!user) {
@@ -64,6 +83,7 @@ export const updateProfile = async (req, res) => {
 
     let updatedUser = null;
 
+    // 1. Update Canonical Primary Store (MongoDB) (Issue #186)
     if (isMongoActive()) {
       const query = userId
         ? { _id: userId }
@@ -73,15 +93,22 @@ export const updateProfile = async (req, res) => {
       })
         .select('-password')
         .lean();
-    } else {
-      const user = userId
+    }
+
+    // 2. Bidirectional Dual-Sync to Secondary Relational Store (PostgreSQL / Sequelize) (Issue #186)
+    try {
+      const pgUser = userId
         ? await User.findByPk(userId)
         : await User.findOne({ where: { email: userEmail.toLowerCase() } });
 
-      if (user) {
-        await user.update(updates);
-        updatedUser = user.toJSON();
+      if (pgUser) {
+        await pgUser.update(updates);
+        if (!updatedUser) {
+          updatedUser = typeof pgUser.toJSON === 'function' ? pgUser.toJSON() : pgUser;
+        }
       }
+    } catch (pgErr) {
+      logger.warn('[DualDB] PostgreSQL user synchronization notice:', pgErr.message);
     }
 
     if (!updatedUser) {

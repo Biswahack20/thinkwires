@@ -695,6 +695,7 @@ const CandidateEvaluationModal = ({ isOpen, onClose, candidateId, showToast }) =
             <button
               type="button"
               onClick={onClose}
+              aria-label="Close Candidate Evaluation Modal"
               style={{
                 background: 'rgba(255, 255, 255, 0.1)',
                 border: 'none',

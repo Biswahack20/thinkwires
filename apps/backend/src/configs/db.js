@@ -64,3 +64,16 @@ export const connectDB = async () => {
     throw error;
   }
 };
+
+/**
+ * Database Architecture Declaration (Issue #186)
+ * MongoDB (Mongoose) is formally designated as the CANONICAL PRIMARY DOCUMENT STORE
+ * for all business domain entities (Candidates, Jobs, Applications, Admin CMS, Placements).
+ * PostgreSQL (Sequelize) is designated as the SECONDARY RELATIONAL STORE with bidirectional
+ * synchronization for dual-mode persistence (User profiles, audit records).
+ */
+export const DATABASE_ARCHITECTURE = {
+  PRIMARY_SOURCE_OF_TRUTH: 'MongoDB (Mongoose)',
+  SECONDARY_RELATIONAL_STORE: 'PostgreSQL (Sequelize)',
+  ROLE: 'Secondary Relational Store & Dual-Persistence Sync Target',
+};

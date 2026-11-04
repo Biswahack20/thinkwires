@@ -65,10 +65,12 @@ const NewsletterCTA = ({ isSubmitted = false, onSubmit }) => {
                   className="NewsletterCTA-figmaForm"
                 >
                   <div className="NewsletterCTA-figmaField">
-                    <label className="NewsletterCTA-figmaLabel">
+                    <label htmlFor="newsletter-email" className="NewsletterCTA-figmaLabel">
                       Work Email Address
                     </label>
                     <input
+                      id="newsletter-email"
+                      aria-label="Work Email Address"
                       type="email"
                       required
                       className="NewsletterCTA-figmaInput"
@@ -79,10 +81,12 @@ const NewsletterCTA = ({ isSubmitted = false, onSubmit }) => {
                   </div>
 
                   <div className="NewsletterCTA-figmaField">
-                    <label className="NewsletterCTA-figmaLabel">
+                    <label htmlFor="newsletter-role" className="NewsletterCTA-figmaLabel">
                       Organization Role
                     </label>
                     <input
+                      id="newsletter-role"
+                      aria-label="Organization Role"
                       type="text"
                       className="NewsletterCTA-figmaInput"
                       placeholder="CTO / VP Engineering / Tech Leadership"
@@ -93,6 +97,7 @@ const NewsletterCTA = ({ isSubmitted = false, onSubmit }) => {
 
                   <button
                     type="submit"
+                    aria-label="Subscribe to Benchmark Dispatch"
                     className="NewsletterCTA-figmaSubmitBtn"
                   >
                     Subscribe to Benchmark Dispatch ⬎

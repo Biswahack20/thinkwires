@@ -514,6 +514,7 @@ const BenchDossierDrawer = () => {
               className="BenchDrawer-closeBtn"
               onClick={() => dispatch(closeDrawer())}
               title="Close Drawer"
+              aria-label="Close dossier drawer"
             >
               <span className="material-symbols-outlined">close</span>
             </button>

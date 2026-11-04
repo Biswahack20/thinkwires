@@ -163,6 +163,19 @@ body {
   box-sizing: inherit;
 }
 
+/* --- Accessibility Utilities (WCAG 2.1) --- */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
 /* --- About --- */
 .About-aboutSection {
   padding: 5rem 1.5rem;
@@ -2505,7 +2518,7 @@ body {
 }
 
 .Footer-copyright {
-  color: #94a3b8;
+  color: #64748b;
   font-size: 0.75rem;
 }
 
@@ -2515,7 +2528,7 @@ body {
 }
 
 .Footer-bottomLink {
-  color: #94a3b8;
+  color: #64748b;
   font-size: 0.75rem;
   text-decoration: none;
 }
@@ -26173,23 +26186,7 @@ textarea {
 
   .Eor-capabilitiesGrid {
     grid-template-columns: 1fr;
-    gap: 1.25rem;
-  }
-
-  .Eor-comparisonGrid {
-    grid-template-columns: 1fr;
-    gap: 1.25rem;
-  }
-
-  .Eor-explanationGrid {
-    grid-template-columns: 1fr;
-    gap: 1.75rem;
-  }
-
-  .Eor-consultationGrid {
-    grid-template-columns: 1fr;
-  }
-
+    gap: 1.2
   .Eor-faqList {
     gap: 0.75rem;
   }

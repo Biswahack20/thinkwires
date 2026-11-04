@@ -1,22 +1,25 @@
 import re
 from typing import Dict, Any, List
+from app.services.resume_parser import sanitize_untrusted_text
 
 def evaluate_candidate_dossier(candidate_data: Dict[str, Any], job_data: Dict[str, Any], recruiter_notes: str = "") -> Dict[str, Any]:
     """
     Evaluates candidate profile against job requirements using the standardized 6-factor weighted
     scoring rubric (35/25/15/10/10/5) and returns a complete audit-grade evaluation dossier (Zero Emojis).
+    Includes prompt injection sanitization on untrusted candidate input (Issue #185).
     """
     candidate_name = candidate_data.get("candidateName") or candidate_data.get("name") or "Candidate"
     target_role = job_data.get("jobTitle") or job_data.get("title") or "Technical Specialist"
     client_name = job_data.get("company") or job_data.get("client") or "Enterprise Client"
 
-    resume_text = (
+    raw_untrusted_text = (
         candidate_data.get("resumeText")
         or candidate_data.get("candidateNote")
         or candidate_data.get("coverLetter")
         or candidate_data.get("bio")
         or ""
-    ).lower()
+    )
+    resume_text = sanitize_untrusted_text(raw_untrusted_text).lower()
 
     candidate_skills = [
         s.strip().lower() for s in (candidate_data.get("skills") or candidate_data.get("technicalSkills") or [])
