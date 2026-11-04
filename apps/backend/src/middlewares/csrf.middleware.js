@@ -1,4 +1,5 @@
 import crypto from 'crypto';
+import { verifyAdminToken } from '../utils/auth.util.js';
 
 export const CSRF_COOKIE_NAME = 'thinkwires_csrf_token';
 
@@ -10,9 +11,10 @@ export const setCsrfCookie = (res, token) => {
   const isProduction = process.env.NODE_ENV === 'production';
   const sameSite =
     process.env.COOKIE_SAME_SITE || (isProduction ? 'none' : 'lax');
+  const secure = isProduction || sameSite.toLowerCase() === 'none';
   res.cookie(CSRF_COOKIE_NAME, token, {
     httpOnly: false, // Must be readable by client JS for double-submit header
-    secure: isProduction,
+    secure,
     sameSite,
     path: '/',
     maxAge: 7 * 24 * 60 * 60 * 1000,
@@ -23,9 +25,10 @@ export const clearCsrfCookie = (res) => {
   const isProduction = process.env.NODE_ENV === 'production';
   const sameSite =
     process.env.COOKIE_SAME_SITE || (isProduction ? 'none' : 'lax');
+  const secure = isProduction || sameSite.toLowerCase() === 'none';
   res.cookie(CSRF_COOKIE_NAME, '', {
     httpOnly: false,
-    secure: isProduction,
+    secure,
     sameSite,
     expires: new Date(0),
     path: '/',
@@ -46,6 +49,14 @@ export const getAllowedOrigins = () => {
   const devOrigins = [
     'http://localhost:5173',
     'http://127.0.0.1:5173',
+    'http://localhost:5174',
+    'http://127.0.0.1:5174',
+    'http://localhost:5175',
+    'http://127.0.0.1:5175',
+    'http://localhost:4173',
+    'http://127.0.0.1:4173',
+    'http://localhost:4174',
+    'http://127.0.0.1:4174',
     'http://localhost:5000',
     'http://127.0.0.1:5000',
     'http://localhost:3000',
@@ -66,6 +77,15 @@ export const getAllowedOrigins = () => {
 export const isAllowedOrigin = (origin) => {
   if (!origin) return true; // Direct server-to-server or test requests
   const normalizedOrigin = origin.replace(/\/+$/, '');
+  const isDev = (process.env.NODE_ENV || 'development') !== 'production';
+  if (
+    isDev &&
+    /^http:\/\/(localhost|127\.0\.0\.1):(517[3-9]|417[3-9]|3000|5000)$/.test(
+      normalizedOrigin
+    )
+  ) {
+    return true;
+  }
   const allowed = getAllowedOrigins();
   return allowed.includes(normalizedOrigin);
 };
@@ -95,21 +115,14 @@ export const adminCsrfProtection = (req, res, next) => {
   const isAuthRoute =
     req.path === '/auth/login' ||
     req.path === '/auth/logout' ||
+    req.path === '/auth/csrf-token' ||
     req.originalUrl?.endsWith('/auth/login') ||
-    req.originalUrl?.endsWith('/auth/logout');
+    req.originalUrl?.endsWith('/auth/logout') ||
+    req.originalUrl?.endsWith('/auth/csrf-token');
 
   if (isAuthRoute) {
     return next();
   }
-
-  const hasAdminCookie = Boolean(
-    req.cookies && req.cookies.thinkwires_admin_jwt
-  );
-  const hasAdminTokenHeader = Boolean(
-    (req.headers.authorization &&
-      req.headers.authorization.startsWith('Bearer ')) ||
-      req.headers['x-admin-token']
-  );
 
   const origin = req.headers.origin;
   const referer = req.headers.referer;
@@ -123,11 +136,33 @@ export const adminCsrfProtection = (req, res, next) => {
     });
   }
 
-  // Requests using custom Authorization Bearer or x-admin-token headers cannot be forged via CSRF
-  // (browsers require CORS preflight and never attach custom headers to cross-site requests).
-  if (hasAdminTokenHeader) {
-    return next();
+  // OWASP standard: Requests using verified custom Authorization Bearer or x-admin-token headers
+  // cannot be forged via CSRF (browsers require CORS preflight and never attach custom headers to cross-site requests).
+  const authHeader = req.headers.authorization;
+  const adminTokenHeader = req.headers['x-admin-token'];
+
+  if (adminTokenHeader) {
+    try {
+      const verified = verifyAdminToken(adminTokenHeader);
+      if (verified) return next();
+    } catch {
+      // Invalid token, fall through to cookie / rejection
+    }
   }
+
+  if (authHeader && authHeader.startsWith('Bearer ')) {
+    const token = authHeader.split(' ')[1];
+    try {
+      const verified = verifyAdminToken(token);
+      if (verified) return next();
+    } catch {
+      // Invalid token, fall through to cookie / rejection
+    }
+  }
+
+  const hasAdminCookie = Boolean(
+    req.cookies && req.cookies.thinkwires_admin_jwt
+  );
 
   if (hasAdminCookie) {
     const clientToken =

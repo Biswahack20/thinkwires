@@ -107,9 +107,10 @@ export const setAuthCookie = (res, token) => {
   const isProduction = process.env.NODE_ENV === 'production';
   const sameSite =
     process.env.COOKIE_SAME_SITE || (isProduction ? 'none' : 'lax');
+  const secure = isProduction || sameSite.toLowerCase() === 'none';
   res.cookie('thinkwires_candidate_jwt', token, {
     httpOnly: true,
-    secure: isProduction,
+    secure,
     sameSite,
     maxAge: 7 * 24 * 60 * 60 * 1000,
     path: '/',
@@ -120,12 +121,17 @@ export const clearAuthCookie = (res) => {
   const isProduction = process.env.NODE_ENV === 'production';
   const sameSite =
     process.env.COOKIE_SAME_SITE || (isProduction ? 'none' : 'lax');
-  res.cookie('thinkwires_candidate_jwt', '', {
+  const secure = isProduction || sameSite.toLowerCase() === 'none';
+  const opts = {
     httpOnly: true,
-    secure: isProduction,
+    secure,
     sameSite,
     expires: new Date(0),
-    path: '/',
+    maxAge: 0,
+  };
+  ['/api/candidate', '/api/auth', '/api', '/'].forEach((p) => {
+    res.cookie('thinkwires_candidate_jwt', '', { ...opts, path: p });
+    res.clearCookie('thinkwires_candidate_jwt', { ...opts, path: p });
   });
 };
 
@@ -212,9 +218,10 @@ export const setAdminAuthCookie = (res, token) => {
   const isProduction = process.env.NODE_ENV === 'production';
   const sameSite =
     process.env.COOKIE_SAME_SITE || (isProduction ? 'none' : 'lax');
+  const secure = isProduction || sameSite.toLowerCase() === 'none';
   res.cookie(ADMIN_COOKIE_NAME, token, {
     httpOnly: true,
-    secure: isProduction,
+    secure,
     sameSite,
     maxAge: ADMIN_COOKIE_MAX_AGE,
     path: ADMIN_COOKIE_PATH,
@@ -225,14 +232,16 @@ export const clearAdminAuthCookie = (res) => {
   const isProduction = process.env.NODE_ENV === 'production';
   const sameSite =
     process.env.COOKIE_SAME_SITE || (isProduction ? 'none' : 'lax');
+  const secure = isProduction || sameSite.toLowerCase() === 'none';
   const opts = {
     httpOnly: true,
-    secure: isProduction,
+    secure,
     sameSite,
     expires: new Date(0),
     maxAge: 0,
   };
-  res.cookie(ADMIN_COOKIE_NAME, '', { ...opts, path: ADMIN_COOKIE_PATH });
-  res.cookie(ADMIN_COOKIE_NAME, '', { ...opts, path: '/api' });
-  res.cookie(ADMIN_COOKIE_NAME, '', { ...opts, path: '/' });
+  ['/api/admin', '/api', '/'].forEach((p) => {
+    res.cookie(ADMIN_COOKIE_NAME, '', { ...opts, path: p });
+    res.clearCookie(ADMIN_COOKIE_NAME, { ...opts, path: p });
+  });
 };

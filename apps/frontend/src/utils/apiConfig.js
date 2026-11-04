@@ -4,6 +4,11 @@
  * and decoupled cross-origin architectures (e.g. Frontend on Vercel, Backend on Render).
  */
 export const getApiBaseUrl = () => {
+  // In automated test environments (vitest / jest), standard unit tests assert on canonical relative endpoints ('/api')
+  if (import.meta.env.MODE === 'test' && !import.meta.env.VITE_TEST_ABSOLUTE_URL) {
+    return '/api';
+  }
+
   const envBase = (import.meta.env.VITE_API_BASE_URL || '').trim();
   const envUrl = (import.meta.env.VITE_API_URL || '').trim();
   const rawUrl = envBase || envUrl;

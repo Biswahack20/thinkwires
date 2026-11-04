@@ -14,6 +14,11 @@ import {
   revokeToken,
   isTokenRevoked,
   clearRevocationStore,
+  setAdminAuthCookie,
+  clearAdminAuthCookie,
+  setAuthCookie,
+  clearAuthCookie,
+  ADMIN_COOKIE_NAME,
 } from '../../utils/auth.util.js';
 
 describe('Auth Utilities (Unit Tests)', () => {
@@ -313,6 +318,49 @@ describe('Auth Utilities (Unit Tests)', () => {
       await expect(isTokenRevoked('token-fail-test')).resolves.toBe(true);
       await expect(isTokenRevoked('unknown-token')).resolves.toBe(false);
       await expect(clearRevocationStore()).resolves.not.toThrow();
+    });
+  });
+
+  describe('Cookie Cleardown & Scope Management (Issue #194)', () => {
+    const createMockRes = () => {
+      const cleared = [];
+      const set = [];
+      return {
+        cleared,
+        set,
+        cookie(name, val, opts) {
+          set.push({ name, val, opts });
+        },
+        clearCookie(name, opts) {
+          cleared.push({ name, opts });
+        },
+      };
+    };
+
+    it('clears admin authentication cookie across /api/admin, /api, and / paths', () => {
+      const res = createMockRes();
+      clearAdminAuthCookie(res);
+
+      const clearedPaths = res.cleared
+        .filter((c) => c.name === ADMIN_COOKIE_NAME)
+        .map((c) => c.opts.path);
+
+      expect(clearedPaths).toContain('/api/admin');
+      expect(clearedPaths).toContain('/api');
+      expect(clearedPaths).toContain('/');
+    });
+
+    it('clears candidate authentication cookie across multi-paths', () => {
+      const res = createMockRes();
+      clearAuthCookie(res);
+
+      const clearedPaths = res.cleared
+        .filter((c) => c.name === 'thinkwires_candidate_jwt')
+        .map((c) => c.opts.path);
+
+      expect(clearedPaths).toContain('/api/candidate');
+      expect(clearedPaths).toContain('/api');
+      expect(clearedPaths).toContain('/');
     });
   });
 });
