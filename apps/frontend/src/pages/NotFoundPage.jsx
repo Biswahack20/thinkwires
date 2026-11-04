@@ -192,7 +192,7 @@ const NotFoundPage = () => {
           >
             <Link to="/about" style={{ color: '#008F68', textDecoration: 'none' }}>About Us</Link>
             <Link to="/bench" style={{ color: '#008F68', textDecoration: 'none' }}>Talent Cloud</Link>
-            <Link to="/candidate-portal/dashboard" style={{ color: '#008F68', textDecoration: 'none' }}>Candidate Portal</Link>
+            <Link to="/candidate/dashboard" style={{ color: '#008F68', textDecoration: 'none' }}>Candidate Portal</Link>
             <Link to="/contact" style={{ color: '#008F68', textDecoration: 'none' }}>Contact Support</Link>
           </div>
         </div>
