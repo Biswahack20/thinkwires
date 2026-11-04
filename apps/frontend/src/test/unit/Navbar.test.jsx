@@ -2,8 +2,12 @@ import React from 'react';
 import { describe, it, expect, beforeEach } from 'vitest';
 import fs from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'url';
 import { renderWithProviders, screen } from '../test-utils';
 import Navbar from '../../components/common/Navbar';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 describe('Navbar Component & Mobile Top Bar Refactor (Issue #119)', () => {
   beforeEach(() => {
