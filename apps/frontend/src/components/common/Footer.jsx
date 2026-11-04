@@ -154,7 +154,7 @@ const Footer = () => {
             </p>
             <div className={'Footer-socialLinks'}>
               <a
-                href="https://www.linkedin.com"
+                href="https://linkedin.com/company/thinkwires"
                 target="_blank"
                 rel="noopener noreferrer"
                 className={'Footer-socialIcon'}
@@ -162,15 +162,7 @@ const Footer = () => {
               >
                 <IconLinkedIn />
               </a>
-              <a
-                href="https://twitter.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className={'Footer-socialIcon'}
-                aria-label="X"
-              >
-                <IconX />
-              </a>
+
               <a
                 href="mailto:info@thinkwires.com"
                 className={'Footer-socialIcon'}
@@ -224,32 +216,32 @@ const Footer = () => {
           <div>
             <h4 className={'Footer-colTitle'}>INDUSTRIES</h4>
             <ul className={'Footer-linkList'}>
-              <li>
-                <Link to="/industries" className={'Footer-linkItem'}>
-                  Information Technology
-                </Link>
-              </li>
-              <li>
-                <Link to="/industries" className={'Footer-linkItem'}>
-                  BFSI &amp; Fintech
-                </Link>
-              </li>
-              <li>
-                <Link to="/industries" className={'Footer-linkItem'}>
-                  Healthcare &amp; Life Sciences
-                </Link>
-              </li>
-              <li>
-                <Link to="/industries" className={'Footer-linkItem'}>
-                  Engineering &amp; Telecom
-                </Link>
-              </li>
-              <li>
-                <Link to="/industries" className={'Footer-linkItem'}>
-                  E-Commerce &amp; Retail
-                </Link>
-              </li>
-            </ul>
+                <li>
+                  <Link to="/industries/information-technology" className={'Footer-linkItem'}>
+                    Information Technology
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/industries/bfsi-and-fintech" className={'Footer-linkItem'}>
+                    BFSI &amp; Fintech
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/industries/healthcare-and-life-sciences" className={'Footer-linkItem'}>
+                    Healthcare &amp; Life Sciences
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/industries/engineering-and-telecom" className={'Footer-linkItem'}>
+                    Engineering &amp; Telecom
+                  </Link>
+                </li>
+                <li>
+                  <Link to="/industries/e-commerce-and-retail" className={'Footer-linkItem'}>
+                    E-Commerce &amp; Retail
+                  </Link>
+                </li>
+              </ul>
           </div>
 
           <div>
