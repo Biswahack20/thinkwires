@@ -109,8 +109,27 @@ const RequisitionsView = () => {
   };
 
   useEffect(() => {
-    fetchRequisitions();
-  }, [search]);
+    let isMounted = true;
+    adminApi
+      .getRequisitions({
+        search,
+      })
+      .then((res) => {
+        if (isMounted) {
+          setRequisitions(res.jobs || []);
+          setLoading(false);
+        }
+      })
+      .catch((err) => {
+        if (isMounted) {
+          setLoading(false);
+          showToast(`Failed to load requisitions: ${err.message}`);
+        }
+      });
+    return () => {
+      isMounted = false;
+    };
+  }, [search, showToast]);
 
   useEffect(() => {
     adminApi

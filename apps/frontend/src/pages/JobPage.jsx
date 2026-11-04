@@ -59,6 +59,15 @@ const JobPage = () => {
   const [searchQuery, setSearchQuery] = useState(() => {
     return industrySlugParam ? getSearchTermForIndustry(industrySlugParam) : '';
   });
+  const [prevIndustrySlug, setPrevIndustrySlug] = useState(industrySlugParam);
+
+  if (prevIndustrySlug !== industrySlugParam) {
+    setPrevIndustrySlug(industrySlugParam);
+    if (industrySlugParam) {
+      setSearchQuery(getSearchTermForIndustry(industrySlugParam));
+    }
+  }
+
   const [locationFilter, setLocationFilter] = useState('All');
   const [experienceFilter, setExperienceFilter] = useState('All');
   const [workMode, setWorkMode] = useState('All Modes');
@@ -66,12 +75,6 @@ const JobPage = () => {
   const [noticePeriod, setNoticePeriod] = useState('All Notice');
   const [departmentFilter, setDepartmentFilter] = useState('All Roles');
   const [sortBy, setSortBy] = useState('Newest First');
-
-  useEffect(() => {
-    if (industrySlugParam) {
-      setSearchQuery(getSearchTermForIndustry(industrySlugParam));
-    }
-  }, [industrySlugParam]);
 
   // Dispatch Redux thunk to fetch openings dynamically from backend
   const loadJobsFromBackend = useCallback(() => {

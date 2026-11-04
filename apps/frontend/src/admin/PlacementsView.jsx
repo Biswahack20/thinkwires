@@ -42,10 +42,31 @@ const PlacementsView = () => {
   };
 
   useEffect(() => {
-    fetchPlacements();
-    adminApi.getEmployees().then((res) => setEmployees(res.employees || []));
-    adminApi.getClients().then((res) => setClients(res.clients || []));
-  }, []);
+    let isMounted = true;
+    adminApi
+      .getPlacements()
+      .then((res) => {
+        if (isMounted) {
+          setPlacements(res.placements || []);
+          setLoading(false);
+        }
+      })
+      .catch((err) => {
+        if (isMounted) {
+          setLoading(false);
+          showToast(`Failed to load placements: ${err.message}`);
+        }
+      });
+    adminApi.getEmployees().then((res) => {
+      if (isMounted) setEmployees(res.employees || []);
+    });
+    adminApi.getClients().then((res) => {
+      if (isMounted) setClients(res.clients || []);
+    });
+    return () => {
+      isMounted = false;
+    };
+  }, [showToast]);
 
   const openAddModal = () => {
     if (activeRole === 'viewer') {

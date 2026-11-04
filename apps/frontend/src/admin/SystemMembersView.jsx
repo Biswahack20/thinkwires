@@ -91,8 +91,25 @@ const SystemMembersView = () => {
   };
 
   useEffect(() => {
-    fetchMembers();
-  }, [activeRole]);
+    let isMounted = true;
+    adminApi
+      .getSystemMembers()
+      .then((res) => {
+        if (isMounted) {
+          setMembers(res.members || []);
+          setLoading(false);
+        }
+      })
+      .catch((err) => {
+        if (isMounted) {
+          setLoading(false);
+          showToast(`Failed to load system members: ${err.message}`);
+        }
+      });
+    return () => {
+      isMounted = false;
+    };
+  }, [activeRole, showToast]);
 
   const openAddModal = () => {
     if (!isSuperAdmin) {

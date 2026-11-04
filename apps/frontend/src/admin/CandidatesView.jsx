@@ -64,8 +64,25 @@ const CandidatesView = () => {
   };
 
   useEffect(() => {
-    fetchCandidates();
-  }, [search, selectedStage]);
+    let isMounted = true;
+    adminApi
+      .getCandidates({ search, status: selectedStage })
+      .then((res) => {
+        if (isMounted) {
+          setCandidates(res.candidates || []);
+          setLoading(false);
+        }
+      })
+      .catch((err) => {
+        if (isMounted) {
+          setLoading(false);
+          showToast(`Failed to load candidates: ${err.message}`);
+        }
+      });
+    return () => {
+      isMounted = false;
+    };
+  }, [search, selectedStage, showToast]);
 
   const handleStageChange = (candidateId, newStage) => {
     if (activeRole === 'viewer') {

@@ -37,8 +37,25 @@ const MediaLibrary = () => {
   };
 
   useEffect(() => {
-    fetchMedia();
-  }, []);
+    let isMounted = true;
+    adminApi
+      .getCmsMedia()
+      .then((res) => {
+        if (isMounted) {
+          setMedia(res.media || []);
+          setLoading(false);
+        }
+      })
+      .catch((err) => {
+        if (isMounted) {
+          setLoading(false);
+          showToast(`Failed to load media assets: ${err.message}`);
+        }
+      });
+    return () => {
+      isMounted = false;
+    };
+  }, [showToast]);
 
   const handleCopyUrl = (url) => {
     navigator.clipboard.writeText(url);

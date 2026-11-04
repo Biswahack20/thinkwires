@@ -320,8 +320,34 @@ const JobsView = ({ defaultFilter }) => {
   };
 
   useEffect(() => {
-    fetchJobs();
-    adminApi.getClients().then((res) => setClients(res.clients || []));
+    let isMounted = true;
+    adminApi
+      .getJobs({
+        search,
+        priority: priorityFilter,
+        status: statusFilter,
+        industry: industryFilter,
+        jobMode: jobModeFilter,
+        category: categoryFilter,
+      })
+      .then((res) => {
+        if (isMounted) {
+          setJobs(res.jobs || []);
+          setLoading(false);
+        }
+      })
+      .catch((err) => {
+        if (isMounted) {
+          setLoading(false);
+          showToast(`Failed to load jobs: ${err.message}`);
+        }
+      });
+    adminApi.getClients().then((res) => {
+      if (isMounted) setClients(res.clients || []);
+    });
+    return () => {
+      isMounted = false;
+    };
   }, [
     search,
     priorityFilter,
@@ -329,6 +355,7 @@ const JobsView = ({ defaultFilter }) => {
     industryFilter,
     jobModeFilter,
     categoryFilter,
+    showToast,
   ]);
 
   const openAddModal = () => {

@@ -36,8 +36,25 @@ const AnnouncementsManager = () => {
   };
 
   useEffect(() => {
-    fetchAnnouncements();
-  }, []);
+    let isMounted = true;
+    adminApi
+      .getAnnouncements()
+      .then((res) => {
+        if (isMounted) {
+          setAnnouncements(res.announcements || []);
+          setLoading(false);
+        }
+      })
+      .catch((err) => {
+        if (isMounted) {
+          setLoading(false);
+          showToast(`Failed to load announcements: ${err.message}`);
+        }
+      });
+    return () => {
+      isMounted = false;
+    };
+  }, [showToast]);
 
   const handleTogglePublish = (id) => {
     if (activeRole === 'viewer') {
