@@ -24,7 +24,16 @@ const ScreeningAssessmentModal = ({
   const [assessment, setAssessment] = useState(initialAssessment);
   const [loading, setLoading] = useState(!initialAssessment);
   const [error, setError] = useState('');
-  const [answers, setAnswers] = useState({});
+  const [answers, setAnswers] = useState(() => {
+    if (!applicationId) return {};
+    try {
+      const localDraft = localStorage.getItem(`assessment_${applicationId}`);
+      return localDraft ? JSON.parse(localDraft) : {};
+    } catch {
+      return {};
+    }
+  });
+  const [saveStatus, setSaveStatus] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [result, setResult] = useState(null);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -35,7 +44,6 @@ const ScreeningAssessmentModal = ({
     if (!applicationId) return;
 
     if (initialAssessment && initialAssessment.questions?.length) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
       setAssessment(initialAssessment);
       setLoading(false);
       return;
@@ -59,6 +67,24 @@ const ScreeningAssessmentModal = ({
           setAssessment(data.assessment);
           if (data.assessment?.timeLimitMinutes) {
             setTimeLeft(data.assessment.timeLimitMinutes * 60);
+          }
+          if (
+            data.draftAnswers &&
+            typeof data.draftAnswers === 'object' &&
+            Object.keys(data.draftAnswers).length > 0
+          ) {
+            setAnswers((prev) => {
+              const merged = { ...data.draftAnswers, ...prev };
+              try {
+                localStorage.setItem(
+                  `assessment_${applicationId}`,
+                  JSON.stringify(merged)
+                );
+              } catch {
+                /* ignore storage errors */
+              }
+              return merged;
+            });
           }
         } else if (isMounted) {
           setError(data.error || 'Failed to load assessment.');
@@ -101,18 +127,53 @@ const ScreeningAssessmentModal = ({
   ).toLowerCase();
   const currentQId = currentQ?.id || `q_${currentQuestionIndex}`;
 
+  const syncDraft = (updatedAnswers) => {
+    try {
+      if (applicationId) {
+        localStorage.setItem(
+          `assessment_${applicationId}`,
+          JSON.stringify(updatedAnswers)
+        );
+      }
+    } catch {
+      /* ignore storage errors */
+    }
+
+    if (applicationId) {
+      setSaveStatus('saving');
+      const apiBase = getApiBaseUrl();
+      fetch(
+        `${apiBase}/candidate/applications/${applicationId}/assessment/draft`,
+        {
+          method: 'PUT',
+          headers: getCandidateAuthHeaders({ 'Content-Type': 'application/json' }),
+          credentials: 'include',
+          body: JSON.stringify({ answers: updatedAnswers }),
+        }
+      )
+        .then((r) => {
+          if (r.ok) setSaveStatus('saved');
+        })
+        .catch(() => {
+          // Non-blocking catch
+        });
+    }
+  };
+
   const handleSelectMCQ = (questionId, optionIndex) => {
-    setAnswers((prev) => ({
-      ...prev,
-      [questionId]: optionIndex,
-    }));
+    setAnswers((prev) => {
+      const next = { ...prev, [questionId]: optionIndex };
+      syncDraft(next);
+      return next;
+    });
   };
 
   const handleTextChange = (questionId, text) => {
-    setAnswers((prev) => ({
-      ...prev,
-      [questionId]: text,
-    }));
+    setAnswers((prev) => {
+      const next = { ...prev, [questionId]: text };
+      syncDraft(next);
+      return next;
+    });
   };
 
   const handleSubmit = async () => {
@@ -134,6 +195,13 @@ const ScreeningAssessmentModal = ({
 
       const data = await res.json();
       if (res.ok) {
+        try {
+          if (applicationId) {
+            localStorage.removeItem(`assessment_${applicationId}`);
+          }
+        } catch {
+          /* ignore storage errors */
+        }
         setResult(data.evaluation);
         if (typeof onComplete === 'function') onComplete(data.evaluation);
         if (typeof onCompleted === 'function') onCompleted(data.evaluation);
@@ -263,6 +331,25 @@ const ScreeningAssessmentModal = ({
                 </span>
                 <span>{formatTimer(timeLeft)}</span>
               </div>
+            )}
+            {!result && saveStatus && (
+              <span
+                style={{
+                  fontSize: '0.75rem',
+                  color: saveStatus === 'saving' ? '#94A3B8' : '#34D399',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '4px',
+                }}
+              >
+                <span
+                  className="material-symbols-outlined"
+                  style={{ fontSize: '14px' }}
+                >
+                  {saveStatus === 'saving' ? 'sync' : 'cloud_done'}
+                </span>
+                {saveStatus === 'saving' ? 'Saving...' : 'Saved'}
+              </span>
             )}
             <button
               type="button"

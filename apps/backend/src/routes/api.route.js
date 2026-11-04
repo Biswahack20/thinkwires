@@ -940,6 +940,14 @@ router.get('/find-talent', async (req, res) => {
 });
 
 router.post('/find-talent/requisition', publicSubmissionRateLimiter, async (req, res) => {
+  if (!isMongoActive() && process.env.NODE_ENV === 'production') {
+    return res.status(503).json({
+      success: false,
+      error: 'Database connection temporarily unavailable. Please retry your request.',
+      retryAfterSeconds: 5,
+    });
+  }
+
   const {
     engagementModel,
     targetRole,
@@ -1025,6 +1033,14 @@ router.post(
   '/candidate-portal/timesheet',
   requireCandidateAuth,
   async (req, res) => {
+    if (!isMongoActive() && process.env.NODE_ENV === 'production') {
+      return res.status(503).json({
+        success: false,
+        error: 'Database connection temporarily unavailable. Please retry your request.',
+        retryAfterSeconds: 5,
+      });
+    }
+
     const candidateId = req.candidate?._id || req.candidate?.id;
     const candidateName = req.candidate?.name || 'Authenticated Candidate';
     const { hours, weekEnding, comments } = req.body;

@@ -7,6 +7,7 @@ import {
   parseResumeForAutoFill,
   getApplicationAssessment,
   submitApplicationAssessment,
+  saveAssessmentDraft,
   withdrawApplication,
   getApplicationDossier,
   uploadAvatar,
@@ -110,6 +111,8 @@ router.get('/applications', getMyApplications);
 router.post('/applications/:applicationId/withdraw', withdrawApplication);
 
 router.get('/applications/:applicationId/assessment', getApplicationAssessment);
+router.put('/applications/:applicationId/assessment/draft', saveAssessmentDraft);
+router.post('/applications/:applicationId/assessment/draft', saveAssessmentDraft);
 router.post(
   '/applications/:applicationId/assessment/submit',
   submitApplicationAssessment

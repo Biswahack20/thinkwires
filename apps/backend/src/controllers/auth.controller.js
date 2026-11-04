@@ -22,6 +22,14 @@ export const registerCandidate = async (req, res) => {
   try {
     const { name, email, password, confirmPassword, phone } = req.body;
 
+    if (mongoose.connection.readyState !== 1 && process.env.NODE_ENV === 'production') {
+      return res.status(503).json({
+        success: false,
+        error: 'Database connection temporarily unavailable. Please retry your request.',
+        retryAfterSeconds: 5,
+      });
+    }
+
     if (!name || !name.trim()) {
       return res
         .status(400)
@@ -254,6 +262,14 @@ export const logoutCandidate = async (req, res) => {
 export const forgotPassword = async (req, res) => {
   try {
     const { email } = req.body;
+
+    if (mongoose.connection.readyState !== 1 && process.env.NODE_ENV === 'production') {
+      return res.status(503).json({
+        success: false,
+        error: 'Database connection temporarily unavailable. Please retry your request.',
+        retryAfterSeconds: 5,
+      });
+    }
     if (!email || !isValidEmail(email)) {
       return res.status(400).json({
         success: false,
@@ -317,6 +333,14 @@ export const forgotPassword = async (req, res) => {
 export const resetPassword = async (req, res) => {
   try {
     const { token, email, password, confirmPassword } = req.body;
+
+    if (mongoose.connection.readyState !== 1 && process.env.NODE_ENV === 'production') {
+      return res.status(503).json({
+        success: false,
+        error: 'Database connection temporarily unavailable. Please retry your request.',
+        retryAfterSeconds: 5,
+      });
+    }
 
     if (!token || !email || !password) {
       return res.status(400).json({

@@ -11,7 +11,22 @@ import aiService from '../services/ai.service.js';
 import { verifyAdminToken, verifyCandidateToken } from '../utils/auth.util.js';
 
 // Fallback in-memory application store for local development if MongoDB is absent
-const localDevApplications = [];
+export const localDevApplications = [];
+
+/**
+ * Fail closed in production when MongoDB connection is inactive to prevent silent data loss (Issue #196)
+ */
+export const requireProductionDb = (res) => {
+  if (mongoose.connection.readyState !== 1 && process.env.NODE_ENV === 'production') {
+    res.status(503).json({
+      success: false,
+      error: 'Database connection temporarily unavailable. Please retry your request.',
+      retryAfterSeconds: 5,
+    });
+    return false;
+  }
+  return true;
+};
 
 /**
  * Validate and sanitize external URL strings to prevent Stored XSS via javascript: or data: schemes
@@ -86,6 +101,7 @@ export const getCandidateDashboard = async (req, res) => {
 export const updateCandidateProfile = async (req, res) => {
   try {
     const candidateId = req.candidate._id || req.candidate.id;
+    if (!requireProductionDb(res)) return;
     const {
       name,
       phone,
@@ -322,17 +338,32 @@ export const applyForJob = async (req, res) => {
       });
     }
 
-    // Enforce single active submission per job opening
+    if (!requireProductionDb(res)) return;
+
+    // Cooldown policy: Active applications permanently block re-applying;
+    // Closed ('Rejected', 'Withdrawn') applications block only during 90-day cooldown (Issue #208)
+    const COOLDOWN_DAYS = 90;
+    const cooldownThreshold = new Date(Date.now() - COOLDOWN_DAYS * 24 * 60 * 60 * 1000);
+
     if (mongoose.connection.readyState === 1) {
       const existingApplication = await JobApplication.findOne({
         candidate: candidateId,
         jobId: String(jobId),
+        $or: [
+          { status: { $in: ['Applied', 'Screening', 'Interview', 'Offered'] } },
+          { status: { $in: ['Rejected', 'Withdrawn'] }, updatedAt: { $gt: cooldownThreshold } },
+        ],
       });
 
       if (existingApplication) {
+        const isTerminal = ['Rejected', 'Withdrawn'].includes(existingApplication.status);
+        const errorMsg = isTerminal
+          ? `You have already applied for this position previously. Re-applications are open ${COOLDOWN_DAYS} days after closure.`
+          : `You have already applied and have an active application under review for "${jobTitle}".`;
+
         return res.status(409).json({
           success: false,
-          error: `You have already applied for "${jobTitle}". Your application is currently under review.`,
+          error: errorMsg,
           applicationId: existingApplication._id,
           appliedAt: existingApplication.createdAt,
           status: existingApplication.status,
@@ -350,73 +381,86 @@ export const applyForJob = async (req, res) => {
         growth_areas: [],
         recommendation: 'Recommended for technical evaluation',
       };
-
-      try {
-        matchScoreResult = await aiService.calculateMatchScore(
-          {
-            skills: parsedSkills,
-            resumeText:
-              candidateNote ||
-              coverLetter ||
-              `${skillSet} ${currentEmployer} ${totalExperienceYears} years`,
-          },
-          {
-            jobTitle,
-            department,
-            requiredSkills: parsedSkills,
-            experienceRequired: Number(totalExperienceYears) || 3,
-          }
-        );
-      } catch (aiErr) {
-        console.warn('AI Match score non-blocking warning:', aiErr.message);
-      }
-
       let assessmentResult = null;
-      try {
-        assessmentResult = await aiService.generateAssessment(
-          {
-            jobId,
-            jobTitle,
-            department,
-            requiredSkills: parsedSkills,
-          },
-          {
-            name: `${resolvedFirstName} ${resolvedLastName}`,
-            skills: parsedSkills,
-          }
-        );
-      } catch (aiErr) {
-        console.warn(
-          'AI Assessment generator non-blocking warning:',
-          aiErr.message
-        );
-      }
-
       let evaluationReportResult = null;
-      try {
-        evaluationReportResult = await aiService.evaluateCandidate(
-          {
-            candidateName: `${resolvedFirstName} ${resolvedLastName}`.trim(),
-            skills: parsedSkills,
-            resumeText:
-              candidateNote ||
-              coverLetter ||
-              `${skillSet} ${currentEmployer} ${totalExperienceYears} years`,
-            experience: totalExperienceYears || experience || 3,
-            totalExperienceYears: totalExperienceYears || experience || 3,
-            noticePeriod,
-            expectedSalary: expectedCTC || '',
-          },
-          {
-            jobTitle,
-            department: department || 'Engineering',
-            company: 'Thinkwires Enterprise Client',
-            requiredSkills: parsedSkills,
-            experienceRequired: Number(totalExperienceYears) || 3,
-          }
-        );
-      } catch (evalErr) {
-        console.warn('AI Evaluation report non-blocking warning:', evalErr.message);
+
+      // Parallel execution with bounded timeout to eliminate 504 timeouts (Issue #206)
+      const timeoutMs = 6000;
+      const withTimeout = (promise, fallback) =>
+        Promise.race([
+          promise,
+          new Promise((resolve) => setTimeout(() => resolve(fallback), timeoutMs)),
+        ]);
+
+      const [matchScoreSettled, assessmentSettled, evaluationSettled] =
+        await Promise.allSettled([
+          withTimeout(
+            aiService.calculateMatchScore(
+              {
+                skills: parsedSkills,
+                resumeText:
+                  candidateNote ||
+                  coverLetter ||
+                  `${skillSet} ${currentEmployer} ${totalExperienceYears} years`,
+              },
+              {
+                jobTitle,
+                department,
+                requiredSkills: parsedSkills,
+                experienceRequired: Number(totalExperienceYears) || 3,
+              }
+            ),
+            matchScoreResult
+          ),
+          withTimeout(
+            aiService.generateAssessment(
+              {
+                jobId,
+                jobTitle,
+                department,
+                requiredSkills: parsedSkills,
+              },
+              {
+                name: `${resolvedFirstName} ${resolvedLastName}`,
+                skills: parsedSkills,
+              }
+            ),
+            null
+          ),
+          withTimeout(
+            aiService.evaluateCandidate(
+              {
+                candidateName: `${resolvedFirstName} ${resolvedLastName}`.trim(),
+                skills: parsedSkills,
+                resumeText:
+                  candidateNote ||
+                  coverLetter ||
+                  `${skillSet} ${currentEmployer} ${totalExperienceYears} years`,
+                experience: totalExperienceYears || experience || 3,
+                totalExperienceYears: totalExperienceYears || experience || 3,
+                noticePeriod,
+                expectedSalary: expectedCTC || '',
+              },
+              {
+                jobTitle,
+                department: department || 'Engineering',
+                company: 'Thinkwires Enterprise Client',
+                requiredSkills: parsedSkills,
+                experienceRequired: Number(totalExperienceYears) || 3,
+              }
+            ),
+            null
+          ),
+        ]);
+
+      if (matchScoreSettled.status === 'fulfilled' && matchScoreSettled.value) {
+        matchScoreResult = matchScoreSettled.value;
+      }
+      if (assessmentSettled.status === 'fulfilled' && assessmentSettled.value) {
+        assessmentResult = assessmentSettled.value;
+      }
+      if (evaluationSettled.status === 'fulfilled' && evaluationSettled.value) {
+        evaluationReportResult = evaluationSettled.value;
       }
 
       const deptPrefix = (department || 'ENG').substring(0, 3).toUpperCase();
@@ -545,19 +589,17 @@ export const applyForJob = async (req, res) => {
           : null
       )
         .then(async (emailResult) => {
-          if (emailResult.success) {
-            await JobApplication.findByIdAndUpdate(application._id, {
-              emailNotificationStatus:
-                emailResult.mode === 'smtp_delivered' ? 'Sent' : 'Disabled',
-            });
-          } else {
-            await JobApplication.findByIdAndUpdate(application._id, {
-              emailNotificationStatus: 'Failed',
-            });
-          }
+          const status = emailResult && emailResult.success ? 'Sent' : 'Failed';
+          await JobApplication.findByIdAndUpdate(application._id, {
+            emailNotificationStatus: status,
+          });
+          application.emailNotificationStatus = status;
         })
-        .catch((err) => {
+        .catch(async (err) => {
           console.error('Async email error:', err.message);
+          await JobApplication.findByIdAndUpdate(application._id, {
+            emailNotificationStatus: 'Failed',
+          }).catch(() => {});
         });
 
       return res.status(201).json({
@@ -570,19 +612,32 @@ export const applyForJob = async (req, res) => {
       });
     } else {
       // In-memory fallback for local dev without MongoDB connection
-      const existing = localDevApplications.find(
-        (a) =>
-          String(a.candidate) === String(candidateId) &&
-          String(a.jobId) === String(jobId)
-      );
+      const inMemExisting = localDevApplications.find((a) => {
+        if (String(a.candidate) !== String(candidateId) || String(a.jobId) !== String(jobId)) {
+          return false;
+        }
+        if (['Applied', 'Screening', 'Interview', 'Offered'].includes(a.status)) {
+          return true;
+        }
+        if (['Rejected', 'Withdrawn'].includes(a.status)) {
+          const appDate = new Date(a.updatedAt || a.createdAt || Date.now());
+          return appDate > cooldownThreshold;
+        }
+        return false;
+      });
 
-      if (existing) {
+      if (inMemExisting) {
+        const isTerminal = ['Rejected', 'Withdrawn'].includes(inMemExisting.status);
+        const errorMsg = isTerminal
+          ? `You have already applied for this position previously. Re-applications are open ${COOLDOWN_DAYS} days after closure.`
+          : `You have already applied and have an active application under review for "${jobTitle}".`;
+
         return res.status(409).json({
           success: false,
-          error: `You have already applied for "${jobTitle}".`,
-          applicationId: existing._id,
-          appliedAt: existing.createdAt || new Date().toISOString(),
-          status: existing.status || 'Applied',
+          error: errorMsg,
+          applicationId: inMemExisting._id,
+          appliedAt: inMemExisting.createdAt || new Date().toISOString(),
+          status: inMemExisting.status || 'Applied',
         });
       }
 
@@ -640,6 +695,7 @@ export const applyForJob = async (req, res) => {
         fitBadge: matchScoreResult.fit_badge,
         assessment: assessmentResult,
         assessmentStatus: 'Not Started',
+        draftAnswers: {},
         status: 'Applied',
         stage: 'Application Received',
         emailNotificationStatus: 'Sent',
@@ -806,6 +862,7 @@ export const getApplicationAssessment = async (req, res) => {
     return res.status(200).json({
       success: true,
       assessment,
+      draftAnswers: app.draftAnswers || {},
       application: {
         id: app._id,
         jobTitle: app.jobTitle,
@@ -835,6 +892,8 @@ export const submitApplicationAssessment = async (req, res) => {
     const candidateId = req.candidate._id || req.candidate.id;
     const { applicationId } = req.params;
     const { answers } = req.body;
+
+    if (!requireProductionDb(res)) return;
 
     let app;
     if (mongoose.connection.readyState === 1) {
@@ -869,6 +928,7 @@ export const submitApplicationAssessment = async (req, res) => {
       screeningPassed: evalResult.passed,
       stage: evalResult.gatekeeper_status,
       status: evalResult.passed ? 'Screening' : 'Screening',
+      draftAnswers: {},
     };
 
     if (mongoose.connection.readyState === 1) {
@@ -880,6 +940,22 @@ export const submitApplicationAssessment = async (req, res) => {
       });
     } else {
       Object.assign(app, updateData);
+    }
+
+    // Alert recruitment team if candidate passed screening assessment (Issue #209)
+    if (evalResult.passed) {
+      sendRecruitmentNotificationEmail({
+        jobTitle: app.jobTitle,
+        location: app.location,
+        firstName: app.firstName || req.candidate?.name,
+        lastName: app.lastName || '',
+        email: app.email || req.candidate?.email,
+        totalExperienceYears: app.totalExperienceYears,
+        noticePeriod: app.noticePeriod,
+        screeningScore: evalResult.total_score,
+        assessmentPassed: true,
+        candidateNote: `Gatekeeper screening assessment PASSED with score ${evalResult.total_score}%.`,
+      }).catch((e) => console.warn('Recruiter screening pass alert notice:', e.message));
     }
 
     return res.status(200).json({
@@ -899,6 +975,77 @@ export const submitApplicationAssessment = async (req, res) => {
 };
 
 /**
+ * Save Candidate Assessment Draft (Issue #207)
+ * PUT /api/candidate/applications/:applicationId/assessment/draft
+ */
+export const saveAssessmentDraft = async (req, res) => {
+  try {
+    const candidateId = req.candidate?._id || req.candidate?.id;
+    const { applicationId } = req.params;
+    const { answers } = req.body;
+
+    if (!candidateId) {
+      return res.status(401).json({
+        success: false,
+        error: 'Authentication required.',
+      });
+    }
+
+    if (!requireProductionDb(res)) return;
+
+    let app = null;
+    if (mongoose.connection.readyState === 1) {
+      app = await JobApplication.findOne({
+        _id: applicationId,
+        candidate: candidateId,
+      });
+
+      if (app) {
+        await JobApplication.findByIdAndUpdate(applicationId, {
+          draftAnswers: answers || {},
+          assessmentStatus:
+            app.assessmentStatus === 'Not Started'
+              ? 'In Progress'
+              : app.assessmentStatus,
+        });
+      }
+    } else {
+      app = localDevApplications.find(
+        (a) =>
+          (String(a._id) === String(applicationId) ||
+            String(a.id) === String(applicationId)) &&
+          String(a.candidate) === String(candidateId)
+      );
+      if (app) {
+        app.draftAnswers = answers || {};
+        if (app.assessmentStatus === 'Not Started') {
+          app.assessmentStatus = 'In Progress';
+        }
+      }
+    }
+
+    if (!app) {
+      return res.status(404).json({
+        success: false,
+        error: 'Application not found.',
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: 'Assessment draft saved successfully.',
+      draftAnswers: answers || {},
+    });
+  } catch (error) {
+    console.error('Save assessment draft error:', error);
+    return res.status(500).json({
+      success: false,
+      error: 'Failed to save assessment draft.',
+    });
+  }
+};
+
+/**
  * Withdraw Job Application by Candidate
  * POST /api/candidate/applications/:applicationId/withdraw
  */
@@ -906,6 +1053,8 @@ export const withdrawApplication = async (req, res) => {
   try {
     const candidateId = req.candidate._id || req.candidate.id;
     const { applicationId } = req.params;
+
+    if (!requireProductionDb(res)) return;
 
     let application = null;
     if (mongoose.connection.readyState === 1) {
@@ -1061,6 +1210,7 @@ export const getApplicationDossier = async (req, res) => {
 export const uploadAvatar = async (req, res) => {
   try {
     const candidateId = req.candidate?._id || req.candidate?.id;
+    if (!requireProductionDb(res)) return;
     if (!req.file) {
       return res.status(400).json({
         success: false,
@@ -1104,6 +1254,7 @@ export const uploadAvatar = async (req, res) => {
 export const setAvatarPreset = async (req, res) => {
   try {
     const candidateId = req.candidate?._id || req.candidate?.id;
+    if (!requireProductionDb(res)) return;
     const { presetId, presetUrl } = req.body;
 
     if (!presetUrl && !presetId) {
@@ -1148,6 +1299,7 @@ export const setAvatarPreset = async (req, res) => {
 export const removeAvatar = async (req, res) => {
   try {
     const candidateId = req.candidate?._id || req.candidate?.id;
+    if (!requireProductionDb(res)) return;
 
     if (mongoose.connection.readyState === 1) {
       await Candidate.findByIdAndUpdate(candidateId, {
