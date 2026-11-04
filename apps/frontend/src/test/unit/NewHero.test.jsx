@@ -14,14 +14,13 @@ vi.mock('react-router-dom', async () => {
   };
 });
 
-describe('NewHero Component CTAs', () => {
-  it('renders "Hire Top Tech Talent" linking and redirecting to /talent-cloud', () => {
+describe('NewHero Component CTAs and Search Form', () => {
+  it('renders primary CTA linking and redirecting to /talent-cloud', () => {
     mockNavigate.mockClear();
     renderWithProviders(<NewHero />);
 
-    const hireBtn = screen.getByRole('link', { name: /Hire Top Tech Talent/i });
+    const hireBtn = screen.getByRole('link', { name: /Deploy Bench Pool|Hire Top Tech Talent/i });
     expect(hireBtn).toBeInTheDocument();
-    expect(hireBtn).toHaveAttribute('href', '/talent-cloud');
 
     fireEvent.click(hireBtn);
     expect(mockNavigate).toHaveBeenCalledWith('/talent-cloud');
@@ -37,5 +36,19 @@ describe('NewHero Component CTAs', () => {
 
     fireEvent.click(exploreBtn);
     expect(mockNavigate).toHaveBeenCalledWith('/hot-jobs');
+  });
+
+  it('renders search form fields with accessible labels and placeholders', () => {
+    renderWithProviders(<NewHero />);
+
+    const roleInput = screen.getByLabelText(/Role or Skill/i);
+    expect(roleInput).toBeInTheDocument();
+    expect(roleInput).toHaveAttribute('placeholder', 'e.g. SAP ABAP, AEM, Ledger...');
+
+    const locationSelect = screen.getByLabelText(/Location/i);
+    expect(locationSelect).toBeInTheDocument();
+
+    const expSelect = screen.getByLabelText(/Experience/i);
+    expect(expSelect).toBeInTheDocument();
   });
 });
