@@ -1,4 +1,9 @@
 :root {
+  /* --- Navigation Heights --- */
+  --nav-topbar-height: 38px;
+  --nav-main-height: 76px;
+  --nav-height: calc(var(--nav-topbar-height) + var(--nav-main-height));
+
   /* --- Typography --- */
   --font-family:
     'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont,
@@ -3915,6 +3920,12 @@ textarea {
    3. TABLETS & MID-SIZE SCREENS (<= 768px)
    -------------------------------------------------------------------------- */
 @media (max-width: 768px) {
+  :root {
+    --nav-topbar-height: 0px;
+    --nav-main-height: 68px;
+    --nav-height: 68px;
+  }
+
   .Navbar-topBar {
     display: none;
   }
@@ -3938,11 +3949,6 @@ textarea {
   .TechStack-headerRight {
     max-width: 100%;
     font-size: clamp(0.75rem, 3.5vw, 0.875rem);
-  }
-
-  .TechStack-carouselWrapper {
-    mask-image: none;
-    -webkit-mask-image: none;
   }
 
   .Capabilities-capabilitiesSection {
@@ -9350,7 +9356,7 @@ textarea {
   align-items: center;
   gap: 0.875rem;
   color: #ffffff;
-  background: rgba(15, 23, 42, 0.88);
+  background: rgba(15, 23, 42, 0.95);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   border: 1px solid rgba(255, 255, 255, 0.15);
@@ -17221,14 +17227,16 @@ textarea {
    Derived from Executive Tech Talent Stitch Design System
    ========================================================================== */
 
-.NewHero-heroSection {
+.NewHero-heroSection,
+.NewHero-section {
   position: relative;
   width: 100%;
   overflow: hidden;
   background-color: var(--color-surface-container-lowest, #ffffff);
-  padding-top: 2rem;
+  padding-top: calc(var(--nav-height, 114px) + 1.5rem);
   padding-bottom: 4rem;
-  transition: background-color 0.25s ease;
+  scroll-margin-top: calc(var(--nav-height, 114px) + 1.5rem);
+  transition: background-color 0.25s ease, padding-top 0.25s ease;
 }
 
 /* Ambient Glow Orbs */
@@ -18006,9 +18014,14 @@ textarea {
   font-size: 0.6875rem;
   font-weight: 700;
   text-transform: uppercase;
-  color: var(--color-secondary, #49607e);
+  color: #1e293b;
   letter-spacing: 0.05em;
   margin-bottom: 0.125rem;
+  transition: color 0.2s ease;
+}
+
+[data-theme='dark'] .NewHero-fieldLabel {
+  color: #f8fafc;
 }
 
 .NewHero-fieldInput {
@@ -18017,18 +18030,24 @@ textarea {
   border: none;
   font-size: 0.875rem;
   font-weight: 600;
-  color: var(--color-navy-dark, #0f172a);
+  color: #0f172a;
   outline: none;
   font-family: inherit;
 }
 
 [data-theme='dark'] .NewHero-fieldInput {
-  color: #ffffff;
+  color: #f8fafc;
 }
 
 .NewHero-fieldInput::placeholder {
-  color: var(--color-outline, #747686);
+  color: #475569;
+  opacity: 1;
   font-weight: 400;
+}
+
+[data-theme='dark'] .NewHero-fieldInput::placeholder {
+  color: #94a3b8;
+  opacity: 1;
 }
 
 .NewHero-fieldSelect {
@@ -18037,24 +18056,26 @@ textarea {
   border: none;
   font-size: 0.875rem;
   font-weight: 600;
-  color: var(--color-navy-dark, #0f172a);
+  color: #0f172a;
   outline: none;
   font-family: inherit;
   cursor: pointer;
 }
 
 [data-theme='dark'] .NewHero-fieldSelect {
-  color: #ffffff;
+  color: #f8fafc;
 }
 
 .NewHero-fieldSelect option {
-  background-color: var(--color-surface-container-lowest, #ffffff);
-  color: var(--color-navy-dark, #0f172a);
+  background-color: #ffffff;
+  color: #0f172a;
+  font-weight: 500;
 }
 
 [data-theme='dark'] .NewHero-fieldSelect option {
-  background-color: #1a1b23;
-  color: #ffffff;
+  background-color: #1e293b;
+  color: #f8fafc;
+  font-weight: 500;
 }
 
 .NewHero-searchAction {
@@ -18102,10 +18123,19 @@ textarea {
    Responsive Overrides
    ========================================================================== */
 
+@media (max-width: 1024px) {
+  .NewHero-heroSection,
+  .NewHero-section {
+    padding-top: calc(var(--nav-height, 108px) + 1.5rem);
+  }
+}
+
 @media (max-width: 768px) {
-  .NewHero-heroSection {
-    padding-top: 1.5rem;
+  .NewHero-heroSection,
+  .NewHero-section {
+    padding-top: calc(var(--nav-height, 68px) + 1.25rem);
     padding-bottom: 2.5rem;
+    scroll-margin-top: calc(var(--nav-height, 68px) + 1.25rem);
   }
 
   .NewHero-slideshowContainer {
@@ -18221,7 +18251,8 @@ textarea {
    Continuous Infinite Marquee Carousel (Pure Brand Logos)
    ========================================================================== */
 
-.TechStack-carouselWrapper {
+.TechStack-carouselWrapper,
+.TechStack-marqueeWrapper {
   position: relative;
   width: 100%;
   overflow: hidden;
@@ -18242,17 +18273,26 @@ textarea {
   );
 }
 
-.TechStack-carouselTrack {
+.TechStack-carouselTrack,
+.TechStack-marqueeTrack {
   display: flex;
   gap: 1.25rem;
   width: max-content;
-  animation: techMarqueeScroll 32s linear infinite;
+  animation: techMarqueeScroll 35s linear infinite;
   will-change: transform;
   align-items: center;
 }
 
-.TechStack-carouselTrack:hover {
+.TechStack-carouselTrack:hover,
+.TechStack-marqueeTrack:hover {
   animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .TechStack-carouselTrack,
+  .TechStack-marqueeTrack {
+    animation-play-state: paused;
+  }
 }
 
 @keyframes techMarqueeScroll {
@@ -18274,6 +18314,7 @@ textarea {
   align-items: center;
   justify-content: center;
   height: 62px;
+  min-width: 140px;
   padding: 0.85rem 1.6rem;
   border-radius: var(--rounded-lg, 0.75rem);
   background-color: var(--color-surface-container-lowest, #ffffff);
@@ -18316,6 +18357,7 @@ textarea {
   align-items: center;
   justify-content: center;
   height: 100%;
+  width: 100%;
 }
 
 .TechStack-logoImg,
@@ -18323,7 +18365,7 @@ textarea {
   height: 28px;
   max-height: 32px;
   width: auto;
-  max-width: 135px;
+  max-width: 145px;
   object-fit: contain;
   display: block;
   transition:
@@ -18345,7 +18387,8 @@ textarea {
     align-items: flex-start;
   }
 
-  .TechStack-carouselWrapper {
+  .TechStack-carouselWrapper,
+  .TechStack-marqueeWrapper {
     mask-image: linear-gradient(
       to right,
       transparent 0%,

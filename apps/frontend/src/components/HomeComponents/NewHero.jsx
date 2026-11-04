@@ -306,7 +306,8 @@ const NewHero = ({ onOpenModal }) => {
     <>
       <section
         ref={heroRef}
-        className="NewHero-heroSection"
+        id="hero-section"
+        className="NewHero-heroSection NewHero-section"
         onMouseMove={handleHeroMouseMove}
       >
 
@@ -653,6 +654,7 @@ const NewHero = ({ onOpenModal }) => {
                     type="text"
                     className="NewHero-fieldInput"
                     placeholder="e.g. SAP ABAP, AEM, Ledger..."
+                    aria-label="Role or Skill"
                     value={roleInput}
                     onChange={(e) => setRoleInput(e.target.value)}
                   />
@@ -674,6 +676,7 @@ const NewHero = ({ onOpenModal }) => {
                   <select
                     id="hero-location-select"
                     className="NewHero-fieldSelect"
+                    aria-label="Location"
                     value={locationInput}
                     onChange={(e) => setLocationInput(e.target.value)}
                   >
@@ -704,6 +707,7 @@ const NewHero = ({ onOpenModal }) => {
                   <select
                     id="hero-experience-select"
                     className="NewHero-fieldSelect"
+                    aria-label="Experience"
                     value={experienceInput}
                     onChange={(e) => setExperienceInput(e.target.value)}
                   >

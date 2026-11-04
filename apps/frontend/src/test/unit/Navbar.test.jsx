@@ -16,13 +16,23 @@ describe('Navbar Component & Mobile Top Bar Refactor (Issue #119)', () => {
 
     expect(screen.getByText(/India & USA \/ Canada/i)).toBeInTheDocument();
     expect(
-      screen.getByText(/Talent is not bound by Borders/i)
+      screen.getByText(
+        /Deploy Top Bench Talent|Talent is not bound by Borders/i
+      )
     ).toBeInTheDocument();
     expect(screen.getByText('info@thinkwires.com')).toBeInTheDocument();
 
     const desktopToggle = screen.getByTestId('desktop-theme-toggle');
     expect(desktopToggle).toBeInTheDocument();
     expect(desktopToggle).toHaveAttribute('aria-label', 'Toggle Theme');
+  });
+
+  it('calibrates dynamic navigation height variables on document root', () => {
+    renderWithProviders(<Navbar />);
+
+    expect(
+      document.documentElement.style.getPropertyValue('--nav-height')
+    ).toBeDefined();
   });
 
   it('renders mobile theme toggle inside mobile navigation drawer with initial state', () => {

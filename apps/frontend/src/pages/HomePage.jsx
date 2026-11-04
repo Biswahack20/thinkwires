@@ -1,4 +1,4 @@
-import React, { Suspense } from 'react';
+import React, { Suspense, useEffect } from 'react';
 import { Helmet } from 'react-helmet-async';
 import Navbar from '../components/common/Navbar';
 // import Hero from '../components/HomeComponents/Hero';
@@ -29,6 +29,10 @@ const Reports = React.lazy(
 const CTA = React.lazy(() => import('../components/common/CTA'));
 
 const HomePage = () => {
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   return (
     <div>
       <Helmet>
