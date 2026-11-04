@@ -356,37 +356,39 @@ const Navbar = () => {
                 }`}
               >
                 <div className="Navbar-servicesHeader">
-                  <button
-                    ref={resourcesToggleRef}
-                    type="button"
-                    className={`Navbar-navLink flex items-center gap-1.5 bg-transparent border-0 cursor-pointer p-0 font-inherit ${
+                  <span
+                    className={`Navbar-navLink cursor-pointer select-none ${
                       ['/resources', '/events', '/faqs', '/policies', '/life-at-thinkwires', '/benefits'].some((p) =>
                         location.pathname.startsWith(p)
                       )
                         ? 'Navbar-active'
                         : ''
                     }`}
+                    onClick={() => setIsResourcesOpen((prev) => !prev)}
+                  >
+                    Resources
+                  </span>
+
+                  <button
+                    ref={resourcesToggleRef}
+                    type="button"
+                    className="Navbar-servicesToggle"
                     aria-label="Toggle resources dropdown"
                     aria-expanded={isResourcesOpen}
                     aria-haspopup="true"
                     aria-controls="Navbar-resourcesMenu"
                     onClick={() => setIsResourcesOpen((prev) => !prev)}
                   >
-                    <span>Resources</span>
                     <svg
-                      width="10"
-                      height="6"
+                      width="12"
+                      height="8"
                       viewBox="0 0 12 8"
                       fill="none"
                       stroke="currentColor"
-                      strokeWidth="1.75"
+                      strokeWidth="1.5"
                       strokeLinecap="round"
                       strokeLinejoin="round"
                       aria-hidden="true"
-                      className="transition-transform duration-200"
-                      style={{
-                        transform: isResourcesOpen ? 'rotate(180deg)' : 'rotate(0deg)',
-                      }}
                     >
                       <path d="m1 1 5 5 5-5" />
                     </svg>

@@ -91,7 +91,12 @@ const ContactChannels = ({ channels = [] }) => {
           );
 
           return (
-            <ScrollReveal key={ch.id} direction="up" delay={idx * 0.1}>
+            <ScrollReveal
+              key={ch.id}
+              direction="up"
+              delay={idx * 0.1}
+              style={{ display: 'flex', height: '100%' }}
+            >
               {ch.href ? (
                 <a
                   href={ch.href}

@@ -28,6 +28,7 @@ const BenchCandidateGrid = ({ talents, totalCount }) => {
             key={talent.id || talent.code || idx}
             direction="up"
             delay={(idx % 2) * 0.1}
+            style={{ display: 'flex', height: '100%' }}
           >
             <BenchCandidateCard talent={talent} />
           </ScrollReveal>
