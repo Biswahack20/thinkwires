@@ -31,8 +31,8 @@ export const getProfile = async (req, res) => {
       user = userId
         ? await UserMongo.findById(userId).select('-password').lean()
         : await UserMongo.findOne({ email: userEmail.toLowerCase() })
-          .select('-password')
-          .lean();
+            .select('-password')
+            .lean();
     }
 
     // 2. Query Secondary Relational Store (PostgreSQL) if absent or offline
@@ -49,7 +49,7 @@ export const getProfile = async (req, res) => {
               { email: user.email.toLowerCase() },
               { $setOnInsert: user },
               { upsert: true }
-            ).catch(() => { });
+            ).catch(() => {});
           }
         }
       } catch (pgErr) {

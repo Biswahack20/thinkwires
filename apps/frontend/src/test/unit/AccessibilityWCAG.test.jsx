@@ -72,11 +72,11 @@ describe('Sprint 6 (Issue #188): WCAG 2.1 Accessibility & Form Control Complianc
       render(
         <JobSearch
           searchQuery="React"
-          setSearchQuery={() => { }}
+          setSearchQuery={() => {}}
           locationFilter="All"
-          setLocationFilter={() => { }}
+          setLocationFilter={() => {}}
           experienceFilter="Senior"
-          setExperienceFilter={() => { }}
+          setExperienceFilter={() => {}}
         />
       );
 
@@ -132,9 +132,9 @@ describe('Sprint 6 (Issue #188): WCAG 2.1 Accessibility & Form Control Complianc
       render(
         <BlogFilters
           selectedCategory="all"
-          setSelectedCategory={() => { }}
+          setSelectedCategory={() => {}}
           searchQuery=""
-          setSearchQuery={() => { }}
+          setSearchQuery={() => {}}
         />
       );
 
@@ -177,7 +177,7 @@ describe('Sprint 6 (Issue #188): WCAG 2.1 Accessibility & Form Control Complianc
             isOpen={true}
             candidateId="cand-1"
             candidateName="Alice Developer"
-            onClose={() => { }}
+            onClose={() => {}}
           />
         );
       });
