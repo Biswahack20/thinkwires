@@ -21,6 +21,7 @@ import LegalPage from './pages/LegalPage';
 import NotFoundPage from './pages/NotFoundPage';
 import MissionVisionPage from './pages/MissionVisionPage';
 import ValuesCodeOfConductPage from './pages/ValuesCodeOfConductPage';
+import ComingSoonPage from './pages/ComingSoonPage';
 import ScrollAnimationManager from './components/common/ScrollAnimationManager';
 import LoadingSpinner from './components/common/LoadingSpinner';
 import ProtectedRoute from './components/common/ProtectedRoute';
@@ -83,6 +84,15 @@ function App() {
           <Route path="/hot-jobs" element={<JobPage />} />
           <Route path="/blog" element={<BlogPage />} />
           <Route path="/contact" element={<ContactPage />} />
+
+          {/* Resources Routes (Issue #170) */}
+          <Route path="/events" element={<ComingSoonPage />} />
+          <Route path="/resources/events" element={<ComingSoonPage />} />
+          <Route path="/faqs" element={<JobPage />} />
+          <Route path="/resources/faqs" element={<JobPage />} />
+          <Route path="/policies" element={<LegalPage />} />
+          <Route path="/life-at-thinkwires" element={<ComingSoonPage />} />
+          <Route path="/benefits" element={<JobPage />} />
 
           {/* Authentication Routes */}
           <Route path="/login" element={<LoginPage />} />
