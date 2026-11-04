@@ -338,3 +338,123 @@ export const sendRecruitmentNotificationEmail = async (
     };
   }
 };
+
+/**
+ * Sends requisition notification email to HR team when a client highlights their demand.
+ */
+export const sendRequisitionNotificationEmail = async (requisitionData) => {
+  try {
+    const transport = getTransporter();
+
+    const recipient =
+      process.env.RECRUITMENT_NOTIFICATION_EMAIL ||
+      process.env.RECRUITMENT_EMAIL ||
+      process.env.ADMIN_NOTIFICATION_EMAIL ||
+      'hr@thinkwires.com';
+
+    const fromAddress =
+      process.env.EMAIL_FROM ||
+      `"Thinkwires Requisitions Desk" <${process.env.SMTP_USER || 'hr@thinkwires.com'}>`;
+
+    const subject = `[Requisition Demand] ${requisitionData.targetRole || 'Technical Hiring'} - ${requisitionData.company || requisitionData.fullName || 'Client Inquiry'}`;
+
+    const escape = (str) =>
+      str ? String(str).replace(/[&<>"']/g, (m) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[m]) : '-';
+
+    const htmlContent = `
+      <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; max-width: 650px; margin: 0 auto; padding: 24px; border: 1px solid #e2e8f0; border-radius: 8px; background: #ffffff;">
+        <div style="border-bottom: 2px solid #2563eb; padding-bottom: 16px; margin-bottom: 24px;">
+          <h2 style="color: #1e293b; margin: 0 0 8px 0; font-size: 20px;">New Client Demand / Requisition Received</h2>
+          <p style="color: #64748b; margin: 0; font-size: 14px;">Submitted via Thinkwires Bench Requisition Desk</p>
+        </div>
+
+        <table style="width: 100%; border-collapse: collapse; margin-bottom: 24px;">
+          <tbody>
+            <tr style="border-bottom: 1px solid #f1f5f9;">
+              <td style="padding: 10px 0; color: #64748b; font-weight: 600; width: 35%;">Target Role / Title:</td>
+              <td style="padding: 10px 0; color: #0f172a; font-weight: 700;">${escape(requisitionData.targetRole)}</td>
+            </tr>
+            <tr style="border-bottom: 1px solid #f1f5f9;">
+              <td style="padding: 10px 0; color: #64748b; font-weight: 600;">Required Skills / Stack:</td>
+              <td style="padding: 10px 0; color: #0284c7; font-weight: 600;">${escape(requisitionData.techStack)}</td>
+            </tr>
+            <tr style="border-bottom: 1px solid #f1f5f9;">
+              <td style="padding: 10px 0; color: #64748b; font-weight: 600;">Experience Range:</td>
+              <td style="padding: 10px 0; color: #0f172a;">${escape(requisitionData.seniority)}</td>
+            </tr>
+            <tr style="border-bottom: 1px solid #f1f5f9;">
+              <td style="padding: 10px 0; color: #64748b; font-weight: 600;">Domain:</td>
+              <td style="padding: 10px 0; color: #0f172a;">${escape(requisitionData.domain || requisitionData.engagementModel)}</td>
+            </tr>
+            <tr style="border-bottom: 1px solid #f1f5f9;">
+              <td style="padding: 10px 0; color: #64748b; font-weight: 600;">Target Notice Period:</td>
+              <td style="padding: 10px 0; color: #0f172a;">${escape(requisitionData.deploymentUrgency)}</td>
+            </tr>
+            <tr style="border-bottom: 1px solid #f1f5f9;">
+              <td style="padding: 10px 0; color: #64748b; font-weight: 600;">Contact Name:</td>
+              <td style="padding: 10px 0; color: #0f172a;">${escape(requisitionData.fullName)}</td>
+            </tr>
+            <tr style="border-bottom: 1px solid #f1f5f9;">
+              <td style="padding: 10px 0; color: #64748b; font-weight: 600;">Work Email:</td>
+              <td style="padding: 10px 0; color: #0f172a;"><a href="mailto:${escape(requisitionData.corporateEmail)}" style="color: #2563eb;">${escape(requisitionData.corporateEmail)}</a></td>
+            </tr>
+            <tr style="border-bottom: 1px solid #f1f5f9;">
+              <td style="padding: 10px 0; color: #64748b; font-weight: 600;">Company / Organization:</td>
+              <td style="padding: 10px 0; color: #0f172a;">${escape(requisitionData.company)}</td>
+            </tr>
+            <tr style="border-bottom: 1px solid #f1f5f9;">
+              <td style="padding: 10px 0; color: #64748b; font-weight: 600;">Contact Method / Details:</td>
+              <td style="padding: 10px 0; color: #0f172a;">${escape(requisitionData.phone || requisitionData.contactDetails)}</td>
+            </tr>
+            ${requisitionData.jobDescription ? `
+            <tr>
+              <td style="padding: 10px 0; color: #64748b; font-weight: 600; vertical-align: top;">Additional Brief:</td>
+              <td style="padding: 10px 0; color: #334155; line-height: 1.5;">${escape(requisitionData.jobDescription)}</td>
+            </tr>
+            ` : ''}
+          </tbody>
+        </table>
+
+        <div style="background: #f8fafc; padding: 12px 16px; border-radius: 6px; font-size: 13px; color: #64748b;">
+          <strong>Action Required:</strong> Please assign this demand to a Technical Staffing Director and calibrate candidate dossiers within the 5-hour SLA.
+        </div>
+      </div>
+    `;
+
+    if (!transport) {
+      console.log('----------------------------------------------------');
+      console.log('[MOCK REQUISITION EMAIL] SMTP not configured. Logged notification:');
+      console.log(`To: ${recipient}`);
+      console.log(`Subject: ${subject}`);
+      console.log(`Role: ${requisitionData.targetRole} | Stack: ${requisitionData.techStack}`);
+      console.log(`Client: ${requisitionData.fullName} <${requisitionData.corporateEmail}> (${requisitionData.company || 'N/A'})`);
+      console.log('----------------------------------------------------');
+      return {
+        success: true,
+        mode: 'mock_logged',
+        recipient,
+      };
+    }
+
+    const info = await transport.sendMail({
+      from: fromAddress,
+      to: recipient,
+      subject,
+      html: htmlContent,
+    });
+
+    console.log(`[EMAIL SENT] Requisition notification delivered to ${recipient}: ${info.messageId}`);
+    return {
+      success: true,
+      mode: 'smtp_delivered',
+      messageId: info.messageId,
+      recipient,
+    };
+  } catch (error) {
+    console.error('[EMAIL ERROR] Failed to send requisition notification email:', error.message);
+    return {
+      success: false,
+      error: error.message,
+    };
+  }
+};
