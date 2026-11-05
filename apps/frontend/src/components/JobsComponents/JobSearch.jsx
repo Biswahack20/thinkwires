@@ -46,6 +46,9 @@ const JobSearch = ({
         <div className="JobSearch-inputsRow">
           {/* Keyword Input */}
           <div className="JobSearch-fieldWithIcon JobSearch-keywordField">
+            <label htmlFor="job-search-query" className="sr-only">
+              Search by title or tech stack
+            </label>
             <svg
               className="JobSearch-inputIcon"
               width="18"
@@ -61,6 +64,8 @@ const JobSearch = ({
               <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
             </svg>
             <input
+              id="job-search-query"
+              aria-label="Search job titles or skills"
               type="text"
               className="JobSearch-nativeInput"
               placeholder="Skill, role or stack (e.g. SAP, AEM, Cloud, C..."
@@ -71,6 +76,7 @@ const JobSearch = ({
               <button
                 type="button"
                 className="JobSearch-clearBtn"
+                aria-label="Clear search input"
                 onClick={() => setSearchQuery('')}
               >
                 <CloseIcon size={13} />
@@ -80,6 +86,9 @@ const JobSearch = ({
 
           {/* Location Selector */}
           <div className="JobSearch-fieldWithIcon JobSearch-selectField">
+            <label htmlFor="job-search-location" className="sr-only">
+              Filter by Location
+            </label>
             <svg
               className="JobSearch-inputIcon"
               width="18"
@@ -95,6 +104,8 @@ const JobSearch = ({
               <circle cx="12" cy="10" r="3"></circle>
             </svg>
             <select
+              id="job-search-location"
+              aria-label="Filter jobs by location"
               className="JobSearch-nativeSelect"
               value={locationFilter}
               onChange={(e) => setLocationFilter(e.target.value)}
@@ -109,6 +120,9 @@ const JobSearch = ({
 
           {/* Experience Selector */}
           <div className="JobSearch-fieldWithIcon JobSearch-selectField">
+            <label htmlFor="job-search-experience" className="sr-only">
+              Filter by Experience
+            </label>
             <svg
               className="JobSearch-inputIcon"
               width="18"
@@ -124,6 +138,8 @@ const JobSearch = ({
               <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
             </svg>
             <select
+              id="job-search-experience"
+              aria-label="Filter jobs by experience tier"
               className="JobSearch-nativeSelect"
               value={experienceFilter}
               onChange={(e) => setExperienceFilter(e.target.value)}
@@ -137,7 +153,7 @@ const JobSearch = ({
           </div>
 
           {/* Search Submit Button */}
-          <button type="submit" className="JobSearch-submitButton">
+          <button type="submit" aria-label="Search Jobs" className="JobSearch-submitButton">
             <span>Search</span>
             <svg
               width="16"

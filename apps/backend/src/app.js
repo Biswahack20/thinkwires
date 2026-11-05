@@ -116,6 +116,11 @@ app.get('/api/health', (req, res) => {
       postgresql: isPostgresReady ? 'connected' : 'optional/fallback',
       redis: isRedisConnected() ? 'connected' : 'in-memory fallback',
     },
+    architecture: {
+      primaryStore: 'MongoDB (Mongoose / ATS & Admin Core)',
+      secondaryRelationalStore: 'PostgreSQL (Sequelize / Dual Sync)',
+      dualSyncStatus: 'active',
+    },
     memoryUsage: {
       rssMb: Math.round(process.memoryUsage().rss / 1024 / 1024),
       heapUsedMb: Math.round(process.memoryUsage().heapUsed / 1024 / 1024),

@@ -1,7 +1,7 @@
 import re
 from typing import Dict, Any, List
 from app.schemas.resume import ResumeMatchRequest, ResumeMatchResponse
-from app.services.resume_parser import COMMON_TECH_SKILLS
+from app.services.resume_parser import COMMON_TECH_SKILLS, sanitize_untrusted_text
 
 def calculate_match_score(request: ResumeMatchRequest) -> ResumeMatchResponse:
     """
@@ -13,9 +13,9 @@ def calculate_match_score(request: ResumeMatchRequest) -> ResumeMatchResponse:
     - Technical Depth & Hands-on: 10%
     - Project Relevance: 10%
     - Domain Relevance: 5%
-    Strict anti-keyword-stuffing rules and zero emojis.
+    Strict anti-keyword-stuffing rules, prompt injection sanitization (Issue #185), and zero emojis.
     """
-    resume_text = request.resume_text or ""
+    resume_text = sanitize_untrusted_text(request.resume_text or "")
     candidate_skills = [s.strip().lower() for s in (request.candidate_skills or [])]
 
     # Combine text extraction if skills list was empty

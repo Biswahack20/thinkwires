@@ -170,11 +170,13 @@ const BenchFilterBar = ({ totalCount }) => {
       <div className="BenchFilter-dropdownRow">
         <div className="BenchFilter-dropdownGroup">
           <div className="BenchFilter-selectField">
-            <label className="BenchFilter-selectLabel">
+            <label htmlFor="bench-filter-urgency" className="BenchFilter-selectLabel">
               <span className="material-symbols-outlined">schedule</span>{' '}
               Urgency:
             </label>
             <select
+              id="bench-filter-urgency"
+              aria-label="Filter candidates by deployment urgency"
               value={activeUrgency}
               onChange={(e) => dispatch(setActiveUrgency(e.target.value))}
               className="BenchFilter-select"
@@ -188,11 +190,12 @@ const BenchFilterBar = ({ totalCount }) => {
           </div>
 
           <div className="BenchFilter-selectField">
-            <label className="BenchFilter-selectLabel">
+            <label htmlFor="bench-filter-notice-period" className="BenchFilter-selectLabel">
               <span className="material-symbols-outlined">hourglass_top</span>{' '}
               Notice Period:
             </label>
             <select
+              id="bench-filter-notice-period"
               value={activeNoticePeriod}
               onChange={(e) => dispatch(setActiveNoticePeriod(e.target.value))}
               className="BenchFilter-select"
@@ -207,13 +210,15 @@ const BenchFilterBar = ({ totalCount }) => {
           </div>
 
           <div className="BenchFilter-selectField">
-            <label className="BenchFilter-selectLabel">
+            <label htmlFor="bench-filter-experience" className="BenchFilter-selectLabel">
               <span className="material-symbols-outlined">
                 workspace_premium
               </span>{' '}
               Experience:
             </label>
             <select
+              id="bench-filter-experience"
+              aria-label="Filter candidates by experience tier"
               value={activeExperience}
               onChange={(e) => dispatch(setActiveExperience(e.target.value))}
               className="BenchFilter-select"
@@ -227,11 +232,13 @@ const BenchFilterBar = ({ totalCount }) => {
           </div>
 
           <div className="BenchFilter-selectField">
-            <label className="BenchFilter-selectLabel">
+            <label htmlFor="bench-filter-location" className="BenchFilter-selectLabel">
               <span className="material-symbols-outlined">public</span>{' '}
               Location:
             </label>
             <select
+              id="bench-filter-location"
+              aria-label="Filter candidates by location"
               value={activeLocation}
               onChange={(e) => dispatch(setActiveLocation(e.target.value))}
               className="BenchFilter-select"
@@ -246,10 +253,12 @@ const BenchFilterBar = ({ totalCount }) => {
         </div>
 
         <div className="BenchFilter-sortField">
-          <label className="BenchFilter-selectLabel">
+          <label htmlFor="bench-filter-sort-by" className="BenchFilter-selectLabel">
             <span className="material-symbols-outlined">sort</span> Sort by:
           </label>
           <select
+            id="bench-filter-sort-by"
+            aria-label="Sort candidates by criteria"
             value={sortBy}
             onChange={(e) => dispatch(setSortBy(e.target.value))}
             className="BenchFilter-select BenchFilter-selectSort"

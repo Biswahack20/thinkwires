@@ -76,6 +76,36 @@ const COMMON_TECH_SKILLS = [
   'Angular',
 ];
 
+export const ADVERSARIAL_PROMPT_PATTERNS = [
+  /ignore\s+(?:all\s+|prior\s+|previous\s+|above\s+)*instructions/i,
+  /disregard\s+(?:all\s+|prior\s+|previous\s+|above\s+)*instructions/i,
+  /system\s+(prompt|override|directive)/i,
+  /you\s+are\s+now\s+(a|an)?/i,
+  /jailbreak/i,
+  /output\s+a?\s*100%/i,
+  /recommend\s+immediate\s+hiring/i,
+  /bypass\s+(rubric|evaluation|scoring)/i,
+  /assistant\s+prompt/i,
+  /developer\s+mode/i,
+];
+
+/**
+ * Sanitizes untrusted candidate text to neutralize prompt injection vectors (Issue #185)
+ * @param {string} text
+ * @returns {string}
+ */
+export const sanitizeUntrustedText = (text = '') => {
+  if (!text || typeof text !== 'string') return '';
+  let sanitized = text
+    .replace(/<\/candidate_document_untrusted>/gi, '&lt;/candidate_document_untrusted&gt;')
+    .replace(/<candidate_document_untrusted>/gi, '&lt;candidate_document_untrusted&gt;');
+
+  for (const pattern of ADVERSARIAL_PROMPT_PATTERNS) {
+    sanitized = sanitized.replace(pattern, '[FILTERED_ADVERSARIAL_TOKEN]');
+  }
+  return sanitized;
+};
+
 /**
  * AI Service Integration Client
  * Communicates with the FastAPI AI Microservice on port 8000.
@@ -108,6 +138,7 @@ class AIServiceClient {
    * @returns {Promise<Object>}
    */
   async parseResume(fileBuffer = null, originalname = '', rawText = '') {
+    const sanitizedRawText = sanitizeUntrustedText(rawText);
     try {
       if (fileBuffer) {
         const formData = new FormData();
@@ -117,7 +148,7 @@ class AIServiceClient {
             : 'application/octet-stream',
         });
         formData.append('file', blob, originalname || 'resume.pdf');
-        if (rawText) formData.append('raw_text', rawText);
+        if (sanitizedRawText) formData.append('raw_text', sanitizedRawText);
 
         const response = await fetch(this.resolveUrl('api/resume/parse'), {
           method: 'POST',
@@ -133,9 +164,9 @@ class AIServiceClient {
             `AI Microservice parseResume HTTP ${response.status}: ${response.statusText}`
           );
         }
-      } else if (rawText) {
+      } else if (sanitizedRawText) {
         const formData = new FormData();
-        formData.append('raw_text', rawText);
+        formData.append('raw_text', sanitizedRawText);
 
         const response = await fetch(this.resolveUrl('api/resume/parse'), {
           method: 'POST',
@@ -394,6 +425,8 @@ class AIServiceClient {
     if (!text) {
       text = originalname || '';
     }
+
+    text = sanitizeUntrustedText(text);
 
     const lines = text
       .split('\n')
@@ -682,13 +715,13 @@ class AIServiceClient {
     const candidateName = candidateData.candidateName || candidateData.name || 'Candidate';
     const targetRole = jobData.jobTitle || jobData.title || 'Technical Specialist';
     const clientName = jobData.company || jobData.client || 'Enterprise Partner';
-    const resumeText = (
+    const rawResume =
       candidateData.resumeText ||
       candidateData.candidateNote ||
       candidateData.coverLetter ||
       candidateData.bio ||
-      ''
-    ).toLowerCase();
+      '';
+    const resumeText = sanitizeUntrustedText(rawResume).toLowerCase();
 
     const candidateSkills = (
       candidateData.skills ||
