@@ -150,7 +150,7 @@ const Reports = () => {
             {reportsData.map((report) => (
               <div
                 key={report.id}
-                className="Reports-slide flex-shrink-0"
+                className="Reports-slide flex-shrink-0 flex"
                 style={{
                   width:
                     cardsPerView === 1
@@ -160,7 +160,7 @@ const Reports = () => {
                       : 'calc((100% - 48px) / 3)',
                 }}
               >
-                <div className="Reports-card group h-full flex flex-col justify-between bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300">
+                <div className="Reports-card group w-full h-full flex flex-col justify-between bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300">
                   <div className="flex flex-col flex-1">
                     <div className="Reports-imageContainer relative w-full h-48 overflow-hidden bg-slate-100">
                       <img
@@ -176,10 +176,10 @@ const Reports = () => {
                       <span className="Reports-date text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2 block">
                         {report.date}
                       </span>
-                      <h3 className="Reports-cardTitle text-lg font-bold text-slate-900 group-hover:text-blue-600 transition-colors mb-3 leading-snug line-clamp-2 min-h-[3.25rem]">
+                      <h3 className="Reports-cardTitle text-lg font-bold text-slate-900 group-hover:text-blue-600 transition-colors mb-3 leading-snug line-clamp-2 min-h-[3.5rem]">
                         {report.title}
                       </h3>
-                      <p className="Reports-cardDesc text-sm text-slate-600 leading-relaxed line-clamp-3 mb-4 flex-1">
+                      <p className="Reports-cardDesc text-sm text-slate-600 leading-relaxed line-clamp-3 mb-4 min-h-[4.5rem]">
                         {report.desc}
                       </p>
                     </div>
