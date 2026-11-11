@@ -61,8 +61,6 @@ const Reports = () => {
   } = useSelector((state) => state.blog);
 
   const trackRef = useRef(null);
-  const [canScrollLeft, setCanScrollLeft] = useState(false);
-  const [canScrollRight, setCanScrollRight] = useState(true);
   const [activeSlide, setActiveSlide] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(() => {
@@ -108,15 +106,12 @@ const Reports = () => {
     return () => mediaQuery.removeEventListener('change', handler);
   }, []);
 
-  // Update navigation button bounds based on scroll position
+  // Update active slide index based on current scroll position
   const updateScrollBounds = useCallback(() => {
     const el = trackRef.current;
     if (!el) return;
 
-    const { scrollLeft, scrollWidth, clientWidth } = el;
-    setCanScrollLeft(scrollLeft > 6);
-    setCanScrollRight(scrollLeft + clientWidth < scrollWidth - 6);
-
+    const { scrollLeft } = el;
     const firstCard = el.querySelector('.Reports-slide');
     if (firstCard) {
       const cardStep = firstCard.offsetWidth + 24; // width + gap
@@ -141,32 +136,12 @@ const Reports = () => {
     };
   }, [updateScrollBounds, allArticles]);
 
-  // Scroll controls using actual card dimensions and gap
+  // Scroll step using card width and gap
   const getScrollStep = () => {
     const el = trackRef.current;
     if (!el) return 350;
     const firstCard = el.querySelector('.Reports-slide');
     return firstCard ? firstCard.offsetWidth + 24 : el.clientWidth;
-  };
-
-  const handlePrev = () => {
-    const el = trackRef.current;
-    if (!el) return;
-    const step = getScrollStep();
-    el.scrollBy({
-      left: -step,
-      behavior: prefersReducedMotion ? 'auto' : 'smooth',
-    });
-  };
-
-  const handleNext = () => {
-    const el = trackRef.current;
-    if (!el) return;
-    const step = getScrollStep();
-    el.scrollBy({
-      left: step,
-      behavior: prefersReducedMotion ? 'auto' : 'smooth',
-    });
   };
 
   const handleScrollToSlide = (idx) => {
@@ -181,16 +156,25 @@ const Reports = () => {
 
   // Keyboard navigation on track focus
   const handleKeyDown = (e) => {
+    const el = trackRef.current;
+    if (!el) return;
+    const step = getScrollStep();
     if (e.key === 'ArrowLeft') {
       e.preventDefault();
-      handlePrev();
+      el.scrollBy({
+        left: -step,
+        behavior: prefersReducedMotion ? 'auto' : 'smooth',
+      });
     } else if (e.key === 'ArrowRight') {
       e.preventDefault();
-      handleNext();
+      el.scrollBy({
+        left: step,
+        behavior: prefersReducedMotion ? 'auto' : 'smooth',
+      });
     }
   };
 
-  // Autoplay support with hover & touch pause
+  // Continuous Auto-Scrolling with pause on hover/touch
   useEffect(() => {
     if (isPaused || prefersReducedMotion || totalReports <= 1) {
       return;
@@ -199,7 +183,8 @@ const Reports = () => {
       const el = trackRef.current;
       if (!el) return;
       const { scrollLeft, scrollWidth, clientWidth } = el;
-      if (scrollLeft + clientWidth >= scrollWidth - 10) {
+      // When nearing the end, loop smoothly back to beginning
+      if (scrollLeft + clientWidth >= scrollWidth - 15) {
         el.scrollTo({
           left: 0,
           behavior: prefersReducedMotion ? 'auto' : 'smooth',
@@ -211,7 +196,7 @@ const Reports = () => {
           behavior: prefersReducedMotion ? 'auto' : 'smooth',
         });
       }
-    }, 7000);
+    }, 4000);
 
     return () => clearInterval(timer);
   }, [isPaused, prefersReducedMotion, totalReports]);
@@ -356,40 +341,12 @@ const Reports = () => {
               Our Latest Tech &amp; Market Reports
             </h2>
           </div>
-          <div className="flex items-center gap-3">
-            {/* Slider Navigation Arrows */}
-            <div className="Reports-navControls">
-              <button
-                type="button"
-                onClick={handlePrev}
-                disabled={!canScrollLeft}
-                aria-label="Previous reports"
-                className="Reports-navBtn"
-              >
-                <span className="material-symbols-outlined text-[18px]">
-                  chevron_left
-                </span>
-              </button>
-              <button
-                type="button"
-                onClick={handleNext}
-                disabled={!canScrollRight}
-                aria-label="Next reports"
-                className="Reports-navBtn"
-              >
-                <span className="material-symbols-outlined text-[18px]">
-                  chevron_right
-                </span>
-              </button>
-            </div>
-
-            <Link to="/blog" className="Reports-browseLink group">
-              <span>Browse All Reports</span>
-              <span className="material-symbols-outlined text-[18px] group-hover:translate-x-1 transition-transform">
-                arrow_forward
-              </span>
-            </Link>
-          </div>
+          <Link to="/blog" className="Reports-browseLink group">
+            <span>Browse All Reports</span>
+            <span className="material-symbols-outlined text-[18px] group-hover:translate-x-1 transition-transform">
+              arrow_forward
+            </span>
+          </Link>
         </div>
 
         {/* Carousel Viewport with Native Horizontal Scroll & CSS Scroll-Snap */}
