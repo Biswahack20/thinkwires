@@ -1,217 +1,512 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
-import { fetchReports } from '../../store/slices/homeSlice';
+import {
+  fetchArticles,
+  fetchFeaturedArticle,
+} from '../../store/slices/blogSlice';
+
+const FALLBACK_IMAGES = {
+  'card-1':
+    'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80',
+  'card-2':
+    'https://images.unsplash.com/photo-1573164713988-8665fc963095?auto=format&fit=crop&w=800&q=80',
+  'card-3':
+    'https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?auto=format&fit=crop&w=800&q=80',
+  'card-4':
+    'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=800&q=80',
+  'card-5':
+    'https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=800&q=80',
+  'card-6':
+    'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=800&q=80',
+};
+
+const getArticleImage = (art) => {
+  if (art.imageUrl) return art.imageUrl;
+  if (art.featuredImageUrl) return art.featuredImageUrl;
+  if (art.image) return art.image;
+  if (FALLBACK_IMAGES[art.id]) return FALLBACK_IMAGES[art.id];
+  return 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=800&q=80';
+};
+
+const getAuthorInitials = (author) => {
+  if (!author) return 'TW';
+  if (author.initials) return author.initials;
+  if (typeof author === 'string') {
+    return author
+      .split(' ')
+      .map((n) => n[0])
+      .join('')
+      .slice(0, 2)
+      .toUpperCase();
+  }
+  if (author.name) {
+    return author.name
+      .split(' ')
+      .map((n) => n[0])
+      .join('')
+      .slice(0, 2)
+      .toUpperCase();
+  }
+  return 'TW';
+};
+
+const getInitialCardsPerView = () => {
+  if (typeof window === 'undefined') return 3;
+  if (window.innerWidth < 768) return 1;
+  if (window.innerWidth < 1200) return 2;
+  return 3;
+};
 
 const Reports = () => {
   const dispatch = useDispatch();
-  const { reports: reportsData, status } = useSelector((state) => state.home);
+  const {
+    articles: blogArticles,
+    featuredArticle,
+    status: blogStatus,
+    error: blogError,
+  } = useSelector((state) => state.blog);
 
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [cardsPerView, setCardsPerView] = useState(3);
-  const [touchStartX, setTouchStartX] = useState(null);
-  const [touchEndX, setTouchEndX] = useState(null);
+  const trackRef = useRef(null);
+  const currentSlideRef = useRef(0);
+  const [activeSlide, setActiveSlide] = useState(0);
+  const [cardsPerView, setCardsPerView] = useState(getInitialCardsPerView);
   const [isPaused, setIsPaused] = useState(false);
-  const timerRef = useRef(null);
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  });
 
-  useEffect(() => {
-    if (status.reports === 'idle') {
-      dispatch(fetchReports());
+  // Combine featured flagship paper and all published blog articles without arbitrary slicing
+  const allArticles = useMemo(() => {
+    const list = [];
+    if (featuredArticle && featuredArticle.id) {
+      list.push(featuredArticle);
     }
-  }, [dispatch, status.reports]);
+    if (Array.isArray(blogArticles)) {
+      blogArticles.forEach((art) => {
+        if (
+          !list.some(
+            (item) => item.id === art.id || (item.slug && item.slug === art.slug)
+          )
+        ) {
+          list.push(art);
+        }
+      });
+    }
+    return list;
+  }, [featuredArticle, blogArticles]);
 
+  const totalReports = allArticles.length;
+
+  // Reduce dots count to valid scroll stops: totalReports - cardsPerView + 1
+  const maxDots = Math.max(1, totalReports - cardsPerView + 1);
+
+  // Fetch blog data if idle
+  useEffect(() => {
+    if (blogStatus === 'idle') {
+      dispatch(fetchArticles());
+      dispatch(fetchFeaturedArticle());
+    }
+  }, [dispatch, blogStatus]);
+
+  // Track responsive cards per view
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth < 640) {
-        setCardsPerView(1);
-      } else if (window.innerWidth < 1024) {
-        setCardsPerView(2);
-      } else {
-        setCardsPerView(3);
+      let perView = 3;
+      if (window.innerWidth < 768) {
+        perView = 1;
+      } else if (window.innerWidth < 1200) {
+        perView = 2;
       }
+      setCardsPerView(perView);
     };
-    handleResize();
+
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const totalReports = reportsData?.length || 0;
-  const maxIndex = Math.max(0, totalReports - cardsPerView);
+  // Listen for reduced motion preference
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const handler = (e) => setPrefersReducedMotion(e.matches);
+    mediaQuery.addEventListener('change', handler);
+    return () => mediaQuery.removeEventListener('change', handler);
+  }, []);
 
-  const nextSlide = () => {
-    setCurrentIndex((prev) => (prev >= maxIndex ? 0 : prev + 1));
-  };
+  // Programmatic scroll to a specific slide index using scrollIntoView
+  const handleScrollToSlide = useCallback(
+    (idx) => {
+      const targetIdx = Math.max(0, Math.min(idx, maxDots - 1));
+      currentSlideRef.current = targetIdx;
+      setActiveSlide(targetIdx);
 
-  const prevSlide = () => {
-    setCurrentIndex((prev) => (prev <= 0 ? maxIndex : prev - 1));
-  };
+      const el = trackRef.current;
+      if (el) {
+        const cards = el.querySelectorAll('.Reports-slide');
+        if (cards[targetIdx]) {
+          cards[targetIdx].scrollIntoView({
+            behavior: prefersReducedMotion ? 'auto' : 'smooth',
+            block: 'nearest',
+            inline: 'start',
+          });
+        }
+      }
+    },
+    [maxDots, prefersReducedMotion]
+  );
 
-  const handleTouchStart = (e) => {
-    setTouchStartX(e.targetTouches[0].clientX);
-  };
+  // Update active slide indicator as user scrolls manually
+  const handleScroll = useCallback(() => {
+    const el = trackRef.current;
+    if (!el) return;
 
-  const handleTouchMove = (e) => {
-    setTouchEndX(e.targetTouches[0].clientX);
-  };
+    const { scrollLeft } = el;
+    const cards = el.querySelectorAll('.Reports-slide');
+    if (!cards.length) return;
 
-  const handleTouchEnd = () => {
-    if (!touchStartX || !touchEndX) return;
-    const distance = touchStartX - touchEndX;
-    if (distance > 50) {
-      nextSlide();
-    } else if (distance < -50) {
-      prevSlide();
+    const firstCard = cards[0];
+    const cardStep = firstCard.offsetWidth + 24; // width + gap
+    if (cardStep > 0) {
+      let idx = Math.round(scrollLeft / cardStep);
+      idx = Math.max(0, Math.min(idx, maxDots - 1));
+      currentSlideRef.current = idx;
+      setActiveSlide(idx);
     }
-    setTouchStartX(null);
-    setTouchEndX(null);
-  };
+  }, [maxDots]);
 
   useEffect(() => {
-    if (isPaused || totalReports <= cardsPerView) {
-      if (timerRef.current) clearInterval(timerRef.current);
+    const el = trackRef.current;
+    if (!el) return;
+
+    handleScroll();
+    el.addEventListener('scroll', handleScroll, { passive: true });
+    return () => el.removeEventListener('scroll', handleScroll);
+  }, [handleScroll, allArticles]);
+
+  // Keyboard navigation on track focus
+  const handleKeyDown = (e) => {
+    if (e.key === 'ArrowLeft') {
+      e.preventDefault();
+      const prevIdx = (currentSlideRef.current - 1 + maxDots) % maxDots;
+      handleScrollToSlide(prevIdx);
+    } else if (e.key === 'ArrowRight') {
+      e.preventDefault();
+      const nextIdx = (currentSlideRef.current + 1) % maxDots;
+      handleScrollToSlide(nextIdx);
+    }
+  };
+
+  // Continuous Auto-Scrolling every 5 seconds with pause on hover/touch
+  useEffect(() => {
+    if (isPaused || prefersReducedMotion || totalReports <= cardsPerView) {
       return;
     }
-    timerRef.current = setInterval(() => {
-      nextSlide();
-    }, 7000);
-    return () => {
-      if (timerRef.current) clearInterval(timerRef.current);
-    };
-  }, [isPaused, totalReports, cardsPerView, maxIndex]);
 
-  return (
-    <section
-      className="Reports-section"
-      onMouseEnter={() => setIsPaused(true)}
-      onMouseLeave={() => setIsPaused(false)}
-    >
-      <div className="Reports-container">
-        <div className="Reports-header">
-          <div className="Reports-headerLeft">
-            <span className="Reports-tag">TALENT ADVISORY INSIGHTS</span>
-            <h2 className="Reports-title">
-              Our Latest Tech &amp; Market Reports
-            </h2>
-          </div>
-          <div className="flex items-center gap-3">
-            {/* Slider Navigation Arrows */}
-            <div className="flex items-center gap-1.5 mr-2">
-              <button
-                type="button"
-                onClick={prevSlide}
-                aria-label="Previous report"
-                className="w-9 h-9 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 flex items-center justify-center transition-all shadow-sm active:scale-95"
-              >
-                <span className="material-symbols-outlined text-[18px]">
-                  chevron_left
-                </span>
-              </button>
-              <button
-                type="button"
-                onClick={nextSlide}
-                aria-label="Next report"
-                className="w-9 h-9 rounded-lg border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 flex items-center justify-center transition-all shadow-sm active:scale-95"
-              >
-                <span className="material-symbols-outlined text-[18px]">
-                  chevron_right
-                </span>
-              </button>
+    const timer = setInterval(() => {
+      const nextIdx = (currentSlideRef.current + 1) % maxDots;
+      handleScrollToSlide(nextIdx);
+    }, 5000);
+
+    return () => clearInterval(timer);
+  }, [isPaused, prefersReducedMotion, totalReports, cardsPerView, maxDots, handleScrollToSlide]);
+
+  // Deep-link destination for modal reader on Blog page
+  const getReportDestination = (article) => {
+    if (article.slug) return `/blog?article=${encodeURIComponent(article.slug)}`;
+    if (article.id) return `/blog?article=${encodeURIComponent(article.id)}`;
+    return `/blog?article=${encodeURIComponent(article.title)}`;
+  };
+
+  // 1. Loading state
+  if (blogStatus === 'loading' && allArticles.length === 0) {
+    return (
+      <section
+        className="Reports-section"
+        aria-labelledby="reports-section-heading"
+      >
+        <div className="Reports-container">
+          <div className="Reports-header">
+            <div className="Reports-headerLeft">
+              <span className="Reports-tag">TALENT ADVISORY INSIGHTS</span>
+              <h2 id="reports-section-heading" className="Reports-title">
+                Our Latest Tech &amp; Market Reports
+              </h2>
             </div>
+          </div>
+          <div className="Reports-grid">
+            {[1, 2, 3].map((idx) => (
+              <div key={idx} className="Reports-card animate-pulse">
+                <div className="Reports-imageContainer bg-slate-200" />
+                <div className="Reports-content space-y-3">
+                  <div className="h-4 bg-slate-200 rounded w-1/3" />
+                  <div className="h-6 bg-slate-200 rounded w-4/5" />
+                  <div className="h-4 bg-slate-200 rounded w-full" />
+                  <div className="h-4 bg-slate-200 rounded w-2/3" />
+                  <div className="h-8 bg-slate-200 rounded w-1/4 mt-4" />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+  }
 
+  // 2. Error state
+  if (blogStatus === 'failed' && allArticles.length === 0) {
+    return (
+      <section
+        className="Reports-section"
+        aria-labelledby="reports-section-heading"
+      >
+        <div className="Reports-container">
+          <div className="Reports-header">
+            <div className="Reports-headerLeft">
+              <span className="Reports-tag">TALENT ADVISORY INSIGHTS</span>
+              <h2 id="reports-section-heading" className="Reports-title">
+                Our Latest Tech &amp; Market Reports
+              </h2>
+            </div>
             <Link to="/blog" className="Reports-browseLink group">
-              <span>Browse All Articles</span>
+              <span>Browse All Reports</span>
               <span className="material-symbols-outlined text-[18px] group-hover:translate-x-1 transition-transform">
                 arrow_forward
               </span>
             </Link>
           </div>
+          <div className="p-8 text-center bg-white rounded-2xl border border-red-100 shadow-sm">
+            <p className="text-sm text-red-600 mb-3">
+              Unable to load blog reports: {blogError || 'Network error'}
+            </p>
+            <button
+              type="button"
+              onClick={() => {
+                dispatch(fetchArticles());
+                dispatch(fetchFeaturedArticle());
+              }}
+              className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors"
+            >
+              Retry Loading
+            </button>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  // 3. Empty state
+  if (allArticles.length === 0) {
+    return (
+      <section
+        className="Reports-section"
+        aria-labelledby="reports-section-heading"
+      >
+        <div className="Reports-container">
+          <div className="Reports-header">
+            <div className="Reports-headerLeft">
+              <span className="Reports-tag">TALENT ADVISORY INSIGHTS</span>
+              <h2 id="reports-section-heading" className="Reports-title">
+                Our Latest Tech &amp; Market Reports
+              </h2>
+            </div>
+            <Link to="/blog" className="Reports-browseLink group">
+              <span>Browse All Reports</span>
+              <span className="material-symbols-outlined text-[18px] group-hover:translate-x-1 transition-transform">
+                arrow_forward
+              </span>
+            </Link>
+          </div>
+          <div className="p-12 text-center bg-white rounded-2xl border border-slate-200">
+            <h3 className="text-lg font-semibold text-slate-800 mb-2">
+              No Research Articles Found
+            </h3>
+            <p className="text-sm text-slate-500 mb-4">
+              Check back soon for new tech insights and whitepapers.
+            </p>
+            <Link
+              to="/blog"
+              className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700"
+            >
+              Visit Blog Directory
+            </Link>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  return (
+    <section
+      className="Reports-section"
+      aria-labelledby="reports-section-heading"
+    >
+      <div className="Reports-container">
+        <div className="Reports-header">
+          <div className="Reports-headerLeft">
+            <span className="Reports-tag">TALENT ADVISORY INSIGHTS</span>
+            <h2 id="reports-section-heading" className="Reports-title">
+              Our Latest Tech &amp; Market Reports
+            </h2>
+          </div>
+          <Link to="/blog" className="Reports-browseLink group">
+            <span>Browse All Reports</span>
+            <span className="material-symbols-outlined text-[18px] group-hover:translate-x-1 transition-transform">
+              arrow_forward
+            </span>
+          </Link>
         </div>
 
-        {/* Carousel Slider Viewport */}
+        {/* Carousel Viewport with Native Horizontal Scroll & CSS Scroll-Snap */}
         <div
-          className="Reports-sliderWrapper overflow-hidden relative select-none"
-          onTouchStart={handleTouchStart}
-          onTouchMove={handleTouchMove}
-          onTouchEnd={handleTouchEnd}
+          ref={trackRef}
+          className="Reports-carouselTrack"
+          tabIndex={0}
+          role="region"
+          aria-roledescription="carousel"
+          aria-label="Talent Advisory Insights Carousel"
+          onKeyDown={handleKeyDown}
+          onMouseEnter={() => setIsPaused(true)}
+          onMouseLeave={() => setIsPaused(false)}
+          onTouchStart={() => setIsPaused(true)}
+          onTouchEnd={() => setIsPaused(false)}
         >
-          <motion.div
-            className="flex gap-6"
-            animate={{
-              x: `calc(-${currentIndex} * (100% / ${cardsPerView} + ${24 / cardsPerView}px - 24px / ${cardsPerView}))`,
-            }}
-            transition={{
-              type: 'spring',
-              stiffness: 260,
-              damping: 30,
-            }}
-            style={{ display: 'flex' }}
-          >
-            {reportsData.map((report) => (
+          {allArticles.map((article) => {
+            const destination = getReportDestination(article);
+            const imageSrc = getArticleImage(article);
+            const badgeText =
+              article.badge || article.category || article.tag || 'Insights';
+            const readTimeText = article.readTime || '8 min read';
+            const publishDate =
+              article.publishedAt || article.date || 'Aug 2026';
+            const subCategoryText =
+              article.subCategory || article.category;
+            const authorName =
+              typeof article.author === 'object'
+                ? article.author?.name || 'Thinkwires Advisory Team'
+                : article.author || 'Thinkwires Advisory Team';
+            const authorAvatar =
+              typeof article.author === 'object' ? article.author?.avatar : null;
+            const authorInitials = getAuthorInitials(article.author);
+
+            return (
               <div
-                key={report.id}
-                className="Reports-slide flex-shrink-0 flex"
-                style={{
-                  width:
-                    cardsPerView === 1
-                      ? '100%'
-                      : cardsPerView === 2
-                      ? 'calc((100% - 24px) / 2)'
-                      : 'calc((100% - 48px) / 3)',
-                }}
+                key={article.id || article.slug || article.title}
+                className="Reports-slide"
               >
-                <div className="Reports-card group w-full h-full flex flex-col justify-between bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300">
-                  <div className="flex flex-col flex-1">
-                    <div className="Reports-imageContainer relative w-full h-48 overflow-hidden bg-slate-100">
+                <article className="Reports-card">
+                  <div style={{ display: 'flex', flexDirection: 'column', flex: '1 1 auto' }}>
+                    {/* Standardized Card Image Header */}
+                    <div className="Reports-imageContainer">
                       <img
-                        src={report.image}
-                        alt={report.title}
-                        className="Reports-image w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        src={imageSrc}
+                        alt={article.title}
+                        className="Reports-image"
+                        loading="lazy"
                       />
-                      <span className="Reports-tagBadge absolute top-3 left-3 px-2.5 py-1 rounded-full text-xs font-semibold bg-white/90 backdrop-blur-sm text-slate-800 shadow-sm">
-                        {report.tag}
+                      <span
+                        className="Reports-tagBadge"
+                        style={{
+                          backgroundColor:
+                            article.badgeBg || 'rgba(15, 23, 42, 0.85)',
+                          color: article.badgeColor || '#ffffff',
+                        }}
+                      >
+                        {badgeText}
                       </span>
+                      {readTimeText && (
+                        <span className="Reports-readBadge">
+                          <span>⏱</span>
+                          <span>{readTimeText}</span>
+                        </span>
+                      )}
                     </div>
-                    <div className="Reports-content p-6 flex flex-col flex-1">
-                      <span className="Reports-date text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2 block">
-                        {report.date}
-                      </span>
-                      <h3 className="Reports-cardTitle text-lg font-bold text-slate-900 group-hover:text-blue-600 transition-colors mb-3 leading-snug line-clamp-2 min-h-[3.5rem]">
-                        {report.title}
+
+                    {/* Content Area with aligned typography */}
+                    <div className="Reports-content">
+                      <div className="Reports-metaRow">
+                        <span className="Reports-metaDate">{publishDate}</span>
+                        {subCategoryText && (
+                          <>
+                            <span className="Reports-metaDot">•</span>
+                            <span className="Reports-metaCategory">
+                              {subCategoryText}
+                            </span>
+                          </>
+                        )}
+                      </div>
+
+                      <h3 className="Reports-cardTitle">
+                        {article.title}
                       </h3>
-                      <p className="Reports-cardDesc text-sm text-slate-600 leading-relaxed line-clamp-3 mb-4 min-h-[4.5rem]">
-                        {report.desc}
+
+                      <p className="Reports-cardDesc">
+                        {article.excerpt || article.summary || article.desc}
                       </p>
                     </div>
                   </div>
 
-                  <div className="Reports-footer px-6 pb-6 pt-3 border-t border-slate-100 mt-auto">
-                    <Link to="/blog" className="Reports-readLink inline-flex items-center gap-1.5 text-sm font-semibold text-blue-600 hover:text-blue-700">
+                  {/* Aligned footer with author and Read Analysis */}
+                  <div className="Reports-footer">
+                    <div className="Reports-authorGroup">
+                      {authorAvatar ? (
+                        <img
+                          src={authorAvatar}
+                          alt={authorName}
+                          className="Reports-authorAvatar"
+                          style={{
+                            width: 28,
+                            height: 28,
+                            minWidth: 28,
+                            minHeight: 28,
+                            maxWidth: 28,
+                            maxHeight: 28,
+                            borderRadius: '50%',
+                            objectFit: 'cover',
+                          }}
+                        />
+                      ) : (
+                        <div className="Reports-authorBubble">
+                          {authorInitials}
+                        </div>
+                      )}
+                      <span className="Reports-authorName">
+                        {authorName}
+                      </span>
+                    </div>
+
+                    <Link
+                      to={destination}
+                      className="Reports-readLink"
+                    >
                       <span>Read Analysis</span>
-                      <span className="material-symbols-outlined text-[16px] group-hover:translate-x-1 transition-transform">
+                      <span className="material-symbols-outlined text-[16px]">
                         arrow_forward
                       </span>
                     </Link>
                   </div>
-                </div>
+                </article>
               </div>
-            ))}
-          </motion.div>
+            );
+          })}
         </div>
 
-        {/* Pagination Dots */}
-        {maxIndex > 0 && (
-          <div className="flex items-center justify-center gap-2 mt-8">
-            {Array.from({ length: maxIndex + 1 }).map((_, dotIdx) => (
+        {/* Slide Indicator / Pagination Dots (Reduced to valid scroll stops) */}
+        {maxDots > 1 && (
+          <div
+            className="Reports-dotsContainer"
+            role="tablist"
+            aria-label="Carousel pagination"
+          >
+            {Array.from({ length: maxDots }).map((_, dotIdx) => (
               <button
                 key={dotIdx}
                 type="button"
-                onClick={() => setCurrentIndex(dotIdx)}
-                aria-label={`Go to reports group ${dotIdx + 1}`}
-                className={`h-2 transition-all rounded-full ${
-                  currentIndex === dotIdx
-                    ? 'w-8 bg-blue-600'
-                    : 'w-2 bg-slate-300 hover:bg-slate-400'
+                onClick={() => handleScrollToSlide(dotIdx)}
+                aria-label={`Go to slide ${dotIdx + 1} of ${maxDots}`}
+                aria-current={activeSlide === dotIdx ? 'true' : undefined}
+                className={`Reports-dot ${
+                  activeSlide === dotIdx ? 'active' : ''
                 }`}
               />
             ))}
