@@ -1688,18 +1688,47 @@ body {
   color: var(--color-cobalt-bright, #2563eb);
 }
 
-/* Carousel slider wrapper — clips overflow, full width of container */
-.Reports-sliderWrapper {
-  overflow: hidden;
+/* Carousel track container — native horizontal scroll with CSS scroll-snap */
+.Reports-carouselTrack {
+  display: flex;
+  gap: 1.5rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  padding-bottom: 0.5rem;
+  padding-top: 0.25rem;
   width: 100%;
-  position: relative;
 }
 
-/* Each slide — flex-shrink-0 so it never collapses; width set via JS inline style */
+.Reports-carouselTrack::-webkit-scrollbar {
+  display: none;
+}
+
+/* Each slide — responsive widths: Desktop 3 cards, Tablet 2 cards, Mobile 1 card */
 .Reports-slide {
-  flex-shrink: 0;
+  flex: 0 0 calc((100% - 3rem) / 3);
+  width: calc((100% - 3rem) / 3);
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
   display: flex;
   flex-direction: column;
+}
+
+@media (max-width: 1199px) {
+  .Reports-slide {
+    flex: 0 0 calc((100% - 1.5rem) / 2);
+    width: calc((100% - 1.5rem) / 2);
+  }
+}
+
+@media (max-width: 767px) {
+  .Reports-slide {
+    flex: 0 0 100%;
+    width: 100%;
+  }
 }
 
 .Reports-grid {

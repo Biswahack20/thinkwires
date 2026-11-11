@@ -1,13 +1,10 @@
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
 import {
   fetchArticles,
   fetchFeaturedArticle,
 } from '../../store/slices/blogSlice';
-
-const GAP_PX = 24;
 
 const FALLBACK_IMAGES = {
   'card-1':
@@ -54,13 +51,6 @@ const getAuthorInitials = (author) => {
   return 'TW';
 };
 
-const getInitialCardsPerView = () => {
-  if (typeof window === 'undefined') return 3;
-  if (window.innerWidth < 640) return 1;
-  if (window.innerWidth < 1024) return 2;
-  return 3;
-};
-
 const Reports = () => {
   const dispatch = useDispatch();
   const {
@@ -70,19 +60,15 @@ const Reports = () => {
     error: blogError,
   } = useSelector((state) => state.blog);
 
-  const containerRef = useRef(null);
-  const [containerWidth, setContainerWidth] = useState(0);
-  const [cardsPerView, setCardsPerView] = useState(getInitialCardsPerView);
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const trackRef = useRef(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(true);
+  const [activeSlide, setActiveSlide] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(() => {
     if (typeof window === 'undefined') return false;
     return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   });
-
-  const touchStartPos = useRef({ x: 0, y: 0 });
-  const touchDeltaPos = useRef({ x: 0, y: 0 });
-  const timerRef = useRef(null);
 
   // Combine featured flagship paper and all published blog articles without arbitrary slicing
   const allArticles = useMemo(() => {
@@ -105,9 +91,8 @@ const Reports = () => {
   }, [featuredArticle, blogArticles]);
 
   const totalReports = allArticles.length;
-  const maxIndex = Math.max(0, totalReports - cardsPerView);
 
-  // Fetch blog data if not already initiated
+  // Fetch blog data if idle
   useEffect(() => {
     if (blogStatus === 'idle') {
       dispatch(fetchArticles());
@@ -115,7 +100,7 @@ const Reports = () => {
     }
   }, [dispatch, blogStatus]);
 
-  // Reduced motion preference listener
+  // Listen for reduced motion preference
   useEffect(() => {
     const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
     const handler = (e) => setPrefersReducedMotion(e.matches);
@@ -123,124 +108,115 @@ const Reports = () => {
     return () => mediaQuery.removeEventListener('change', handler);
   }, []);
 
-  // Responsive layout measurement via ResizeObserver
-  useEffect(() => {
-    const el = containerRef.current;
+  // Update navigation button bounds based on scroll position
+  const updateScrollBounds = useCallback(() => {
+    const el = trackRef.current;
     if (!el) return;
 
-    let animId = null;
-    const measure = () => {
-      animId = requestAnimationFrame(() => {
-        if (!containerRef.current) return;
-        const width = containerRef.current.clientWidth;
-        setContainerWidth(width);
+    const { scrollLeft, scrollWidth, clientWidth } = el;
+    setCanScrollLeft(scrollLeft > 6);
+    setCanScrollRight(scrollLeft + clientWidth < scrollWidth - 6);
 
-        let perView = 3;
-        if (window.innerWidth < 640) {
-          perView = 1;
-        } else if (window.innerWidth < 1024) {
-          perView = 2;
-        }
-        setCardsPerView(perView);
-
-        // Re-clamp index to valid bounds on resize
-        const newMax = Math.max(0, totalReports - perView);
-        setCurrentIndex((prev) => Math.min(prev, newMax));
-      });
-    };
-
-    measure();
-
-    const observer = new ResizeObserver(() => {
-      measure();
-    });
-    observer.observe(el);
-
-    return () => {
-      if (animId) cancelAnimationFrame(animId);
-      observer.disconnect();
-    };
-  }, [totalReports]);
-
-  // Navigation handlers with strict bounds
-  const nextSlide = useCallback(() => {
-    setCurrentIndex((prev) => Math.min(maxIndex, prev + 1));
-  }, [maxIndex]);
-
-  const prevSlide = useCallback(() => {
-    setCurrentIndex((prev) => Math.max(0, prev - 1));
-  }, []);
-
-  // Touch Swipe handlers for mobile
-  const handleTouchStart = (e) => {
-    if (!e.targetTouches || e.targetTouches.length === 0) return;
-    touchStartPos.current = {
-      x: e.targetTouches[0].clientX,
-      y: e.targetTouches[0].clientY,
-    };
-    touchDeltaPos.current = { x: 0, y: 0 };
-    setIsPaused(true);
-  };
-
-  const handleTouchMove = (e) => {
-    if (!e.targetTouches || e.targetTouches.length === 0) return;
-    touchDeltaPos.current = {
-      x: e.targetTouches[0].clientX - touchStartPos.current.x,
-      y: e.targetTouches[0].clientY - touchStartPos.current.y,
-    };
-  };
-
-  const handleTouchEnd = () => {
-    const { x: deltaX, y: deltaY } = touchDeltaPos.current;
-    // Require at least 40px swipe and ensure gesture is predominantly horizontal
-    if (Math.abs(deltaX) > 40 && Math.abs(deltaX) > Math.abs(deltaY) * 1.2) {
-      if (deltaX < 0) {
-        nextSlide();
-      } else {
-        prevSlide();
+    const firstCard = el.querySelector('.Reports-slide');
+    if (firstCard) {
+      const cardStep = firstCard.offsetWidth + 24; // width + gap
+      if (cardStep > 0) {
+        const idx = Math.round(scrollLeft / cardStep);
+        setActiveSlide(Math.max(0, Math.min(idx, totalReports - 1)));
       }
     }
-    touchStartPos.current = { x: 0, y: 0 };
-    touchDeltaPos.current = { x: 0, y: 0 };
-    setIsPaused(false);
+  }, [totalReports]);
+
+  useEffect(() => {
+    const el = trackRef.current;
+    if (!el) return;
+
+    updateScrollBounds();
+    el.addEventListener('scroll', updateScrollBounds, { passive: true });
+    window.addEventListener('resize', updateScrollBounds);
+
+    return () => {
+      el.removeEventListener('scroll', updateScrollBounds);
+      window.removeEventListener('resize', updateScrollBounds);
+    };
+  }, [updateScrollBounds, allArticles]);
+
+  // Scroll controls using actual card dimensions and gap
+  const getScrollStep = () => {
+    const el = trackRef.current;
+    if (!el) return 350;
+    const firstCard = el.querySelector('.Reports-slide');
+    return firstCard ? firstCard.offsetWidth + 24 : el.clientWidth;
   };
 
-  // Keyboard navigation
+  const handlePrev = () => {
+    const el = trackRef.current;
+    if (!el) return;
+    const step = getScrollStep();
+    el.scrollBy({
+      left: -step,
+      behavior: prefersReducedMotion ? 'auto' : 'smooth',
+    });
+  };
+
+  const handleNext = () => {
+    const el = trackRef.current;
+    if (!el) return;
+    const step = getScrollStep();
+    el.scrollBy({
+      left: step,
+      behavior: prefersReducedMotion ? 'auto' : 'smooth',
+    });
+  };
+
+  const handleScrollToSlide = (idx) => {
+    const el = trackRef.current;
+    if (!el) return;
+    const step = getScrollStep();
+    el.scrollTo({
+      left: idx * step,
+      behavior: prefersReducedMotion ? 'auto' : 'smooth',
+    });
+  };
+
+  // Keyboard navigation on track focus
   const handleKeyDown = (e) => {
     if (e.key === 'ArrowLeft') {
       e.preventDefault();
-      prevSlide();
+      handlePrev();
     } else if (e.key === 'ArrowRight') {
       e.preventDefault();
-      nextSlide();
+      handleNext();
     }
   };
 
-  // Autoplay timer with pause on hover/touch
+  // Autoplay support with hover & touch pause
   useEffect(() => {
-    if (isPaused || prefersReducedMotion || totalReports <= cardsPerView) {
-      if (timerRef.current) clearInterval(timerRef.current);
+    if (isPaused || prefersReducedMotion || totalReports <= 1) {
       return;
     }
-    timerRef.current = setInterval(() => {
-      setCurrentIndex((prev) => (prev >= maxIndex ? 0 : prev + 1));
+    const timer = setInterval(() => {
+      const el = trackRef.current;
+      if (!el) return;
+      const { scrollLeft, scrollWidth, clientWidth } = el;
+      if (scrollLeft + clientWidth >= scrollWidth - 10) {
+        el.scrollTo({
+          left: 0,
+          behavior: prefersReducedMotion ? 'auto' : 'smooth',
+        });
+      } else {
+        const step = getScrollStep();
+        el.scrollBy({
+          left: step,
+          behavior: prefersReducedMotion ? 'auto' : 'smooth',
+        });
+      }
     }, 7000);
-    return () => {
-      if (timerRef.current) clearInterval(timerRef.current);
-    };
-  }, [isPaused, prefersReducedMotion, totalReports, cardsPerView, maxIndex]);
 
-  // Card width and translation offset calculation
-  const cardWidth =
-    containerWidth > 0
-      ? cardsPerView === 1
-        ? containerWidth
-        : (containerWidth - (cardsPerView - 1) * GAP_PX) / cardsPerView
-      : 0;
+    return () => clearInterval(timer);
+  }, [isPaused, prefersReducedMotion, totalReports]);
 
-  const translateX = -(currentIndex * (cardWidth + GAP_PX));
-
-  // Determine report deep-link destination for modal reader on Blog page
+  // Deep-link destination for modal reader on Blog page
   const getReportDestination = (article) => {
     if (article.slug) return `/blog?article=${encodeURIComponent(article.slug)}`;
     if (article.id) return `/blog?article=${encodeURIComponent(article.id)}`;
@@ -385,11 +361,11 @@ const Reports = () => {
             <div className="flex items-center gap-1.5 mr-2">
               <button
                 type="button"
-                onClick={prevSlide}
-                disabled={currentIndex <= 0}
+                onClick={handlePrev}
+                disabled={!canScrollLeft}
                 aria-label="Previous reports"
                 className={`w-9 h-9 rounded-lg border flex items-center justify-center transition-all shadow-sm ${
-                  currentIndex <= 0
+                  !canScrollLeft
                     ? 'border-slate-100 bg-slate-50 text-slate-300 cursor-not-allowed opacity-50'
                     : 'border-slate-200 bg-white hover:bg-slate-50 text-slate-700 active:scale-95'
                 }`}
@@ -400,11 +376,11 @@ const Reports = () => {
               </button>
               <button
                 type="button"
-                onClick={nextSlide}
-                disabled={currentIndex >= maxIndex}
+                onClick={handleNext}
+                disabled={!canScrollRight}
                 aria-label="Next reports"
                 className={`w-9 h-9 rounded-lg border flex items-center justify-center transition-all shadow-sm ${
-                  currentIndex >= maxIndex
+                  !canScrollRight
                     ? 'border-slate-100 bg-slate-50 text-slate-300 cursor-not-allowed opacity-50'
                     : 'border-slate-200 bg-white hover:bg-slate-50 text-slate-700 active:scale-95'
                 }`}
@@ -415,10 +391,7 @@ const Reports = () => {
               </button>
             </div>
 
-            <Link
-              to="/blog"
-              className="Reports-browseLink group"
-            >
+            <Link to="/blog" className="Reports-browseLink group">
               <span>Browse All Reports</span>
               <span className="material-symbols-outlined text-[18px] group-hover:translate-x-1 transition-transform">
                 arrow_forward
@@ -427,177 +400,144 @@ const Reports = () => {
           </div>
         </div>
 
-        {/* Carousel Slider Viewport */}
+        {/* Carousel Viewport with Native Horizontal Scroll & CSS Scroll-Snap */}
         <div
-          ref={containerRef}
-          className="Reports-sliderWrapper overflow-hidden relative select-none focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded-2xl"
+          ref={trackRef}
+          className="Reports-carouselTrack focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded-2xl"
           tabIndex={0}
           role="region"
           aria-roledescription="carousel"
           aria-label="Talent Advisory Insights Carousel"
           onKeyDown={handleKeyDown}
-          onTouchStart={handleTouchStart}
-          onTouchMove={handleTouchMove}
-          onTouchEnd={handleTouchEnd}
+          onTouchStart={() => setIsPaused(true)}
+          onTouchEnd={() => setIsPaused(false)}
         >
-          <motion.div
-            className="flex"
-            style={{
-              gap: `${GAP_PX}px`,
-            }}
-            animate={{
-              x: containerWidth > 0 ? translateX : 0,
-            }}
-            transition={
-              prefersReducedMotion
-                ? { duration: 0 }
-                : {
-                    type: 'spring',
-                    stiffness: 280,
-                    damping: 32,
-                    mass: 0.8,
-                  }
-            }
-          >
-            {allArticles.map((article) => {
-              const destination = getReportDestination(article);
-              const imageSrc = getArticleImage(article);
-              const badgeText =
-                article.badge || article.category || article.tag || 'Insights';
-              const readTimeText = article.readTime || '8 min read';
-              const publishDate =
-                article.publishedAt || article.date || 'Aug 2026';
-              const subCategoryText =
-                article.subCategory || article.category;
-              const authorName =
-                typeof article.author === 'object'
-                  ? article.author?.name || 'Thinkwires Advisory Team'
-                  : article.author || 'Thinkwires Advisory Team';
-              const authorAvatar =
-                typeof article.author === 'object'
-                  ? article.author?.avatar
-                  : null;
-              const authorInitials = getAuthorInitials(article.author);
+          {allArticles.map((article) => {
+            const destination = getReportDestination(article);
+            const imageSrc = getArticleImage(article);
+            const badgeText =
+              article.badge || article.category || article.tag || 'Insights';
+            const readTimeText = article.readTime || '8 min read';
+            const publishDate =
+              article.publishedAt || article.date || 'Aug 2026';
+            const subCategoryText =
+              article.subCategory || article.category;
+            const authorName =
+              typeof article.author === 'object'
+                ? article.author?.name || 'Thinkwires Advisory Team'
+                : article.author || 'Thinkwires Advisory Team';
+            const authorAvatar =
+              typeof article.author === 'object' ? article.author?.avatar : null;
+            const authorInitials = getAuthorInitials(article.author);
 
-              return (
-                <div
-                  key={article.id || article.slug || article.title}
-                  className="Reports-slide flex-shrink-0 flex"
-                  style={{
-                    width:
-                      cardWidth > 0
-                        ? `${cardWidth}px`
-                        : cardsPerView === 1
-                        ? '100%'
-                        : cardsPerView === 2
-                        ? 'calc((100% - 24px) / 2)'
-                        : 'calc((100% - 48px) / 3)',
-                  }}
-                >
-                  <article className="Reports-card group w-full h-full flex flex-col justify-between bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300">
-                    <div className="flex flex-col flex-1">
-                      {/* Standardized Card Image Header */}
-                      <div className="Reports-imageContainer relative w-full h-48 sm:h-52 overflow-hidden bg-slate-100 flex-shrink-0">
-                        <img
-                          src={imageSrc}
-                          alt={article.title}
-                          className="Reports-image w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                          loading="lazy"
-                        />
-                        <span
-                          className="Reports-tagBadge absolute top-3 left-3 px-2.5 py-1 rounded-full text-xs font-semibold backdrop-blur-sm shadow-sm"
-                          style={{
-                            backgroundColor:
-                              article.badgeBg || 'rgba(15, 23, 42, 0.85)',
-                            color: article.badgeColor || '#ffffff',
-                          }}
-                        >
-                          {badgeText}
-                        </span>
-                        {readTimeText && (
-                          <span className="absolute top-3 right-3 px-2.5 py-1 rounded-full text-xs font-medium bg-slate-900/70 backdrop-blur-sm text-white shadow-sm flex items-center gap-1">
-                            <span>⏱</span>
-                            <span>{readTimeText}</span>
-                          </span>
-                        )}
-                      </div>
-
-                      {/* Content Area with aligned typography */}
-                      <div className="Reports-content p-6 flex flex-col flex-1">
-                        <div className="flex items-center gap-2 text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2.5">
-                          <time className="Reports-date mb-0">{publishDate}</time>
-                          {subCategoryText && (
-                            <>
-                              <span className="text-slate-300">•</span>
-                              <span className="text-blue-600 font-medium normal-case tracking-normal truncate">
-                                {subCategoryText}
-                              </span>
-                            </>
-                          )}
-                        </div>
-
-                        <h3 className="Reports-cardTitle text-lg font-bold text-slate-900 group-hover:text-blue-600 transition-colors mb-3 leading-snug line-clamp-2 min-h-[3.5rem]">
-                          {article.title}
-                        </h3>
-
-                        <p className="Reports-cardDesc text-sm text-slate-600 leading-relaxed line-clamp-3 mb-4 min-h-[4.5rem]">
-                          {article.excerpt || article.summary || article.desc}
-                        </p>
-                      </div>
-                    </div>
-
-                    {/* Perfectly aligned footer with author and Read Analysis */}
-                    <div className="Reports-footer px-6 pb-6 pt-3 border-t border-slate-100 mt-auto flex items-center justify-between">
-                      <div className="flex items-center gap-2.5 min-w-0 pr-2">
-                        {authorAvatar ? (
-                          <img
-                            src={authorAvatar}
-                            alt={authorName}
-                            className="w-7 h-7 rounded-full object-cover flex-shrink-0"
-                          />
-                        ) : (
-                          <div className="w-7 h-7 rounded-full bg-blue-100 text-blue-700 font-bold text-xs flex items-center justify-center flex-shrink-0">
-                            {authorInitials}
-                          </div>
-                        )}
-                        <span className="text-xs font-medium text-slate-700 truncate">
-                          {authorName}
-                        </span>
-                      </div>
-
-                      <Link
-                        to={destination}
-                        className="Reports-readLink inline-flex items-center gap-1 text-sm font-semibold text-blue-600 hover:text-blue-700 flex-shrink-0 ml-auto"
+            return (
+              <div
+                key={article.id || article.slug || article.title}
+                className="Reports-slide"
+              >
+                <article className="Reports-card group w-full h-full flex flex-col justify-between bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300">
+                  <div className="flex flex-col flex-1">
+                    {/* Standardized Card Image Header */}
+                    <div className="Reports-imageContainer relative w-full h-48 sm:h-52 overflow-hidden bg-slate-100 flex-shrink-0">
+                      <img
+                        src={imageSrc}
+                        alt={article.title}
+                        className="Reports-image w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        loading="lazy"
+                      />
+                      <span
+                        className="Reports-tagBadge absolute top-3 left-3 px-2.5 py-1 rounded-full text-xs font-semibold backdrop-blur-sm shadow-sm"
+                        style={{
+                          backgroundColor:
+                            article.badgeBg || 'rgba(15, 23, 42, 0.85)',
+                          color: article.badgeColor || '#ffffff',
+                        }}
                       >
-                        <span>Read Analysis</span>
-                        <span className="material-symbols-outlined text-[16px] group-hover:translate-x-1 transition-transform">
-                          arrow_forward
+                        {badgeText}
+                      </span>
+                      {readTimeText && (
+                        <span className="absolute top-3 right-3 px-2.5 py-1 rounded-full text-xs font-medium bg-slate-900/70 backdrop-blur-sm text-white shadow-sm flex items-center gap-1">
+                          <span>⏱</span>
+                          <span>{readTimeText}</span>
                         </span>
-                      </Link>
+                      )}
                     </div>
-                  </article>
-                </div>
-              );
-            })}
-          </motion.div>
+
+                    {/* Content Area with aligned typography */}
+                    <div className="Reports-content p-6 flex flex-col flex-1">
+                      <div className="flex items-center gap-2 text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2.5">
+                        <time className="Reports-date mb-0">{publishDate}</time>
+                        {subCategoryText && (
+                          <>
+                            <span className="text-slate-300">•</span>
+                            <span className="text-blue-600 font-medium normal-case tracking-normal truncate">
+                              {subCategoryText}
+                            </span>
+                          </>
+                        )}
+                      </div>
+
+                      <h3 className="Reports-cardTitle text-lg font-bold text-slate-900 group-hover:text-blue-600 transition-colors mb-3 leading-snug line-clamp-2 min-h-[3.25rem]">
+                        {article.title}
+                      </h3>
+
+                      <p className="Reports-cardDesc text-sm text-slate-600 leading-relaxed line-clamp-3 mb-4 min-h-[4.5rem]">
+                        {article.excerpt || article.summary || article.desc}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Aligned footer with author and Read Analysis */}
+                  <div className="Reports-footer px-6 pb-6 pt-3 border-t border-slate-100 mt-auto flex items-center justify-between">
+                    <div className="flex items-center gap-2.5 min-w-0 pr-2">
+                      {authorAvatar ? (
+                        <img
+                          src={authorAvatar}
+                          alt={authorName}
+                          className="w-7 h-7 rounded-full object-cover flex-shrink-0"
+                        />
+                      ) : (
+                        <div className="w-7 h-7 rounded-full bg-blue-100 text-blue-700 font-bold text-xs flex items-center justify-center flex-shrink-0">
+                          {authorInitials}
+                        </div>
+                      )}
+                      <span className="text-xs font-medium text-slate-700 truncate">
+                        {authorName}
+                      </span>
+                    </div>
+
+                    <Link
+                      to={destination}
+                      className="Reports-readLink inline-flex items-center gap-1 text-sm font-semibold text-blue-600 hover:text-blue-700 flex-shrink-0 ml-auto"
+                    >
+                      <span>Read Analysis</span>
+                      <span className="material-symbols-outlined text-[16px] group-hover:translate-x-1 transition-transform">
+                        arrow_forward
+                      </span>
+                    </Link>
+                  </div>
+                </article>
+              </div>
+            );
+          })}
         </div>
 
-        {/* Pagination Dots */}
-        {maxIndex > 0 && (
+        {/* Slide Indicator / Pagination Dots */}
+        {totalReports > 1 && (
           <div
             className="flex items-center justify-center gap-2 mt-8"
             role="tablist"
             aria-label="Carousel pagination"
           >
-            {Array.from({ length: maxIndex + 1 }).map((_, dotIdx) => (
+            {allArticles.map((art, dotIdx) => (
               <button
-                key={dotIdx}
+                key={art.id || dotIdx}
                 type="button"
-                onClick={() => setCurrentIndex(dotIdx)}
-                aria-label={`Go to slide ${dotIdx + 1} of ${maxIndex + 1}`}
-                aria-current={currentIndex === dotIdx ? 'true' : undefined}
+                onClick={() => handleScrollToSlide(dotIdx)}
+                aria-label={`Go to slide ${dotIdx + 1} of ${totalReports}`}
+                aria-current={activeSlide === dotIdx ? 'true' : undefined}
                 className={`h-2 transition-all rounded-full ${
-                  currentIndex === dotIdx
+                  activeSlide === dotIdx
                     ? 'w-8 bg-blue-600'
                     : 'w-2 bg-slate-300 hover:bg-slate-400'
                 }`}
