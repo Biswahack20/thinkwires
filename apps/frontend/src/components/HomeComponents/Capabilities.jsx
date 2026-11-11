@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { fetchCapabilities } from '../../store/slices/homeSlice';
 import SectionBadge from '../common/SectionBadge';
-import ApplyModal from '../common/ApplyModal';
+import ScopeCallModal from '../common/ScopeCallModal';
 
 const getCapabilityRoute = (cap) => {
   const title = (cap.title || '').toLowerCase();
@@ -134,10 +134,9 @@ const Capabilities = () => {
           )}
         </div>
       </div>
-      <ApplyModal
+      <ScopeCallModal
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        roleTitle="Schedule Scope Call - Enterprise Solutions"
       />
     </section>
   );

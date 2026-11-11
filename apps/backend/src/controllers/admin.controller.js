@@ -16,6 +16,14 @@ import Media from '../models/media.mongo.model.js';
 import Announcement from '../models/announcement.mongo.model.js';
 import Activity from '../models/activity.mongo.model.js';
 import UserMongo from '../models/user.mongo.model.js';
+import {
+  HelpDeskTicket,
+  memoryHelpDeskStore,
+  queryHelpDeskTickets,
+  getHelpDeskStats,
+  updateHelpDeskTicket,
+} from '../models/helpdesk.mongo.model.js';
+import { getTransporter } from '../utils/notificationDispatcher.util.js';
 import aiService from '../services/ai.service.js';
 import {
   hashPassword,
@@ -3782,6 +3790,257 @@ export const deleteSystemMember = async (req, res) => {
     res.json({
       success: true,
       message: 'System Member access revoked successfully.',
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+};
+
+// ============================================================================
+// HelpDesk Administration Handlers
+// ============================================================================
+
+export const getHelpDeskTicketsHandler = async (req, res) => {
+  try {
+    const result = await queryHelpDeskTickets(req.query);
+    res.json({
+      success: true,
+      ...result,
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+};
+
+export const getHelpDeskStatsHandler = async (req, res) => {
+  try {
+    const stats = await getHelpDeskStats();
+    res.json({
+      success: true,
+      stats,
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+};
+
+export const getHelpDeskTicketByIdHandler = async (req, res) => {
+  try {
+    const { id } = req.params;
+    let ticket = null;
+
+    if (isMongoActive()) {
+      ticket = mongoose.Types.ObjectId.isValid(id)
+        ? await HelpDeskTicket.findById(id).lean()
+        : await HelpDeskTicket.findOne({ ticketId: id }).lean();
+    }
+
+    if (!ticket) {
+      ticket = memoryHelpDeskStore.find(
+        (t) => t._id === id || t.ticketId === id
+      );
+    }
+
+    if (!ticket) {
+      return res.status(404).json({ success: false, error: 'Ticket not found.' });
+    }
+
+    res.json({ success: true, ticket });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+};
+
+export const updateHelpDeskTicketHandler = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { status, priority, note, internalNote } = req.body;
+
+    const updates = {};
+    if (status) updates.status = status;
+    if (priority) updates.priority = priority;
+
+    if (internalNote && (typeof internalNote === 'object' ? internalNote.note : internalNote)) {
+      updates.internalNote = {
+        author: (typeof internalNote === 'object' && internalNote.author) || req.user?.name || 'Staffing Admin',
+        note: (typeof internalNote === 'object' ? internalNote.note : internalNote).trim(),
+      };
+    } else if (note && note.trim()) {
+      updates.internalNote = {
+        author: req.user?.name || 'Staffing Admin',
+        note: note.trim(),
+      };
+    }
+
+    const updated = await updateHelpDeskTicket(id, updates);
+
+    if (!updated) {
+      return res.status(404).json({ success: false, error: 'Ticket not found.' });
+    }
+
+    await logActivity(
+      'HelpDesk Ticket Updated',
+      'HelpDesk',
+      id,
+      `Admin updated status of ticket ${id} to ${updated.status}.`,
+      req.user,
+      '#059669'
+    );
+
+    res.json({ success: true, ticket: updated });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+};
+
+export const replyHelpDeskTicketHandler = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { replyText, replyMessage, recipientEmail } = req.body;
+    const messageContent = (replyText || replyMessage || '').trim();
+
+    if (!messageContent) {
+      return res.status(400).json({ success: false, error: 'Reply text is required.' });
+    }
+
+    let ticket = null;
+    if (isMongoActive()) {
+      ticket = mongoose.Types.ObjectId.isValid(id)
+        ? await HelpDeskTicket.findById(id)
+        : await HelpDeskTicket.findOne({ ticketId: id });
+    }
+    if (!ticket) {
+      ticket = memoryHelpDeskStore.find(
+        (t) => t._id === id || t.ticketId === id
+      );
+    }
+
+    if (!ticket) {
+      return res.status(404).json({ success: false, error: 'Ticket not found.' });
+    }
+
+    const targetEmail = recipientEmail || ticket.email;
+    const repliedBy = req.user?.name || 'Thinkwires Staffing Director';
+
+    const replyEntry = {
+      repliedBy,
+      replyContent: messageContent,
+      recipientEmail: targetEmail,
+      sentAt: new Date(),
+    };
+
+    // If SMTP configured, dispatch reply email
+    const transport = getTransporter();
+    if (transport) {
+      try {
+        await transport.sendMail({
+          from: `"Thinkwires HelpDesk" <${process.env.SMTP_USER || 'notifications@thinkwires.com'}>`,
+          to: targetEmail,
+          subject: `Re: [${ticket.ticketId}] ${ticket.subject}`,
+          text: replyText.trim(),
+          html: `<div style="font-family: sans-serif; padding: 16px; line-height: 1.6;">${replyText.trim().replace(/\n/g, '<br/>')}</div>`,
+        });
+      } catch (mailErr) {
+        console.warn('HelpDesk email reply error:', mailErr.message);
+      }
+    }
+
+    if (isMongoActive() && ticket.save) {
+      ticket.replyHistory.push(replyEntry);
+      ticket.status = 'Replied';
+      await ticket.save();
+    } else {
+      ticket.replyHistory = ticket.replyHistory || [];
+      ticket.replyHistory.push({
+        ...replyEntry,
+        sentAt: replyEntry.sentAt.toISOString(),
+      });
+      ticket.status = 'Replied';
+      ticket.updatedAt = new Date().toISOString();
+    }
+
+    await logActivity(
+      'HelpDesk Email Reply Sent',
+      'HelpDesk',
+      ticket.ticketId,
+      `Sent email response to ${targetEmail} for ticket ${ticket.ticketId}.`,
+      req.user,
+      '#2563eb'
+    );
+
+    res.json({
+      success: true,
+      message: `Reply sent successfully to ${targetEmail}.`,
+      ticket,
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+};
+
+export const convertHelpDeskToRequisitionHandler = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    let ticket = null;
+    if (isMongoActive()) {
+      ticket = mongoose.Types.ObjectId.isValid(id)
+        ? await HelpDeskTicket.findById(id).lean()
+        : await HelpDeskTicket.findOne({ ticketId: id }).lean();
+    }
+    if (!ticket) {
+      ticket = memoryHelpDeskStore.find(
+        (t) => t._id === id || t.ticketId === id
+      );
+    }
+
+    if (!ticket) {
+      return res.status(404).json({ success: false, error: 'Ticket not found.' });
+    }
+
+    const requisitionPayload = {
+      engagementModel: `Converted from HelpDesk: ${ticket.category}`,
+      targetRole: ticket.metadata?.targetRole || ticket.subject || 'Engineering Squad Mandate',
+      techStack: ticket.metadata?.techStack || [ticket.subject],
+      headcount: ticket.metadata?.headcount || 1,
+      seniority: ticket.metadata?.seniority || 'Mid-to-Senior',
+      deploymentUrgency: ticket.metadata?.deploymentUrgency || ticket.metadata?.timeline || 'Immediate',
+      workArrangement: ticket.metadata?.workArrangement || 'Remote / Hybrid',
+      fullName: ticket.fullName,
+      corporateEmail: ticket.email,
+      company: ticket.company || 'Enterprise Client Inquiry',
+      phone: ticket.phone,
+      jobDescription: `[Converted from HelpDesk Ticket ${ticket.ticketId}]\n${ticket.message}\nConsultation: ${ticket.metadata?.consultationSlot || 'Direct Coordination'}`,
+    };
+
+    const createdReq = await recordInboundRequisition(requisitionPayload);
+
+    // Update ticket status to In Review and append internal note
+    const updatedTicket = await updateHelpDeskTicket(id, {
+      status: 'In Review',
+      metadata: {
+        convertedRequisitionId: createdReq?.requisitionId || createdReq?.id || createdReq?._id,
+      },
+      internalNote: {
+        author: req.user?.name || 'Admin',
+        note: `1-Click converted to Client Requisition ${createdReq?.requisitionId || 'Inbound'} on ${new Date().toLocaleDateString()}.`,
+      },
+    });
+
+    await logActivity(
+      'Converted Ticket to Requisition',
+      'HelpDesk',
+      ticket.ticketId,
+      `Inquiry converted into Client Requisition ${createdReq?.requisitionId}.`,
+      req.user,
+      '#059669'
+    );
+
+    res.json({
+      success: true,
+      message: `Inquiry successfully converted to Client Requisition ${createdReq?.requisitionId}.`,
+      requisition: createdReq,
+      ticket: updatedTicket,
     });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });

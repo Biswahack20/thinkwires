@@ -4,6 +4,7 @@ import Page from '../models/page.mongo.model.js';
 import { loadSeedJson } from '../utils/seedLoader.js';
 import rateLimit from 'express-rate-limit';
 import requireAuth from '../middlewares/auth.middleware.js';
+import { recordHelpDeskInquiry } from '../models/helpdesk.mongo.model.js';
 
 const isMongoActive = () => mongoose.connection.readyState === 1;
 
@@ -89,7 +90,7 @@ router.post('/payroll', adminAuthGuard, async (req, res) => {
   }
 });
 
-router.post('/payroll/consultation', publicSubmissionRateLimiter, (req, res) => {
+router.post('/payroll/consultation', publicSubmissionRateLimiter, async (req, res) => {
   const {
     companyName,
     fullName,
@@ -111,6 +112,23 @@ router.post('/payroll/consultation', publicSubmissionRateLimiter, (req, res) => 
     phoneNumber,
     emailAddress,
   });
+
+  try {
+    await recordHelpDeskInquiry({
+      category: 'Service Consultation',
+      fullName,
+      email: emailAddress,
+      phone: phoneNumber,
+      company: companyName,
+      subject: `Payroll Consultation Request: ${companyName}`,
+      message: `Payroll consultation for employee size: ${employeeSize || 'Not specified'}. Service requirement: ${serviceReq || 'Payroll Infrastructure'}`,
+      metadata: { service: 'Payroll', employeeSize, serviceReq },
+      priority: 'High',
+    });
+  } catch (err) {
+    console.warn('HelpDesk payroll consultation logging warning:', err.message);
+  }
+
   res.json({
     success: true,
     message:
@@ -147,7 +165,7 @@ router.post('/eor', adminAuthGuard, async (req, res) => {
   }
 });
 
-router.post('/eor/consultation', publicSubmissionRateLimiter, (req, res) => {
+router.post('/eor/consultation', publicSubmissionRateLimiter, async (req, res) => {
   const {
     fullName,
     workEmail,
@@ -169,6 +187,23 @@ router.post('/eor/consultation', publicSubmissionRateLimiter, (req, res) => {
     headcount,
     projectDetails,
   });
+
+  try {
+    await recordHelpDeskInquiry({
+      category: 'Service Consultation',
+      fullName,
+      email: workEmail,
+      phone: req.body.phone || null,
+      company: companyName,
+      subject: `EOR Consultation Request: ${companyName}`,
+      message: `EOR consultation request for geo: ${targetGeo || 'Global'}. Headcount: ${headcount || 'Not specified'}. Project: ${projectDetails || 'Standard EOR Infrastructure'}`,
+      metadata: { service: 'EOR', targetGeo, headcount, projectDetails },
+      priority: 'High',
+    });
+  } catch (err) {
+    console.warn('HelpDesk EOR consultation logging warning:', err.message);
+  }
+
   res.json({
     success: true,
     message:
@@ -216,7 +251,7 @@ router.post('/staff-augmentation', adminAuthGuard, async (req, res) => {
   }
 });
 
-router.post('/staff-augmentation/consultation', publicSubmissionRateLimiter, (req, res) => {
+router.post('/staff-augmentation/consultation', publicSubmissionRateLimiter, async (req, res) => {
   const { name, email, phone, company, roleNeeded, preferredTime, details } =
     req.body;
   if (!name || !email || !company) {
@@ -233,6 +268,23 @@ router.post('/staff-augmentation/consultation', publicSubmissionRateLimiter, (re
     preferredTime,
     details,
   });
+
+  try {
+    await recordHelpDeskInquiry({
+      category: 'Service Consultation',
+      fullName: name,
+      email,
+      phone: phone || null,
+      company,
+      subject: `Staff Augmentation Request: ${company}`,
+      message: `Role needed: ${roleNeeded || 'Engineering Lead'}. Preferred time: ${preferredTime || 'Immediate'}. Details: ${details || 'Standard Augmentation'}`,
+      metadata: { service: 'Staff Augmentation', roleNeeded, preferredTime, details },
+      priority: 'High',
+    });
+  } catch (err) {
+    console.warn('HelpDesk staff aug consultation logging warning:', err.message);
+  }
+
   res.json({
     success: true,
     message:
@@ -288,7 +340,7 @@ router.post('/permanent-staffing', adminAuthGuard, async (req, res) => {
   }
 });
 
-router.post('/permanent-staffing/consultation', publicSubmissionRateLimiter, (req, res) => {
+router.post('/permanent-staffing/consultation', publicSubmissionRateLimiter, async (req, res) => {
   const {
     fullName,
     workEmail,
@@ -304,7 +356,7 @@ router.post('/permanent-staffing/consultation', publicSubmissionRateLimiter, (re
       .status(400)
       .json({ error: 'Full name, work email, and company name are required.' });
   }
-  console.log('[Executive Search] New Mandate Request:', {
+  console.log('[Permanent Staffing] New Mandate Request:', {
     fullName,
     workEmail,
     companyName,
@@ -314,6 +366,23 @@ router.post('/permanent-staffing/consultation', publicSubmissionRateLimiter, (re
     mandateScope,
     isConfidential,
   });
+
+  try {
+    await recordHelpDeskInquiry({
+      category: 'Service Consultation',
+      fullName,
+      email: workEmail,
+      phone: directPhone || null,
+      company: companyName,
+      subject: `Permanent Staffing Mandate: ${companyName}`,
+      message: `Hierarchy: ${mandateHierarchy || 'Senior'}. Timeline: ${targetTimeline || 'Standard'}. Scope: ${mandateScope || 'Direct Hire'}. Confidential: ${isConfidential ? 'Yes' : 'No'}`,
+      metadata: { service: 'Permanent Staffing', mandateHierarchy, targetTimeline, isConfidential },
+      priority: 'High',
+    });
+  } catch (err) {
+    console.warn('HelpDesk perm staffing consultation logging warning:', err.message);
+  }
+
   res.json({
     success: true,
     message:
@@ -321,7 +390,7 @@ router.post('/permanent-staffing/consultation', publicSubmissionRateLimiter, (re
   });
 });
 
-router.post('/executive-search/consultation', publicSubmissionRateLimiter, (req, res) => {
+router.post('/executive-search/consultation', publicSubmissionRateLimiter, async (req, res) => {
   const {
     fullName,
     workEmail,
@@ -347,6 +416,23 @@ router.post('/executive-search/consultation', publicSubmissionRateLimiter, (req,
     mandateScope,
     isConfidential,
   });
+
+  try {
+    await recordHelpDeskInquiry({
+      category: 'Service Consultation',
+      fullName,
+      email: workEmail,
+      phone: directPhone || null,
+      company: companyName,
+      subject: `Executive Search Mandate: ${companyName}`,
+      message: `Hierarchy: ${mandateHierarchy || 'Executive'}. Timeline: ${targetTimeline || 'Standard'}. Scope: ${mandateScope || 'Retained Search'}. Confidential: ${isConfidential ? 'Yes' : 'No'}`,
+      metadata: { service: 'Executive Search', mandateHierarchy, targetTimeline, isConfidential },
+      priority: 'Urgent',
+    });
+  } catch (err) {
+    console.warn('HelpDesk executive search logging warning:', err.message);
+  }
+
   res.json({
     success: true,
     message:

@@ -28,6 +28,7 @@ import {
   LogoutIcon,
   CheckIcon,
   BookOpenIcon,
+  HelpDeskIcon,
 } from './AdminIcons';
 import './admin.css';
 
@@ -54,6 +55,7 @@ const AdminLayout = () => {
   const [toastMessage, setToastMessage] = useState(null);
   const [pendingRequisitionsCount, setPendingRequisitionsCount] =
     useState(null);
+  const [helpDeskUnreadCount, setHelpDeskUnreadCount] = useState(null);
 
   const markAllAnnouncementsAsRead = () => {
     const allIds = announcements.map(
@@ -148,6 +150,17 @@ const AdminLayout = () => {
       .catch((err) =>
         console.warn('Could not fetch topbar stats:', err.message)
       );
+
+    if (activeRole !== 'cms_admin') {
+      adminApi
+        .getHelpDeskStats()
+        .then((res) => {
+          if (res && res.stats && res.stats.new !== undefined) {
+            setHelpDeskUnreadCount(res.stats.new);
+          }
+        })
+        .catch(() => {});
+    }
   }, [activeRole, authChecking, currentUser]);
 
   const handleLogout = async () => {
@@ -215,6 +228,15 @@ const AdminLayout = () => {
           {
             group: 'MANPOWER & RECRUITMENT',
             items: [
+              {
+                label: 'HelpDesk',
+                path: '/admin/helpdesk',
+                icon: <HelpDeskIcon size={18} />,
+                badge:
+                  helpDeskUnreadCount !== null && helpDeskUnreadCount > 0
+                    ? String(helpDeskUnreadCount)
+                    : null,
+              },
               {
                 label: 'Requisition Requests',
                 path: '/admin/requisitions',

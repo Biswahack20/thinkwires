@@ -6,6 +6,7 @@ import { logger } from '../utils/logger.js';
 import { loadSeedJson } from '../utils/seedLoader.js';
 import rateLimit from 'express-rate-limit';
 import requireAuth from '../middlewares/auth.middleware.js';
+import { recordHelpDeskInquiry } from '../models/helpdesk.mongo.model.js';
 
 const isMongoActive = () => mongoose.connection.readyState === 1;
 
@@ -54,6 +55,22 @@ router.post('/contact', publicSubmissionRateLimiter, async (req, res) => {
 
   logger.info('New Contact Request received:', { email, phone });
 
+  let ticket = null;
+  try {
+    ticket = await recordHelpDeskInquiry({
+      category: 'Talent Callback',
+      fullName: req.body.name || 'Immediate Callback Requester',
+      email,
+      phone,
+      company: req.body.company || 'Individual Inquiry',
+      subject: 'Immediate Talent Callback Requested',
+      message: `Client requested callback via website for phone: ${phone}, email: ${email}`,
+      priority: 'High',
+    });
+  } catch (hdErr) {
+    logger.warn('HelpDesk callback logging warning:', hdErr.message);
+  }
+
   if (isMongoActive()) {
     try {
       await Activity.create({
@@ -61,7 +78,7 @@ router.post('/contact', publicSubmissionRateLimiter, async (req, res) => {
         entityType: 'Client',
         entityId: email,
         description: `Client requested callback for email: ${email}, phone: ${phone}`,
-        user: { name: 'Public Visitor', role: 'user' },
+        user: { name: req.body.name || 'Public Visitor', role: 'user' },
         badgeColor: '#3478D4',
       });
     } catch (err) {
@@ -72,7 +89,11 @@ router.post('/contact', publicSubmissionRateLimiter, async (req, res) => {
     }
   }
 
-  res.json({ message: 'Callback requested successfully!' });
+  res.json({
+    success: true,
+    ticketId: ticket?.ticketId,
+    message: 'Callback requested successfully!',
+  });
 });
 
 
@@ -168,16 +189,38 @@ router.post('/contact/faq', adminAuthGuard, async (req, res) => {
 });
 
 // Handle contact form submission
-router.post('/contact/message', publicSubmissionRateLimiter, (req, res) => {
-  const { fullName, workEmail, inquiryType } = req.body;
-  if (!fullName || !workEmail || !inquiryType) {
+router.post('/contact/message', publicSubmissionRateLimiter, async (req, res) => {
+  const { fullName, workEmail, email, inquiryType, subject, message, phone, company } = req.body;
+  const contactEmail = workEmail || email;
+  const inquiryCategory = inquiryType || subject || 'General Inquiry';
+
+  if (!fullName || !contactEmail) {
     return res
       .status(400)
-      .json({ error: 'Full name, work email, and inquiry type are required' });
+      .json({ error: 'Full name and email are required' });
   }
   console.log('[Contact Us] New Submission:', req.body);
+
+  let ticket = null;
+  try {
+    ticket = await recordHelpDeskInquiry({
+      category: 'General Inquiry',
+      fullName,
+      email: contactEmail,
+      phone: phone || null,
+      company: company || 'General Inquiry Client',
+      subject: `Contact Us: ${inquiryCategory}`,
+      message: message || `Inquiry regarding ${inquiryCategory}`,
+      metadata: { inquiryType: inquiryCategory },
+      priority: 'Normal',
+    });
+  } catch (hdErr) {
+    logger.warn('HelpDesk contact message logging warning:', hdErr.message);
+  }
+
   res.json({
     success: true,
+    ticketId: ticket?.ticketId,
     message:
       'Thank you for reaching out! A Thinkwires staffing director will respond within 5 business hours.',
   });
@@ -242,6 +285,22 @@ const handleConsultationSubmission = async (req, res) => {
 
   consultationSubmissions.push(submission);
   logger.info('[Consultation] Strategy Scheduled:', submission);
+
+  try {
+    await recordHelpDeskInquiry({
+      category: 'Workforce Consultation',
+      fullName,
+      email: workEmail,
+      phone,
+      company: req.body.company || 'Enterprise Consultation Client',
+      subject: `Workforce Strategy Consultation: ${primaryNeed || 'Staff Augmentation'}`,
+      message: `Consultation request for need: ${primaryNeed || 'Staff Augmentation'}. Target roles: ${techRoles || 'General'}. Booking Ref: ${bookingRef}`,
+      metadata: { primaryNeed, techRoles, bookingRef },
+      priority: 'High',
+    });
+  } catch (hdErr) {
+    logger.warn('HelpDesk consultation logging warning:', hdErr.message);
+  }
 
   if (isMongoActive()) {
     try {

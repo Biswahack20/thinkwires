@@ -43,6 +43,7 @@ import JobApplyPage from './pages/candidate/JobApplyPage';
 const AdminLayout = lazy(() => import('./admin/AdminLayout'));
 const AdminLoginPage = lazy(() => import('./admin/AdminLoginPage'));
 const AdminDashboard = lazy(() => import('./admin/AdminDashboard'));
+const HelpDeskView = lazy(() => import('./admin/HelpDeskView'));
 const EmployeesView = lazy(() => import('./admin/EmployeesView'));
 const CandidatesView = lazy(() => import('./admin/CandidatesView'));
 const ClientsView = lazy(() => import('./admin/ClientsView'));
@@ -223,6 +224,7 @@ function App() {
             }
           >
             <Route index element={<AdminDashboard />} />
+            <Route path="helpdesk" element={<HelpDeskView />} />
             <Route path="requisitions" element={<RequisitionsView />} />
             <Route path="employees" element={<EmployeesView />} />
             <Route path="candidates" element={<CandidatesView />} />
