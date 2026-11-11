@@ -496,6 +496,8 @@ const ScopeCallModal = ({ isOpen, onClose }) => {
                   type="submit"
                   className="ScopeModal-submitBtn"
                   disabled={isSubmitting}
+                  aria-label="Schedule Scoping Call"
+                  data-testid="scope-modal-submit"
                 >
                   {isSubmitting ? (
                     <>
@@ -505,7 +507,7 @@ const ScopeCallModal = ({ isOpen, onClose }) => {
                   ) : (
                     <>
                       <span className="material-symbols-outlined text-[18px]">calendar_month</span>
-                      <span>Confirm Scoping Call</span>
+                      <span>Schedule Scoping Call</span>
                     </>
                   )}
                 </button>

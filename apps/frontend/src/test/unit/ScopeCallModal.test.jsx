@@ -34,7 +34,7 @@ describe('ScopeCallModal Component (Issue #237)', () => {
     expect(screen.getByLabelText(/Preferred Consultation Date/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/Preferred Time Slot/i)).toBeInTheDocument();
     expect(screen.getByLabelText(/Project Scope & Engineering Constraints/i)).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: /Confirm Scoping Call/i })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Schedule Scoping Call/i })).toBeInTheDocument();
   });
 
   it('triggers onClose when close button is clicked', () => {
@@ -66,7 +66,7 @@ describe('ScopeCallModal Component (Issue #237)', () => {
   it('shows error banner when submitted with empty required fields', async () => {
     render(<ScopeCallModal {...defaultProps} />);
 
-    const submitBtn = screen.getByRole('button', { name: /Confirm Scoping Call/i });
+    const submitBtn = screen.getByRole('button', { name: /Schedule Scoping Call/i });
     fireEvent.click(submitBtn);
 
     expect(await screen.findByRole('alert')).toBeInTheDocument();
@@ -86,7 +86,7 @@ describe('ScopeCallModal Component (Issue #237)', () => {
       target: { value: 'not-an-email' },
     });
 
-    const submitBtn = screen.getByRole('button', { name: /Confirm Scoping Call/i });
+    const submitBtn = screen.getByRole('button', { name: /Schedule Scoping Call/i });
     fireEvent.click(submitBtn);
 
     expect(await screen.findByRole('alert')).toBeInTheDocument();
@@ -109,7 +109,7 @@ describe('ScopeCallModal Component (Issue #237)', () => {
       target: { value: '+1 (415) 890-1234' },
     });
 
-    const submitBtn = screen.getByRole('button', { name: /Confirm Scoping Call/i });
+    const submitBtn = screen.getByRole('button', { name: /Schedule Scoping Call/i });
     fireEvent.click(submitBtn);
 
     await waitFor(() => {
