@@ -327,8 +327,8 @@ All test files are organized in `apps/frontend/src/test/`:
 
 ### 9.2. Test Helper Infrastructure
 
-- **`renderWithProviders(ui, options)`** ([src/test/test-utils.jsx](file:///c:/Users/Tanjil%20Alam/Desktop/Thinkwires/thinkwires/apps/frontend/src/test/test-utils.jsx)): Wraps tested components in an isolated Redux store, the application's `ThemeProvider`, and a React Router `MemoryRouter`. Returns initialized `userEvent` alongside standard Testing Library utilities.
-- **Global Environment Mocks** ([src/test/setup.js](file:///c:/Users/Tanjil%20Alam/Desktop/Thinkwires/thinkwires/apps/frontend/src/test/setup.js)): Provides polyfills and mocks for `window.matchMedia`, `ResizeObserver`, `IntersectionObserver`, `scrollTo`, and `HTMLCanvasElement.getContext` (preventing DOM crashes from Three.js 3D canvas rendering).
+- **`renderWithProviders(ui, options)`** ([src/test/test-utils.jsx](../apps/frontend/src/test/test-utils.jsx)): Wraps tested components in an isolated Redux store, the application's `ThemeProvider`, and a React Router `MemoryRouter`. Returns initialized `userEvent` alongside standard Testing Library utilities.
+- **Global Environment Mocks** ([src/test/setup.js](../apps/frontend/src/test/setup.js)): Provides polyfills and mocks for `window.matchMedia`, `ResizeObserver`, `IntersectionObserver`, `scrollTo`, and `HTMLCanvasElement.getContext` (preventing DOM crashes from Three.js 3D canvas rendering).
 - **MSW Lifecycle Hooks**: Automatically intercepts network requests during integration testing, resets handlers after each test, and closes cleanly after execution.
 
 ### 9.3. Test Execution Commands

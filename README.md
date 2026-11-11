@@ -10,14 +10,47 @@ Thinkwires is an enterprise technical manpower supply, global staffing, and tale
 
 ## Project Documentation Hub
 
-| Document                                               | Primary Audience            | Scope and Contents                                                                                                                                               |
-| ------------------------------------------------------ | --------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [**docs/FrontendDocs.md**](docs/FrontendDocs.md)       | Frontend Engineers & Agents | React 19 architecture, Vite proxy, Redux Toolkit slices, routing inventory, design tokens, Three.js canvas, and auth state.                                      |
-| [**docs/BackendDocs.md**](docs/BackendDocs.md)         | Backend Engineers & Agents  | Express 5 API Gateway, dual-persistence (PostgreSQL + MongoDB Atlas), connection resilience, in-memory fallback, rate limiting, and complete REST API reference. |
-| [**docs/Ai_ServicesDocs.md**](docs/Ai_ServicesDocs.md) | AI Engineers & Agents       | Python FastAPI microservice, PDF link annotation parsing, ATS match scorer, assessment generator, and automated test grader.                                     |
-| [**docs/adminPanel.md**](docs/adminPanel.md)           | Admins, Ops & Agents        | 15 Admin & CMS views, Recharts financial analytics, 6-stage ATS Kanban, RBAC persona switcher, candidate tracking, and live preview editors.                     |
-| [**docs/PRD.md**](docs/PRD.md)                         | Product Managers & Leads    | Product Requirements Document, business KPIs, legal compliance, screening test specifications, and platform roadmap.                                             |
-| [**docs/Design.md**](docs/Design.md)                   | Designers & Developers      | Design aesthetic rules, color tokens, typography scales, glassmorphism specs, and UI guidelines.                                                                 |
+The Thinkwires documentation suite is organized into four comprehensive tiers covering system architecture, operational workflows, security audits, and testing manuals:
+
+### 1. Core Specifications & Engineering Guides
+| Document | Primary Audience | Scope and Contents |
+| :--- | :--- | :--- |
+| [**docs/FrontendDocs.md**](docs/FrontendDocs.md) | Frontend Engineers & Agents | React 19 architecture, Vite proxy, Redux Toolkit slices, routing inventory, design tokens, Three.js canvas, and auth state. |
+| [**docs/BackendDocs.md**](docs/BackendDocs.md) | Backend Engineers & Agents | Express 5 API Gateway, dual-persistence (PostgreSQL + MongoDB Atlas), connection resilience, in-memory fallback, rate limiting, and complete REST API reference. |
+| [**docs/Ai_ServicesDocs.md**](docs/Ai_ServicesDocs.md) | AI Engineers & Agents | Python FastAPI microservice, multi-provider LLM cascade, PDF link parsing, ATS match scorer, assessment generator, and test grader. |
+| [**docs/adminPanel.md**](docs/adminPanel.md) | Admins, Ops & Agents | 15 Admin & CMS views, Recharts financial analytics, 6-stage ATS Kanban, RBAC persona switcher, candidate tracking, and live preview editors. |
+| [**docs/PRD.md**](docs/PRD.md) | Product Managers & Leads | Product Requirements Document, business KPIs, legal compliance, screening test specifications, and platform roadmap. |
+| [**docs/Design.md**](docs/Design.md) | Designers & Developers | Design aesthetic rules, color tokens, typography scales, glassmorphism specs, and UI guidelines. |
+| [**docs/Test.md**](docs/Test.md) | QA, DevOps & Engineers | Master testing guide, command reference cheat sheet, Vitest, MSW, Supertest, Axe-core, and Playwright E2E suites. |
+| [**docs/VERCEL_DEPLOYMENT.md**](docs/VERCEL_DEPLOYMENT.md) | DevOps & SREs | Edge CDN routing, serverless Express API deployment, environment variable configuration, and custom domains. |
+
+### 2. End-to-End Operational Workflow Blueprints
+| Document | Primary Audience | Scope and Contents |
+| :--- | :--- | :--- |
+| [**docs/CandidateWorkflow.md**](docs/CandidateWorkflow.md) | Recruiters & Engineers | Candidate onboarding, resume auto-fill parsing, application lifecycle, and interactive screening gatekeeper. |
+| [**docs/ClientRequisitionWorkflow.md**](docs/ClientRequisitionWorkflow.md) | Sales, Ops & Recruiters | Enterprise mandate submission, 5-Hour SLA benchmark, recruiter approval desk, and conversion to active openings. |
+| [**docs/BenchWorkflow.md**](docs/BenchWorkflow.md) | Clients, Ops & Recruiters | Talent Cloud Bench sourcing, candidate privacy protection (blind profiles `TW-CAND-XXXX`), and direct client interview booking. |
+| [**docs/PlacementWorkflow.md**](docs/PlacementWorkflow.md) | HR, Payroll & Finance | Post-hire placement contract initiation, weekly timesheet logging, client hour approval, and global EOR advisory. |
+| [**docs/CMSWorkflow.md**](docs/CMSWorkflow.md) | Content Admins & Marketing | Dynamic website pages, engineering blog publishing, media library curation, emergency banners, and SEO metadata. |
+| [**docs/AdminWorkflow.md**](docs/AdminWorkflow.md) | Admins & Ops | Three-tier RBAC (`superadmin`, `admin`, `cms_admin`), session management, CSRF defense, and administrative desk routing. |
+| [**docs/AIPipelineWorkflow.md**](docs/AIPipelineWorkflow.md) | AI & Backend Engineers | Multi-provider LLM cascade (Groq Llama-3.3 -> Gemini -> OpenRouter -> Ollama -> OpenAI) and deterministic 6-factor fallback. |
+| [**docs/DossierWorkflow.md**](docs/DossierWorkflow.md) | Recruiters & Clients | Candidate evaluation dossier synthesis, 6-factor radar assessment, and multi-tier privacy presentation views. |
+
+### 3. Security, Performance & SRE Audits (November 2026)
+| Document | Primary Audience | Scope and Contents |
+| :--- | :--- | :--- |
+| [**docs/AUDIT_IMPLEMENTATION_TRACKER.md**](docs/AUDIT_IMPLEMENTATION_TRACKER.md) | Engineering Leads & Product | Centralized implementation roadmap, 5 milestones, and issue acceptance criteria across all audits. |
+| [**docs/BOLA_IDOR_Remediation_Plan.md**](docs/BOLA_IDOR_Remediation_Plan.md) | Security & Backend Leads | Master remediation blueprint resolving all 16 BOLA / IDOR vulnerabilities, compound ESR indexing, and zero-crash safeguards. |
+| [**docs/ExpressBackendSecurityAndArchitectureAudit.md**](docs/ExpressBackendSecurityAndArchitectureAudit.md) | Backend & Security Architects | NoSQL selector injection defense, mass assignment prevention, body parser DoS hardening, and process exception monitors. |
+| [**docs/DatabaseSecurityAndQueryAudit.md**](docs/DatabaseSecurityAndQueryAudit.md) | Database Admins & Engineers | Query hygiene audit resolving 19 unbounded `.find()` queries, strict schema enforcement, and TLS connection security. |
+| [**docs/FrontendPerformanceAndSecurityAudit.md**](docs/FrontendPerformanceAndSecurityAudit.md) | Frontend Architects | Code-splitting & lazy loading to reduce 1.14 MB bundle, input debouncing, `AbortController` race prevention, and client auth hygiene. |
+| [**docs/DeploymentReadinessAndPortabilityAudit.md**](docs/DeploymentReadinessAndPortabilityAudit.md) | SREs & Cloud Architects | 12-Factor App compliance audit, ephemeral disk upload migration to object storage, container probes, and 0.0.0.0 binding. |
+
+### 4. Specialized Concepts & Governance
+| Document | Primary Audience | Scope and Contents |
+| :--- | :--- | :--- |
+| [**docs/resume.md**](docs/resume.md) | Product & AI Engineers | Dual-Score Architecture solving the AI "Resume Inflation" problem: separating paper claims from empirical test scores. |
+| [**thinkwires_policies_md/**](thinkwires_policies_md/md/) | Legal, HR & Compliance | Corporate information security, anti-bribery, GDPR personal data handling, and cookie privacy policies. |
 
 ---
 

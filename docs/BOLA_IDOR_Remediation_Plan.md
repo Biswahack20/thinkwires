@@ -41,22 +41,22 @@ flowchart TD
 
 | ID | Vulnerability | Severity | Target Endpoint & File | Attacker Input | Impact |
 | :--- | :--- | :---: | :--- | :--- | :--- |
-| **BOLA-1** | Candidate Cross-User PII Extraction via Application Conflict | **CRITICAL** | `POST /api/candidate/apply`<br>[`candidatePortal.controller.js`](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/backend/src/controllers/candidatePortal.controller.js#L311-L370) | `req.body.email`<br>`req.body.jobId` | Supplying victim's email returns HTTP 409 and dumped victim's full application and evaluation dossier. |
-| **BOLA-2** | Arbitrary Resume Pointer Attachment | **HIGH** | `POST /api/candidate/apply`<br>[`candidatePortal.controller.js`](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/backend/src/controllers/candidatePortal.controller.js#L311-L314) | `req.body.resumeUrl`<br>(`clientResumeUrl`) | Attacker passes victim's resume filename; backend saves it as attacker's `resumeUrl`, granting attacker valid ownership to download it. |
-| **BOLA-3** | Unescaped Regex Pattern Injection in Resume Download | **HIGH** | `GET /api/candidate/download-resume/:filename`<br>[`candidatePortal.controller.js`](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/backend/src/controllers/candidatePortal.controller.js#L1428-L1436) | `:filename` path param with regex metacharacters | `{ resumeUrl: { $regex: safeFilename } }` matches arbitrary candidate records via regex wildcard `.` matching. |
-| **BOLA-4** | CMS Admin Cross-Role Resume Access Escalation | **HIGH** | `GET /uploads/resumes/:filename`<br>[`candidatePortal.controller.js`](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/backend/src/controllers/candidatePortal.controller.js#L1402) | `req.user` token of `cms_admin` | `['superadmin', 'admin', 'cms_admin']` treats `cms_admin` as `isAdmin = true`, bypassing candidate ownership verification. |
-| **BOLA-5** | CMS Admin Cross-Role Job Openings Manipulation | **HIGH** | `POST /api/openings`<br>[`api.route.js`](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/backend/src/routes/api.route.js#L455) | `adminAuthGuard` accepting `cms_admin` | CMS editors can create, modify, or delete recruitment mandates on public website, bypassing `manpowerGuard`. |
-| **BOLA-6** | Manpower Admin Cross-Role CMS Page Defacement | **MEDIUM** | 14 CMS endpoints in [`api.route.js`](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/backend/src/routes/api.route.js), [`contact.route.js`](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/backend/src/routes/contact.route.js), [`industries.route.js`](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/backend/src/routes/industries.route.js), [`services.route.js`](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/backend/src/routes/services.route.js) | `adminAuthGuard` accepting `admin` | Manpower Admins can rewrite public marketing pages (Stats, Process, Capabilities, Offices, FAQ, Payroll, EOR, Staff Augmentation). |
-| **BOLA-7** | Low-Entropy Predictable Anonymous Code Scraping | **HIGH** | `POST /api/candidate/apply`<br>[`candidatePortal.controller.js`](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/backend/src/controllers/candidatePortal.controller.js#L467-L468) | `Math.random()` yielding 900 ints (`TW-ENG-100`..`999`) | Unauthenticated scrapers can iterate through all 900 codes via `/api/bench/dossier/:id` to extract candidate skill dossiers. |
-| **BOLA-8** | Unauthenticated Static Resume Exposure | **HIGH** | `GET /uploads/resumes/:filename`<br>[`app.js`](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/backend/src/app.js#L85-L87) | Direct static file path | If static uploads directory is mounted without auth, resumes are publicly downloadable. Must route through `downloadResume`. |
-| **BOLA-9** | Confidential Corporate Requisition & Contact Exposure | **HIGH** | `GET /api/openings`<br>[`api.route.js`](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/backend/src/routes/api.route.js#L221-L266) | Public query params | Inbound requisitions created with manager email and contact phone in description string leaked to public visitors. |
-| **BOLA-10** | Raw Database ObjectId Scraping on Public Bench | **MEDIUM** | `GET /api/bench/dossier/:id`<br>[`bench.route.js`](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/backend/src/routes/bench.route.js#L568-L574) | `:id` param as MongoDB ObjectId | Direct database ObjectIds dumped full candidate dossier. Must strictly enforce code/UUID formats. |
-| **BOLA-11** | Unauthenticated Placement Audit Log Injection | **MEDIUM** | `POST /api/candidate-portal/timesheet`<br>[`api.route.js`](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/backend/src/routes/api.route.js#L1032-L1035) | `req.body.hours`, `comments` | Public unauthenticated POST wrote directly to operational `Activity` collection shown on admin dashboard. |
-| **BOLA-12** | Cross-Domain Activity Stream Log Leakage | **LOW** | `GET /api/admin/activities`<br>[`admin.controller.js`](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/backend/src/controllers/admin.controller.js#L3197-L3212) | `req.user` token of `cms_admin` | `cms_admin` could observe commercial client placements, contract bill rates, and ATS milestones. |
-| **BOLA-13** | Untrusted Avatar Preset URL Injection & SSRF Exposure | **MEDIUM** | `PUT /api/candidate/avatar/preset`<br>[`candidatePortal.controller.js`](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/backend/src/controllers/candidatePortal.controller.js#L1254-L1277) | `req.body.presetUrl` | Allows saving arbitrary URLs (`javascript:...`, external phishing links) into candidate profile and applications. |
-| **BOLA-14** | Dual-Auth Session Ambiguity & User Table Confusion | **LOW** | `GET /api/user/profile`<br>[`user.route.js`](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/backend/src/routes/user.route.js#L11-L12) | Candidate JWT token | `authenticateCandidateOrAdmin` allows candidate tokens to reach admin `UserMongo` controller, creating 404s and session confusion. |
-| **BOLA-15** | CastError Server 500 Crash via Malformed Application ID | **HIGH** | Candidate application endpoints in [`candidatePortal.controller.js`](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/backend/src/controllers/candidatePortal.controller.js) | Malformed `:applicationId` parameter | Passing non-ObjectId strings throws unhandled Mongoose `CastError`, crashing request into 500 server error instead of clean 400. |
-| **BOLA-16** | Assessment Submission & Draft State Tampering (IDOR) | **MEDIUM** | `POST /api/candidate/applications/:applicationId/assessment/submit`<br>[`candidatePortal.controller.js`](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/backend/src/controllers/candidatePortal.controller.js#L890-L915) | Cross-candidate `:applicationId` | Must strictly verify both `_id: applicationId` AND `candidate: req.candidate._id`, ensuring candidate cannot submit answers for another's test. |
+| **BOLA-1** | Candidate Cross-User PII Extraction via Application Conflict | **CRITICAL** | `POST /api/candidate/apply`<br>[`candidatePortal.controller.js`](../apps/backend/src/controllers/candidatePortal.controller.js#L311-L370) | `req.body.email`<br>`req.body.jobId` | Supplying victim's email returns HTTP 409 and dumped victim's full application and evaluation dossier. |
+| **BOLA-2** | Arbitrary Resume Pointer Attachment | **HIGH** | `POST /api/candidate/apply`<br>[`candidatePortal.controller.js`](../apps/backend/src/controllers/candidatePortal.controller.js#L311-L314) | `req.body.resumeUrl`<br>(`clientResumeUrl`) | Attacker passes victim's resume filename; backend saves it as attacker's `resumeUrl`, granting attacker valid ownership to download it. |
+| **BOLA-3** | Unescaped Regex Pattern Injection in Resume Download | **HIGH** | `GET /api/candidate/download-resume/:filename`<br>[`candidatePortal.controller.js`](../apps/backend/src/controllers/candidatePortal.controller.js#L1428-L1436) | `:filename` path param with regex metacharacters | `{ resumeUrl: { $regex: safeFilename } }` matches arbitrary candidate records via regex wildcard `.` matching. |
+| **BOLA-4** | CMS Admin Cross-Role Resume Access Escalation | **HIGH** | `GET /uploads/resumes/:filename`<br>[`candidatePortal.controller.js`](../apps/backend/src/controllers/candidatePortal.controller.js#L1402) | `req.user` token of `cms_admin` | `['superadmin', 'admin', 'cms_admin']` treats `cms_admin` as `isAdmin = true`, bypassing candidate ownership verification. |
+| **BOLA-5** | CMS Admin Cross-Role Job Openings Manipulation | **HIGH** | `POST /api/openings`<br>[`api.route.js`](../apps/backend/src/routes/api.route.js#L455) | `adminAuthGuard` accepting `cms_admin` | CMS editors can create, modify, or delete recruitment mandates on public website, bypassing `manpowerGuard`. |
+| **BOLA-6** | Manpower Admin Cross-Role CMS Page Defacement | **MEDIUM** | 14 CMS endpoints in [`api.route.js`](../apps/backend/src/routes/api.route.js), [`contact.route.js`](../apps/backend/src/routes/contact.route.js), [`industries.route.js`](../apps/backend/src/routes/industries.route.js), [`services.route.js`](../apps/backend/src/routes/services.route.js) | `adminAuthGuard` accepting `admin` | Manpower Admins can rewrite public marketing pages (Stats, Process, Capabilities, Offices, FAQ, Payroll, EOR, Staff Augmentation). |
+| **BOLA-7** | Low-Entropy Predictable Anonymous Code Scraping | **HIGH** | `POST /api/candidate/apply`<br>[`candidatePortal.controller.js`](../apps/backend/src/controllers/candidatePortal.controller.js#L467-L468) | `Math.random()` yielding 900 ints (`TW-ENG-100`..`999`) | Unauthenticated scrapers can iterate through all 900 codes via `/api/bench/dossier/:id` to extract candidate skill dossiers. |
+| **BOLA-8** | Unauthenticated Static Resume Exposure | **HIGH** | `GET /uploads/resumes/:filename`<br>[`app.js`](../apps/backend/src/app.js#L85-L87) | Direct static file path | If static uploads directory is mounted without auth, resumes are publicly downloadable. Must route through `downloadResume`. |
+| **BOLA-9** | Confidential Corporate Requisition & Contact Exposure | **HIGH** | `GET /api/openings`<br>[`api.route.js`](../apps/backend/src/routes/api.route.js#L221-L266) | Public query params | Inbound requisitions created with manager email and contact phone in description string leaked to public visitors. |
+| **BOLA-10** | Raw Database ObjectId Scraping on Public Bench | **MEDIUM** | `GET /api/bench/dossier/:id`<br>[`bench.route.js`](../apps/backend/src/routes/bench.route.js#L568-L574) | `:id` param as MongoDB ObjectId | Direct database ObjectIds dumped full candidate dossier. Must strictly enforce code/UUID formats. |
+| **BOLA-11** | Unauthenticated Placement Audit Log Injection | **MEDIUM** | `POST /api/candidate-portal/timesheet`<br>[`api.route.js`](../apps/backend/src/routes/api.route.js#L1032-L1035) | `req.body.hours`, `comments` | Public unauthenticated POST wrote directly to operational `Activity` collection shown on admin dashboard. |
+| **BOLA-12** | Cross-Domain Activity Stream Log Leakage | **LOW** | `GET /api/admin/activities`<br>[`admin.controller.js`](../apps/backend/src/controllers/admin.controller.js#L3197-L3212) | `req.user` token of `cms_admin` | `cms_admin` could observe commercial client placements, contract bill rates, and ATS milestones. |
+| **BOLA-13** | Untrusted Avatar Preset URL Injection & SSRF Exposure | **MEDIUM** | `PUT /api/candidate/avatar/preset`<br>[`candidatePortal.controller.js`](../apps/backend/src/controllers/candidatePortal.controller.js#L1254-L1277) | `req.body.presetUrl` | Allows saving arbitrary URLs (`javascript:...`, external phishing links) into candidate profile and applications. |
+| **BOLA-14** | Dual-Auth Session Ambiguity & User Table Confusion | **LOW** | `GET /api/user/profile`<br>[`user.route.js`](../apps/backend/src/routes/user.route.js#L11-L12) | Candidate JWT token | `authenticateCandidateOrAdmin` allows candidate tokens to reach admin `UserMongo` controller, creating 404s and session confusion. |
+| **BOLA-15** | CastError Server 500 Crash via Malformed Application ID | **HIGH** | Candidate application endpoints in [`candidatePortal.controller.js`](../apps/backend/src/controllers/candidatePortal.controller.js) | Malformed `:applicationId` parameter | Passing non-ObjectId strings throws unhandled Mongoose `CastError`, crashing request into 500 server error instead of clean 400. |
+| **BOLA-16** | Assessment Submission & Draft State Tampering (IDOR) | **MEDIUM** | `POST /api/candidate/applications/:applicationId/assessment/submit`<br>[`candidatePortal.controller.js`](../apps/backend/src/controllers/candidatePortal.controller.js#L890-L915) | Cross-candidate `:applicationId` | Must strictly verify both `_id: applicationId` AND `candidate: req.candidate._id`, ensuring candidate cannot submit answers for another's test. |
 
 ---
 
@@ -93,7 +93,7 @@ To guarantee that the codebase **never crashes, hangs, or throws 500 errors** fo
 ## 4. Detailed Implementation Phases
 
 ### Phase 1: File Storage BOLA & Resume Authorization Remediation
-**Target File**: [`apps/backend/src/controllers/candidatePortal.controller.js`](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/backend/src/controllers/candidatePortal.controller.js)
+**Target File**: [`apps/backend/src/controllers/candidatePortal.controller.js`](../apps/backend/src/controllers/candidatePortal.controller.js)
 
 1. **Fix Arbitrary Resume Attachment (Findings BOLA-1 & BOLA-2)**:
    In `applyForJob`:
@@ -158,10 +158,10 @@ To guarantee that the codebase **never crashes, hangs, or throws 500 errors** fo
 
 ### Phase 2: Strict RBAC Role Boundaries (CMS vs ATS)
 **Target Files**:
-- [`apps/backend/src/routes/api.route.js`](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/backend/src/routes/api.route.js)
-- [`apps/backend/src/routes/contact.route.js`](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/backend/src/routes/contact.route.js)
-- [`apps/backend/src/routes/industries.route.js`](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/backend/src/routes/industries.route.js)
-- [`apps/backend/src/routes/services.route.js`](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/backend/src/routes/services.route.js)
+- [`apps/backend/src/routes/api.route.js`](../apps/backend/src/routes/api.route.js)
+- [`apps/backend/src/routes/contact.route.js`](../apps/backend/src/routes/contact.route.js)
+- [`apps/backend/src/routes/industries.route.js`](../apps/backend/src/routes/industries.route.js)
+- [`apps/backend/src/routes/services.route.js`](../apps/backend/src/routes/services.route.js)
 
 1. **Protect `POST /api/openings` (Finding BOLA-5)**:
    In `api.route.js`:
@@ -201,8 +201,8 @@ To guarantee that the codebase **never crashes, hangs, or throws 500 errors** fo
 
 ### Phase 3: Public Bench & Requisition Protection
 **Target Files**:
-- [`apps/backend/src/controllers/candidatePortal.controller.js`](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/backend/src/controllers/candidatePortal.controller.js)
-- [`apps/backend/src/routes/bench.route.js`](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/backend/src/routes/bench.route.js)
+- [`apps/backend/src/controllers/candidatePortal.controller.js`](../apps/backend/src/controllers/candidatePortal.controller.js)
+- [`apps/backend/src/routes/bench.route.js`](../apps/backend/src/routes/bench.route.js)
 
 1. **Generate Cryptographic UUID Anonymous Codes (Finding BOLA-7)**:
    In `candidatePortal.controller.js`:
@@ -251,8 +251,8 @@ To guarantee that the codebase **never crashes, hangs, or throws 500 errors** fo
 
 ### Phase 4: Input Whitelisting, Avatar Presets & Session Hygiene
 **Target Files**:
-- [`apps/backend/src/controllers/candidatePortal.controller.js`](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/backend/src/controllers/candidatePortal.controller.js)
-- [`apps/backend/src/routes/user.route.js`](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/backend/src/routes/user.route.js)
+- [`apps/backend/src/controllers/candidatePortal.controller.js`](../apps/backend/src/controllers/candidatePortal.controller.js)
+- [`apps/backend/src/routes/user.route.js`](../apps/backend/src/routes/user.route.js)
 
 1. **Whitelist Avatar Presets (Finding BOLA-13)**:
    In `setAvatarPreset`:
@@ -277,7 +277,7 @@ To guarantee that the codebase **never crashes, hangs, or throws 500 errors** fo
 ---
 
 ### Phase 5: CastError & Parameter Tampering Zero-Crash Guards
-**Target File**: [`apps/backend/src/controllers/candidatePortal.controller.js`](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/backend/src/controllers/candidatePortal.controller.js)
+**Target File**: [`apps/backend/src/controllers/candidatePortal.controller.js`](../apps/backend/src/controllers/candidatePortal.controller.js)
 
 Add strict ObjectId validation to all 5 candidate application endpoints to eliminate `Mongoose.CastError` 500 crashes:
 ```javascript
@@ -294,7 +294,7 @@ if (!mongoose.isValidObjectId(applicationId)) {
 ---
 
 ### Phase 6: Partial Unique Index Fix for Application Cooldown (Issue #208)
-**Target File**: [`apps/backend/src/models/jobApplication.mongo.model.js`](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/backend/src/models/jobApplication.mongo.model.js)
+**Target File**: [`apps/backend/src/models/jobApplication.mongo.model.js`](../apps/backend/src/models/jobApplication.mongo.model.js)
 
 1. **Replace Hard Unique Index with Partial Unique Index**:
    ```javascript
@@ -332,7 +332,7 @@ if (!mongoose.isValidObjectId(applicationId)) {
 ---
 
 ### Phase 8: Production Index Synchronization Pipeline
-**Target File**: [`apps/backend/src/configs/mongodb.js`](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/backend/src/configs/mongodb.js)
+**Target File**: [`apps/backend/src/configs/mongodb.js`](../apps/backend/src/configs/mongodb.js)
 
 Add an idempotent, non-blocking index sync utility invoked upon database connection:
 ```javascript

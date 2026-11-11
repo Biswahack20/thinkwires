@@ -12,7 +12,7 @@
 
 A comprehensive static code analysis of the 194 frontend components and pages across `apps/frontend` revealed that while the project utilizes React 19 and Vite 8, the application suffers from **critical bundle bloat**, **client-side security anti-patterns**, and **rendering performance bottlenecks**:
 
-1. **Initial Bundle Bloat (1,139 kB JS):** In [`apps/frontend/src/App.jsx`](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/frontend/src/App.jsx), 28 routes (all public pages, auth flows, and candidate portal views) are statically imported at the top level. Furthermore, the entire `three.js` WebGL 3D engine (~600 kB) is synchronously imported into the Home Page hero section.
+1. **Initial Bundle Bloat (1,139 kB JS):** In [`apps/frontend/src/App.jsx`](../apps/frontend/src/App.jsx), 28 routes (all public pages, auth flows, and candidate portal views) are statically imported at the top level. Furthermore, the entire `three.js` WebGL 3D engine (~600 kB) is synchronously imported into the Home Page hero section.
 2. **Missing Input Debouncing & API Flooding:** Across all admin data views (`CandidatesView`, `JobsView`, `RequisitionsView`, `ClientsView`), search input `onChange` handlers immediately trigger `useEffect` network requests without debouncing. Typing a 15-character term fires 15 concurrent backend API requests.
 3. **Missing `AbortController` (Race Conditions):** Search and filter effects lack cancellation handles. Slower earlier search queries can resolve after faster later queries, corrupting UI state with stale results.
 4. **Client-Side Auth Token Storage:** JWT tokens are stored in `localStorage` in `apiConfig.js` instead of relying strictly on secure, HttpOnly, SameSite cookies.
@@ -44,15 +44,15 @@ flowchart TD
 
 | Finding ID | File Path : Line Number | Category | Severity | Anti-Pattern Description |
 | :---: | :--- | :--- | :---: | :--- |
-| **SEC-FE-01** | [`apps/frontend/src/App.jsx:6-41`](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/frontend/src/App.jsx#L6-L41) | Performance / Bundle Size | **CRITICAL** | **Synchronous Monolithic Route Imports:** 28 page routes are statically imported at the root, inflating initial bundle to 1,139 kB. |
-| **SEC-FE-02** | [`apps/frontend/src/components/HomeComponents/Hero.jsx:2`](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/frontend/src/components/HomeComponents/Hero.jsx#L2) & [`ThinkWiresAnimation.jsx:2`](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/frontend/src/components/ThinkWiresAnimation.jsx#L2) | Performance / Bundle Size | **CRITICAL** | **Synchronous Heavy 3D Engine Import:** `three` (~600 kB) is synchronously imported on Home Page first paint. |
-| **SEC-FE-03** | [`apps/frontend/src/admin/CandidatesView.jsx:66-72`](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/frontend/src/admin/CandidatesView.jsx#L66-L72) & [`:225`](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/frontend/src/admin/CandidatesView.jsx#L225) | Data Fetching / Performance | **HIGH** | **Un-debounced Search-as-You-Type:** Fires a network API query on every keystroke without debouncing or throttle across 8 data views. |
-| **SEC-FE-04** | [`apps/frontend/src/admin/CandidatesView.jsx:66-75`](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/frontend/src/admin/CandidatesView.jsx#L66-L75) | State / Side-Effects | **HIGH** | **Missing AbortController (Race Condition):** Async fetch does not cancel in-flight requests on dependency change. |
-| **SEC-FE-05** | [`apps/frontend/src/utils/apiConfig.js:46-60`](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/frontend/src/utils/apiConfig.js#L46-L60) | Client-Side Security | **HIGH** | **Sensitive Token in `localStorage`:** Candidate JWT stored in `localStorage`, exposing session credentials to XSS extraction. |
-| **SEC-FE-06** | [`apps/frontend/src/components/common/Navbar.jsx:13`](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/frontend/src/components/common/Navbar.jsx#L13) | Performance / Bundle Size | **MEDIUM** | **Top-Level Heavy Modal Import in Global Nav:** `QuickApplyModal` (28.4 kB) statically imported in global Navbar rendered on every route. |
-| **SEC-FE-07** | [`apps/frontend/src/components/common/Footer.jsx:143`](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/frontend/src/components/common/Footer.jsx#L143) & [`AdminLayout.jsx:662`](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/frontend/src/admin/AdminLayout.jsx#L662) | Client-Side Security | **MEDIUM** | **Reverse Tab-Nabbing:** `target="_blank"` anchor links without `rel="noopener noreferrer"`. |
-| **SEC-FE-08** | [`apps/frontend/src/components/HomeComponents/NewHero.jsx:479`](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/frontend/src/components/HomeComponents/NewHero.jsx#L479) & [`AboutHero.jsx:158`](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/frontend/src/components/AboutComponents/AboutHero.jsx#L158) | Accessibility (a11y) & CLS | **MEDIUM** | **Missing `alt` and Explicit Dimensions:** 25 `<img>` tags lack `alt` text and `width`/`height` attributes, violating WCAG 1.1.1 and causing layout shift. |
-| **SEC-FE-09** | [`apps/frontend/src/assets/about-hero-DGODxdt4.jpg`](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/frontend/src/assets) | Performance / Asset Hygiene | **MEDIUM** | **Unoptimized Image Payload:** 3 raw JPEG images exceed 800 kB each (totaling 2.5 MB) instead of modern compressed WebP/AVIF. |
+| **SEC-FE-01** | [`apps/frontend/src/App.jsx:6-41`](../apps/frontend/src/App.jsx#L6-L41) | Performance / Bundle Size | **CRITICAL** | **Synchronous Monolithic Route Imports:** 28 page routes are statically imported at the root, inflating initial bundle to 1,139 kB. |
+| **SEC-FE-02** | [`apps/frontend/src/components/HomeComponents/Hero.jsx:2`](../apps/frontend/src/components/HomeComponents/Hero.jsx#L2) & [`ThinkWiresAnimation.jsx:2`](../apps/frontend/src/components/ThinkWiresAnimation.jsx#L2) | Performance / Bundle Size | **CRITICAL** | **Synchronous Heavy 3D Engine Import:** `three` (~600 kB) is synchronously imported on Home Page first paint. |
+| **SEC-FE-03** | [`apps/frontend/src/admin/CandidatesView.jsx:66-72`](../apps/frontend/src/admin/CandidatesView.jsx#L66-L72) & [`:225`](../apps/frontend/src/admin/CandidatesView.jsx#L225) | Data Fetching / Performance | **HIGH** | **Un-debounced Search-as-You-Type:** Fires a network API query on every keystroke without debouncing or throttle across 8 data views. |
+| **SEC-FE-04** | [`apps/frontend/src/admin/CandidatesView.jsx:66-75`](../apps/frontend/src/admin/CandidatesView.jsx#L66-L75) | State / Side-Effects | **HIGH** | **Missing AbortController (Race Condition):** Async fetch does not cancel in-flight requests on dependency change. |
+| **SEC-FE-05** | [`apps/frontend/src/utils/apiConfig.js:46-60`](../apps/frontend/src/utils/apiConfig.js#L46-L60) | Client-Side Security | **HIGH** | **Sensitive Token in `localStorage`:** Candidate JWT stored in `localStorage`, exposing session credentials to XSS extraction. |
+| **SEC-FE-06** | [`apps/frontend/src/components/common/Navbar.jsx:13`](../apps/frontend/src/components/common/Navbar.jsx#L13) | Performance / Bundle Size | **MEDIUM** | **Top-Level Heavy Modal Import in Global Nav:** `QuickApplyModal` (28.4 kB) statically imported in global Navbar rendered on every route. |
+| **SEC-FE-07** | [`apps/frontend/src/components/common/Footer.jsx:143`](../apps/frontend/src/components/common/Footer.jsx#L143) & [`AdminLayout.jsx:662`](../apps/frontend/src/admin/AdminLayout.jsx#L662) | Client-Side Security | **MEDIUM** | **Reverse Tab-Nabbing:** `target="_blank"` anchor links without `rel="noopener noreferrer"`. |
+| **SEC-FE-08** | [`apps/frontend/src/components/HomeComponents/NewHero.jsx:479`](../apps/frontend/src/components/HomeComponents/NewHero.jsx#L479) & [`AboutHero.jsx:158`](../apps/frontend/src/components/AboutComponents/AboutHero.jsx#L158) | Accessibility (a11y) & CLS | **MEDIUM** | **Missing `alt` and Explicit Dimensions:** 25 `<img>` tags lack `alt` text and `width`/`height` attributes, violating WCAG 1.1.1 and causing layout shift. |
+| **SEC-FE-09** | [`apps/frontend/src/assets/about-hero-DGODxdt4.jpg`](../apps/frontend/src/assets) | Performance / Asset Hygiene | **MEDIUM** | **Unoptimized Image Payload:** 3 raw JPEG images exceed 800 kB each (totaling 2.5 MB) instead of modern compressed WebP/AVIF. |
 
 ---
 
@@ -61,7 +61,7 @@ flowchart TD
 ---
 
 ### SEC-FE-01: Synchronous Monolithic Route Imports Inflating Initial Bundle
-- **Location:** [`apps/frontend/src/App.jsx:6-41`](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/frontend/src/App.jsx#L6-L41)
+- **Location:** [`apps/frontend/src/App.jsx:6-41`](../apps/frontend/src/App.jsx#L6-L41)
 - **Category:** Performance / Code Splitting
 - **Impact:** Forces every visitor to download code for all 28 pages before first paint, inflating `index.js` to 1,139 kB.
 - **Offending Code:**
@@ -131,7 +131,7 @@ flowchart TD
 ---
 
 ### SEC-FE-02: Synchronous Import of Heavy Three.js 3D Engine on Initial Paint
-- **Location:** [`apps/frontend/src/components/HomeComponents/Hero.jsx:2`](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/frontend/src/components/HomeComponents/Hero.jsx#L2) & [`ThinkWiresAnimation.jsx:2`](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/frontend/src/components/ThinkWiresAnimation.jsx#L2)
+- **Location:** [`apps/frontend/src/components/HomeComponents/Hero.jsx:2`](../apps/frontend/src/components/HomeComponents/Hero.jsx#L2) & [`ThinkWiresAnimation.jsx:2`](../apps/frontend/src/components/ThinkWiresAnimation.jsx#L2)
 - **Category:** Performance / Bundle Size
 - **Impact:** `three` (~600 kB) blocks DOMContentLoaded on the marketing homepage.
 - **Offending Code:**
@@ -179,7 +179,7 @@ flowchart TD
 ---
 
 ### SEC-FE-03: Un-debounced Search-as-You-Type Flooding Backend API
-- **Location:** [`apps/frontend/src/admin/CandidatesView.jsx:66-72`](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/frontend/src/admin/CandidatesView.jsx#L66-L72) & [`:224-225`](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/frontend/src/admin/CandidatesView.jsx#L224-L225)
+- **Location:** [`apps/frontend/src/admin/CandidatesView.jsx:66-72`](../apps/frontend/src/admin/CandidatesView.jsx#L66-L72) & [`:224-225`](../apps/frontend/src/admin/CandidatesView.jsx#L224-L225)
 - **Category:** Network Performance & Throttle
 - **Impact:** Every single keystroke fires an HTTP request to `/api/admin/candidates`. Typing a 15-character search term fires 15 concurrent unthrottled requests.
 - **Offending Code:**
@@ -259,7 +259,7 @@ flowchart TD
 ---
 
 ### SEC-FE-04: Missing `AbortController` in Asynchronous Side-Effects (Race Conditions)
-- **Location:** [`apps/frontend/src/admin/CandidatesView.jsx:66-75`](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/frontend/src/admin/CandidatesView.jsx#L66-L75)
+- **Location:** [`apps/frontend/src/admin/CandidatesView.jsx:66-75`](../apps/frontend/src/admin/CandidatesView.jsx#L66-L75)
 - **Category:** State Architecture / Async Hygiene
 - **Impact:** Rapid typing or filter toggles cause out-of-order response settlement, where an older slow request resolves after a newer fast request, leaving the UI displaying stale results.
 - **Offending Code:**
@@ -308,7 +308,7 @@ flowchart TD
 ---
 
 ### SEC-FE-05: Sensitive Authentication Credentials Stored in `localStorage`
-- **Location:** [`apps/frontend/src/utils/apiConfig.js:46-60`](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/frontend/src/utils/apiConfig.js#L46-L60)
+- **Location:** [`apps/frontend/src/utils/apiConfig.js:46-60`](../apps/frontend/src/utils/apiConfig.js#L46-L60)
 - **Category:** Client-Side Security / XSS Defense
 - **Impact:** Candidate JWT stored in `localStorage` is accessible to third-party scripts, browser extensions, or XSS payloads.
 - **Offending Code:**
@@ -357,7 +357,7 @@ flowchart TD
 ---
 
 ### SEC-FE-06: Top-Level Heavy Modal Import in Global Navigation Shell
-- **Location:** [`apps/frontend/src/components/common/Navbar.jsx:13`](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/frontend/src/components/common/Navbar.jsx#L13)
+- **Location:** [`apps/frontend/src/components/common/Navbar.jsx:13`](../apps/frontend/src/components/common/Navbar.jsx#L13)
 - **Category:** Performance / Bundle Size
 - **Impact:** `QuickApplyModal` (28.4 kB) is bundled into the global Navbar, forcing every visitor across all pages to download modal code even if they never click "Apply".
 - **Offending Code:**
@@ -397,7 +397,7 @@ flowchart TD
 ---
 
 ### SEC-FE-07: Reverse Tab-Nabbing Vulnerability on `target="_blank"` Links
-- **Location:** [`apps/frontend/src/components/common/Footer.jsx:143`](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/frontend/src/components/common/Footer.jsx#L143) & [`admin/AdminLayout.jsx:662`](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/frontend/src/admin/AdminLayout.jsx#L662)
+- **Location:** [`apps/frontend/src/components/common/Footer.jsx:143`](../apps/frontend/src/components/common/Footer.jsx#L143) & [`admin/AdminLayout.jsx:662`](../apps/frontend/src/admin/AdminLayout.jsx#L662)
 - **Category:** Client-Side Security
 - **Impact:** Target page gains access to `window.opener.location`, enabling malicious destinations to redirect the original app tab to a phishing clone.
 - **Offending Code:**
@@ -427,7 +427,7 @@ flowchart TD
 ---
 
 ### SEC-FE-08: Missing `alt` Text on Images & Unconstrained Layout Shift (CLS)
-- **Location:** [`apps/frontend/src/components/HomeComponents/NewHero.jsx:479`](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/frontend/src/components/HomeComponents/NewHero.jsx#L479) & [`AboutHero.jsx:158`](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/frontend/src/components/AboutComponents/AboutHero.jsx#L158)
+- **Location:** [`apps/frontend/src/components/HomeComponents/NewHero.jsx:479`](../apps/frontend/src/components/HomeComponents/NewHero.jsx#L479) & [`AboutHero.jsx:158`](../apps/frontend/src/components/AboutComponents/AboutHero.jsx#L158)
 - **Category:** Accessibility (a11y) & Core Web Vitals (CLS)
 - **Impact:** Screen readers cannot interpret images (WCAG 1.1.1 violation). Missing `width`/`height` attributes causes Cumulative Layout Shifts when images finish loading.
 - **Offending Code:**
