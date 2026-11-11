@@ -1,12 +1,8 @@
-Ran search scoring fields in backend
-Analyzed candidatePortal.controller.js:L890-945
-Ran search evaluateAssessment in ai.service.js
-Analyzed ai.service.js:L359-420
-Ran find fallbackEvaluateAssessment
-Analyzed ai.service.js:L1022-1065
-Analyzed screening.py:L1-35
+# Thinkwires Dual-Score Architecture & Resume Inflation Mitigation (`resume.md`)
 
-You have highlighted a crucial reality in modern hiring and enterprise staffing:
+## Overview
+
+In modern technical hiring and enterprise staffing, automated screening systems face a critical challenge:
 
 > **The "Resume Inflation" Problem**: With ChatGPT, Claude, and ATS optimization tools, any candidate can generate an impeccably formatted resume stuffed with exact job keywords that scores 95%+ on keyword match algorithms, without possessing the actual engineering depth to deliver in production.
 
@@ -54,7 +50,7 @@ $$\text{Candidate Score} = (0.50 \times \text{Assessment}) + (0.25 \times \text{
 
 ### Pillar 1: Proctored Technical Screening Assessment (50% Weight)
 
-- **Where it runs**: [`apps/backend/src/controllers/candidatePortal.controller.js:890-940`](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/backend/src/controllers/candidatePortal.controller.js#L890-L940) (`submitApplicationAssessment`) backed by `aiService.evaluateAssessment()`.
+- **Where it runs**: [`apps/backend/src/controllers/candidatePortal.controller.js:890-940`](../apps/backend/src/controllers/candidatePortal.controller.js#L890-L940) (`submitApplicationAssessment`) backed by `aiService.evaluateAssessment()`.
 - **How it works**:
   1. When a candidate applies, `aiService.generateAssessment()` dynamically synthesizes a **10-question timed assessment** customized to the job's tech stack (MCQs, systems architecture scenarios, and debugging questions).
   2. The candidate completes the test in the Candidate Portal (`/candidate-portal/assessment/:id`).
@@ -63,7 +59,7 @@ $$\text{Candidate Score} = (0.50 \times \text{Assessment}) + (0.25 \times \text{
 
 ### Pillar 2: Recruiter Live Calibration & Verification (25% Weight)
 
-- **Where it runs**: [`apps/backend/src/controllers/admin.controller.js:950-1005`](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/backend/src/controllers/admin.controller.js#L950-L1005) (`reEvaluateCandidate`).
+- **Where it runs**: [`apps/backend/src/controllers/admin.controller.js:950-1005`](../apps/backend/src/controllers/admin.controller.js#L950-L1005) (`reEvaluateCandidate`).
 - **How it works**:
   1. The staffing director conducts a 15-minute phone screen using the **Targeted Recruiter Screening Questions** generated in the AI Dossier.
   2. The recruiter enters qualitative notes into `POST /api/admin/candidates/:id/re-evaluate` (`recruiterNotes`).
@@ -71,7 +67,7 @@ $$\text{Candidate Score} = (0.50 \times \text{Assessment}) + (0.25 \times \text{
 
 ### Pillar 3: Verified Artifacts & History (15% Weight)
 
-- **Where it runs**: [`pricing.utils.js`](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/backend/src/utils/pricing.utils.js) and `candidatePortal.controller.js`.
+- **Where it runs**: [`pricing.utils.js`](../apps/backend/src/utils/pricing.utils.js) and `candidatePortal.controller.js`.
 - **How it works**:
   - Verification of public GitHub repositories / commit histories (`sanitizeSafeUrl(githubUrl)`).
   - Validation of current employer tenure and notice period (`parseNoticeDays(noticePeriod)`).

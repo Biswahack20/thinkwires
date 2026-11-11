@@ -31,15 +31,15 @@ The Thinkwires AI Microservice is a high-throughput, asynchronous **FastAPI** se
 │  - Weighted ATS Candidate Match Scorer (PRD 4.3)       │
 │  - 10-Question Dynamic Assessment Generator            │
 │  - Automated MCQ, Scenario & Practical Code Grader     │
-│  - OpenAI GPT-4o-mini Integration + Heuristic Fallback │
+│  - Multi-Provider LLM Cascade + Heuristic Fallback     │
 └────────────────────────────────────────────────────────┘
 ```
 
 ### Core Design Principles
 
-1. **Dual-Engine Resilience (Zero-Failure Execution)**:
-   - **Primary Engine**: When an `OPENAI_API_KEY` is present, the service leverages `gpt-4o-mini` with structured JSON output modes for nuanced natural language extraction and situational appraisal.
-   - **Heuristic Rule Engine**: If the OpenAI API key is unset or external API quotas fail, the service executes deterministic, regex-based, rule-governed NLP extraction, mathematical ATS formula calculations, and programmatic test grading. The platform never crashes or stalls candidate applications.
+1. **Multi-Provider LLM Cascade & Dual-Engine Resilience (Zero-Failure Execution)**:
+   - **Provider Cascade**: The service operates an intelligent multi-provider LLM cascade prioritized by latency and availability (`Groq Llama-3.3` -> `Google Gemini 1.5 Flash` -> `OpenRouter` -> `Local Ollama` -> `OpenAI GPT-4o-mini`).
+   - **Deterministic Heuristic Rule Engine**: If cloud API keys are unset, throttled (HTTP 429), or offline, the service automatically fails over to deterministic, regex-based NLP extraction, mathematical ATS formula calculations, and programmatic test grading. The platform never crashes or stalls candidate applications.
 2. **Deep Document Extraction**:
    - Parses both text layers and embedded PDF annotations (`/Annot`, `/URI`) to discover hyperlinks for LinkedIn, GitHub, and portfolio websites even if display text is abbreviated.
 3. **Clean Modular Architecture**:

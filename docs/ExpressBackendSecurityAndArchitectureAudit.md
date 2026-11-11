@@ -38,15 +38,15 @@ flowchart TD
 
 | Finding ID | File Path : Line Number | Category | Severity | Risk & Impact |
 | :---: | :--- | :--- | :---: | :--- |
-| **SEC-EXP-01** | [`apps/backend/src/controllers/admin.controller.js:672`](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/backend/src/controllers/admin.controller.js#L672) & [`:1336`](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/backend/src/controllers/admin.controller.js#L1336) | Input Validation / Injection | **CRITICAL** | **NoSQL Injection via Query Objects:** Unvalidated `req.query.status` accepts nested query selectors (e.g. `[$ne]=`) directly into MongoDB filters. |
-| **SEC-EXP-02** | [`apps/backend/src/controllers/admin.controller.js:1437-1452`](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/backend/src/controllers/admin.controller.js#L1437-L1452) | Parameter Tampering / Mass Assignment | **HIGH** | **Direct `req.body` Passing to `findOneAndUpdate`:** Raw request body passed to MongoDB driver without schema filtering or sanitization. |
-| **SEC-EXP-03** | [`apps/backend/src/app.js:64-65`](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/backend/src/app.js#L64-L65) | Security Hardening / DoS | **HIGH** | **Excessive Body Parser Limit (10MB):** `express.json({ limit: '10mb' })` allows multi-megabyte JSON payloads that freeze the event loop. |
-| **SEC-EXP-04** | [`apps/backend/src/app.js:168-177`](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/backend/src/app.js#L168-L177) | Process Safety / Info Leakage | **HIGH** | **Production Information Leakage:** Global error handler returns `err.message` unconditionally, leaking internal database stack details. |
-| **SEC-EXP-05** | [`apps/backend/src/server.js:68-96`](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/backend/src/server.js#L68-L96) | Process Lifecycle | **HIGH** | **Missing Unhandled Rejection Listeners:** No `unhandledRejection` or `uncaughtException` monitors registered in `server.js`. |
-| **SEC-EXP-06** | [`apps/backend/src/routes/api.route.js:455-474`](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/backend/src/routes/api.route.js#L455-L474) | Middleware Order / RBAC | **HIGH** | **Alternate Route Privilege Escalation:** `POST /api/openings` uses `requireAuth(['superadmin', 'admin', 'cms_admin'])`, allowing `cms_admin` to upsert jobs. |
-| **SEC-EXP-07** | [`apps/backend/src/configs/db.js:42`](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/backend/src/configs/db.js#L42) | Connection Security | **HIGH** | **TLS Verification Bypass:** PostgreSQL connection pool uses `rejectUnauthorized: false`, permitting MITM interception on cloud networks. |
-| **SEC-EXP-08** | [`apps/backend/src/models/job.mongo.model.js:142`](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/backend/src/models/job.mongo.model.js#L142) | Schema Integrity | **HIGH** | **Unrestricted Document Schemas:** `strict: false` disables Mongoose attribute validation, permitting arbitrary property injection. |
-| **SEC-EXP-09** | [`apps/backend/src/configs/mongodb.js:28`](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/backend/src/configs/mongodb.js#L28) | Index Lifecycle | **MEDIUM** | **Unsynchronized Production Indexes:** `autoIndex: false` in production without an automated index migration runner. |
+| **SEC-EXP-01** | [`apps/backend/src/controllers/admin.controller.js:672`](../apps/backend/src/controllers/admin.controller.js#L672) & [`:1336`](../apps/backend/src/controllers/admin.controller.js#L1336) | Input Validation / Injection | **CRITICAL** | **NoSQL Injection via Query Objects:** Unvalidated `req.query.status` accepts nested query selectors (e.g. `[$ne]=`) directly into MongoDB filters. |
+| **SEC-EXP-02** | [`apps/backend/src/controllers/admin.controller.js:1437-1452`](../apps/backend/src/controllers/admin.controller.js#L1437-L1452) | Parameter Tampering / Mass Assignment | **HIGH** | **Direct `req.body` Passing to `findOneAndUpdate`:** Raw request body passed to MongoDB driver without schema filtering or sanitization. |
+| **SEC-EXP-03** | [`apps/backend/src/app.js:64-65`](../apps/backend/src/app.js#L64-L65) | Security Hardening / DoS | **HIGH** | **Excessive Body Parser Limit (10MB):** `express.json({ limit: '10mb' })` allows multi-megabyte JSON payloads that freeze the event loop. |
+| **SEC-EXP-04** | [`apps/backend/src/app.js:168-177`](../apps/backend/src/app.js#L168-L177) | Process Safety / Info Leakage | **HIGH** | **Production Information Leakage:** Global error handler returns `err.message` unconditionally, leaking internal database stack details. |
+| **SEC-EXP-05** | [`apps/backend/src/server.js:68-96`](../apps/backend/src/server.js#L68-L96) | Process Lifecycle | **HIGH** | **Missing Unhandled Rejection Listeners:** No `unhandledRejection` or `uncaughtException` monitors registered in `server.js`. |
+| **SEC-EXP-06** | [`apps/backend/src/routes/api.route.js:455-474`](../apps/backend/src/routes/api.route.js#L455-L474) | Middleware Order / RBAC | **HIGH** | **Alternate Route Privilege Escalation:** `POST /api/openings` uses `requireAuth(['superadmin', 'admin', 'cms_admin'])`, allowing `cms_admin` to upsert jobs. |
+| **SEC-EXP-07** | [`apps/backend/src/configs/db.js:42`](../apps/backend/src/configs/db.js#L42) | Connection Security | **HIGH** | **TLS Verification Bypass:** PostgreSQL connection pool uses `rejectUnauthorized: false`, permitting MITM interception on cloud networks. |
+| **SEC-EXP-08** | [`apps/backend/src/models/job.mongo.model.js:142`](../apps/backend/src/models/job.mongo.model.js#L142) | Schema Integrity | **HIGH** | **Unrestricted Document Schemas:** `strict: false` disables Mongoose attribute validation, permitting arbitrary property injection. |
+| **SEC-EXP-09** | [`apps/backend/src/configs/mongodb.js:28`](../apps/backend/src/configs/mongodb.js#L28) | Index Lifecycle | **MEDIUM** | **Unsynchronized Production Indexes:** `autoIndex: false` in production without an automated index migration runner. |
 
 ---
 
@@ -55,7 +55,7 @@ flowchart TD
 ---
 
 ### SEC-EXP-01: NoSQL Query Selector Injection via Unsanitized Query Objects
-- **Location:** [`apps/backend/src/controllers/admin.controller.js:672`](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/backend/src/controllers/admin.controller.js#L672) & [`:1336`](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/backend/src/controllers/admin.controller.js#L1336)
+- **Location:** [`apps/backend/src/controllers/admin.controller.js:672`](../apps/backend/src/controllers/admin.controller.js#L672) & [`:1336`](../apps/backend/src/controllers/admin.controller.js#L1336)
 - **Root Cause:**
   `express.urlencoded({ extended: true })` uses the `qs` library. When a client sends `?status[$ne]=Rejected`, `req.query.status` is parsed as an object `{ "$ne": "Rejected" }`. In `getCandidates` and `getClients`, the controller directly assigns:
   ```javascript
@@ -104,7 +104,7 @@ flowchart TD
 ---
 
 ### SEC-EXP-02: Mass Assignment in MongoDB Update Operations
-- **Location:** [`apps/backend/src/controllers/admin.controller.js:1437-1453`](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/backend/src/controllers/admin.controller.js#L1437-L1453)
+- **Location:** [`apps/backend/src/controllers/admin.controller.js:1437-1453`](../apps/backend/src/controllers/admin.controller.js#L1437-L1453)
 - **Root Cause:**
   Passing raw `req.body` directly to `findOneAndUpdate` without whitelisting allows malicious callers to overwrite unexposed fields or inject atomic operators (`$set`, `$unset`, `$rename`).
 - **Offending Code:**
@@ -152,7 +152,7 @@ flowchart TD
 ---
 
 ### SEC-EXP-03: Denial of Service via 10 MB JSON Body Limit
-- **Location:** [`apps/backend/src/app.js:64-65`](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/backend/src/app.js#L64-L65)
+- **Location:** [`apps/backend/src/app.js:64-65`](../apps/backend/src/app.js#L64-L65)
 - **Root Cause:**
   `app.use(express.json({ limit: '10mb' }))` permits 10 MB JSON payloads. Parsing a 10 MB JSON string blocks the V8 event loop for 200–500 ms. A burst of requests causes thread starvation, 504 gateway timeouts, and server crashes. Multipart file uploads are handled separately via `multer`, making a 10 MB JSON limit completely unnecessary.
 - **Offending Code:**
@@ -171,7 +171,7 @@ flowchart TD
 ---
 
 ### SEC-EXP-04: Information Leakage in Global Error Middleware
-- **Location:** [`apps/backend/src/app.js:168-177`](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/backend/src/app.js#L168-L177)
+- **Location:** [`apps/backend/src/app.js:168-177`](../apps/backend/src/app.js#L168-L177)
 - **Root Cause:**
   `res.status(err.status || 500).json({ error: err.message })` exposes internal driver error strings (e.g. `MongoServerError: connection <monitor> to shard-00... closed`, Mongoose validation details containing collection names and file paths).
 - **Offending Code:**
@@ -222,7 +222,7 @@ flowchart TD
 ---
 
 ### SEC-EXP-05: Missing Process-Level Unhandled Rejection Monitors
-- **Location:** [`apps/backend/src/server.js:68-96`](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/backend/src/server.js#L68-L96)
+- **Location:** [`apps/backend/src/server.js:68-96`](../apps/backend/src/server.js#L68-L96)
 - **Root Cause:**
   Node.js terminates processes on unhandled promise rejections if no listener is attached. Background tasks (e.g., mail dispatch, async activity logging) running outside the request-response lifecycle can crash the container if a promise fails without a catch handler.
 - **Offending Code:**

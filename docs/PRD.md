@@ -4,7 +4,7 @@
 
 **Document Version:** 1.0
 
-**Target Architecture:** Modern Web Application built with **JavaScript (Node.js/Express + React)**, **Python (FastAPI for AI)**, **PostgreSQL (Database)**, and **Redis (Caching & Fast Memory)**.
+**Target Architecture:** Modern Web Application built with **JavaScript/TypeScript (Express 5 API Gateway + React 19 Frontend)**, **Python 3.12 (FastAPI Microservice with Multi-Provider LLM Cascade)**, **Dual-Persistence Database Architecture (MongoDB Atlas primary document store + PostgreSQL relational identity sync)**, and **Redis (Caching & Rate Limiting)**.
 
 ---
 
@@ -20,7 +20,7 @@ ThinkWire is a complete platform that connects three groups of people:
 
 ### What Makes ThinkWire Special?
 
-- **AI Screening Gatekeeper:** When a candidate applies for a job, our AI creates a custom 10-question test based on the job description. Candidates must pass this test before their application is shown to recruiters or clients.
+- **AI Screening Gatekeeper:** When a candidate applies for a job, our AI creates a custom screening assessment (5 to 10 dynamically calibrated questions) based on the job description. Candidates must pass this test before their application is shown to recruiters or clients.
 - **Resume Match Scorer:** The system automatically reads candidate resumes, compares them against the job requirements, and generates a **Fit Score (0–100%)**.
 - **Bench Management:** Keeps track of candidates currently on the internal payroll who are between client projects, showing daily cost overhead and enabling single-click reassignment.
 - **Admin Control Panel (CMS & Feature Flags):** Admins can change website text, add new job categories, and turn platform features ON or OFF in real time without touching any code.
@@ -62,8 +62,8 @@ Everything in this project is written in **Modern JavaScript (ES6+)** for the we
 - **Node.js (v20 or higher):** The JavaScript runtime environment used to execute JavaScript code on the backend and build the frontend.
 - **npm (Node Package Manager v10 or higher):** Comes bundled with Node.js; used to install all JavaScript libraries.
 - **Python (v3.12 or higher):** Required exclusively to run the FastAPI AI microservice.
-- **Docker & Docker Desktop:** Software that runs PostgreSQL, Redis, and our web applications inside isolated, lightweight containers.
-- **PostgreSQL (v16):** The primary database that stores users, jobs, timesheets, and candidate data.
+- **Docker & Docker Desktop:** Software that runs PostgreSQL, MongoDB, Redis, and our web applications inside isolated, lightweight containers.
+- **Dual Databases (MongoDB Atlas + PostgreSQL v16):** MongoDB Atlas (v7) serves as the primary document store for candidates, applications, jobs, clients, and CMS. PostgreSQL (v16) stores relational users and identity sync.
 - **Redis (v7):** Fast in-memory storage used for real-time feature toggles, user session blacklists, and task queues.
 - **VS Code (Visual Studio Code):** The recommended code editor for building this project.
 
@@ -104,7 +104,7 @@ Everything in this project is written in **Modern JavaScript (ES6+)** for the we
 
 - **Language & Runtime:** **JavaScript (Node.js)**
 - **Framework:** **Express.js** — A lightweight JavaScript framework for building REST APIs.
-- **Database Driver & ORM:** **Sequelize ORM** — Translates JavaScript code directly into SQL queries for PostgreSQL.
+- **Database Drivers & ORMs:** **Mongoose ODM** (Primary MongoDB document store) & **Sequelize ORM** (Relational PostgreSQL store).
 - **Security Libraries:**
 - **`jsonwebtoken` (JWT):** Generates secure login tokens for authenticated users.
 - **`bcryptjs`:** Encrypts user passwords before saving them to the database.

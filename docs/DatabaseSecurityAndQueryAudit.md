@@ -52,17 +52,17 @@ flowchart TD
 
 | Finding ID | File Path : Line Number | Severity | Category | Offending Code Pattern |
 | :---: | :--- | :---: | :--- | :--- |
-| **SEC-DB-01** | [`apps/backend/src/controllers/admin.controller.js:677`](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/backend/src/controllers/admin.controller.js#L677) | **CRITICAL** | Retrieval Hygiene (OOM) | `const applications = await JobApplication.find().populate('candidate').sort({ createdAt: -1 }).lean();` |
-| **SEC-DB-02** | [`apps/backend/src/controllers/admin.controller.js:1451-1453`](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/backend/src/controllers/admin.controller.js#L1451-L1453) | **HIGH** | Mass Assignment / Unvalidated Updates | `const updates = req.body; await Client.findOneAndUpdate(query, updates, { new: true });` |
-| **SEC-DB-03** | [`apps/backend/src/routes/api.route.js:460-466`](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/backend/src/routes/api.route.js#L460-L466) | **HIGH** | Input Sanitization / Object Spread | `await JobRequirement.findOneAndUpdate({ title: j.title, client: ... }, { ...j, client: ... }, { upsert: true });` |
-| **SEC-DB-04** | [`apps/backend/src/controllers/admin.controller.js:1330`](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/backend/src/controllers/admin.controller.js#L1330) & [`:1515`](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/backend/src/controllers/admin.controller.js#L1515) | **HIGH** | Injection / ReDoS | `{ companyName: { $regex: search, $options: 'i' } }` |
-| **SEC-DB-05** | [`apps/backend/src/models/job.mongo.model.js:142`](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/backend/src/models/job.mongo.model.js#L142) & [`article.mongo.model.js:105`](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/backend/src/models/article.mongo.model.js#L105) | **HIGH** | Schema Enforcement | `{ timestamps: true, strict: false, id: false }` |
-| **SEC-DB-06** | [`apps/backend/src/configs/db.js:42`](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/backend/src/configs/db.js#L42) | **HIGH** | Connection Security / TLS Verification | `ssl: { require: true, rejectUnauthorized: false }` |
-| **SEC-DB-07** | [`apps/backend/src/configs/mongodb.js:28`](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/backend/src/configs/mongodb.js#L28) | **HIGH** | Index Lifecycle / Production Silo | `autoIndex: !isProduction` (without automated sync) |
-| **SEC-DB-08** | [`apps/backend/src/models/jobApplication.mongo.model.js:321`](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/backend/src/models/jobApplication.mongo.model.js#L321) | **HIGH** | Constraint Conflict (Issue #208) | `jobApplicationSchema.index({ candidate: 1, jobId: 1 }, { unique: true });` |
-| **SEC-DB-09** | [`apps/backend/src/routes/api.route.js:238`](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/backend/src/routes/api.route.js#L238) | **MEDIUM** | Query Efficiency / ESR Violation | `JobRequirement.find({ status: { $in: [...] }, isRequisition: { $ne: true } }).sort({ createdAt: -1 })` |
-| **SEC-DB-10** | [`apps/backend/src/routes/articles.route.js:61`](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/backend/src/routes/articles.route.js#L61) | **MEDIUM** | Payload Hygiene / Missing Projection | `const dbArticles = await Article.find({ status: 'published' }).sort({ publishedAt: -1, createdAt: -1 })` |
-| **SEC-DB-11** | [`apps/backend/src/server.js:26`](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/backend/src/server.js#L26) | **MEDIUM** | Relational DDL Discipline | `await sequelize.sync(syncOptions);` |
+| **SEC-DB-01** | [`apps/backend/src/controllers/admin.controller.js:677`](../apps/backend/src/controllers/admin.controller.js#L677) | **CRITICAL** | Retrieval Hygiene (OOM) | `const applications = await JobApplication.find().populate('candidate').sort({ createdAt: -1 }).lean();` |
+| **SEC-DB-02** | [`apps/backend/src/controllers/admin.controller.js:1451-1453`](../apps/backend/src/controllers/admin.controller.js#L1451-L1453) | **HIGH** | Mass Assignment / Unvalidated Updates | `const updates = req.body; await Client.findOneAndUpdate(query, updates, { new: true });` |
+| **SEC-DB-03** | [`apps/backend/src/routes/api.route.js:460-466`](../apps/backend/src/routes/api.route.js#L460-L466) | **HIGH** | Input Sanitization / Object Spread | `await JobRequirement.findOneAndUpdate({ title: j.title, client: ... }, { ...j, client: ... }, { upsert: true });` |
+| **SEC-DB-04** | [`apps/backend/src/controllers/admin.controller.js:1330`](../apps/backend/src/controllers/admin.controller.js#L1330) & [`:1515`](../apps/backend/src/controllers/admin.controller.js#L1515) | **HIGH** | Injection / ReDoS | `{ companyName: { $regex: search, $options: 'i' } }` |
+| **SEC-DB-05** | [`apps/backend/src/models/job.mongo.model.js:142`](../apps/backend/src/models/job.mongo.model.js#L142) & [`article.mongo.model.js:105`](../apps/backend/src/models/article.mongo.model.js#L105) | **HIGH** | Schema Enforcement | `{ timestamps: true, strict: false, id: false }` |
+| **SEC-DB-06** | [`apps/backend/src/configs/db.js:42`](../apps/backend/src/configs/db.js#L42) | **HIGH** | Connection Security / TLS Verification | `ssl: { require: true, rejectUnauthorized: false }` |
+| **SEC-DB-07** | [`apps/backend/src/configs/mongodb.js:28`](../apps/backend/src/configs/mongodb.js#L28) | **HIGH** | Index Lifecycle / Production Silo | `autoIndex: !isProduction` (without automated sync) |
+| **SEC-DB-08** | [`apps/backend/src/models/jobApplication.mongo.model.js:321`](../apps/backend/src/models/jobApplication.mongo.model.js#L321) | **HIGH** | Constraint Conflict (Issue #208) | `jobApplicationSchema.index({ candidate: 1, jobId: 1 }, { unique: true });` |
+| **SEC-DB-09** | [`apps/backend/src/routes/api.route.js:238`](../apps/backend/src/routes/api.route.js#L238) | **MEDIUM** | Query Efficiency / ESR Violation | `JobRequirement.find({ status: { $in: [...] }, isRequisition: { $ne: true } }).sort({ createdAt: -1 })` |
+| **SEC-DB-10** | [`apps/backend/src/routes/articles.route.js:61`](../apps/backend/src/routes/articles.route.js#L61) | **MEDIUM** | Payload Hygiene / Missing Projection | `const dbArticles = await Article.find({ status: 'published' }).sort({ publishedAt: -1, createdAt: -1 })` |
+| **SEC-DB-11** | [`apps/backend/src/server.js:26`](../apps/backend/src/server.js#L26) | **MEDIUM** | Relational DDL Discipline | `await sequelize.sync(syncOptions);` |
 
 ---
 
@@ -71,7 +71,7 @@ flowchart TD
 ---
 
 ### SEC-DB-01: Unbounded In-Memory Collection Hydration in ATS Pipelines
-- **Location:** [`apps/backend/src/controllers/admin.controller.js:677`](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/backend/src/controllers/admin.controller.js#L677)
+- **Location:** [`apps/backend/src/controllers/admin.controller.js:677`](../apps/backend/src/controllers/admin.controller.js#L677)
 - **Impact:** Critical memory leak and Node.js process crash. `JobApplication` documents include full 6-factor AI dossiers (`evaluationReport`), candidate notes, 10 assessment questions, and PII. Loading the entire collection into memory on a single HTTP call exhausts the Node.js V8 heap.
 - **Offending Code:**
   ```javascript
@@ -120,7 +120,7 @@ flowchart TD
 ---
 
 ### SEC-DB-02: Mass Assignment & Unvalidated Request Body Passing
-- **Location:** [`apps/backend/src/controllers/admin.controller.js:1437-1453`](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/backend/src/controllers/admin.controller.js#L1437-L1453)
+- **Location:** [`apps/backend/src/controllers/admin.controller.js:1437-1453`](../apps/backend/src/controllers/admin.controller.js#L1437-L1453)
 - **Impact:** An attacker can inject update operators (`$rename`, `$unset`) or overwrite immutable audit timestamps, internal references, and ownership fields.
 - **Offending Code:**
   ```javascript
@@ -175,7 +175,7 @@ flowchart TD
 ---
 
 ### SEC-DB-03: Object Spread Injection in Bulk Openings Upsert
-- **Location:** [`apps/backend/src/routes/api.route.js:460-466`](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/backend/src/routes/api.route.js#L460-L466)
+- **Location:** [`apps/backend/src/routes/api.route.js:460-466`](../apps/backend/src/routes/api.route.js#L460-L466)
 - **Impact:** `{ ...j, client: ... }` spreads unvalidated objects directly into MongoDB update documents.
 - **Offending Code:**
   ```javascript
@@ -223,7 +223,7 @@ flowchart TD
 ---
 
 ### SEC-DB-04: ReDoS in Unsanitized Text Search Queries
-- **Location:** [`apps/backend/src/controllers/admin.controller.js:1330`](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/backend/src/controllers/admin.controller.js#L1330) & [`:1515`](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/backend/src/controllers/admin.controller.js#L1515)
+- **Location:** [`apps/backend/src/controllers/admin.controller.js:1330`](../apps/backend/src/controllers/admin.controller.js#L1330) & [`:1515`](../apps/backend/src/controllers/admin.controller.js#L1515)
 - **Impact:** An attacker passing regex special characters (e.g. `(a+)+$`) triggers exponential backtracking in MongoDB's PCRE engine, pegging CPU at 100%.
 - **Offending Code:**
   ```javascript
@@ -258,7 +258,7 @@ flowchart TD
 ---
 
 ### SEC-DB-05: Schema Enforcement Disabled via `strict: false`
-- **Location:** [`apps/backend/src/models/job.mongo.model.js:142`](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/backend/src/models/job.mongo.model.js#L142) & [`article.mongo.model.js:105`](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/backend/src/models/article.mongo.model.js#L105)
+- **Location:** [`apps/backend/src/models/job.mongo.model.js:142`](../apps/backend/src/models/job.mongo.model.js#L142) & [`article.mongo.model.js:105`](../apps/backend/src/models/article.mongo.model.js#L105)
 - **Impact:** Disables Mongoose validation for incoming document attributes. Unrecognized keys are saved directly into the database.
 - **Offending Code:**
   ```javascript
@@ -283,7 +283,7 @@ flowchart TD
 ---
 
 ### SEC-DB-06: Insecure PostgreSQL TLS Verification Bypass (`rejectUnauthorized: false`)
-- **Location:** [`apps/backend/src/configs/db.js:37-45`](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/backend/src/configs/db.js#L37-L45)
+- **Location:** [`apps/backend/src/configs/db.js:37-45`](../apps/backend/src/configs/db.js#L37-L45)
 - **Impact:** Disables certificate authority verification, making database connections vulnerable to Man-in-the-Middle (MITM) credential interception on cloud networks.
 - **Offending Code:**
   ```javascript
@@ -318,7 +318,7 @@ flowchart TD
 ---
 
 ### SEC-DB-07: Production Auto-Index Silo
-- **Location:** [`apps/backend/src/configs/mongodb.js:28`](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/backend/src/configs/mongodb.js#L28)
+- **Location:** [`apps/backend/src/configs/mongodb.js:28`](../apps/backend/src/configs/mongodb.js#L28)
 - **Impact:** Because `autoIndex: false` is active in production, newly declared schema indexes are never built unless triggered by an automated deployment script.
 - **Remediated Implementation (Automated Deployment Index Sync Runner):**
   ```javascript
@@ -355,7 +355,7 @@ flowchart TD
 ---
 
 ### SEC-DB-08: Application Cooldown Conflict in Hard Unique Index
-- **Location:** [`apps/backend/src/models/jobApplication.mongo.model.js:321`](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/backend/src/models/jobApplication.mongo.model.js#L321)
+- **Location:** [`apps/backend/src/models/jobApplication.mongo.model.js:321`](../apps/backend/src/models/jobApplication.mongo.model.js#L321)
 - **Impact:** Platform Issue #208 established a 90-day cooldown allowing rejected or withdrawn candidates to re-apply. The hard unique index throws `E11000 duplicate key error`, permanently locking out candidate re-applications.
 - **Offending Code:**
   ```javascript
@@ -380,7 +380,7 @@ flowchart TD
 ---
 
 ### SEC-DB-09: Query Efficiency & ESR (Equality, Sort, Range) Violation
-- **Location:** [`apps/backend/src/routes/api.route.js:238-243`](file:///c:/Users/Tanjil%20Alam/Desktop/ThinkWires/thinkwires/apps/backend/src/routes/api.route.js#L238-L243)
+- **Location:** [`apps/backend/src/routes/api.route.js:238-243`](../apps/backend/src/routes/api.route.js#L238-L243)
 - **Impact:** The public job openings query performs an unindexed collection scan and in-memory sort on every visitor page hit.
 - **Offending Code:**
   ```javascript
