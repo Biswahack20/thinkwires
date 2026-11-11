@@ -51,6 +51,13 @@ const getAuthorInitials = (author) => {
   return 'TW';
 };
 
+const getInitialCardsPerView = () => {
+  if (typeof window === 'undefined') return 3;
+  if (window.innerWidth < 768) return 1;
+  if (window.innerWidth < 1200) return 2;
+  return 3;
+};
+
 const Reports = () => {
   const dispatch = useDispatch();
   const {
@@ -61,7 +68,9 @@ const Reports = () => {
   } = useSelector((state) => state.blog);
 
   const trackRef = useRef(null);
+  const currentSlideRef = useRef(0);
   const [activeSlide, setActiveSlide] = useState(0);
+  const [cardsPerView, setCardsPerView] = useState(getInitialCardsPerView);
   const [isPaused, setIsPaused] = useState(false);
   const [prefersReducedMotion, setPrefersReducedMotion] = useState(() => {
     if (typeof window === 'undefined') return false;
@@ -90,6 +99,9 @@ const Reports = () => {
 
   const totalReports = allArticles.length;
 
+  // Reduce dots count to valid scroll stops: totalReports - cardsPerView + 1
+  const maxDots = Math.max(1, totalReports - cardsPerView + 1);
+
   // Fetch blog data if idle
   useEffect(() => {
     if (blogStatus === 'idle') {
@@ -97,6 +109,22 @@ const Reports = () => {
       dispatch(fetchFeaturedArticle());
     }
   }, [dispatch, blogStatus]);
+
+  // Track responsive cards per view
+  useEffect(() => {
+    const handleResize = () => {
+      let perView = 3;
+      if (window.innerWidth < 768) {
+        perView = 1;
+      } else if (window.innerWidth < 1200) {
+        perView = 2;
+      }
+      setCardsPerView(perView);
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   // Listen for reduced motion preference
   useEffect(() => {
@@ -106,100 +134,82 @@ const Reports = () => {
     return () => mediaQuery.removeEventListener('change', handler);
   }, []);
 
-  // Update active slide index based on current scroll position
-  const updateScrollBounds = useCallback(() => {
+  // Programmatic scroll to a specific slide index using scrollIntoView
+  const handleScrollToSlide = useCallback(
+    (idx) => {
+      const targetIdx = Math.max(0, Math.min(idx, maxDots - 1));
+      currentSlideRef.current = targetIdx;
+      setActiveSlide(targetIdx);
+
+      const el = trackRef.current;
+      if (el) {
+        const cards = el.querySelectorAll('.Reports-slide');
+        if (cards[targetIdx]) {
+          cards[targetIdx].scrollIntoView({
+            behavior: prefersReducedMotion ? 'auto' : 'smooth',
+            block: 'nearest',
+            inline: 'start',
+          });
+        }
+      }
+    },
+    [maxDots, prefersReducedMotion]
+  );
+
+  // Update active slide indicator as user scrolls manually
+  const handleScroll = useCallback(() => {
     const el = trackRef.current;
     if (!el) return;
 
     const { scrollLeft } = el;
-    const firstCard = el.querySelector('.Reports-slide');
-    if (firstCard) {
-      const cardStep = firstCard.offsetWidth + 24; // width + gap
-      if (cardStep > 0) {
-        const idx = Math.round(scrollLeft / cardStep);
-        setActiveSlide(Math.max(0, Math.min(idx, totalReports - 1)));
-      }
+    const cards = el.querySelectorAll('.Reports-slide');
+    if (!cards.length) return;
+
+    const firstCard = cards[0];
+    const cardStep = firstCard.offsetWidth + 24; // width + gap
+    if (cardStep > 0) {
+      let idx = Math.round(scrollLeft / cardStep);
+      idx = Math.max(0, Math.min(idx, maxDots - 1));
+      currentSlideRef.current = idx;
+      setActiveSlide(idx);
     }
-  }, [totalReports]);
+  }, [maxDots]);
 
   useEffect(() => {
     const el = trackRef.current;
     if (!el) return;
 
-    updateScrollBounds();
-    el.addEventListener('scroll', updateScrollBounds, { passive: true });
-    window.addEventListener('resize', updateScrollBounds);
-
-    return () => {
-      el.removeEventListener('scroll', updateScrollBounds);
-      window.removeEventListener('resize', updateScrollBounds);
-    };
-  }, [updateScrollBounds, allArticles]);
-
-  // Scroll step using card width and gap
-  const getScrollStep = () => {
-    const el = trackRef.current;
-    if (!el) return 350;
-    const firstCard = el.querySelector('.Reports-slide');
-    return firstCard ? firstCard.offsetWidth + 24 : el.clientWidth;
-  };
-
-  const handleScrollToSlide = (idx) => {
-    const el = trackRef.current;
-    if (!el) return;
-    const step = getScrollStep();
-    el.scrollTo({
-      left: idx * step,
-      behavior: prefersReducedMotion ? 'auto' : 'smooth',
-    });
-  };
+    handleScroll();
+    el.addEventListener('scroll', handleScroll, { passive: true });
+    return () => el.removeEventListener('scroll', handleScroll);
+  }, [handleScroll, allArticles]);
 
   // Keyboard navigation on track focus
   const handleKeyDown = (e) => {
-    const el = trackRef.current;
-    if (!el) return;
-    const step = getScrollStep();
     if (e.key === 'ArrowLeft') {
       e.preventDefault();
-      el.scrollBy({
-        left: -step,
-        behavior: prefersReducedMotion ? 'auto' : 'smooth',
-      });
+      const prevIdx = (currentSlideRef.current - 1 + maxDots) % maxDots;
+      handleScrollToSlide(prevIdx);
     } else if (e.key === 'ArrowRight') {
       e.preventDefault();
-      el.scrollBy({
-        left: step,
-        behavior: prefersReducedMotion ? 'auto' : 'smooth',
-      });
+      const nextIdx = (currentSlideRef.current + 1) % maxDots;
+      handleScrollToSlide(nextIdx);
     }
   };
 
-  // Continuous Auto-Scrolling with pause on hover/touch
+  // Continuous Auto-Scrolling every 5 seconds with pause on hover/touch
   useEffect(() => {
-    if (isPaused || prefersReducedMotion || totalReports <= 1) {
+    if (isPaused || prefersReducedMotion || totalReports <= cardsPerView) {
       return;
     }
+
     const timer = setInterval(() => {
-      const el = trackRef.current;
-      if (!el) return;
-      const { scrollLeft, scrollWidth, clientWidth } = el;
-      // When nearing the end, loop smoothly back to beginning
-      if (scrollLeft + clientWidth >= scrollWidth - 15) {
-        el.scrollTo({
-          left: 0,
-          behavior: prefersReducedMotion ? 'auto' : 'smooth',
-        });
-      } else {
-        const step = getScrollStep();
-        el.scrollBy({
-          left: step,
-          behavior: prefersReducedMotion ? 'auto' : 'smooth',
-        });
-      }
-    }, 4000);
+      const nextIdx = (currentSlideRef.current + 1) % maxDots;
+      handleScrollToSlide(nextIdx);
+    }, 5000);
 
     return () => clearInterval(timer);
-  }, [isPaused, prefersReducedMotion, totalReports]);
+  }, [isPaused, prefersReducedMotion, totalReports, cardsPerView, maxDots, handleScrollToSlide]);
 
   // Deep-link destination for modal reader on Blog page
   const getReportDestination = (article) => {
@@ -329,8 +339,6 @@ const Reports = () => {
   return (
     <section
       className="Reports-section"
-      onMouseEnter={() => setIsPaused(true)}
-      onMouseLeave={() => setIsPaused(false)}
       aria-labelledby="reports-section-heading"
     >
       <div className="Reports-container">
@@ -358,6 +366,8 @@ const Reports = () => {
           aria-roledescription="carousel"
           aria-label="Talent Advisory Insights Carousel"
           onKeyDown={handleKeyDown}
+          onMouseEnter={() => setIsPaused(true)}
+          onMouseLeave={() => setIsPaused(false)}
           onTouchStart={() => setIsPaused(true)}
           onTouchEnd={() => setIsPaused(false)}
         >
@@ -481,19 +491,19 @@ const Reports = () => {
           })}
         </div>
 
-        {/* Slide Indicator / Pagination Dots */}
-        {totalReports > 1 && (
+        {/* Slide Indicator / Pagination Dots (Reduced to valid scroll stops) */}
+        {maxDots > 1 && (
           <div
             className="Reports-dotsContainer"
             role="tablist"
             aria-label="Carousel pagination"
           >
-            {allArticles.map((art, dotIdx) => (
+            {Array.from({ length: maxDots }).map((_, dotIdx) => (
               <button
-                key={art.id || dotIdx}
+                key={dotIdx}
                 type="button"
                 onClick={() => handleScrollToSlide(dotIdx)}
-                aria-label={`Go to slide ${dotIdx + 1} of ${totalReports}`}
+                aria-label={`Go to slide ${dotIdx + 1} of ${maxDots}`}
                 aria-current={activeSlide === dotIdx ? 'true' : undefined}
                 className={`Reports-dot ${
                   activeSlide === dotIdx ? 'active' : ''
