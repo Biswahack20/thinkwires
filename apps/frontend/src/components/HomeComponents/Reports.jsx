@@ -1,10 +1,58 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { fetchReports } from '../../store/slices/homeSlice';
+import {
+  fetchArticles,
+  fetchFeaturedArticle,
+} from '../../store/slices/blogSlice';
 
 const GAP_PX = 24;
+
+const FALLBACK_IMAGES = {
+  'card-1':
+    'https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=800&q=80',
+  'card-2':
+    'https://images.unsplash.com/photo-1573164713988-8665fc963095?auto=format&fit=crop&w=800&q=80',
+  'card-3':
+    'https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?auto=format&fit=crop&w=800&q=80',
+  'card-4':
+    'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=800&q=80',
+  'card-5':
+    'https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=800&q=80',
+  'card-6':
+    'https://images.unsplash.com/photo-1504384308090-c894fdcc538d?auto=format&fit=crop&w=800&q=80',
+};
+
+const getArticleImage = (art) => {
+  if (art.imageUrl) return art.imageUrl;
+  if (art.featuredImageUrl) return art.featuredImageUrl;
+  if (art.image) return art.image;
+  if (FALLBACK_IMAGES[art.id]) return FALLBACK_IMAGES[art.id];
+  return 'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=800&q=80';
+};
+
+const getAuthorInitials = (author) => {
+  if (!author) return 'TW';
+  if (author.initials) return author.initials;
+  if (typeof author === 'string') {
+    return author
+      .split(' ')
+      .map((n) => n[0])
+      .join('')
+      .slice(0, 2)
+      .toUpperCase();
+  }
+  if (author.name) {
+    return author.name
+      .split(' ')
+      .map((n) => n[0])
+      .join('')
+      .slice(0, 2)
+      .toUpperCase();
+  }
+  return 'TW';
+};
 
 const getInitialCardsPerView = () => {
   if (typeof window === 'undefined') return 3;
@@ -15,7 +63,12 @@ const getInitialCardsPerView = () => {
 
 const Reports = () => {
   const dispatch = useDispatch();
-  const { reports: reportsData, status } = useSelector((state) => state.home);
+  const {
+    articles: blogArticles,
+    featuredArticle,
+    status: blogStatus,
+    error: blogError,
+  } = useSelector((state) => state.blog);
 
   const containerRef = useRef(null);
   const [containerWidth, setContainerWidth] = useState(0);
@@ -31,16 +84,36 @@ const Reports = () => {
   const touchDeltaPos = useRef({ x: 0, y: 0 });
   const timerRef = useRef(null);
 
-  const reports = reportsData || [];
-  const totalReports = reports.length;
+  // Combine featured flagship paper and all published blog articles without arbitrary slicing
+  const allArticles = useMemo(() => {
+    const list = [];
+    if (featuredArticle && featuredArticle.id) {
+      list.push(featuredArticle);
+    }
+    if (Array.isArray(blogArticles)) {
+      blogArticles.forEach((art) => {
+        if (
+          !list.some(
+            (item) => item.id === art.id || (item.slug && item.slug === art.slug)
+          )
+        ) {
+          list.push(art);
+        }
+      });
+    }
+    return list;
+  }, [featuredArticle, blogArticles]);
+
+  const totalReports = allArticles.length;
   const maxIndex = Math.max(0, totalReports - cardsPerView);
 
-  // Fetch reports if needed
+  // Fetch blog data if not already initiated
   useEffect(() => {
-    if (status?.reports === 'idle') {
-      dispatch(fetchReports());
+    if (blogStatus === 'idle') {
+      dispatch(fetchArticles());
+      dispatch(fetchFeaturedArticle());
     }
-  }, [dispatch, status?.reports]);
+  }, [dispatch, blogStatus]);
 
   // Reduced motion preference listener
   useEffect(() => {
@@ -98,7 +171,7 @@ const Reports = () => {
     setCurrentIndex((prev) => Math.max(0, prev - 1));
   }, []);
 
-  // Touch Swipe handlers
+  // Touch Swipe handlers for mobile
   const handleTouchStart = (e) => {
     if (!e.targetTouches || e.targetTouches.length === 0) return;
     touchStartPos.current = {
@@ -157,7 +230,7 @@ const Reports = () => {
     };
   }, [isPaused, prefersReducedMotion, totalReports, cardsPerView, maxIndex]);
 
-  // Exact card width and translation offset calculation
+  // Card width and translation offset calculation
   const cardWidth =
     containerWidth > 0
       ? cardsPerView === 1
@@ -167,16 +240,130 @@ const Reports = () => {
 
   const translateX = -(currentIndex * (cardWidth + GAP_PX));
 
-  // Determine report destination
-  const getReportDestination = (report) => {
-    if (report.link) return report.link;
-    if (report.url) return report.url;
-    if (report.slug) return `/blog?article=${report.slug}`;
-    if (report.id === 1) return '/blog?article=featured-flagship-1';
-    if (report.id === 2) return '/blog?article=card-1';
-    if (report.id === 3) return '/blog?article=card-2';
-    return `/blog?article=${report.id}`;
+  // Determine report deep-link destination for modal reader on Blog page
+  const getReportDestination = (article) => {
+    if (article.slug) return `/blog?article=${encodeURIComponent(article.slug)}`;
+    if (article.id) return `/blog?article=${encodeURIComponent(article.id)}`;
+    return `/blog?article=${encodeURIComponent(article.title)}`;
   };
+
+  // 1. Loading state
+  if (blogStatus === 'loading' && allArticles.length === 0) {
+    return (
+      <section
+        className="Reports-section"
+        aria-labelledby="reports-section-heading"
+      >
+        <div className="Reports-container">
+          <div className="Reports-header">
+            <div className="Reports-headerLeft">
+              <span className="Reports-tag">TALENT ADVISORY INSIGHTS</span>
+              <h2 id="reports-section-heading" className="Reports-title">
+                Our Latest Tech &amp; Market Reports
+              </h2>
+            </div>
+          </div>
+          <div className="Reports-grid">
+            {[1, 2, 3].map((idx) => (
+              <div key={idx} className="Reports-card animate-pulse">
+                <div className="Reports-imageContainer bg-slate-200" />
+                <div className="Reports-content space-y-3">
+                  <div className="h-4 bg-slate-200 rounded w-1/3" />
+                  <div className="h-6 bg-slate-200 rounded w-4/5" />
+                  <div className="h-4 bg-slate-200 rounded w-full" />
+                  <div className="h-4 bg-slate-200 rounded w-2/3" />
+                  <div className="h-8 bg-slate-200 rounded w-1/4 mt-4" />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  // 2. Error state
+  if (blogStatus === 'failed' && allArticles.length === 0) {
+    return (
+      <section
+        className="Reports-section"
+        aria-labelledby="reports-section-heading"
+      >
+        <div className="Reports-container">
+          <div className="Reports-header">
+            <div className="Reports-headerLeft">
+              <span className="Reports-tag">TALENT ADVISORY INSIGHTS</span>
+              <h2 id="reports-section-heading" className="Reports-title">
+                Our Latest Tech &amp; Market Reports
+              </h2>
+            </div>
+            <Link to="/blog" className="Reports-browseLink group">
+              <span>Browse All Reports</span>
+              <span className="material-symbols-outlined text-[18px] group-hover:translate-x-1 transition-transform">
+                arrow_forward
+              </span>
+            </Link>
+          </div>
+          <div className="p-8 text-center bg-white rounded-2xl border border-red-100 shadow-sm">
+            <p className="text-sm text-red-600 mb-3">
+              Unable to load blog reports: {blogError || 'Network error'}
+            </p>
+            <button
+              type="button"
+              onClick={() => {
+                dispatch(fetchArticles());
+                dispatch(fetchFeaturedArticle());
+              }}
+              className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors"
+            >
+              Retry Loading
+            </button>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  // 3. Empty state
+  if (allArticles.length === 0) {
+    return (
+      <section
+        className="Reports-section"
+        aria-labelledby="reports-section-heading"
+      >
+        <div className="Reports-container">
+          <div className="Reports-header">
+            <div className="Reports-headerLeft">
+              <span className="Reports-tag">TALENT ADVISORY INSIGHTS</span>
+              <h2 id="reports-section-heading" className="Reports-title">
+                Our Latest Tech &amp; Market Reports
+              </h2>
+            </div>
+            <Link to="/blog" className="Reports-browseLink group">
+              <span>Browse All Reports</span>
+              <span className="material-symbols-outlined text-[18px] group-hover:translate-x-1 transition-transform">
+                arrow_forward
+              </span>
+            </Link>
+          </div>
+          <div className="p-12 text-center bg-white rounded-2xl border border-slate-200">
+            <h3 className="text-lg font-semibold text-slate-800 mb-2">
+              No Research Articles Found
+            </h3>
+            <p className="text-sm text-slate-500 mb-4">
+              Check back soon for new tech insights and whitepapers.
+            </p>
+            <Link
+              to="/blog"
+              className="inline-flex items-center gap-2 px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700"
+            >
+              Visit Blog Directory
+            </Link>
+          </div>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section
@@ -229,7 +416,7 @@ const Reports = () => {
             </div>
 
             <Link
-              to="/blog?category=Talent+Strategy"
+              to="/blog"
               className="Reports-browseLink group"
             >
               <span>Browse All Reports</span>
@@ -272,15 +459,29 @@ const Reports = () => {
                   }
             }
           >
-            {reports.map((report) => {
-              const destination = getReportDestination(report);
-              const isExternal =
-                destination.startsWith('http://') ||
-                destination.startsWith('https://');
+            {allArticles.map((article) => {
+              const destination = getReportDestination(article);
+              const imageSrc = getArticleImage(article);
+              const badgeText =
+                article.badge || article.category || article.tag || 'Insights';
+              const readTimeText = article.readTime || '8 min read';
+              const publishDate =
+                article.publishedAt || article.date || 'Aug 2026';
+              const subCategoryText =
+                article.subCategory || article.category;
+              const authorName =
+                typeof article.author === 'object'
+                  ? article.author?.name || 'Thinkwires Advisory Team'
+                  : article.author || 'Thinkwires Advisory Team';
+              const authorAvatar =
+                typeof article.author === 'object'
+                  ? article.author?.avatar
+                  : null;
+              const authorInitials = getAuthorInitials(article.author);
 
               return (
                 <div
-                  key={report.id}
+                  key={article.id || article.slug || article.title}
                   className="Reports-slide flex-shrink-0 flex"
                   style={{
                     width:
@@ -295,54 +496,84 @@ const Reports = () => {
                 >
                   <article className="Reports-card group w-full h-full flex flex-col justify-between bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300">
                     <div className="flex flex-col flex-1">
-                      <div className="Reports-imageContainer relative w-full h-48 overflow-hidden bg-slate-100">
+                      {/* Standardized Card Image Header */}
+                      <div className="Reports-imageContainer relative w-full h-48 sm:h-52 overflow-hidden bg-slate-100 flex-shrink-0">
                         <img
-                          src={report.image}
-                          alt={report.title}
+                          src={imageSrc}
+                          alt={article.title}
                           className="Reports-image w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                           loading="lazy"
                         />
-                        <span className="Reports-tagBadge absolute top-3 left-3 px-2.5 py-1 rounded-full text-xs font-semibold bg-white/90 backdrop-blur-sm text-slate-800 shadow-sm">
-                          {report.tag}
+                        <span
+                          className="Reports-tagBadge absolute top-3 left-3 px-2.5 py-1 rounded-full text-xs font-semibold backdrop-blur-sm shadow-sm"
+                          style={{
+                            backgroundColor:
+                              article.badgeBg || 'rgba(15, 23, 42, 0.85)',
+                            color: article.badgeColor || '#ffffff',
+                          }}
+                        >
+                          {badgeText}
                         </span>
+                        {readTimeText && (
+                          <span className="absolute top-3 right-3 px-2.5 py-1 rounded-full text-xs font-medium bg-slate-900/70 backdrop-blur-sm text-white shadow-sm flex items-center gap-1">
+                            <span>⏱</span>
+                            <span>{readTimeText}</span>
+                          </span>
+                        )}
                       </div>
+
+                      {/* Content Area with aligned typography */}
                       <div className="Reports-content p-6 flex flex-col flex-1">
-                        <time className="Reports-date text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2 block">
-                          {report.date}
-                        </time>
+                        <div className="flex items-center gap-2 text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2.5">
+                          <time className="Reports-date mb-0">{publishDate}</time>
+                          {subCategoryText && (
+                            <>
+                              <span className="text-slate-300">•</span>
+                              <span className="text-blue-600 font-medium normal-case tracking-normal truncate">
+                                {subCategoryText}
+                              </span>
+                            </>
+                          )}
+                        </div>
+
                         <h3 className="Reports-cardTitle text-lg font-bold text-slate-900 group-hover:text-blue-600 transition-colors mb-3 leading-snug line-clamp-2 min-h-[3.5rem]">
-                          {report.title}
+                          {article.title}
                         </h3>
+
                         <p className="Reports-cardDesc text-sm text-slate-600 leading-relaxed line-clamp-3 mb-4 min-h-[4.5rem]">
-                          {report.desc}
+                          {article.excerpt || article.summary || article.desc}
                         </p>
                       </div>
                     </div>
 
-                    <div className="Reports-footer px-6 pb-6 pt-3 border-t border-slate-100 mt-auto">
-                      {isExternal ? (
-                        <a
-                          href={destination}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="Reports-readLink inline-flex items-center gap-1.5 text-sm font-semibold text-blue-600 hover:text-blue-700"
-                        >
-                          <span>Read Analysis</span>
-                          <span className="material-symbols-outlined text-[16px] group-hover:translate-x-1 transition-transform">
-                            open_in_new
-                          </span>
-                        </a>
-                      ) : (
-                        <Link
-                          to={destination}
-                          className="Reports-readLink inline-flex items-center gap-1.5 text-sm font-semibold text-blue-600 hover:text-blue-700"
-                        >
-                          <span>Read Analysis</span>
-                          <span className="material-symbols-outlined text-[16px] group-hover:translate-x-1 transition-transform">
-                            arrow_forward
-                          </span>
-                        </Link>
-                      )}
+                    {/* Perfectly aligned footer with author and Read Analysis */}
+                    <div className="Reports-footer px-6 pb-6 pt-3 border-t border-slate-100 mt-auto flex items-center justify-between">
+                      <div className="flex items-center gap-2.5 min-w-0 pr-2">
+                        {authorAvatar ? (
+                          <img
+                            src={authorAvatar}
+                            alt={authorName}
+                            className="w-7 h-7 rounded-full object-cover flex-shrink-0"
+                          />
+                        ) : (
+                          <div className="w-7 h-7 rounded-full bg-blue-100 text-blue-700 font-bold text-xs flex items-center justify-center flex-shrink-0">
+                            {authorInitials}
+                          </div>
+                        )}
+                        <span className="text-xs font-medium text-slate-700 truncate">
+                          {authorName}
+                        </span>
+                      </div>
+
+                      <Link
+                        to={destination}
+                        className="Reports-readLink inline-flex items-center gap-1 text-sm font-semibold text-blue-600 hover:text-blue-700 flex-shrink-0 ml-auto"
+                      >
+                        <span>Read Analysis</span>
+                        <span className="material-symbols-outlined text-[16px] group-hover:translate-x-1 transition-transform">
+                          arrow_forward
+                        </span>
+                      </Link>
                     </div>
                   </article>
                 </div>

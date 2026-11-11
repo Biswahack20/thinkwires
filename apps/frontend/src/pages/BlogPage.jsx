@@ -102,7 +102,7 @@ const BlogPage = () => {
   // Handle ?article= URL param — open the matching article in the reader modal
   useEffect(() => {
     const articleParam = searchParams.get('article');
-    if (!articleParam || articles.length === 0) return;
+    if (!articleParam) return;
     const target = articles.find(
       (a) =>
         String(a.id) === articleParam ||
@@ -113,8 +113,11 @@ const BlogPage = () => {
       // Defer to avoid synchronous setState-in-effect lint warning
       setTimeout(() => setActiveArticleModal(target), 0);
     } else if (
-      articleParam === 'featured-flagship-1' &&
-      featuredArticle
+      featuredArticle &&
+      (articleParam === 'featured-flagship-1' ||
+        String(featuredArticle.id) === articleParam ||
+        featuredArticle.slug === articleParam ||
+        featuredArticle.title?.toLowerCase().includes(articleParam.toLowerCase()))
     ) {
       setTimeout(() => setActiveArticleModal(featuredArticle), 0);
     }
