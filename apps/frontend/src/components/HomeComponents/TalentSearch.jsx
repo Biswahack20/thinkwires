@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import SkillSearchInput from '../common/SkillSearchInput';
 
 const TalentSearch = ({ onSearch }) => {
   const navigate = useNavigate();
@@ -25,17 +26,10 @@ const TalentSearch = ({ onSearch }) => {
     if (locationInput) params.append('location', locationInput);
     if (experienceInput) params.append('experience', experienceInput);
 
-    const openingsSection =
-      document.getElementById('openings') ||
-      document.getElementById('hot-jobs');
-    if (openingsSection) {
-      openingsSection.scrollIntoView({ behavior: 'smooth' });
-    } else {
-      navigate({
-        pathname: '/jobs',
-        search: params.toString() ? `?${params.toString()}` : '',
-      });
-    }
+    navigate({
+      pathname: '/bench',
+      search: params.toString() ? `?${params.toString()}` : '',
+    });
   };
 
   return (
@@ -49,13 +43,17 @@ const TalentSearch = ({ onSearch }) => {
             <label htmlFor="talent-search-role" className="NewHero-fieldLabel">
               Role or Skill
             </label>
-            <input
+            <SkillSearchInput
               id="talent-search-role"
-              type="text"
               className="NewHero-fieldInput"
-              placeholder="e.g. SAP ABAP, AEM, Ledger..."
+              wrapperClassName="NewHero-skillSearchWrap"
+              placeholder="e.g. React, Python, AWS, SAP..."
+              ariaLabel="Role or Skill"
               value={roleInput}
-              onChange={(e) => setRoleInput(e.target.value)}
+              onChange={(e) =>
+                setRoleInput(typeof e === 'string' ? e : e.target.value)
+              }
+              onSelect={(skill) => setRoleInput(skill)}
             />
           </div>
         </div>

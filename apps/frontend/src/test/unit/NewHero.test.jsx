@@ -75,4 +75,30 @@ describe('NewHero Component CTAs and Search Form', () => {
     const expSelect = screen.getByLabelText(/Experience/i);
     expect(expSelect).toBeInTheDocument();
   });
+
+  it('provides single-letter skill suggestions when typing in role or skill input', () => {
+    renderWithProviders(<NewHero />);
+
+    const roleInput = screen.getByLabelText(/Role or Skill/i);
+    fireEvent.change(roleInput, { target: { value: 'r' } });
+    fireEvent.focus(roleInput);
+
+    expect(screen.getByRole('listbox')).toBeInTheDocument();
+  });
+
+  it('navigates to /bench (Bench Pool) with query parameters upon submitting the search form', () => {
+    mockNavigate.mockClear();
+    renderWithProviders(<NewHero />);
+
+    const roleInput = screen.getByLabelText(/Role or Skill/i);
+    fireEvent.change(roleInput, { target: { value: 'React' } });
+
+    const submitBtn = screen.getByRole('button', { name: /find matches/i });
+    fireEvent.click(submitBtn);
+
+    expect(mockNavigate).toHaveBeenCalledWith({
+      pathname: '/bench',
+      search: '?search=React',
+    });
+  });
 });

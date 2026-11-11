@@ -54,9 +54,13 @@ const JobPage = () => {
 
   const [searchParams] = useSearchParams();
   const industrySlugParam = searchParams.get('industry');
+  const searchParam = searchParams.get('search') || searchParams.get('q');
+  const locationParam = searchParams.get('location');
+  const experienceParam = searchParams.get('experience');
 
   // Search & Filter state
   const [searchQuery, setSearchQuery] = useState(() => {
+    if (searchParam) return searchParam;
     return industrySlugParam ? getSearchTermForIndustry(industrySlugParam) : '';
   });
   const [prevIndustrySlug, setPrevIndustrySlug] = useState(industrySlugParam);
@@ -68,8 +72,24 @@ const JobPage = () => {
     }
   }
 
-  const [locationFilter, setLocationFilter] = useState('All');
-  const [experienceFilter, setExperienceFilter] = useState('All');
+  const [locationFilter, setLocationFilter] = useState(() => locationParam || 'All');
+  const [experienceFilter, setExperienceFilter] = useState(() => experienceParam || 'All');
+
+  // Sync state when URL search parameters change
+  useEffect(() => {
+    const q = searchParams.get('search') || searchParams.get('q');
+    if (q !== null && q !== undefined) {
+      setSearchQuery(q);
+    }
+    const loc = searchParams.get('location');
+    if (loc) {
+      setLocationFilter(loc);
+    }
+    const exp = searchParams.get('experience');
+    if (exp) {
+      setExperienceFilter(exp);
+    }
+  }, [searchParams]);
   const [workMode, setWorkMode] = useState('All Modes');
   const [jobMode, setJobMode] = useState('All Types');
   const [noticePeriod, setNoticePeriod] = useState('All Notice');

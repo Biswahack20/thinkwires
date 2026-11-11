@@ -1,7 +1,8 @@
 import React, { useEffect, useMemo } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchBenchData } from '../store/slices/benchSlice';
+import { useSearchParams } from 'react-router-dom';
+import { fetchBenchData, setSearchQuery } from '../store/slices/benchSlice';
 import Navbar from '../components/common/Navbar';
 import Footer from '../components/common/Footer';
 import BenchHero from '../components/BenchComponents/BenchHero';
@@ -14,6 +15,7 @@ import BenchDossierDrawer from '../components/BenchComponents/BenchDossierDrawer
 
 const BenchPage = () => {
   const dispatch = useDispatch();
+  const [searchParams] = useSearchParams();
   const {
     talents,
     activeSpecialty,
@@ -32,6 +34,13 @@ const BenchPage = () => {
       dispatch(fetchBenchData());
     }
   }, [dispatch, status]);
+
+  useEffect(() => {
+    const q = searchParams.get('search') || searchParams.get('q');
+    if (q) {
+      dispatch(setSearchQuery(q));
+    }
+  }, [searchParams, dispatch]);
 
   // Client-side filtering & sorting for instant responsiveness
   const filteredTalents = useMemo(() => {

@@ -317,7 +317,39 @@
 /* --- Container Wrappers in Search Layouts --- */
 .JobSearch-fieldWithIcon .tw-skill-search-wrap,
 .BenchFilter-searchInputWrapper .tw-skill-search-wrap,
-.tw-filter-search-wrap .tw-skill-search-wrap {
+.tw-filter-search-wrap .tw-skill-search-wrap,
+.NewHero-inputBlock .tw-skill-search-wrap {
   flex: 1;
   width: 100%;
+}
+
+.NewHero-searchFieldRole {
+  position: relative;
+  z-index: 30;
+}
+
+.NewHero-skillSearchWrap {
+  width: 100%;
+  position: relative;
+}
+
+.NewHero-skillSearchWrap .NewHero-fieldInput {
+  width: 100%;
+  background: transparent;
+  border: none;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #0f172a;
+  outline: none;
+  font-family: inherit;
+  padding: 0;
+}
+
+[data-theme='dark'] .NewHero-skillSearchWrap .NewHero-fieldInput {
+  color: #f8fafc;
+}
+
+.NewHero-skillSearchWrap .tw-skill-search-dropdown {
+  top: calc(100% + 14px);
+  min-width: 280px;
 }

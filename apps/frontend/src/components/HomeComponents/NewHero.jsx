@@ -16,6 +16,7 @@ import {
   useMotionTemplate,
 } from 'framer-motion';
 import ApplyModal from '../common/ApplyModal';
+import SkillSearchInput from '../common/SkillSearchInput';
 
 const SLIDE_IMAGES = [
   'https://lh3.googleusercontent.com/aida-public/AB6AXuA5nGnSn6TrjHRXk6Yrr1hngBL_Ptdje8dtE8juA2qY036lQqvHvN6avSAYmFKXi3Ws1s1GOGxDg1UJxSBPj1bormKO3GX6ikbORRKq0xiEnRjFfHJo92S4rMz1pkRIj6a5ttei2dUbSMuy8XDy119wvMZL2XWo1xcVcwOq7iaR0aXLZuhNnMM_WFqdq-qjIFA2YtN4dBM2z7SYgEFLd9VAlLdP7jvkhrd0JGOiVZuUwZkeI7SvLyKJQA',
@@ -251,23 +252,16 @@ const NewHero = ({ onOpenModal }) => {
   };
 
   const handleSearchSubmit = (e) => {
-    e.preventDefault();
+    e?.preventDefault();
     const params = new URLSearchParams();
-    if (roleInput.trim()) params.append('search', roleInput.trim());
+    if (roleInput && roleInput.trim()) params.append('search', roleInput.trim());
     if (locationInput) params.append('location', locationInput);
     if (experienceInput) params.append('experience', experienceInput);
 
-    const openingsSection =
-      document.getElementById('openings') ||
-      document.getElementById('hot-jobs');
-    if (openingsSection) {
-      openingsSection.scrollIntoView({ behavior: 'smooth' });
-    } else {
-      navigate({
-        pathname: '/jobs',
-        search: params.toString() ? `?${params.toString()}` : '',
-      });
-    }
+    navigate({
+      pathname: '/bench',
+      search: params.toString() ? `?${params.toString()}` : '',
+    });
   };
 
   const handleHireTalent = (e) => {
@@ -649,14 +643,17 @@ const NewHero = ({ onOpenModal }) => {
                   >
                     Role or Skill
                   </label>
-                  <input
+                  <SkillSearchInput
                     id="hero-role-input"
-                    type="text"
                     className="NewHero-fieldInput"
+                    wrapperClassName="NewHero-skillSearchWrap"
                     placeholder="e.g. SAP ABAP, AEM, Ledger..."
-                    aria-label="Role or Skill"
+                    ariaLabel="Role or Skill"
                     value={roleInput}
-                    onChange={(e) => setRoleInput(e.target.value)}
+                    onChange={(e) =>
+                      setRoleInput(typeof e === 'string' ? e : e.target.value)
+                    }
+                    onSelect={(skill) => setRoleInput(skill)}
                   />
                 </div>
               </div>
