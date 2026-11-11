@@ -1688,6 +1688,20 @@ body {
   color: var(--color-cobalt-bright, #2563eb);
 }
 
+/* Carousel slider wrapper — clips overflow, full width of container */
+.Reports-sliderWrapper {
+  overflow: hidden;
+  width: 100%;
+  position: relative;
+}
+
+/* Each slide — flex-shrink-0 so it never collapses; width set via JS inline style */
+.Reports-slide {
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+}
+
 .Reports-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
