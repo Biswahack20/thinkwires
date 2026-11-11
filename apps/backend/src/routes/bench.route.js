@@ -16,12 +16,12 @@ const { benchData = null } = mockData;
 let bench = benchData
   ? { ...benchData }
   : {
-      statsBadges: [],
-      specialtyFilters: [],
-      talents: [],
-      dossierFeatures: [],
-      vettingGates: [],
-    };
+    statsBadges: [],
+    specialtyFilters: [],
+    talents: [],
+    dossierFeatures: [],
+    vettingGates: [],
+  };
 
 const publicSubmissionRateLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
@@ -75,11 +75,11 @@ router.get('/bench', async (req, res) => {
           role: c.currentRole || 'Software Professional',
           initials: c.name
             ? c.name
-                .split(' ')
-                .map((n) => n[0])
-                .join('')
-                .slice(0, 2)
-                .toUpperCase()
+              .split(' ')
+              .map((n) => n[0])
+              .join('')
+              .slice(0, 2)
+              .toUpperCase()
             : 'TW',
           specialty: 'Systems & Distributed',
           seniorityTier:
@@ -154,7 +154,7 @@ router.get('/bench', async (req, res) => {
       noticePeriod:
         c.noticePeriod ||
         (c.urgency === 'immediate' ||
-        (c.availability && c.availability.includes('Immediate'))
+          (c.availability && c.availability.includes('Immediate'))
           ? 'Immediate'
           : '30 Days'),
       engagementType: pricing.engagementType,
@@ -165,8 +165,8 @@ router.get('/bench', async (req, res) => {
       rateDisplay: pricing.rateDisplay,
       hourlyRate:
         c.hourlyRate &&
-        !c.hourlyRate.includes('$') &&
-        !c.hourlyRate.includes('5,500')
+          !c.hourlyRate.includes('$') &&
+          !c.hourlyRate.includes('5,500')
           ? c.hourlyRate
           : pricing.rateDisplay,
       proofQuote:
@@ -174,23 +174,23 @@ router.get('/bench', async (req, res) => {
         c.proofQuote ||
         'Architected and scaled production enterprise systems with zero downtime.',
       skills: c.skills || [],
-    rubric: c.dossier?.rubric
-      ? {
+      rubric: c.dossier?.rubric
+        ? {
           systemDesign: parseInt(c.dossier.rubric.systemDesign) || 98,
           codeQuality: parseInt(c.dossier.rubric.cleanCode) || 97,
           liveDebugging: 99,
           communication: 96,
         }
-      : c.rubric || {
+        : c.rubric || {
           systemDesign: 98,
           codeQuality: 97,
           liveDebugging: 99,
           communication: 96,
         },
-    bio: c.dossier?.evaluatorNotes || c.bio,
-    dossier: c.dossier,
-  };
-});
+      bio: c.dossier?.evaluatorNotes || c.bio,
+      dossier: c.dossier,
+    };
+  });
 
   const specialtyFilters = [
     { label: 'All Engineering', count: 142 },
@@ -272,12 +272,12 @@ router.get('/bench', async (req, res) => {
       })) || [],
     requisitionCta: bench.requisitionCTA
       ? {
-          tag: bench.requisitionCTA.eyebrow,
-          title: bench.requisitionCTA.title,
-          description: bench.requisitionCTA.description,
-          primaryBtn: { text: bench.requisitionCTA.ctaLabel, link: '/contact' },
-          secondaryBtn: { text: 'Speak with a Director', link: '/contact' },
-        }
+        tag: bench.requisitionCTA.eyebrow,
+        title: bench.requisitionCTA.title,
+        description: bench.requisitionCTA.description,
+        primaryBtn: { text: bench.requisitionCTA.ctaLabel, link: '/contact' },
+        secondaryBtn: { text: 'Speak with a Director', link: '/contact' },
+      }
       : null,
   };
 
@@ -305,11 +305,11 @@ router.get('/bench/talents', async (req, res) => {
           role: c.currentRole || 'Software Professional',
           initials: c.name
             ? c.name
-                .split(' ')
-                .map((n) => n[0])
-                .join('')
-                .slice(0, 2)
-                .toUpperCase()
+              .split(' ')
+              .map((n) => n[0])
+              .join('')
+              .slice(0, 2)
+              .toUpperCase()
             : 'TW',
           specialty: 'Systems & Distributed',
           seniorityTier:
@@ -354,14 +354,14 @@ router.get('/bench/talents', async (req, res) => {
         c.initials ||
         (c.name
           ? c.name
-              .split(' ')
-              .map((n) => n[0])
-              .join('')
-              .slice(0, 2)
-              .toUpperCase()
+            .split(' ')
+            .map((n) => n[0])
+            .join('')
+            .slice(0, 2)
+            .toUpperCase()
           : c.code
-          ? c.code.replace(/[^A-Za-z0-9]/g, '').slice(0, 2).toUpperCase()
-          : 'TW'),
+            ? c.code.replace(/[^A-Za-z0-9]/g, '').slice(0, 2).toUpperCase()
+            : 'TW'),
       specialty:
         c.specialty === 'genai'
           ? 'GenAI & LLMs'
@@ -394,7 +394,7 @@ router.get('/bench/talents', async (req, res) => {
       noticePeriod:
         c.noticePeriod ||
         (c.urgency === 'immediate' ||
-        (c.availability && c.availability.includes('Immediate'))
+          (c.availability && c.availability.includes('Immediate'))
           ? 'Immediate'
           : '30 Days'),
       engagementType: pricing.engagementType,
@@ -405,8 +405,8 @@ router.get('/bench/talents', async (req, res) => {
       rateDisplay: pricing.rateDisplay,
       hourlyRate:
         c.hourlyRate &&
-        !c.hourlyRate.includes('$') &&
-        !c.hourlyRate.includes('5,500')
+          !c.hourlyRate.includes('$') &&
+          !c.hourlyRate.includes('5,500')
           ? c.hourlyRate
           : pricing.rateDisplay,
       proofQuote:
@@ -551,8 +551,8 @@ router.get('/bench/talents/:id', async (req, res) => {
       rateDisplay: pricing.rateDisplay,
       hourlyRate:
         talent.hourlyRate &&
-        !talent.hourlyRate.includes('$') &&
-        !talent.hourlyRate.includes('5,500')
+          !talent.hourlyRate.includes('$') &&
+          !talent.hourlyRate.includes('5,500')
           ? talent.hourlyRate
           : pricing.rateDisplay,
     });
