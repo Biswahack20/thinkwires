@@ -358,17 +358,13 @@ const Reports = () => {
           </div>
           <div className="flex items-center gap-3">
             {/* Slider Navigation Arrows */}
-            <div className="flex items-center gap-1.5 mr-2">
+            <div className="Reports-navControls">
               <button
                 type="button"
                 onClick={handlePrev}
                 disabled={!canScrollLeft}
                 aria-label="Previous reports"
-                className={`w-9 h-9 rounded-lg border flex items-center justify-center transition-all shadow-sm ${
-                  !canScrollLeft
-                    ? 'border-slate-100 bg-slate-50 text-slate-300 cursor-not-allowed opacity-50'
-                    : 'border-slate-200 bg-white hover:bg-slate-50 text-slate-700 active:scale-95'
-                }`}
+                className="Reports-navBtn"
               >
                 <span className="material-symbols-outlined text-[18px]">
                   chevron_left
@@ -379,11 +375,7 @@ const Reports = () => {
                 onClick={handleNext}
                 disabled={!canScrollRight}
                 aria-label="Next reports"
-                className={`w-9 h-9 rounded-lg border flex items-center justify-center transition-all shadow-sm ${
-                  !canScrollRight
-                    ? 'border-slate-100 bg-slate-50 text-slate-300 cursor-not-allowed opacity-50'
-                    : 'border-slate-200 bg-white hover:bg-slate-50 text-slate-700 active:scale-95'
-                }`}
+                className="Reports-navBtn"
               >
                 <span className="material-symbols-outlined text-[18px]">
                   chevron_right
@@ -403,7 +395,7 @@ const Reports = () => {
         {/* Carousel Viewport with Native Horizontal Scroll & CSS Scroll-Snap */}
         <div
           ref={trackRef}
-          className="Reports-carouselTrack focus:outline-none focus-visible:ring-2 focus-visible:ring-blue-500 rounded-2xl"
+          className="Reports-carouselTrack"
           tabIndex={0}
           role="region"
           aria-roledescription="carousel"
@@ -435,18 +427,18 @@ const Reports = () => {
                 key={article.id || article.slug || article.title}
                 className="Reports-slide"
               >
-                <article className="Reports-card group w-full h-full flex flex-col justify-between bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300">
-                  <div className="flex flex-col flex-1">
+                <article className="Reports-card">
+                  <div style={{ display: 'flex', flexDirection: 'column', flex: '1 1 auto' }}>
                     {/* Standardized Card Image Header */}
-                    <div className="Reports-imageContainer relative w-full h-48 sm:h-52 overflow-hidden bg-slate-100 flex-shrink-0">
+                    <div className="Reports-imageContainer">
                       <img
                         src={imageSrc}
                         alt={article.title}
-                        className="Reports-image w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                        className="Reports-image"
                         loading="lazy"
                       />
                       <span
-                        className="Reports-tagBadge absolute top-3 left-3 px-2.5 py-1 rounded-full text-xs font-semibold backdrop-blur-sm shadow-sm"
+                        className="Reports-tagBadge"
                         style={{
                           backgroundColor:
                             article.badgeBg || 'rgba(15, 23, 42, 0.85)',
@@ -456,7 +448,7 @@ const Reports = () => {
                         {badgeText}
                       </span>
                       {readTimeText && (
-                        <span className="absolute top-3 right-3 px-2.5 py-1 rounded-full text-xs font-medium bg-slate-900/70 backdrop-blur-sm text-white shadow-sm flex items-center gap-1">
+                        <span className="Reports-readBadge">
                           <span>⏱</span>
                           <span>{readTimeText}</span>
                         </span>
@@ -464,54 +456,64 @@ const Reports = () => {
                     </div>
 
                     {/* Content Area with aligned typography */}
-                    <div className="Reports-content p-6 flex flex-col flex-1">
-                      <div className="flex items-center gap-2 text-xs font-semibold text-slate-500 uppercase tracking-wider mb-2.5">
-                        <time className="Reports-date mb-0">{publishDate}</time>
+                    <div className="Reports-content">
+                      <div className="Reports-metaRow">
+                        <span className="Reports-metaDate">{publishDate}</span>
                         {subCategoryText && (
                           <>
-                            <span className="text-slate-300">•</span>
-                            <span className="text-blue-600 font-medium normal-case tracking-normal truncate">
+                            <span className="Reports-metaDot">•</span>
+                            <span className="Reports-metaCategory">
                               {subCategoryText}
                             </span>
                           </>
                         )}
                       </div>
 
-                      <h3 className="Reports-cardTitle text-lg font-bold text-slate-900 group-hover:text-blue-600 transition-colors mb-3 leading-snug line-clamp-2 min-h-[3.25rem]">
+                      <h3 className="Reports-cardTitle">
                         {article.title}
                       </h3>
 
-                      <p className="Reports-cardDesc text-sm text-slate-600 leading-relaxed line-clamp-3 mb-4 min-h-[4.5rem]">
+                      <p className="Reports-cardDesc">
                         {article.excerpt || article.summary || article.desc}
                       </p>
                     </div>
                   </div>
 
                   {/* Aligned footer with author and Read Analysis */}
-                  <div className="Reports-footer px-6 pb-6 pt-3 border-t border-slate-100 mt-auto flex items-center justify-between">
-                    <div className="flex items-center gap-2.5 min-w-0 pr-2">
+                  <div className="Reports-footer">
+                    <div className="Reports-authorGroup">
                       {authorAvatar ? (
                         <img
                           src={authorAvatar}
                           alt={authorName}
-                          className="w-7 h-7 rounded-full object-cover flex-shrink-0"
+                          className="Reports-authorAvatar"
+                          style={{
+                            width: 28,
+                            height: 28,
+                            minWidth: 28,
+                            minHeight: 28,
+                            maxWidth: 28,
+                            maxHeight: 28,
+                            borderRadius: '50%',
+                            objectFit: 'cover',
+                          }}
                         />
                       ) : (
-                        <div className="w-7 h-7 rounded-full bg-blue-100 text-blue-700 font-bold text-xs flex items-center justify-center flex-shrink-0">
+                        <div className="Reports-authorBubble">
                           {authorInitials}
                         </div>
                       )}
-                      <span className="text-xs font-medium text-slate-700 truncate">
+                      <span className="Reports-authorName">
                         {authorName}
                       </span>
                     </div>
 
                     <Link
                       to={destination}
-                      className="Reports-readLink inline-flex items-center gap-1 text-sm font-semibold text-blue-600 hover:text-blue-700 flex-shrink-0 ml-auto"
+                      className="Reports-readLink"
                     >
                       <span>Read Analysis</span>
-                      <span className="material-symbols-outlined text-[16px] group-hover:translate-x-1 transition-transform">
+                      <span className="material-symbols-outlined text-[16px]">
                         arrow_forward
                       </span>
                     </Link>
@@ -525,7 +527,7 @@ const Reports = () => {
         {/* Slide Indicator / Pagination Dots */}
         {totalReports > 1 && (
           <div
-            className="flex items-center justify-center gap-2 mt-8"
+            className="Reports-dotsContainer"
             role="tablist"
             aria-label="Carousel pagination"
           >
@@ -536,10 +538,8 @@ const Reports = () => {
                 onClick={() => handleScrollToSlide(dotIdx)}
                 aria-label={`Go to slide ${dotIdx + 1} of ${totalReports}`}
                 aria-current={activeSlide === dotIdx ? 'true' : undefined}
-                className={`h-2 transition-all rounded-full ${
-                  activeSlide === dotIdx
-                    ? 'w-8 bg-blue-600'
-                    : 'w-2 bg-slate-300 hover:bg-slate-400'
+                className={`Reports-dot ${
+                  activeSlide === dotIdx ? 'active' : ''
                 }`}
               />
             ))}
