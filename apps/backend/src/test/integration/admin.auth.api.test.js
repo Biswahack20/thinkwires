@@ -41,8 +41,8 @@ describe('Admin Authentication & Cookie Security (Integration Tests)', () => {
       expect(res.body.user).toBeDefined();
       expect(res.body.user.email).toBe(adminCredentials.email);
 
-      // CRITICAL: Token MUST NOT be present in JSON response body
-      expect(res.body.token).toBeUndefined();
+      // Bearer token provided in response body for cross-origin resiliency (PR #236)
+      expect(typeof res.body.token).toBe('string');
 
       // Anti-CSRF token should be provided
       expect(res.body.csrfToken).toBeDefined();

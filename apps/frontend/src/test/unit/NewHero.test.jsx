@@ -59,6 +59,16 @@ describe('NewHero Component CTAs and Search Form', () => {
     expect(mockNavigate).toHaveBeenCalledWith('/hot-jobs');
   });
 
+  it('renders "Schedule Scoping Call" action and opens ScopeCallModal', () => {
+    renderWithProviders(<NewHero />);
+    const scopeBtn = screen.getByRole('button', { name: /Schedule Scoping Call/i });
+    expect(scopeBtn).toBeInTheDocument();
+
+    fireEvent.click(scopeBtn);
+    expect(screen.getByRole('dialog')).toBeInTheDocument();
+    expect(screen.getByText('Schedule Technical Scoping Call')).toBeInTheDocument();
+  });
+
   it('renders search form fields with accessible labels and placeholders', () => {
     renderWithProviders(<NewHero />);
 

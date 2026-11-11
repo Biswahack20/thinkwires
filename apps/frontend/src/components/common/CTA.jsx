@@ -1,6 +1,7 @@
 import API_BASE from '../../utils/apiConfig';
 import React, { useState } from 'react';
 import ApplyModal from './ApplyModal';
+import ScopeCallModal from './ScopeCallModal';
 
 // API_BASE is imported from apiConfig
 
@@ -13,6 +14,7 @@ const CTA = () => {
     error: null,
   });
   const [isApplyModalOpen, setIsApplyModalOpen] = useState(false);
+  const [isScopeModalOpen, setIsScopeModalOpen] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -67,6 +69,21 @@ const CTA = () => {
             sprint bottlenecks, match vetted candidates within 48 hours, and
             manage cross-border compliance.
           </p>
+
+          <button
+            type="button"
+            className="CTA-scopeCallBtn"
+            onClick={() => setIsScopeModalOpen(true)}
+          >
+            <span className="material-symbols-outlined text-[20px]">
+              calendar_month
+            </span>
+            <span>Schedule Scoping Call</span>
+          </button>
+
+          <div className="CTA-dividerText">
+            <span>or request quick callback</span>
+          </div>
 
           <form className="CTA-form" onSubmit={handleSubmit}>
             {status.success && (
@@ -167,6 +184,10 @@ const CTA = () => {
         isOpen={isApplyModalOpen}
         onClose={() => setIsApplyModalOpen(false)}
         roleTitle="General Engineering Candidate Pool"
+      />
+      <ScopeCallModal
+        isOpen={isScopeModalOpen}
+        onClose={() => setIsScopeModalOpen(false)}
       />
     </section>
   );

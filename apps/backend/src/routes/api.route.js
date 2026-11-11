@@ -17,6 +17,7 @@ import rateLimit from 'express-rate-limit';
 import requireAuth, { requireCandidateAuth } from '../middlewares/auth.middleware.js';
 import { recordInboundRequisition } from '../controllers/admin.controller.js';
 import { sendRequisitionNotificationEmail } from '../utils/recruitmentEmail.util.js';
+import { recordHelpDeskInquiry } from '../models/helpdesk.mongo.model.js';
 import { calculateCandidatePricing, parseNoticeDays } from '../utils/pricing.utils.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -1009,6 +1010,31 @@ router.post('/find-talent/requisition', publicSubmissionRateLimiter, async (req,
     await sendRequisitionNotificationEmail(requisitionPayload);
   } catch (emailErr) {
     logger.warn('Requisition email notification trigger failure (non-blocking):', emailErr.message);
+  }
+
+  // Log to centralized HelpDesk
+  try {
+    await recordHelpDeskInquiry({
+      category: 'Enterprise Requisition',
+      fullName,
+      email: corporateEmail,
+      phone,
+      company: effectiveCompany,
+      subject: `Enterprise Requisition: ${targetRole || 'Engineering Squad'}`,
+      message: jobDescription || `Requisition for ${headcount || 1} x ${targetRole || 'Engineer'} (${techStack || 'General'})`,
+      metadata: {
+        targetRole,
+        headcount,
+        seniority,
+        techStack,
+        deploymentUrgency,
+        workArrangement,
+        requisitionId: createdRequisition?.requisitionId || null,
+      },
+      priority: 'Urgent',
+    });
+  } catch (hdErr) {
+    logger.warn('HelpDesk requisition logging warning:', hdErr.message);
   }
 
   res.json({

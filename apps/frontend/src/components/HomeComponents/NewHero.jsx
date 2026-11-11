@@ -16,6 +16,7 @@ import {
   useMotionTemplate,
 } from 'framer-motion';
 import ApplyModal from '../common/ApplyModal';
+import ScopeCallModal from '../common/ScopeCallModal';
 import SkillSearchInput from '../common/SkillSearchInput';
 
 const SLIDE_IMAGES = [
@@ -127,6 +128,7 @@ const NewHero = ({ onOpenModal }) => {
   const [locationInput, setLocationInput] = useState('');
   const [experienceInput, setExperienceInput] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isScopeModalOpen, setIsScopeModalOpen] = useState(false);
   const [selectedRole, setSelectedRole] = useState('Hire Top Tech Talent');
 
   // Fetch openings from single source if idle
@@ -405,6 +407,19 @@ const NewHero = ({ onOpenModal }) => {
                     arrow_forward
                   </span>
                 </motion.a>
+
+                <motion.button
+                  type="button"
+                  className="NewHero-btnScoping"
+                  onClick={() => setIsScopeModalOpen(true)}
+                  whileHover={{ scale: 1.025, y: -2 }}
+                  whileTap={{ scale: 0.975 }}
+                >
+                  <span className="material-symbols-outlined NewHero-btnIcon">
+                    calendar_month
+                  </span>
+                  <span>Schedule Scoping Call</span>
+                </motion.button>
               </motion.div>
 
               {/* Trust Metrics Bar */}
@@ -742,6 +757,12 @@ const NewHero = ({ onOpenModal }) => {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         roleTitle={selectedRole}
+      />
+
+      {/* Enterprise Scoping Call Modal */}
+      <ScopeCallModal
+        isOpen={isScopeModalOpen}
+        onClose={() => setIsScopeModalOpen(false)}
       />
     </>
   );

@@ -54,6 +54,12 @@ import {
   createSystemMember,
   updateSystemMember,
   deleteSystemMember,
+  getHelpDeskTicketsHandler,
+  getHelpDeskStatsHandler,
+  getHelpDeskTicketByIdHandler,
+  updateHelpDeskTicketHandler,
+  replyHelpDeskTicketHandler,
+  convertHelpDeskToRequisitionHandler,
 } from '../controllers/admin.controller.js';
 
 import {
@@ -97,6 +103,18 @@ const cmsGuard = requireRole('superadmin', 'cms_admin');
 
 router.get('/stats', manpowerGuard, getDashboardOverview);
 router.get('/activities', getActivities);
+
+// HelpDesk Communications & Inquiry Management
+router.get('/helpdesk', manpowerGuard, getHelpDeskTicketsHandler);
+router.get('/helpdesk/stats', manpowerGuard, getHelpDeskStatsHandler);
+router.get('/helpdesk/:id', manpowerGuard, getHelpDeskTicketByIdHandler);
+router.patch('/helpdesk/:id', manpowerGuard, updateHelpDeskTicketHandler);
+router.post('/helpdesk/:id/reply', manpowerGuard, replyHelpDeskTicketHandler);
+router.post(
+  '/helpdesk/:id/convert-to-requisition',
+  manpowerGuard,
+  convertHelpDeskToRequisitionHandler
+);
 
 // Superadmin
 router.get('/system-members', superadminGuard, getSystemMembers);

@@ -94,4 +94,57 @@ export const handlers = [
       },
     });
   }),
+
+  // Enterprise requisition & scoping call intake
+  http.post('/api/find-talent/requisition', async ({ request }) => {
+    const body = await request.json();
+    if (!body.company || !body.fullName || !body.corporateEmail) {
+      return HttpResponse.json(
+        { success: false, error: 'Validation failed: Missing required fields.' },
+        { status: 400 }
+      );
+    }
+    return HttpResponse.json({
+      success: true,
+      message: 'Talent requisition logged successfully.',
+      requisition: {
+        requisitionId: 'REQ-MOCK-237',
+        title: body.targetRole || 'Enterprise Engineering Squad',
+        client: body.company,
+        contactPerson: body.fullName,
+        contactEmail: body.corporateEmail,
+        status: 'Inbound',
+      },
+    });
+  }),
+
+  // Admin HelpDesk stats & communications
+  http.get('/api/admin/helpdesk/stats', () => {
+    return HttpResponse.json({
+      success: true,
+      stats: {
+        total: 10,
+        new: 2,
+        inReview: 3,
+        replied: 5,
+        infoInquiries: 4,
+        hrInquiries: 6,
+        routing: {
+          overrideEmail: null,
+          companyInfoEmail: 'info@thinkwires.com',
+          hrRequisitionEmail: 'hr@thinkwires.com',
+        },
+      },
+    });
+  }),
+
+  http.get('/api/admin/helpdesk', () => {
+    return HttpResponse.json({
+      success: true,
+      tickets: [],
+      total: 0,
+      totalPages: 1,
+      page: 1,
+    });
+  }),
 ];

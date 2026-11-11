@@ -6,6 +6,7 @@ import { loadSeedJson } from '../utils/seedLoader.js';
 import rateLimit from 'express-rate-limit';
 import { calculateCandidatePricing, parseNoticeDays } from '../utils/pricing.utils.js';
 import Page from '../models/page.mongo.model.js';
+import { recordHelpDeskInquiry } from '../models/helpdesk.mongo.model.js';
 
 const isMongoActive = () => mongoose.connection.readyState === 1;
 
@@ -639,7 +640,7 @@ router.get('/bench/dossier/:id', async (req, res) => {
   }
 });
 
-router.post('/bench/book-interview', publicSubmissionRateLimiter, (req, res) => {
+router.post('/bench/book-interview', publicSubmissionRateLimiter, async (req, res) => {
   const {
     talentId,
     talentCode,
@@ -661,10 +662,28 @@ router.post('/bench/book-interview', publicSubmissionRateLimiter, (req, res) => 
     hiringManager,
     timeSlot,
   });
+
+  const bookingRef = `TW-BENCH-${Date.now().toString(36).toUpperCase()}`;
+
+  try {
+    await recordHelpDeskInquiry({
+      category: 'Bench Interview',
+      fullName: hiringManager || 'Talent Cloud Hiring Lead',
+      email: workEmail,
+      company: companyName || 'Client Organization',
+      subject: `Bench Talent Interview Booking: ${talentCode}`,
+      message: `Client requested interview for candidate ${talentCode}. Proposed slot: ${timeSlot || 'Flexible'}. Booking Reference: ${bookingRef}`,
+      metadata: { talentId, talentCode, hiringManager, timeSlot, bookingRef },
+      priority: 'Urgent',
+    });
+  } catch (hdErr) {
+    console.warn('HelpDesk bench interview logging warning:', hdErr.message);
+  }
+
   res.json({
     success: true,
     message: `Interview request confirmed for ${talentCode}. Calendar invites sent to ${workEmail}.`,
-    bookingRef: `TW-${Date.now().toString(36).toUpperCase()}`,
+    bookingRef,
   });
 });
 

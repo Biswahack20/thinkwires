@@ -743,6 +743,69 @@ export const adminApi = {
     if (!res.ok) throw new Error(json.error || `HTTP error ${res.status}`);
     return json;
   },
+
+  // HelpDesk Communications & Inquiry Management
+  async getHelpDeskTickets(params = {}) {
+    const query = new URLSearchParams();
+    if (params.search) query.append('search', params.search);
+    if (params.category && params.category !== 'all')
+      query.append('category', params.category);
+    if (params.status && params.status !== 'all')
+      query.append('status', params.status);
+    if (params.priority && params.priority !== 'all')
+      query.append('priority', params.priority);
+    if (params.page) query.append('page', params.page);
+    if (params.limit) query.append('limit', params.limit);
+
+    const queryString = query.toString() ? `?${query.toString()}` : '';
+    const res = await adminFetch(`/helpdesk${queryString}`);
+    const json = await res.json();
+    if (!res.ok) throw new Error(json.error || `HTTP error ${res.status}`);
+    return json;
+  },
+
+  async getHelpDeskStats() {
+    const res = await adminFetch('/helpdesk/stats');
+    const json = await res.json();
+    if (!res.ok) throw new Error(json.error || `HTTP error ${res.status}`);
+    return json;
+  },
+
+  async getHelpDeskTicketById(id) {
+    const res = await adminFetch(`/helpdesk/${id}`);
+    const json = await res.json();
+    if (!res.ok) throw new Error(json.error || `HTTP error ${res.status}`);
+    return json;
+  },
+
+  async updateHelpDeskTicket(id, data) {
+    const res = await adminFetch(`/helpdesk/${id}`, {
+      method: 'PATCH',
+      body: JSON.stringify(data),
+    });
+    const json = await res.json();
+    if (!res.ok) throw new Error(json.error || `HTTP error ${res.status}`);
+    return json;
+  },
+
+  async replyHelpDeskTicket(id, data) {
+    const res = await adminFetch(`/helpdesk/${id}/reply`, {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+    const json = await res.json();
+    if (!res.ok) throw new Error(json.error || `HTTP error ${res.status}`);
+    return json;
+  },
+
+  async convertHelpDeskToRequisition(id) {
+    const res = await adminFetch(`/helpdesk/${id}/convert-to-requisition`, {
+      method: 'POST',
+    });
+    const json = await res.json();
+    if (!res.ok) throw new Error(json.error || `HTTP error ${res.status}`);
+    return json;
+  },
 };
 
 export default adminApi;
