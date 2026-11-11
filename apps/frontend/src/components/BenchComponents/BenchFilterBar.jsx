@@ -1,5 +1,6 @@
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import SkillSearchInput from '../common/SkillSearchInput';
 import {
   setActiveSpecialty,
   setActiveUrgency,
@@ -88,12 +89,13 @@ const BenchFilterBar = ({ totalCount }) => {
           <span className="material-symbols-outlined BenchFilter-searchIcon">
             search
           </span>
-          <input
-            type="text"
+          <SkillSearchInput
+            id="bench-search-input"
             className="BenchFilter-searchInput"
             placeholder="Search by role, stack (e.g. LangChain, Kubernetes, Go), or TW-BENCH code..."
             value={searchQuery}
             onChange={(e) => dispatch(setSearchQuery(e.target.value))}
+            onSelect={(skill) => dispatch(setSearchQuery(skill))}
           />
           {searchQuery && (
             <button

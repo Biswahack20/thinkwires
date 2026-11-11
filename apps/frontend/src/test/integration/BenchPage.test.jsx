@@ -200,4 +200,15 @@ describe('BenchPage Candidate Filtering and AI Assessment Sorting', () => {
     expect(matchingCards.length).toBe(1);
     expect(matchingCards[0].textContent).toContain('TW-CAND-02');
   });
+
+  it('automatically applies search filter from URL query parameter ?search=...', () => {
+    renderWithProviders(<BenchPage />, {
+      preloadedState: mockPreloadedState,
+      initialEntries: ['/bench?search=Generative'],
+    });
+
+    const matchingCards = screen.getAllByText(/TW-CAND-/);
+    expect(matchingCards.length).toBe(1);
+    expect(matchingCards[0].textContent).toContain('TW-CAND-02');
+  });
 });

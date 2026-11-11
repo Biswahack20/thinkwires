@@ -1,5 +1,6 @@
 import React from 'react';
 import { CloseIcon } from '../../admin/AdminIcons';
+import SkillSearchInput from '../common/SkillSearchInput';
 
 const JobSearch = ({
   searchQuery,
@@ -63,14 +64,14 @@ const JobSearch = ({
               <circle cx="11" cy="11" r="8"></circle>
               <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
             </svg>
-            <input
+            <SkillSearchInput
               id="job-search-query"
-              aria-label="Search job titles or skills"
-              type="text"
+              ariaLabel="Search job titles or skills"
               className="JobSearch-nativeInput"
-              placeholder="Skill, role or stack (e.g. SAP, AEM, Cloud, C..."
+              placeholder="Skill, role or stack (e.g. React, Python, Cloud)..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
+              onSelect={(skill) => setSearchQuery(skill)}
             />
             {searchQuery && (
               <button

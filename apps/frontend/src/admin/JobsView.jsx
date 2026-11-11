@@ -17,6 +17,8 @@ import {
   WORK_MODES,
   NOTICE_PERIODS,
 } from './jobConstants';
+import SkillTagInput from '../components/common/SkillTagInput';
+import SkillSearchInput from '../components/common/SkillSearchInput';
 
 const formatPriority = (p) => {
   if (typeof p === 'number') {
@@ -556,13 +558,14 @@ const JobsView = ({ defaultFilter }) => {
             className="tw-table-filters"
             style={{ flexWrap: 'wrap', gap: '0.5rem' }}
           >
-            <input
-              type="text"
+            <SkillSearchInput
+              id="jobs-filter-search"
               className="tw-filter-input"
               placeholder="Search title, client, skill, industry..."
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              style={{ width: '230px' }}
+              onSelect={(skill) => setSearch(skill)}
+              wrapperClassName="tw-filter-search-wrap"
             />
 
             <select
@@ -1306,19 +1309,18 @@ const JobsView = ({ defaultFilter }) => {
                 {/* Row 5: Skills */}
                 <div className="tw-form-group">
                   <label className="tw-form-label">
-                    Required Technical Skills (comma separated) *
+                    Required Technical Skills *
                   </label>
-                  <input
-                    type="text"
-                    className="tw-form-input"
+                  <SkillTagInput
+                    id="job-form-skills"
+                    placeholder="Type to search and add skills (e.g. React, TypeScript, Node.js, AWS)..."
                     value={formData.requiredSkills}
-                    onChange={(e) =>
+                    onChange={(val) =>
                       setFormData({
                         ...formData,
-                        requiredSkills: e.target.value,
+                        requiredSkills: val,
                       })
                     }
-                    placeholder="React, TypeScript, Node.js, AWS, Docker"
                   />
                 </div>
 

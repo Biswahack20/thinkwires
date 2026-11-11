@@ -959,6 +959,15 @@
   border-color: var(--tw-emerald);
 }
 
+.tw-filter-search-wrap {
+  position: relative;
+  min-width: 230px;
+}
+
+.tw-filter-search-wrap .tw-filter-input {
+  width: 100%;
+}
+
 .tw-table {
   width: 100%;
   border-collapse: collapse;

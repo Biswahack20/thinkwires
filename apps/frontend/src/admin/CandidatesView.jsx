@@ -9,6 +9,7 @@ import {
   AlertCircleIcon,
 } from './AdminIcons';
 import CandidateEvaluationModal from './CandidateEvaluationModal';
+import SkillSearchInput from '../components/common/SkillSearchInput';
 
 const PIPELINE_STAGES = [
   'Applied',
@@ -217,13 +218,14 @@ const CandidatesView = () => {
         }}
       >
         <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
-          <input
-            type="text"
+          <SkillSearchInput
+            id="candidates-filter-search"
             className="tw-filter-input"
             placeholder="Search candidate name or skill..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            style={{ width: '260px' }}
+            onSelect={(skill) => setSearch(skill)}
+            wrapperClassName="tw-filter-search-wrap"
           />
 
           <select

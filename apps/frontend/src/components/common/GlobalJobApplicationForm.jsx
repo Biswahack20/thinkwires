@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useSelector } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import ScreeningAssessmentModal from './ScreeningAssessmentModal';
+import SkillTagInput from './SkillTagInput';
 
 /**
  * GlobalJobApplicationForm
@@ -1081,13 +1082,14 @@ const GlobalJobApplicationForm = ({ isOpen, onClose, jobData = {} }) => {
               style={{ marginTop: '0.75rem' }}
             >
               <label htmlFor="apply-skillSet">Skill Set</label>
-              <input
+              <SkillTagInput
                 id="apply-skillSet"
-                type="text"
                 name="skillSet"
-                placeholder="e.g. SAP ABAP, S/4HANA, Node.js, AWS, Kubernetes"
+                placeholder="Type to search and add skills (e.g. SAP ABAP, Node.js, AWS)..."
                 value={formData.skillSet}
-                onChange={handleChange}
+                onChange={(val) =>
+                  setFormData((prev) => ({ ...prev, skillSet: val }))
+                }
               />
             </div>
 
