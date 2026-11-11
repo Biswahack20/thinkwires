@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import SkillTagInput from '../common/SkillTagInput';
 import {
   submitTalentRequisition,
   resetRequisitionState,
@@ -258,11 +259,28 @@ const FindTalentIntakeForm = ({ data }) => {
                 <div className="field-group span-12">
                   <div className="label-with-counter">
                     <label className="field-label">
-                      Mandatory Technical Stack (Click to tag)
+                      Mandatory Technical Stack
                     </label>
                     <span className="counter-text">
                       Selected: <strong>{selectedTechs.length}</strong> tags
                     </span>
+                  </div>
+                  <SkillTagInput
+                    id="find-talent-skills-input"
+                    placeholder="Search and add technical skills (e.g. AWS, Kubernetes, React, Python)..."
+                    value={selectedTechs}
+                    onChange={(newTechs) => setSelectedTechs(newTechs)}
+                    style={{ marginBottom: '0.75rem' }}
+                  />
+                  <div
+                    style={{
+                      fontSize: '0.75rem',
+                      color: '#64748b',
+                      marginBottom: '0.4rem',
+                      fontWeight: 600,
+                    }}
+                  >
+                    Quick-select popular enterprise stacks:
                   </div>
                   <div className="tech-tags-list">
                     {techTags.map((tag) => {

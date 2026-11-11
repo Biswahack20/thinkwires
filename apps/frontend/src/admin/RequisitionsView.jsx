@@ -15,6 +15,7 @@ import {
   AlertCircleIcon,
   ClockIcon,
 } from './AdminIcons';
+import SkillSearchInput from '../components/common/SkillSearchInput';
 
 const ENGAGEMENT_MODELS = [
   'Staff Augmentation',
@@ -640,12 +641,14 @@ const RequisitionsView = () => {
             style={{ flexWrap: 'wrap', gap: '0.5rem' }}
           >
             <div style={{ position: 'relative', width: '260px' }}>
-              <input
-                type="text"
+              <SkillSearchInput
+                id="requisitions-filter-search"
                 className="tw-filter-input"
                 placeholder="Search role, client, contact, skill..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
+                onSelect={(skill) => setSearch(skill)}
+                wrapperClassName="tw-filter-search-wrap"
                 style={{ width: '100%', paddingLeft: '2rem' }}
               />
               <span

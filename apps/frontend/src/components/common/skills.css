@@ -1,0 +1,323 @@
+/* ==========================================================================
+   Thinkwires Technical Skill Autocomplete & Tag Input Component Styles
+   Supports Light & Dark Modes with zero emojis and accessible contrast.
+   ========================================================================== */
+
+/* --- Wrapper and Input Container --- */
+.tw-skill-tag-input-wrap {
+  position: relative;
+  width: 100%;
+}
+
+.tw-skill-tag-box {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.45rem 0.65rem;
+  min-height: 44px;
+  background-color: #ffffff;
+  border: 1px solid #cbd5e1;
+  border-radius: 8px;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
+  cursor: text;
+}
+
+[data-theme='dark'] .tw-skill-tag-box {
+  background-color: #0f172a;
+  border-color: #334155;
+}
+
+.tw-skill-tag-box:focus-within {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.14);
+}
+
+.tw-skill-tag-box.is-disabled {
+  background-color: #f8fafc;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+[data-theme='dark'] .tw-skill-tag-box.is-disabled {
+  background-color: #1e293b;
+}
+
+/* --- Tag Chips --- */
+.tw-skill-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.2rem 0.55rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+  line-height: 1.25;
+  color: #1e40af;
+  background-color: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 6px;
+  user-select: none;
+  animation: twSkillChipFadeIn 0.16s ease-out;
+}
+
+[data-theme='dark'] .tw-skill-chip {
+  color: #93c5fd;
+  background-color: rgba(30, 58, 138, 0.35);
+  border-color: rgba(59, 130, 246, 0.4);
+}
+
+@keyframes twSkillChipFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.tw-skill-chip-remove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  padding: 0;
+  font-size: 0.9rem;
+  line-height: 1;
+  color: #60a5fa;
+  background: transparent;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: color 0.15s ease, background-color 0.15s ease;
+}
+
+.tw-skill-chip-remove:hover {
+  color: #1e3a8a;
+  background-color: #dbeafe;
+}
+
+[data-theme='dark'] .tw-skill-chip-remove:hover {
+  color: #ffffff;
+  background-color: #2563eb;
+}
+
+/* --- Interactive Input Field --- */
+.tw-skill-input-field {
+  flex: 1 1 120px;
+  min-width: 100px;
+  border: none;
+  outline: none;
+  background: transparent;
+  padding: 0.2rem 0.1rem;
+  font-size: 0.88rem;
+  color: #0f172a;
+}
+
+[data-theme='dark'] .tw-skill-input-field {
+  color: #f1f5f9;
+}
+
+.tw-skill-input-field::placeholder {
+  color: #94a3b8;
+  font-size: 0.85rem;
+}
+
+/* --- Suggestions Dropdown --- */
+.tw-skill-dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  max-height: 280px;
+  overflow-y: auto;
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  box-shadow: 0 10px 25px -5px rgba(15, 23, 42, 0.12),
+              0 8px 10px -6px rgba(15, 23, 42, 0.08);
+  z-index: 1050;
+  padding: 0.35rem 0;
+  margin: 0;
+  list-style: none;
+}
+
+[data-theme='dark'] .tw-skill-dropdown {
+  background-color: #0f172a;
+  border-color: #334155;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5),
+              0 8px 10px -6px rgba(0, 0, 0, 0.3);
+}
+
+.tw-skill-dropdown-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.35rem 0.75rem 0.25rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #64748b;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+[data-theme='dark'] .tw-skill-dropdown-header {
+  color: #94a3b8;
+  border-color: #1e293b;
+}
+
+.tw-skill-suggestion-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 0.85rem;
+  font-size: 0.85rem;
+  color: #1e293b;
+  cursor: pointer;
+  transition: background-color 0.12s ease;
+}
+
+[data-theme='dark'] .tw-skill-suggestion-item {
+  color: #e2e8f0;
+}
+
+.tw-skill-suggestion-item:hover,
+.tw-skill-suggestion-item.is-active {
+  background-color: #f1f5f9;
+}
+
+[data-theme='dark'] .tw-skill-suggestion-item:hover,
+[data-theme='dark'] .tw-skill-suggestion-item.is-active {
+  background-color: #1e293b;
+}
+
+.tw-skill-item-main {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.tw-skill-highlight {
+  font-weight: 700;
+  color: #2563eb;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+[data-theme='dark'] .tw-skill-highlight {
+  color: #60a5fa;
+}
+
+.tw-skill-category-badge {
+  font-size: 0.68rem;
+  font-weight: 600;
+  padding: 0.12rem 0.45rem;
+  border-radius: 4px;
+  background-color: #f1f5f9;
+  color: #475569;
+  border: 1px solid #e2e8f0;
+}
+
+[data-theme='dark'] .tw-skill-category-badge {
+  background-color: #1e293b;
+  color: #94a3b8;
+  border-color: #334155;
+}
+
+.tw-skill-custom-add-hint {
+  display: block;
+  padding: 0.5rem 0.85rem;
+  font-size: 0.78rem;
+  color: #64748b;
+  background-color: #f8fafc;
+  border-top: 1px solid #f1f5f9;
+}
+
+[data-theme='dark'] .tw-skill-custom-add-hint {
+  color: #94a3b8;
+  background-color: #0b1120;
+  border-color: #1e293b;
+}
+
+.tw-skill-custom-add-key {
+  display: inline-block;
+  padding: 0.1rem 0.35rem;
+  font-size: 0.68rem;
+  font-weight: 700;
+  background-color: #e2e8f0;
+  color: #334155;
+  border-radius: 3px;
+  margin: 0 0.15rem;
+}
+
+[data-theme='dark'] .tw-skill-custom-add-key {
+  background-color: #334155;
+  color: #f1f5f9;
+}
+
+/* --- Search Bar Autocomplete Dropdown Variant --- */
+.tw-skill-search-wrap {
+  position: relative;
+  width: 100%;
+}
+
+.tw-skill-search-dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  max-height: 300px;
+  overflow-y: auto;
+  background-color: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  box-shadow: 0 12px 28px -4px rgba(15, 23, 42, 0.15);
+  z-index: 1050;
+  padding: 0.35rem 0;
+  margin: 0;
+  list-style: none;
+}
+
+[data-theme='dark'] .tw-skill-search-dropdown {
+  background-color: #0f172a;
+  border-color: #334155;
+  box-shadow: 0 12px 28px -4px rgba(0, 0, 0, 0.6);
+}
+
+.tw-skill-search-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.55rem 0.85rem;
+  font-size: 0.86rem;
+  color: #1e293b;
+  cursor: pointer;
+  transition: background-color 0.12s ease;
+}
+
+[data-theme='dark'] .tw-skill-search-item {
+  color: #e2e8f0;
+}
+
+.tw-skill-search-item:hover,
+.tw-skill-search-item.is-active {
+  background-color: #eff6ff;
+  color: #1d4ed8;
+}
+
+[data-theme='dark'] .tw-skill-search-item:hover,
+[data-theme='dark'] .tw-skill-search-item.is-active {
+  background-color: #1e293b;
+  color: #93c5fd;
+}
+
+/* --- Container Wrappers in Search Layouts --- */
+.JobSearch-fieldWithIcon .tw-skill-search-wrap,
+.BenchFilter-searchInputWrapper .tw-skill-search-wrap,
+.tw-filter-search-wrap .tw-skill-search-wrap {
+  flex: 1;
+  width: 100%;
+}

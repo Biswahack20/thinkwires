@@ -6,6 +6,7 @@ import { updateProfile } from '../../store/slices/authSlice';
 import { getApiBaseUrl, getCandidateAuthHeaders } from '../../utils/apiConfig';
 import Navbar from '../../components/common/Navbar';
 import Footer from '../../components/common/Footer';
+import SkillTagInput from '../../components/common/SkillTagInput';
 import './candidate.css';
 import '../auth/auth.css';
 import AvatarManagerModal from '../../components/candidate/AvatarManagerModal';
@@ -1172,44 +1173,20 @@ const CandidateProfilePage = () => {
 
             <div className="tw-field">
               <label className="tw-field-label" htmlFor="prof-skills">
-                Key Technical Skills (Comma-separated)
+                Key Technical Skills
               </label>
-              <input
+              <SkillTagInput
                 id="prof-skills"
-                type="text"
                 name="technicalSkills"
-                placeholder="e.g. React, Node.js, Go, Kubernetes, AWS, PostgreSQL, Kafka"
-                className="tw-input-control"
+                placeholder="Type a letter to suggest and add skills (e.g. React, Python, AWS)..."
                 value={formData.technicalSkills}
-                onChange={handleChange}
+                onChange={(val) =>
+                  setFormData((prev) => ({ ...prev, technicalSkills: val }))
+                }
               />
 
-              {/* Live Interactive Skill Badges */}
-              {activeSkillsList.length > 0 && (
-                <div className="tw-skills-preview-wrap">
-                  <span className="tw-skills-label">
-                    Parsed Skills ({activeSkillsList.length})
-                  </span>
-                  <div className="tw-skills-chip-list">
-                    {activeSkillsList.map((skill, idx) => (
-                      <span key={`${skill}-${idx}`} className="tw-skill-chip">
-                        {skill}
-                        <button
-                          type="button"
-                          className="tw-skill-chip-remove"
-                          onClick={() => handleRemoveSkill(skill)}
-                          title={`Remove ${skill}`}
-                        >
-                          ×
-                        </button>
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              )}
-
               {/* Popular Skill Suggestions */}
-              <div className="tw-popular-skills-row">
+              <div className="tw-popular-skills-row" style={{ marginTop: '0.65rem' }}>
                 <span>Suggested quick-add:</span>
                 {POPULAR_SKILL_SUGGESTIONS.map((sug) => (
                   <button

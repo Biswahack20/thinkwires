@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Link, useNavigate } from 'react-router-dom';
 import { loginUser, registerUser } from '../../store/slices/authSlice';
+import SkillTagInput from './SkillTagInput';
 
 /**
  * QuickApplyModal
@@ -638,12 +639,12 @@ const QuickApplyModal = ({ isOpen, onClose, jobData = {}, roleTitle = '' }) => {
             <div className="ApplyModal-row">
               <div className="ApplyModal-fieldGroup">
                 <label htmlFor="quick-apply-skills">Key Technical Skills</label>
-                <input
+                <SkillTagInput
                   id="quick-apply-skills"
-                  type="text"
-                  placeholder="e.g. React, Node.js, AWS, Kubernetes"
+                  name="skills"
+                  placeholder="Type to search skills (e.g. React, Node.js)..."
                   value={skills}
-                  onChange={(e) => setSkills(e.target.value)}
+                  onChange={(val) => setSkills(val)}
                 />
               </div>
 
