@@ -22,7 +22,10 @@ const Reports = () => {
   const [cardsPerView, setCardsPerView] = useState(getInitialCardsPerView);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
-  const [prefersReducedMotion, setPrefersReducedMotion] = useState(false);
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(() => {
+    if (typeof window === 'undefined') return false;
+    return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  });
 
   const touchStartPos = useRef({ x: 0, y: 0 });
   const touchDeltaPos = useRef({ x: 0, y: 0 });
@@ -39,10 +42,9 @@ const Reports = () => {
     }
   }, [dispatch, status?.reports]);
 
-  // Reduced motion preference
+  // Reduced motion preference listener
   useEffect(() => {
     const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-    setPrefersReducedMotion(mediaQuery.matches);
     const handler = (e) => setPrefersReducedMotion(e.matches);
     mediaQuery.addEventListener('change', handler);
     return () => mediaQuery.removeEventListener('change', handler);
