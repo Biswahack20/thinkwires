@@ -18,6 +18,7 @@ import {
 import ApplyModal from '../common/ApplyModal';
 import ScopeCallModal from '../common/ScopeCallModal';
 import SkillSearchInput from '../common/SkillSearchInput';
+import ParticleNetworkBackground from './ParticleNetworkBackground';
 
 const SLIDE_IMAGES = [
   'https://lh3.googleusercontent.com/aida-public/AB6AXuA5nGnSn6TrjHRXk6Yrr1hngBL_Ptdje8dtE8juA2qY036lQqvHvN6avSAYmFKXi3Ws1s1GOGxDg1UJxSBPj1bormKO3GX6ikbORRKq0xiEnRjFfHJo92S4rMz1pkRIj6a5ttei2dUbSMuy8XDy119wvMZL2XWo1xcVcwOq7iaR0aXLZuhNnMM_WFqdq-qjIFA2YtN4dBM2z7SYgEFLd9VAlLdP7jvkhrd0JGOiVZuUwZkeI7SvLyKJQA',
@@ -328,6 +329,9 @@ const NewHero = ({ onOpenModal }) => {
           aria-hidden="true"
         />
         <div className="NewHero-glowOrb NewHero-glowTeal" aria-hidden="true" />
+
+        {/* Premium Interactive Particle Network Background */}
+        <ParticleNetworkBackground />
 
         <div className="NewHero-container">
           {/* Main 2-Column Hero Grid with Staggered Motion */}
