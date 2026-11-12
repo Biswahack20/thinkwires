@@ -145,10 +145,10 @@ const Reports = () => {
       if (el) {
         const cards = el.querySelectorAll('.Reports-slide');
         if (cards[targetIdx]) {
-          cards[targetIdx].scrollIntoView({
+          const cardLeft = cards[targetIdx].offsetLeft - el.offsetLeft;
+          el.scrollTo({
+            left: cardLeft,
             behavior: prefersReducedMotion ? 'auto' : 'smooth',
-            block: 'nearest',
-            inline: 'start',
           });
         }
       }
