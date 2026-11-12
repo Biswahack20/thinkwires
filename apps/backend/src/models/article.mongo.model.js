@@ -106,6 +106,9 @@ const articleSchema = new mongoose.Schema(
   }
 );
 
+articleSchema.index({ status: 1, publishedAt: -1, createdAt: -1 });
+articleSchema.index({ articleId: 1 }, { sparse: true });
+
 const Article =
   mongoose.models.Article || mongoose.model('Article', articleSchema);
 

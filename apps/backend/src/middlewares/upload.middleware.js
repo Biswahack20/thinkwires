@@ -113,12 +113,14 @@ const avatarStorage = multer.diskStorage({
     cb(null, avatarDir);
   },
   filename: (req, file, cb) => {
+    const candidateId = req.candidate?._id || req.candidate?.id || 'cand';
+    const sanitizedCandidateId = String(candidateId).replace(/[^a-zA-Z0-9_-]/g, '').slice(0, 36);
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
     const rawExt = path.extname(file.originalname || '').toLowerCase();
     const safeExt = ['.jpg', '.jpeg', '.png', '.webp'].includes(rawExt)
       ? rawExt
       : '.jpg';
-    cb(null, `avatar-${uniqueSuffix}${safeExt}`);
+    cb(null, `avatar-${sanitizedCandidateId}-${uniqueSuffix}${safeExt}`);
   },
 });
 

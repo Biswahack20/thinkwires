@@ -86,6 +86,19 @@ export const isAllowedOrigin = (origin) => {
   ) {
     return true;
   }
+
+  // Allow official Thinkwires Vercel preview and deployment URLs
+  if (
+    /^https:\/\/thinkwires(-[a-z0-9-]+)*-tanjil-alams-projects\.vercel\.app$/i.test(
+      normalizedOrigin
+    ) ||
+    /^https:\/\/thinkwires-git-[a-z0-9-]+\.vercel\.app$/i.test(
+      normalizedOrigin
+    )
+  ) {
+    return true;
+  }
+
   const allowed = getAllowedOrigins();
   return allowed.includes(normalizedOrigin);
 };

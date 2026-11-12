@@ -155,6 +155,11 @@ candidateSchema.pre('save', function (next) {
   next();
 });
 
+candidateSchema.index({ resetPasswordToken: 1 }, { sparse: true });
+candidateSchema.index({ status: 1, createdAt: -1 });
+candidateSchema.index({ createdAt: -1 });
+candidateSchema.index({ resumeUrl: 1 });
+
 // Prevent re-compilation in development
 const Candidate =
   mongoose.models.Candidate || mongoose.model('Candidate', candidateSchema);

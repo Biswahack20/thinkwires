@@ -25,7 +25,7 @@ let currentPermanentStaffingData = permanentStaffingData
   ? { ...permanentStaffingData }
   : null;
 
-const adminAuthGuard = requireAuth(['superadmin', 'admin', 'cms_admin']);
+const cmsGuard = requireAuth(['superadmin', 'cms_admin']);
 
 const publicSubmissionRateLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
@@ -67,7 +67,7 @@ router.get('/payroll', async (req, res) => {
   res.json(result);
 });
 
-router.post('/payroll', adminAuthGuard, async (req, res) => {
+router.post('/payroll', cmsGuard, async (req, res) => {
   if (req.body.payrollData) {
     currentPayrollData = { ...currentPayrollData, ...req.body.payrollData };
     if (isMongoActive()) {
@@ -142,7 +142,7 @@ router.get('/eor', async (req, res) => {
   res.json(result);
 });
 
-router.post('/eor', adminAuthGuard, async (req, res) => {
+router.post('/eor', cmsGuard, async (req, res) => {
   if (req.body.eorData) {
     currentEorData = { ...currentEorData, ...req.body.eorData };
     if (isMongoActive()) {
@@ -220,7 +220,7 @@ router.get('/staff-augmentation', async (req, res) => {
   res.json(result);
 });
 
-router.post('/staff-augmentation', adminAuthGuard, async (req, res) => {
+router.post('/staff-augmentation', cmsGuard, async (req, res) => {
   if (req.body.staffAugmentationData) {
     currentStaffAugmentationData = {
       ...currentStaffAugmentationData,
@@ -309,7 +309,7 @@ router.get('/executive-search', async (req, res) => {
   res.json(result);
 });
 
-router.post('/permanent-staffing', adminAuthGuard, async (req, res) => {
+router.post('/permanent-staffing', cmsGuard, async (req, res) => {
   if (req.body.permanentStaffingData) {
     currentPermanentStaffingData = {
       ...currentPermanentStaffingData,

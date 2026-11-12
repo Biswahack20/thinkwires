@@ -56,6 +56,10 @@ const placementSchema = new mongoose.Schema(
   }
 );
 
+placementSchema.index({ candidateOrEmployeeName: 1, clientName: 1, assignmentStatus: 1 });
+placementSchema.index({ createdAt: -1 });
+placementSchema.index({ assignmentStatus: 1 });
+
 const Placement =
   mongoose.models.Placement || mongoose.model('Placement', placementSchema);
 

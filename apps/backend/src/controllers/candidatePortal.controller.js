@@ -245,8 +245,11 @@ export const applyForJob = async (req, res) => {
       experience,
       skills,
       coverLetter,
-      resumeUrl: clientResumeUrl,
+      resumeUrl: bodyResumeUrl,
+      clientResumeUrl: passedClientResumeUrl,
     } = req.body;
+
+    const clientResumeUrl = passedClientResumeUrl || bodyResumeUrl || '';
 
     if (!jobId || !jobTitle) {
       return res.status(400).json({
@@ -309,9 +312,26 @@ export const applyForJob = async (req, res) => {
       ? uploadedFile.filename
       : req.body.resumeFileName || resumeOriginalName || '';
     const resumePath = uploadedFile ? uploadedFile.path : '';
-    const finalResumeUrl = uploadedFile
-      ? `/uploads/resumes/${uploadedFile.filename}`
-      : clientResumeUrl || (candidate && candidate.resumeUrl) || '';
+    // BOLA-2 Remediation: Only allow genuine uploaded files or candidate's verified existing resume
+    let finalResumeUrl = '';
+    if (uploadedFile) {
+      finalResumeUrl = `/uploads/resumes/${uploadedFile.filename}`;
+    } else if (candidate && candidate.resumeUrl) {
+      if (clientResumeUrl && clientResumeUrl !== candidate.resumeUrl) {
+        return res.status(400).json({
+          success: false,
+          error:
+            'Invalid resume file reference. You can only attach your own previously uploaded resume.',
+        });
+      }
+      finalResumeUrl = candidate.resumeUrl;
+    } else if (clientResumeUrl) {
+      return res.status(400).json({
+        success: false,
+        error:
+          'No existing resume found on profile. Please upload a resume file.',
+      });
+    }
 
     // Parse skills array
     let parsedSkills = [];
@@ -465,8 +485,7 @@ export const applyForJob = async (req, res) => {
       }
 
       const deptPrefix = (department || 'ENG').substring(0, 3).toUpperCase();
-      const randomSuffix = Math.floor(100 + Math.random() * 900);
-      const generatedAnonymousCode = `TW-${deptPrefix}-${randomSuffix}`;
+      const generatedAnonymousCode = `TW-${deptPrefix}-${crypto.randomUUID()}`;
       const candidateAvatar = (candidate && candidate.avatarUrl) || '';
 
       const application = await JobApplication.create({
@@ -699,6 +718,7 @@ export const applyForJob = async (req, res) => {
         draftAnswers: {},
         status: 'Applied',
         stage: 'Application Received',
+        anonymousCode: `TW-${(department || 'ENG').substring(0, 3).toUpperCase()}-${crypto.randomUUID()}`,
         emailNotificationStatus: 'Sent',
         createdAt: new Date(),
       };
@@ -805,6 +825,14 @@ export const parseResumeForAutoFill = async (req, res) => {
 };
 
 /**
+ * Safe ObjectId validator helper to prevent unhandled CastError 500 crashes
+ */
+const isValidApplicationId = (id) =>
+  Boolean(id) &&
+  (mongoose.isValidObjectId(id) ||
+    (typeof id === 'string' && id.startsWith('app_')));
+
+/**
  * Retrieve Screening Assessment for a Specific Application
  * GET /api/candidate/applications/:applicationId/assessment
  */
@@ -812,6 +840,14 @@ export const getApplicationAssessment = async (req, res) => {
   try {
     const candidateId = req.candidate._id || req.candidate.id;
     const { applicationId } = req.params;
+
+    if (!isValidApplicationId(applicationId)) {
+      return res.status(400).json({
+        success: false,
+        error:
+          'Invalid application identifier format. Must be a valid 24-character hexadecimal ID.',
+      });
+    }
 
     let app;
     if (mongoose.connection.readyState === 1) {
@@ -893,6 +929,14 @@ export const submitApplicationAssessment = async (req, res) => {
     const candidateId = req.candidate._id || req.candidate.id;
     const { applicationId } = req.params;
     const { answers } = req.body;
+
+    if (!isValidApplicationId(applicationId)) {
+      return res.status(400).json({
+        success: false,
+        error:
+          'Invalid application identifier format. Must be a valid 24-character hexadecimal ID.',
+      });
+    }
 
     if (!requireProductionDb(res)) return;
 
@@ -1007,6 +1051,14 @@ export const saveAssessmentDraft = async (req, res) => {
       });
     }
 
+    if (!isValidApplicationId(applicationId)) {
+      return res.status(400).json({
+        success: false,
+        error:
+          'Invalid application identifier format. Must be a valid 24-character hexadecimal ID.',
+      });
+    }
+
     if (!requireProductionDb(res)) return;
 
     let app = null;
@@ -1069,6 +1121,14 @@ export const withdrawApplication = async (req, res) => {
   try {
     const candidateId = req.candidate._id || req.candidate.id;
     const { applicationId } = req.params;
+
+    if (!isValidApplicationId(applicationId)) {
+      return res.status(400).json({
+        success: false,
+        error:
+          'Invalid application identifier format. Must be a valid 24-character hexadecimal ID.',
+      });
+    }
 
     if (!requireProductionDb(res)) return;
 
@@ -1139,6 +1199,14 @@ export const getApplicationDossier = async (req, res) => {
   try {
     const candidateId = req.candidate?._id || req.candidate?.id;
     const { applicationId } = req.params;
+
+    if (!isValidApplicationId(applicationId)) {
+      return res.status(400).json({
+        success: false,
+        error:
+          'Invalid application identifier format. Must be a valid 24-character hexadecimal ID.',
+      });
+    }
 
     let application = null;
     if (mongoose.connection.readyState === 1) {
@@ -1288,16 +1356,17 @@ export const setAvatarPreset = async (req, res) => {
   try {
     const candidateId = req.candidate?._id || req.candidate?.id;
     if (!requireProductionDb(res)) return;
-    const { presetId, presetUrl } = req.body;
+    const { presetId } = req.body;
 
-    if (!presetUrl && !presetId) {
+    if (!presetId || typeof presetId !== 'string' || !/^[a-zA-Z0-9_-]{1,30}$/.test(presetId)) {
       return res.status(400).json({
         success: false,
-        error: 'Preset identifier is required.',
+        error:
+          'Valid preset identifier is required (alphanumeric, max 30 chars).',
       });
     }
 
-    const targetUrl = presetUrl || `/avatars/presets/${presetId}.svg`;
+    const targetUrl = `/avatars/presets/${presetId}.svg`;
 
     if (mongoose.connection.readyState === 1) {
       await Candidate.findByIdAndUpdate(candidateId, {
@@ -1429,13 +1498,15 @@ export const downloadResume = async (req, res) => {
     if (adminToken) {
       try {
         const decodedAdmin = verifyAdminToken(adminToken);
-        if (
-          decodedAdmin &&
-          decodedAdmin.email &&
-          ['superadmin', 'admin', 'cms_admin'].includes(
-            (decodedAdmin.role || '').toLowerCase()
-          )
-        ) {
+        const role = (decodedAdmin?.role || '').toLowerCase();
+        if (role === 'cms_admin') {
+          return res.status(403).json({
+            success: false,
+            error:
+              'Access denied: CMS Administrators are restricted from viewing candidate resumes (RBAC_CMS_ADMIN_RESTRICTED).',
+          });
+        }
+        if (['superadmin', 'admin'].includes(role)) {
           isAdmin = true;
         }
       } catch {
@@ -1457,14 +1528,15 @@ export const downloadResume = async (req, res) => {
       const candidateId = candidatePrincipal._id || candidatePrincipal.id;
 
       if (mongoose.connection.readyState === 1) {
+        const targetResumePath = `/uploads/resumes/${safeFilename}`;
         const [candidateDoc, appDoc] = await Promise.all([
           Candidate.findOne({
             _id: candidateId,
-            resumeUrl: { $regex: safeFilename },
+            resumeUrl: { $in: [targetResumePath, safeFilename] },
           }).select('_id'),
           JobApplication.findOne({
             candidate: candidateId,
-            resumeUrl: { $regex: safeFilename },
+            resumeUrl: { $in: [targetResumePath, safeFilename] },
           }).select('_id'),
         ]);
 

@@ -39,6 +39,21 @@ const publicSubmissionRateLimiter = rateLimit({
   },
 });
 
+const benchDossierLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 30,
+  standardHeaders: true,
+  legacyHeaders: false,
+  validate: {
+    xForwardedForHeader: false,
+    forwardedHeader: false,
+  },
+  message: {
+    success: false,
+    error: 'Too many talent dossier requests. Please wait 15 minutes.',
+  },
+});
+
 const getPageDataBySlug = async (slug, fallback) => {
   if (isMongoActive()) {
     try {
@@ -562,7 +577,7 @@ router.get('/bench/talents/:id', async (req, res) => {
   }
 });
 
-router.get('/bench/dossier/:id', async (req, res) => {
+router.get('/bench/dossier/:id', benchDossierLimiter, async (req, res) => {
   try {
     const { id } = req.params;
 
@@ -572,6 +587,15 @@ router.get('/bench/dossier/:id', async (req, res) => {
         success: false,
         error:
           'Invalid bench identifier format. Please use standard candidate code.',
+      });
+    }
+
+    // Validate bench code format matches either legacy seed format (e.g. TW-BENCH-902) or UUID v4 format
+    const isValidBenchCode = /^TW-[A-Za-z0-9_-]{2,20}-([0-9]{2,4}|[a-f0-9-]{36})$/i.test(id);
+    if (!isValidBenchCode) {
+      return res.status(400).json({
+        success: false,
+        error: 'Malformed bench code format.',
       });
     }
 

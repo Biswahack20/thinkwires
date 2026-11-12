@@ -1,14 +1,16 @@
 import express from 'express';
 import { getProfile, updateProfile } from '../controllers/user.js';
-import { authenticateCandidateOrAdmin } from '../middlewares/auth.middleware.js';
+import requireAuth from '../middlewares/auth.middleware.js';
 
 const router = express.Router();
 
 /**
- * User Profile Management Routes
- * Protected by authentication middleware (JWT cookie or Bearer header)
+ * Staff User Profile Management Routes
+ * Protected strictly for administrative team members (BOLA-14)
  */
-router.get('/profile', authenticateCandidateOrAdmin, getProfile);
-router.put('/profile', authenticateCandidateOrAdmin, updateProfile);
+const staffGuard = requireAuth(['superadmin', 'admin', 'cms_admin']);
+
+router.get('/profile', staffGuard, getProfile);
+router.put('/profile', staffGuard, updateProfile);
 
 export default router;

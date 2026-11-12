@@ -18,7 +18,7 @@ let currentIndustriesPageData = industriesPageData
   ? { ...industriesPageData }
   : {};
 
-const adminAuthGuard = requireAuth(['superadmin', 'admin', 'cms_admin']);
+const cmsGuard = requireAuth(['superadmin', 'cms_admin']);
 const getMockData = () => loadSeedJson('mockData.json', mockData);
 
 const getHomeSection = async (sectionKey, fallbackValue) => {
@@ -45,7 +45,7 @@ router.get('/industries', async (req, res) => {
   const result = await getHomeSection('industries', industries);
   res.json(result);
 });
-router.post('/industries', adminAuthGuard, async (req, res) => {
+router.post('/industries', cmsGuard, async (req, res) => {
   if (Array.isArray(req.body.industries)) {
     industries = req.body.industries;
     if (isMongoActive()) {
@@ -101,7 +101,7 @@ router.get('/sector-catalog', async (req, res) => {
   res.json(sectors);
 });
 
-router.post('/industries-page', adminAuthGuard, async (req, res) => {
+router.post('/industries-page', cmsGuard, async (req, res) => {
   if (req.body.industriesPageData) {
     currentIndustriesPageData = {
       ...currentIndustriesPageData,
@@ -153,7 +153,7 @@ router.get('/industries/:slug', async (req, res) => {
   res.json({ dynamic: false, data: fallback });
 });
 
-router.post('/industries/:slug', adminAuthGuard, async (req, res) => {
+router.post('/industries/:slug', cmsGuard, async (req, res) => {
   const { slug } = req.params;
   const pageSlug = `industries/${slug}`;
   const industryData = req.body.industryData || req.body;

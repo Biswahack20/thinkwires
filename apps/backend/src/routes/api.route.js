@@ -83,8 +83,9 @@ let currentCandidatePortalData = candidatePortalData
 
 const router = express.Router();
 
-// Strict RBAC guard for mutating operations on CMS/site collections
-const adminAuthGuard = requireAuth(['superadmin', 'admin', 'cms_admin']);
+// Strict RBAC guards separating manpower recruitment operations from CMS content publishing
+const manpowerGuard = requireAuth(['superadmin', 'admin']);
+const cmsGuard = requireAuth(['superadmin', 'cms_admin']);
 
 // Rate limiter for public lead generation / consultation submissions to prevent spam and DoS
 const publicSubmissionRateLimiter = rateLimit({
@@ -453,7 +454,7 @@ router.get('/openings', async (req, res) => {
   res.json(filtered);
 });
 
-router.post('/openings', adminAuthGuard, async (req, res) => {
+router.post('/openings', manpowerGuard, async (req, res) => {
   if (Array.isArray(req.body.openings)) {
     openings = req.body.openings;
     if (isMongoActive()) {
@@ -480,7 +481,7 @@ router.get('/stats', async (req, res) => {
   const result = await getHomeSection('stats', stats);
   res.json(result);
 });
-router.post('/stats', adminAuthGuard, async (req, res) => {
+router.post('/stats', cmsGuard, async (req, res) => {
   if (req.body.stats) {
     stats = { ...stats, ...req.body.stats };
     if (isMongoActive()) {
@@ -506,7 +507,7 @@ router.get('/process', async (req, res) => {
   const result = await getHomeSection('process', processSteps);
   res.json(result);
 });
-router.post('/process', adminAuthGuard, async (req, res) => {
+router.post('/process', cmsGuard, async (req, res) => {
   if (Array.isArray(req.body.processSteps)) {
     processSteps = req.body.processSteps;
     if (isMongoActive()) {
@@ -534,7 +535,7 @@ router.get('/capabilities', async (req, res) => {
   const result = await getHomeSection('capabilities', capabilities);
   res.json(result);
 });
-router.post('/capabilities', adminAuthGuard, async (req, res) => {
+router.post('/capabilities', cmsGuard, async (req, res) => {
   if (Array.isArray(req.body.capabilities)) {
     capabilities = req.body.capabilities;
     if (isMongoActive()) {
@@ -559,7 +560,7 @@ router.get('/reports', async (req, res) => {
   const result = await getHomeSection('reports', reports);
   res.json(result);
 });
-router.post('/reports', adminAuthGuard, async (req, res) => {
+router.post('/reports', cmsGuard, async (req, res) => {
   if (Array.isArray(req.body.reports)) {
     reports = req.body.reports;
     if (isMongoActive()) {

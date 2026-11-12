@@ -13,7 +13,7 @@ const isMongoActive = () => mongoose.connection.readyState === 1;
 const mockData = loadSeedJson('mockData.json', {}) || {};
 const { contactData = null, aboutData = null } = mockData;
 
-const adminAuthGuard = requireAuth(['superadmin', 'admin', 'cms_admin']);
+const cmsGuard = requireAuth(['superadmin', 'cms_admin']);
 
 const publicSubmissionRateLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
@@ -115,7 +115,7 @@ router.get('/contact', async (req, res) => {
 });
 
 // Update office locations dynamically (Admin Only)
-router.post('/contact/offices', adminAuthGuard, async (req, res) => {
+router.post('/contact/offices', cmsGuard, async (req, res) => {
   if (Array.isArray(req.body.officeLocations)) {
     contactPageData.officeLocations = req.body.officeLocations;
     if (isMongoActive()) {
@@ -144,7 +144,7 @@ router.post('/contact/offices', adminAuthGuard, async (req, res) => {
 });
 
 // Update contact channels dynamically (Admin Only)
-router.post('/contact/channels', adminAuthGuard, async (req, res) => {
+router.post('/contact/channels', cmsGuard, async (req, res) => {
   if (Array.isArray(req.body.channels)) {
     contactPageData.channels = req.body.channels;
     if (isMongoActive()) {
@@ -168,7 +168,7 @@ router.post('/contact/channels', adminAuthGuard, async (req, res) => {
 });
 
 // Update FAQ dynamically (Admin Only)
-router.post('/contact/faq', adminAuthGuard, async (req, res) => {
+router.post('/contact/faq', cmsGuard, async (req, res) => {
   if (Array.isArray(req.body.faq)) {
     contactPageData.faq = req.body.faq;
     if (isMongoActive()) {

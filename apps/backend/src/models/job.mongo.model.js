@@ -144,6 +144,11 @@ const jobRequirementSchema = new mongoose.Schema(
   }
 );
 
+jobRequirementSchema.index({ isRequisition: 1, status: 1, createdAt: -1 });
+jobRequirementSchema.index({ status: 1, isRequisition: 1, createdAt: -1 });
+jobRequirementSchema.index({ title: 1, client: 1 });
+jobRequirementSchema.index({ jobId: 1 });
+
 const JobRequirement =
   mongoose.models.JobRequirement ||
   mongoose.model('JobRequirement', jobRequirementSchema);

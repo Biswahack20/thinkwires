@@ -124,6 +124,24 @@ export const disconnectMongoDB = async () => {
 };
 
 /**
+ * Synchronize compound ESR and partial unique indexes across all registered Mongoose models
+ */
+export const synchronizeIndexes = async () => {
+  if (mongoose.connection.readyState !== 1) return;
+  try {
+    const models = Object.values(mongoose.models);
+    for (const model of models) {
+      if (model && typeof model.syncIndexes === 'function') {
+        await model.syncIndexes();
+      }
+    }
+    console.log('[MongoDB] Production compound indexes synchronized successfully.');
+  } catch (err) {
+    console.warn('[MongoDB] Index synchronization notice:', err.message);
+  }
+};
+
+/**
  * Database Architecture Declaration (Issue #186)
  * MongoDB (Mongoose) is formally designated as the CANONICAL PRIMARY DOCUMENT STORE
  * (Source of Truth) for all core business entities.
