@@ -8,6 +8,7 @@ import Footer from '../components/common/Footer';
 import BlogHero from '../components/BlogComponents/BlogHero';
 import BlogFilters from '../components/BlogComponents/BlogFilters';
 import { CloseIcon, StarIcon } from '../admin/AdminIcons';
+import API_BASE from '../utils/apiConfig';
 
 import {
   setSearchQuery,
@@ -66,6 +67,74 @@ const CATEGORY_PARAM_MAP = {
   'case studies': 'Case Studies',
 };
 
+// Helper to parse and render paragraphs & markdown images: ![caption](url)
+const renderArticleContent = (content) => {
+  if (!content) return null;
+  const blocks = String(content).split(/\n\n+/).filter((p) => p.trim() !== '');
+
+  return blocks.map((block, idx) => {
+    const trimmed = block.trim();
+    const imgMatch = trimmed.match(/^!\[(.*?)\]\((.*?)\)$/);
+    if (imgMatch) {
+      const [, alt, src] = imgMatch;
+      return (
+        <figure
+          key={idx}
+          style={{
+            margin: '1.5rem 0',
+            textAlign: 'center',
+            backgroundColor: '#F8FAFC',
+            padding: '0.75rem',
+            borderRadius: '12px',
+          }}
+        >
+          <img
+            src={src}
+            alt={alt || 'Blog illustration'}
+            style={{
+              maxWidth: '100%',
+              borderRadius: '8px',
+              boxShadow: '0 4px 12px rgba(0,0,0,0.06)',
+              maxHeight: '450px',
+              objectFit: 'contain',
+              display: 'block',
+              margin: '0 auto',
+            }}
+            onError={(e) => {
+              e.target.style.display = 'none';
+            }}
+          />
+          {alt && (
+            <figcaption
+              style={{
+                fontSize: '0.8rem',
+                color: 'var(--color-outline)',
+                marginTop: '0.5rem',
+                fontStyle: 'italic',
+              }}
+            >
+              {alt}
+            </figcaption>
+          )}
+        </figure>
+      );
+    }
+    return (
+      <p
+        key={idx}
+        style={{
+          lineHeight: '1.8',
+          color: 'var(--color-on-surface-variant)',
+          marginBottom: '1rem',
+          whiteSpace: 'pre-line',
+        }}
+      >
+        {block}
+      </p>
+    );
+  });
+};
+
 const BlogPage = () => {
   const dispatch = useDispatch();
   const [searchParams] = useSearchParams();
@@ -83,6 +152,31 @@ const BlogPage = () => {
   } = useSelector((state) => state.blog);
 
   const [activeArticleModal, setActiveArticleModal] = useState(null);
+
+  const handleArticleClick = async (art) => {
+    if (!art) return;
+    setActiveArticleModal(art);
+    // If body or content isn't loaded (e.g. pruned in listing endpoint), fetch full article
+    if (!art.body && !art.content) {
+      try {
+        const id = art.slug || art.articleId || art.id || art._id;
+        const res = await fetch(`${API_BASE}/articles/${encodeURIComponent(id)}`);
+        if (res.ok) {
+          const fullArt = await res.json();
+          setActiveArticleModal((current) =>
+            current &&
+            (current.id === art.id ||
+              current.slug === art.slug ||
+              current._id === art._id)
+              ? { ...current, ...fullArt }
+              : current
+          );
+        }
+      } catch {
+        // Fallback silently to existing preview
+      }
+    }
+  };
 
   // Handle ?category= URL param — map to a known BlogFilters key
   useEffect(() => {
@@ -111,7 +205,7 @@ const BlogPage = () => {
     );
     if (target) {
       // Defer to avoid synchronous setState-in-effect lint warning
-      setTimeout(() => setActiveArticleModal(target), 0);
+      setTimeout(() => handleArticleClick(target), 0);
     } else if (
       featuredArticle &&
       (articleParam === 'featured-flagship-1' ||
@@ -119,7 +213,7 @@ const BlogPage = () => {
         featuredArticle.slug === articleParam ||
         featuredArticle.title?.toLowerCase().includes(articleParam.toLowerCase()))
     ) {
-      setTimeout(() => setActiveArticleModal(featuredArticle), 0);
+      setTimeout(() => handleArticleClick(featuredArticle), 0);
     }
   }, [searchParams, articles, featuredArticle]);
 
@@ -209,7 +303,7 @@ const BlogPage = () => {
             article={featuredArticle}
             isBookmarked={bookmarkedArticles.includes(featuredArticle?.id)}
             onBookmarkToggle={(id) => dispatch(toggleBookmark(id))}
-            onReadClick={(art) => setActiveArticleModal(art)}
+            onReadClick={handleArticleClick}
           />
 
           {/* 3. Figma Category Filter Bar */}
@@ -229,7 +323,7 @@ const BlogPage = () => {
               isLoading={status === 'loading'}
               bookmarkedArticles={bookmarkedArticles}
               onBookmarkToggle={(id) => dispatch(toggleBookmark(id))}
-              onReadClick={(art) => setActiveArticleModal(art)}
+              onReadClick={handleArticleClick}
               onResetFilters={() => {
                 dispatch(setSearchQuery(''));
                 dispatch(setSelectedCategory('all'));
@@ -295,23 +389,35 @@ const BlogPage = () => {
                 )}
                 <div>
                   <strong>{activeArticleModal.author?.name}</strong> •{' '}
-                  {activeArticleModal.subCategory}
+                  {activeArticleModal.author?.role || activeArticleModal.subCategory || 'Contributor'}
                   <div
                     style={{
                       fontSize: '0.8rem',
                       color: 'var(--color-outline)',
                     }}
                   >
-                    Published on {activeArticleModal.publishedAt} •{' '}
-                    {activeArticleModal.readTime}
+                    Published on {activeArticleModal.publishedAt ? new Date(activeArticleModal.publishedAt).toLocaleDateString() : 'Recent'} •{' '}
+                    {activeArticleModal.readTime || '4 min read'}
                   </div>
                 </div>
               </div>
             </div>
+
+            {/* Featured Image Banner */}
+            {activeArticleModal.featuredImageUrl && (
+              <div style={{ marginBottom: '1.5rem', borderRadius: '12px', overflow: 'hidden' }}>
+                <img
+                  src={activeArticleModal.featuredImageUrl}
+                  alt={activeArticleModal.title}
+                  style={{ width: '100%', maxHeight: '340px', objectFit: 'cover', display: 'block' }}
+                />
+              </div>
+            )}
+
             <div className="BlogPage-modalBody">
-              {activeArticleModal.content ? (
+              {activeArticleModal.body || activeArticleModal.content ? (
                 <>
-                  {activeArticleModal.excerpt && (
+                  {(activeArticleModal.excerpt || activeArticleModal.summary) && (
                     <p
                       style={{
                         fontSize: '1.1rem',
@@ -321,38 +427,12 @@ const BlogPage = () => {
                         marginBottom: '1.5rem',
                       }}
                     >
-                      {activeArticleModal.excerpt}
+                      {activeArticleModal.excerpt || activeArticleModal.summary}
                     </p>
                   )}
-                  {typeof activeArticleModal.content === 'string' ? (
-                    activeArticleModal.content
-                      .split('\n\n')
-                      .filter((p) => p.trim() !== '')
-                      .map((paragraph, idx) => (
-                        <p
-                          key={idx}
-                          style={{
-                            lineHeight: '1.8',
-                            color: 'var(--color-on-surface-variant)',
-                            marginBottom: '1rem',
-                            whiteSpace: 'pre-line',
-                          }}
-                        >
-                          {paragraph}
-                        </p>
-                      ))
-                  ) : (
-                    <p
-                      style={{
-                        lineHeight: '1.8',
-                        color: 'var(--color-on-surface-variant)',
-                      }}
-                    >
-                      {String(activeArticleModal.content)}
-                    </p>
-                  )}
+                  {renderArticleContent(activeArticleModal.body || activeArticleModal.content)}
                 </>
-              ) : activeArticleModal.excerpt ? (
+              ) : (activeArticleModal.excerpt || activeArticleModal.summary) ? (
                 <p
                   style={{
                     lineHeight: '1.8',
@@ -361,7 +441,7 @@ const BlogPage = () => {
                     whiteSpace: 'pre-line',
                   }}
                 >
-                  {activeArticleModal.excerpt}
+                  {activeArticleModal.excerpt || activeArticleModal.summary}
                 </p>
               ) : (
                 <p

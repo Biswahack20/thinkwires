@@ -2654,19 +2654,24 @@ export const createCmsArticle = async (req, res) => {
             .filter(Boolean)
         : ['Staffing', 'Tech Insights'];
 
+    const authorObj = typeof author === 'object' && author !== null ? author : {};
+    const resolvedAuthorName = authorObj.name || req.body.authorName || (typeof author === 'string' ? author : '') || req.user?.name || 'Thinkwires Editorial';
+    const resolvedAuthorRole = authorObj.role || req.body.authorRole || 'Chief Technology Advisor';
+    const resolvedAuthorAvatar = authorObj.avatar || authorObj.imageUrl || req.body.authorAvatar || '';
+    const resolvedAuthorInitials = authorObj.initials || resolvedAuthorName.split(' ').map((n) => n[0]).join('').slice(0, 2).toUpperCase();
+
     const newArt = {
       id: `art_${Date.now()}`,
       title,
       slug: cleanSlug,
       summary,
       body,
-      author:
-        typeof author === 'object'
-          ? author
-          : {
-              name: author || req.user?.name || 'Thinkwires Editorial',
-              role: 'Staff Contributor',
-            },
+      author: {
+        name: resolvedAuthorName,
+        role: resolvedAuthorRole,
+        avatar: resolvedAuthorAvatar,
+        initials: resolvedAuthorInitials,
+      },
       category: category || 'Industry Insights',
       featuredImageUrl: featuredImageUrl || '/images/about-philosophy.jpg',
       tags: tagsArray,
@@ -2725,6 +2730,51 @@ export const updateCmsArticle = async (req, res) => {
         .filter(Boolean);
     }
 
+    if (
+      updates.author !== undefined ||
+      updates.authorName !== undefined ||
+      updates.authorRole !== undefined ||
+      updates.authorAvatar !== undefined
+    ) {
+      const currentAuthor = inMemoryData.articles[idx].author || {};
+      const authorObj =
+        typeof updates.author === 'object' && updates.author !== null
+          ? updates.author
+          : {};
+      const resolvedName =
+        authorObj.name ||
+        updates.authorName ||
+        (typeof updates.author === 'string' ? updates.author : '') ||
+        currentAuthor.name ||
+        'Thinkwires Editorial';
+      const resolvedRole =
+        authorObj.role ||
+        updates.authorRole ||
+        currentAuthor.role ||
+        'Chief Technology Advisor';
+      const resolvedAvatar =
+        authorObj.avatar !== undefined
+          ? authorObj.avatar
+          : updates.authorAvatar !== undefined
+            ? updates.authorAvatar
+            : currentAuthor.avatar || '';
+      const resolvedInitials =
+        authorObj.initials ||
+        resolvedName
+          .split(' ')
+          .map((n) => n[0])
+          .join('')
+          .slice(0, 2)
+          .toUpperCase();
+
+      updates.author = {
+        name: resolvedName,
+        role: resolvedRole,
+        avatar: resolvedAvatar,
+        initials: resolvedInitials,
+      };
+    }
+
     updates.updatedAt = new Date().toISOString();
     if (
       updates.status === 'published' &&
@@ -2736,7 +2786,9 @@ export const updateCmsArticle = async (req, res) => {
     inMemoryData.articles[idx] = { ...inMemoryData.articles[idx], ...updates };
 
     if (isMongoActive()) {
-      const query = mongoose.Types.ObjectId.isValid(id) ? { _id: id } : { id };
+      const query = mongoose.Types.ObjectId.isValid(id)
+        ? { _id: id }
+        : { $or: [{ id }, { articleId: id }, { slug: id }] };
       await Article.findOneAndUpdate(query, updates, { new: true });
     }
 

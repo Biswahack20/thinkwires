@@ -9,6 +9,77 @@ import {
   AlertCircleIcon,
 } from './AdminIcons';
 
+// Helper to render article body paragraphs and markdown images in preview modal
+const renderArticleContent = (content) => {
+  if (!content) return null;
+  const blocks = String(content)
+    .split(/\n\n+/)
+    .filter((p) => p.trim() !== '');
+
+  return blocks.map((block, idx) => {
+    const trimmed = block.trim();
+    const imgMatch = trimmed.match(/^!\[(.*?)\]\((.*?)\)$/);
+    if (imgMatch) {
+      const [, alt, src] = imgMatch;
+      return (
+        <figure
+          key={idx}
+          style={{
+            margin: '1.25rem 0',
+            textAlign: 'center',
+            backgroundColor: '#F8FAFC',
+            padding: '0.5rem',
+            borderRadius: '8px',
+          }}
+        >
+          <img
+            src={src}
+            alt={alt || 'Blog visual'}
+            style={{
+              maxWidth: '100%',
+              borderRadius: '6px',
+              border: '1px solid #E2E8F0',
+              maxHeight: '360px',
+              objectFit: 'contain',
+              display: 'block',
+              margin: '0 auto',
+            }}
+            onError={(e) => {
+              e.target.style.display = 'none';
+            }}
+          />
+          {alt && (
+            <figcaption
+              style={{
+                fontSize: '0.75rem',
+                color: '#64748B',
+                marginTop: '0.35rem',
+                fontStyle: 'italic',
+              }}
+            >
+              {alt}
+            </figcaption>
+          )}
+        </figure>
+      );
+    }
+    return (
+      <p
+        key={idx}
+        style={{
+          lineHeight: '1.7',
+          fontSize: '0.9rem',
+          color: '#172033',
+          marginBottom: '0.85rem',
+          whiteSpace: 'pre-line',
+        }}
+      >
+        {block}
+      </p>
+    );
+  });
+};
+
 const BlogManager = () => {
   const { showToast, activeRole } = useOutletContext();
   const [articles, setArticles] = useState([]);
@@ -29,6 +100,7 @@ const BlogManager = () => {
     body: '',
     authorName: 'Biswarupa Swain',
     authorRole: 'Chief Technology Advisor',
+    authorAvatar: '',
     category: 'Industry Insights',
     featuredImageUrl: '/assets/blog_ai_gcc_dashboard.jpg',
     tags: 'GCC, Staffing, Tech Hubs',
@@ -85,6 +157,7 @@ const BlogManager = () => {
       body: '',
       authorName: 'Biswarupa Swain',
       authorRole: 'Chief Technology Advisor',
+      authorAvatar: '',
       category: 'Industry Insights',
       featuredImageUrl: '/assets/blog_ai_gcc_dashboard.jpg',
       tags: 'GCC, Staffing, Enterprise Innovation',
@@ -103,10 +176,12 @@ const BlogManager = () => {
     setFormData({
       title: art.title || '',
       slug: art.slug || '',
-      summary: art.summary || '',
-      body: art.body || '',
+      summary: art.summary || art.excerpt || '',
+      body: art.body || art.content || '',
       authorName: art.author?.name || 'Thinkwires Editorial',
       authorRole: art.author?.role || 'Staff Contributor',
+      authorAvatar:
+        art.author?.avatar || art.author?.imageUrl || art.authorAvatar || '',
       category: art.category || 'Industry Insights',
       featuredImageUrl:
         art.featuredImageUrl || '/assets/blog_ai_gcc_dashboard.jpg',
@@ -142,12 +217,24 @@ const BlogManager = () => {
       return;
     }
 
+    const resolvedInitials = formData.authorName
+      ? formData.authorName
+          .split(' ')
+          .map((n) => n[0])
+          .join('')
+          .slice(0, 2)
+          .toUpperCase()
+      : 'TW';
+
     const payload = {
       ...formData,
       author: {
         name: formData.authorName,
         role: formData.authorRole,
+        avatar: formData.authorAvatar,
+        initials: resolvedInitials,
       },
+      authorAvatar: formData.authorAvatar,
       tags: formData.tags
         .split(',')
         .map((t) => t.trim())
@@ -267,15 +354,107 @@ const BlogManager = () => {
                 articles.map((art) => (
                   <tr key={art.id || art._id}>
                     <td>
-                      <div style={{ fontWeight: 600 }}>{art.title}</div>
-                      <div style={{ fontSize: '0.72rem', color: '#64748B' }}>
-                        /{art.slug}
+                      <div
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '0.65rem',
+                        }}
+                      >
+                        {art.featuredImageUrl && (
+                          <img
+                            src={art.featuredImageUrl}
+                            alt=""
+                            style={{
+                              width: '38px',
+                              height: '28px',
+                              borderRadius: '4px',
+                              objectFit: 'cover',
+                              border: '1px solid #E2E8F0',
+                              flexShrink: 0,
+                            }}
+                            onError={(e) => {
+                              e.target.style.display = 'none';
+                            }}
+                          />
+                        )}
+                        <div>
+                          <div style={{ fontWeight: 600 }}>{art.title}</div>
+                          <div
+                            style={{
+                              fontSize: '0.72rem',
+                              color: '#64748B',
+                            }}
+                          >
+                            /{art.slug}
+                          </div>
+                        </div>
                       </div>
                     </td>
                     <td>
-                      <div>{art.author?.name || 'Staff'}</div>
-                      <div style={{ fontSize: '0.7rem', color: '#64748B' }}>
-                        {art.author?.role}
+                      <div
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: '0.5rem',
+                        }}
+                      >
+                        {art.author?.avatar ? (
+                          <img
+                            src={art.author.avatar}
+                            alt={art.author.name}
+                            style={{
+                              width: '28px',
+                              height: '28px',
+                              borderRadius: '50%',
+                              objectFit: 'cover',
+                              border: '1px solid #CBD5E1',
+                              flexShrink: 0,
+                            }}
+                            onError={(e) => {
+                              e.target.style.display = 'none';
+                            }}
+                          />
+                        ) : (
+                          <div
+                            style={{
+                              width: '28px',
+                              height: '28px',
+                              borderRadius: '50%',
+                              backgroundColor: '#E2E8F0',
+                              color: '#475569',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              fontSize: '0.65rem',
+                              fontWeight: 600,
+                              flexShrink: 0,
+                            }}
+                          >
+                            {art.author?.initials ||
+                              (art.author?.name
+                                ? art.author.name
+                                    .split(' ')
+                                    .map((n) => n[0])
+                                    .join('')
+                                    .slice(0, 2)
+                                    .toUpperCase()
+                                : 'TW')}
+                          </div>
+                        )}
+                        <div>
+                          <div style={{ fontWeight: 500 }}>
+                            {art.author?.name || 'Staff'}
+                          </div>
+                          <div
+                            style={{
+                              fontSize: '0.7rem',
+                              color: '#64748B',
+                            }}
+                          >
+                            {art.author?.role}
+                          </div>
+                        </div>
                       </div>
                     </td>
                     <td>
@@ -384,43 +563,104 @@ const BlogManager = () => {
             </div>
 
             <div className="tw-modal-body">
+              {previewArticle.featuredImageUrl && (
+                <div
+                  style={{
+                    marginBottom: '1rem',
+                    borderRadius: '8px',
+                    overflow: 'hidden',
+                  }}
+                >
+                  <img
+                    src={previewArticle.featuredImageUrl}
+                    alt={previewArticle.title}
+                    style={{
+                      width: '100%',
+                      maxHeight: '240px',
+                      objectFit: 'cover',
+                      display: 'block',
+                    }}
+                  />
+                </div>
+              )}
+
               <div
                 style={{
                   display: 'flex',
                   alignItems: 'center',
-                  gap: '0.5rem',
+                  gap: '0.65rem',
                   marginBottom: '1rem',
-                  fontSize: '0.8rem',
+                  fontSize: '0.82rem',
                   color: '#64748B',
                 }}
               >
-                <strong>By {previewArticle.author?.name}</strong> •{' '}
-                {previewArticle.author?.role}
+                {previewArticle.author?.avatar ? (
+                  <img
+                    src={previewArticle.author.avatar}
+                    alt={previewArticle.author.name}
+                    style={{
+                      width: '32px',
+                      height: '32px',
+                      borderRadius: '50%',
+                      objectFit: 'cover',
+                      border: '1px solid #CBD5E1',
+                    }}
+                  />
+                ) : (
+                  <div
+                    style={{
+                      width: '32px',
+                      height: '32px',
+                      borderRadius: '50%',
+                      backgroundColor: '#E2E8F0',
+                      color: '#475569',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontWeight: 600,
+                      fontSize: '0.72rem',
+                    }}
+                  >
+                    {previewArticle.author?.initials ||
+                      (previewArticle.author?.name
+                        ? previewArticle.author.name
+                            .split(' ')
+                            .map((n) => n[0])
+                            .join('')
+                            .slice(0, 2)
+                            .toUpperCase()
+                        : 'TW')}
+                  </div>
+                )}
+                <div>
+                  <strong>By {previewArticle.author?.name || 'Staff'}</strong> •{' '}
+                  {previewArticle.author?.role || 'Staff Contributor'}
+                </div>
               </div>
 
-              <div
-                style={{
-                  fontStyle: 'italic',
-                  padding: '1rem',
-                  backgroundColor: '#F8FAFC',
-                  borderRadius: '8px',
-                  marginBottom: '1rem',
-                  borderLeft: '4px solid #008F68',
-                  fontSize: '0.88rem',
-                  color: '#334155',
-                }}
-              >
-                {previewArticle.summary}
-              </div>
+              {(previewArticle.summary || previewArticle.excerpt) && (
+                <div
+                  style={{
+                    fontStyle: 'italic',
+                    padding: '0.85rem 1rem',
+                    backgroundColor: '#F8FAFC',
+                    borderRadius: '8px',
+                    marginBottom: '1rem',
+                    borderLeft: '4px solid #008F68',
+                    fontSize: '0.88rem',
+                    color: '#334155',
+                  }}
+                >
+                  {previewArticle.summary || previewArticle.excerpt}
+                </div>
+              )}
 
-              <div
-                style={{
-                  lineHeight: '1.7',
-                  fontSize: '0.9rem',
-                  color: '#172033',
-                }}
-              >
-                {previewArticle.body}
+              <div style={{ color: '#172033' }}>
+                {renderArticleContent(
+                  previewArticle.body ||
+                    previewArticle.content ||
+                    previewArticle.summary
+                )}
               </div>
             </div>
 
@@ -526,8 +766,103 @@ const BlogManager = () => {
                       onChange={(e) =>
                         setFormData({ ...formData, authorName: e.target.value })
                       }
+                      placeholder="e.g. Biswarupa Swain"
                     />
                   </div>
+                  <div className="tw-form-group">
+                    <label className="tw-form-label">Author Role / Designation</label>
+                    <input
+                      type="text"
+                      className="tw-form-input"
+                      value={formData.authorRole}
+                      onChange={(e) =>
+                        setFormData({ ...formData, authorRole: e.target.value })
+                      }
+                      placeholder="e.g. Chief Technology Advisor"
+                    />
+                  </div>
+                </div>
+
+                <div className="tw-form-group">
+                  <label className="tw-form-label">
+                    Author Image / Avatar URL
+                  </label>
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.75rem',
+                    }}
+                  >
+                    <input
+                      type="text"
+                      className="tw-form-input"
+                      value={formData.authorAvatar}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          authorAvatar: e.target.value,
+                        })
+                      }
+                      placeholder="https://... or /assets/authors/avatar.jpg"
+                      style={{ flex: 1 }}
+                    />
+                    {formData.authorAvatar ? (
+                      <img
+                        src={formData.authorAvatar}
+                        alt="Author Preview"
+                        style={{
+                          width: '38px',
+                          height: '38px',
+                          borderRadius: '50%',
+                          objectFit: 'cover',
+                          border: '2px solid #E2E8F0',
+                          flexShrink: 0,
+                        }}
+                        onError={(e) => {
+                          e.target.style.display = 'none';
+                        }}
+                      />
+                    ) : (
+                      <div
+                        style={{
+                          width: '38px',
+                          height: '38px',
+                          borderRadius: '50%',
+                          backgroundColor: '#E2E8F0',
+                          color: '#475569',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          fontSize: '0.75rem',
+                          fontWeight: 600,
+                          flexShrink: 0,
+                        }}
+                      >
+                        {formData.authorName
+                          ? formData.authorName
+                              .split(' ')
+                              .map((n) => n[0])
+                              .join('')
+                              .slice(0, 2)
+                              .toUpperCase()
+                          : 'TW'}
+                      </div>
+                    )}
+                  </div>
+                  <span
+                    style={{
+                      fontSize: '0.72rem',
+                      color: '#64748B',
+                      marginTop: '0.25rem',
+                      display: 'block',
+                    }}
+                  >
+                    Direct image URL for the author profile picture (displayed on blog cards and reader modal).
+                  </span>
+                </div>
+
+                <div className="tw-form-row">
                   <div className="tw-form-group">
                     <label className="tw-form-label">Publication Status</label>
                     <select
@@ -540,6 +875,20 @@ const BlogManager = () => {
                       <option value="published">Published</option>
                       <option value="draft">Draft</option>
                     </select>
+                  </div>
+                  <div className="tw-form-group">
+                    <label className="tw-form-label">
+                      Tags (comma separated)
+                    </label>
+                    <input
+                      type="text"
+                      className="tw-form-input"
+                      value={formData.tags}
+                      onChange={(e) =>
+                        setFormData({ ...formData, tags: e.target.value })
+                      }
+                      placeholder="GCC, India Tech, Staffing"
+                    />
                   </div>
                 </div>
 
@@ -560,22 +909,80 @@ const BlogManager = () => {
                 </div>
 
                 <div className="tw-form-group">
-                  <label className="tw-form-label">Full Article Body *</label>
+                  <div
+                    style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      marginBottom: '0.35rem',
+                    }}
+                  >
+                    <label className="tw-form-label" style={{ marginBottom: 0 }}>
+                      Full Article Body *
+                    </label>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const url = window.prompt('Enter Image URL:');
+                        if (!url) return;
+                        const caption =
+                          window.prompt('Enter Image Caption / Alt text (optional):') ||
+                          'Visual Analysis';
+                        const mdImage = `\n\n![${caption}](${url})\n\n`;
+                        setFormData((prev) => ({
+                          ...prev,
+                          body: prev.body + mdImage,
+                        }));
+                      }}
+                      style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '0.35rem',
+                        padding: '0.2rem 0.65rem',
+                        fontSize: '0.75rem',
+                        fontWeight: 600,
+                        borderRadius: '6px',
+                        backgroundColor: '#EEF2FF',
+                        color: '#4F46E5',
+                        border: '1px solid #C7D2FE',
+                        cursor: 'pointer',
+                      }}
+                      title="Insert markdown image syntax into body"
+                    >
+                      🖼️ Insert Image into Body
+                    </button>
+                  </div>
                   <textarea
                     className="tw-form-textarea"
-                    rows="6"
+                    rows="7"
                     value={formData.body}
                     onChange={(e) =>
                       setFormData({ ...formData, body: e.target.value })
                     }
-                    placeholder="Enter full article paragraphs, analysis, benchmarks..."
+                    placeholder="Enter full article paragraphs, analysis, benchmarks... Markdown images supported: ![Caption](https://url.com/image.jpg)"
                     required
                   ></textarea>
+                  <span
+                    style={{
+                      fontSize: '0.72rem',
+                      color: '#64748B',
+                      marginTop: '0.25rem',
+                      display: 'block',
+                    }}
+                  >
+                    💡 <strong>Tip:</strong> Embed visuals anytime using <code>![Caption](image-url)</code> or click <strong>🖼️ Insert Image into Body</strong> above.
+                  </span>
                 </div>
 
-                <div className="tw-form-row">
-                  <div className="tw-form-group">
-                    <label className="tw-form-label">Featured Image URL</label>
+                <div className="tw-form-group">
+                  <label className="tw-form-label">Featured Image URL (Card & Header Banner)</label>
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '0.75rem',
+                    }}
+                  >
                     <input
                       type="text"
                       className="tw-form-input"
@@ -586,22 +993,26 @@ const BlogManager = () => {
                           featuredImageUrl: e.target.value,
                         })
                       }
-                      placeholder="/assets/blog_ai_gcc_dashboard.jpg"
+                      placeholder="/assets/blog_ai_gcc_dashboard.jpg or https://..."
+                      style={{ flex: 1 }}
                     />
-                  </div>
-                  <div className="tw-form-group">
-                    <label className="tw-form-label">
-                      Tags (comma separated)
-                    </label>
-                    <input
-                      type="text"
-                      className="tw-form-input"
-                      value={formData.tags}
-                      onChange={(e) =>
-                        setFormData({ ...formData, tags: e.target.value })
-                      }
-                      placeholder="GCC, India Tech, Staffing"
-                    />
+                    {formData.featuredImageUrl && (
+                      <img
+                        src={formData.featuredImageUrl}
+                        alt="Banner Preview"
+                        style={{
+                          width: '54px',
+                          height: '36px',
+                          borderRadius: '6px',
+                          objectFit: 'cover',
+                          border: '1px solid #CBD5E1',
+                          flexShrink: 0,
+                        }}
+                        onError={(e) => {
+                          e.target.style.display = 'none';
+                        }}
+                      />
+                    )}
                   </div>
                 </div>
               </div>
