@@ -47,3 +47,4 @@ describe('LiquidAuroraRibbons (Unit Test)', () => {
     expect(container.querySelector('.ParticleNetwork-canvas')).toBeNull();
   });
 });
+

@@ -1,5 +1,4 @@
 import React from 'react';
-import './LiquidAuroraRibbons.css';
 
 /**
  * Premium Liquid Aurora + 3D Glass Ribbons Background for Thinkwires Homepage Hero.
@@ -216,3 +215,4 @@ const LiquidAuroraRibbons = () => {
 };
 
 export default LiquidAuroraRibbons;
+
