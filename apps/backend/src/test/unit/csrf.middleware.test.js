@@ -61,6 +61,22 @@ describe('CSRF & Origin Verification (Unit Tests)', () => {
       expect(isAllowedOrigin('https://thinkwires.vercel.app')).toBe(true);
     });
 
+    it('allows Thinkwires Vercel preview deployment URLs', () => {
+      expect(
+        isAllowedOrigin(
+          'https://thinkwires-git-fork-biswahack20-bola-idor-tanjil-alams-projects.vercel.app'
+        )
+      ).toBe(true);
+      expect(
+        isAllowedOrigin('https://thinkwires-git-feat-preview-123.vercel.app')
+      ).toBe(true);
+      expect(
+        isAllowedOrigin(
+          'https://thinkwires-deploy-tanjil-alams-projects.vercel.app'
+        )
+      ).toBe(true);
+    });
+
     it('normalizes trailing slashes in both configuration and incoming origin', () => {
       process.env.ALLOWED_ORIGINS = 'https://thinkwires.vercel.app/';
 
