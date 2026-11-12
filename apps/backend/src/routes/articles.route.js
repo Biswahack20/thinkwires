@@ -59,6 +59,7 @@ router.get('/articles', async (req, res) => {
   if (isMongoActive()) {
     try {
       const dbArticles = await Article.find({ status: 'published' })
+        .select('-body -content')
         .sort({ publishedAt: -1 })
         .lean();
       if (dbArticles && dbArticles.length > 0) {
@@ -136,13 +137,14 @@ router.get('/articles/:id', async (req, res) => {
     try {
       const query = mongoose.isValidObjectId(targetId)
         ? {
+            status: 'published',
             $or: [
               { _id: targetId },
               { slug: targetId },
               { articleId: targetId },
             ],
           }
-        : { $or: [{ slug: targetId }, { articleId: targetId }] };
+        : { status: 'published', $or: [{ slug: targetId }, { articleId: targetId }] };
       const art = await Article.findOne(query).lean();
       if (art) {
         return res.json({ ...art, id: art.articleId || art.slug || art._id });
@@ -153,12 +155,15 @@ router.get('/articles/:id', async (req, res) => {
   }
 
   const article = articles.find(
-    (art) => art.id === targetId || art.slug === targetId
+    (art) =>
+      (art.status === 'published' || !art.status) &&
+      (art.id === targetId || art.slug === targetId)
   );
   if (article) {
     res.json(article);
   } else if (
     featuredArticle &&
+    (featuredArticle.status === 'published' || !featuredArticle.status) &&
     (featuredArticle.id === targetId || featuredArticle.slug === targetId)
   ) {
     res.json(featuredArticle);

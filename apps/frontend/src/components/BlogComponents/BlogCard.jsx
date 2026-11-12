@@ -48,7 +48,9 @@ const BlogCard = ({ article, onReadClick }) => {
       </h3>
 
       {/* Excerpt */}
-      <p className="FigmaBlogCard-excerpt">{article.excerpt}</p>
+      <p className="FigmaBlogCard-excerpt">
+        {article.excerpt || article.summary}
+      </p>
 
       {/* Dynamic Telemetry Box inside Card */}
       <div
