@@ -65,4 +65,41 @@ describe('Candidate Portal API (Integration Tests)', () => {
       );
     });
   });
+
+  describe('POST /api/candidate/applications/:applicationId/assessment/submit', () => {
+    it('rejects unauthenticated request with 401 Unauthorized', async () => {
+      const res = await api
+        .post('/api/candidate/applications/nonexistent_id/assessment/submit')
+        .send({ answers: {} });
+
+      expect(res.status).toBe(401);
+    });
+
+    it('returns 404 when application does not exist', async () => {
+      const res = await api
+        .post('/api/candidate/applications/507f1f77bcf86cd799439011/assessment/submit')
+        .set('Cookie', candidateCookie)
+        .send({ answers: {} });
+
+      expect(res.status).toBe(404);
+      expect(res.body.success).toBe(false);
+    });
+  });
+
+  describe('GET /api/candidate/applications/:applicationId/dossier', () => {
+    it('rejects unauthenticated request with 401 Unauthorized', async () => {
+      const res = await api.get('/api/candidate/applications/nonexistent_id/dossier');
+
+      expect(res.status).toBe(401);
+    });
+
+    it('returns 404 when application does not exist', async () => {
+      const res = await api
+        .get('/api/candidate/applications/507f1f77bcf86cd799439011/dossier')
+        .set('Cookie', candidateCookie);
+
+      expect(res.status).toBe(404);
+      expect(res.body.success).toBe(false);
+    });
+  });
 });

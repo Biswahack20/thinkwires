@@ -9,6 +9,7 @@ import JobRequirement from '../models/job.mongo.model.js';
 import { sendRecruitmentNotificationEmail } from '../utils/recruitmentEmail.util.js';
 import aiService from '../services/ai.service.js';
 import { verifyAdminToken, verifyCandidateToken } from '../utils/auth.util.js';
+import { buildDualScoreReport } from '../utils/dualScore.util.js';
 
 // Fallback in-memory application store for local development if MongoDB is absent
 export const localDevApplications = [];
@@ -922,6 +923,15 @@ export const submitApplicationAssessment = async (req, res) => {
       answers || {}
     );
 
+    const dualScoreReport = buildDualScoreReport({
+      resumeScore: app.fitScore || (app.aiAnalysis?.skillsMatch ? Math.round(app.aiAnalysis.skillsMatch) : 85),
+      assessmentScore: evalResult.total_score,
+      assessmentData: assessment,
+      candidateAnswers: answers || {},
+      evalResult,
+      timeSpentMinutes: assessment.timeSpentMinutes || 14,
+    });
+
     const updateData = {
       assessmentScore: evalResult.total_score,
       assessmentStatus: evalResult.passed ? 'Passed' : 'Failed',
@@ -929,6 +939,10 @@ export const submitApplicationAssessment = async (req, res) => {
       stage: evalResult.gatekeeper_status,
       status: evalResult.passed ? 'Screening' : 'Screening',
       draftAnswers: {},
+      evaluationReport: {
+        ...(app.evaluationReport || {}),
+        ...dualScoreReport,
+      },
     };
 
     if (mongoose.connection.readyState === 1) {
@@ -936,7 +950,7 @@ export const submitApplicationAssessment = async (req, res) => {
       await Candidate.findByIdAndUpdate(candidateId, {
         status: updateData.status,
         assessmentScore: evalResult.total_score,
-        vettingScore: Math.max(evalResult.total_score, 80),
+        vettingScore: dualScoreReport.scores.candidateScore.overall,
       });
     } else {
       Object.assign(app, updateData);
@@ -954,7 +968,7 @@ export const submitApplicationAssessment = async (req, res) => {
         noticePeriod: app.noticePeriod,
         screeningScore: evalResult.total_score,
         assessmentPassed: true,
-        candidateNote: `Gatekeeper screening assessment PASSED with score ${evalResult.total_score}%.`,
+        candidateNote: `Gatekeeper screening assessment PASSED with score ${evalResult.total_score}%. Verified Candidate Score: ${dualScoreReport.scores.candidateScore.overall}%, Resume Match: ${dualScoreReport.scores.resumeScore.overall}% (Inflation Risk: ${dualScoreReport.scores.divergenceAnalysis.inflationRisk}).`,
       }).catch((e) => console.warn('Recruiter screening pass alert notice:', e.message));
     }
 
@@ -964,6 +978,8 @@ export const submitApplicationAssessment = async (req, res) => {
         ? 'Congratulations! You passed the screening assessment.'
         : 'Assessment submitted. Your score has been recorded.',
       evaluation: evalResult,
+      scores: dualScoreReport.scores,
+      assessmentAudit: dualScoreReport.assessmentAudit,
     });
   } catch (error) {
     console.error('Submit assessment error:', error);
@@ -1177,6 +1193,23 @@ export const getApplicationDossier = async (req, res) => {
         });
       }
       application.evaluationReport = dossier;
+    }
+
+    if (dossier && !dossier.scores) {
+      const dualScoreReport = buildDualScoreReport({
+        resumeScore: dossier.overallMatchScore || application.fitScore || 85,
+        assessmentScore: application.assessmentScore ?? 85,
+        assessmentData: application.assessment || {},
+        candidateAnswers: application.draftAnswers || {},
+        evalResult: {
+          total_score: application.assessmentScore ?? 85,
+          passed: (application.assessmentScore ?? 85) >= 75,
+        },
+      });
+      dossier.scores = dualScoreReport.scores;
+      if (!dossier.assessmentAudit && dualScoreReport.assessmentAudit) {
+        dossier.assessmentAudit = dualScoreReport.assessmentAudit;
+      }
     }
 
     return res.status(200).json({

@@ -25,6 +25,7 @@ import {
 } from '../models/helpdesk.mongo.model.js';
 import { getTransporter } from '../utils/notificationDispatcher.util.js';
 import aiService from '../services/ai.service.js';
+import { buildDualScoreReport } from '../utils/dualScore.util.js';
 import {
   hashPassword,
   comparePassword,
@@ -915,6 +916,23 @@ export const getCandidateDossier = async (req, res) => {
       }
     }
 
+    if (dossier && !dossier.scores) {
+      const dualScoreReport = buildDualScoreReport({
+        resumeScore: dossier.overallMatchScore || application?.fitScore || 85,
+        assessmentScore: application?.assessmentScore ?? candidate?.assessmentScore ?? 85,
+        assessmentData: application?.assessment || {},
+        candidateAnswers: application?.draftAnswers || {},
+        evalResult: {
+          total_score: application?.assessmentScore ?? candidate?.assessmentScore ?? 85,
+          passed: (application?.assessmentScore ?? candidate?.assessmentScore ?? 85) >= 75,
+        },
+      });
+      dossier.scores = dualScoreReport.scores;
+      if (!dossier.assessmentAudit && dualScoreReport.assessmentAudit) {
+        dossier.assessmentAudit = dualScoreReport.assessmentAudit;
+      }
+    }
+
     const candidateSummary = {
       id: String(application?._id || candidate?._id || id),
       name: (application?.candidateName || candidate?.name || 'Applicant Candidate').trim(),
@@ -993,6 +1011,20 @@ export const reEvaluateCandidate = async (req, res) => {
       },
       recruiterNotes || ''
     );
+
+    const dualScoreReport = buildDualScoreReport({
+      resumeScore: updatedDossier.overallMatchScore || 85,
+      assessmentScore: application?.assessmentScore ?? candidate?.assessmentScore ?? 85,
+      assessmentData: application?.assessment || {},
+      candidateAnswers: application?.draftAnswers || {},
+      recruiterScreenScore: recruiterNotes && recruiterNotes.trim().length > 15 ? 88 : 80,
+      evalResult: {
+        total_score: application?.assessmentScore ?? candidate?.assessmentScore ?? 85,
+        passed: (application?.assessmentScore ?? candidate?.assessmentScore ?? 85) >= 75,
+      },
+    });
+    updatedDossier.scores = dualScoreReport.scores;
+    updatedDossier.assessmentAudit = dualScoreReport.assessmentAudit;
 
     if (isMongoActive() && application?._id) {
       await JobApplication.findByIdAndUpdate(

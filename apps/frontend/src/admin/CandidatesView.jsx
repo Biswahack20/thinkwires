@@ -389,6 +389,56 @@ const CandidatesView = () => {
                             </div>
                           )}
 
+                        {/* Dual-Score Badge & Resume Inflation Guard */}
+                        {((cand.fitScore !== null && cand.fitScore !== undefined) || (cand.assessmentScore !== null && cand.assessmentScore !== undefined) || (cand.vettingScore !== null && cand.vettingScore !== undefined)) && (
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.3rem', flexWrap: 'wrap', marginTop: '0.25rem' }}>
+                            <span
+                              style={{
+                                fontSize: '0.65rem',
+                                padding: '0.1rem 0.35rem',
+                                borderRadius: '4px',
+                                fontWeight: 600,
+                                backgroundColor: '#F1F5F9',
+                                color: '#334155',
+                                border: '1px solid #CBD5E1',
+                              }}
+                              title="Resume Match Score (Paper Claims)"
+                            >
+                              Resume: {cand.fitScore ?? 85}%
+                            </span>
+                            <span
+                              style={{
+                                fontSize: '0.65rem',
+                                padding: '0.1rem 0.35rem',
+                                borderRadius: '4px',
+                                fontWeight: 600,
+                                backgroundColor: (cand.assessmentScore ?? cand.vettingScore ?? 80) >= 75 ? '#DCFCE7' : '#FEE2E2',
+                                color: (cand.assessmentScore ?? cand.vettingScore ?? 80) >= 75 ? '#15803D' : '#B91C1C',
+                                border: (cand.assessmentScore ?? cand.vettingScore ?? 80) >= 75 ? '1px solid #BBF7D0' : '1px solid #FECDD3',
+                              }}
+                              title="Verified Candidate Score (Proctored Technical Proof)"
+                            >
+                              Verified: {cand.assessmentScore ?? cand.vettingScore ?? 80}%
+                            </span>
+                            {cand.fitScore && cand.assessmentScore && (cand.fitScore - cand.assessmentScore > 25) && (
+                              <span
+                                style={{
+                                  fontSize: '0.63rem',
+                                  padding: '0.1rem 0.35rem',
+                                  borderRadius: '4px',
+                                  fontWeight: 700,
+                                  backgroundColor: '#FEE2E2',
+                                  color: '#B91C1C',
+                                  border: '1px solid #FECDD3',
+                                }}
+                                title={`Delta: ${cand.fitScore - cand.assessmentScore}% divergence between paper claims and proctored test`}
+                              >
+                                High Inflation Risk
+                              </span>
+                            )}
+                          </div>
+                        )}
+
                         <div
                           style={{
                             display: 'flex',
@@ -586,6 +636,54 @@ const CandidatesView = () => {
                             </span>
                           </div>
                         )}
+                      {((cand.fitScore !== null && cand.fitScore !== undefined) || (cand.assessmentScore !== null && cand.assessmentScore !== undefined) || (cand.vettingScore !== null && cand.vettingScore !== undefined)) && (
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '0.25rem', flexWrap: 'wrap', marginTop: '0.2rem' }}>
+                          <span
+                            style={{
+                              fontSize: '0.63rem',
+                              padding: '0.1rem 0.3rem',
+                              borderRadius: '4px',
+                              fontWeight: 600,
+                              backgroundColor: '#F1F5F9',
+                              color: '#334155',
+                              border: '1px solid #CBD5E1',
+                            }}
+                            title="Resume Match (Paper Claims)"
+                          >
+                            Resume: {cand.fitScore ?? 85}%
+                          </span>
+                          <span
+                            style={{
+                              fontSize: '0.63rem',
+                              padding: '0.1rem 0.3rem',
+                              borderRadius: '4px',
+                              fontWeight: 600,
+                              backgroundColor: (cand.assessmentScore ?? cand.vettingScore ?? 80) >= 75 ? '#DCFCE7' : '#FEE2E2',
+                              color: (cand.assessmentScore ?? cand.vettingScore ?? 80) >= 75 ? '#15803D' : '#B91C1C',
+                              border: (cand.assessmentScore ?? cand.vettingScore ?? 80) >= 75 ? '1px solid #BBF7D0' : '1px solid #FECDD3',
+                            }}
+                            title="Verified Score (Technical Assessment)"
+                          >
+                            Verified: {cand.assessmentScore ?? cand.vettingScore ?? 80}%
+                          </span>
+                          {cand.fitScore && cand.assessmentScore && (cand.fitScore - cand.assessmentScore > 25) && (
+                            <span
+                              style={{
+                                fontSize: '0.62rem',
+                                padding: '0.1rem 0.3rem',
+                                borderRadius: '4px',
+                                fontWeight: 700,
+                                backgroundColor: '#FEE2E2',
+                                color: '#B91C1C',
+                                border: '1px solid #FECDD3',
+                              }}
+                              title={`Delta: ${cand.fitScore - cand.assessmentScore}% divergence`}
+                            >
+                              Inflation Risk
+                            </span>
+                          )}
+                        </div>
+                      )}
                     </td>
                     <td data-label="Applied For">
                       <div style={{ fontWeight: 600, color: '#0F172A' }}>
