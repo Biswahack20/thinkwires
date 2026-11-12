@@ -178,5 +178,23 @@ describe('BenchDossierDrawer (Issue #174: Header Renaming & Avatar Integration)'
     expect(screen.getByText('Download Blind Dossier (PDF)')).toBeInTheDocument();
     expect(screen.getByText('TW-BENCH-902')).toBeInTheDocument();
   });
+
+  it('renders Dual-Score architecture (Resume Match vs. Verified Candidate Score) and Integrity banner', async () => {
+    await act(async () => {
+      renderWithProviders(<BenchDossierDrawer />, {
+        preloadedState: {
+          bench: {
+            drawerOpen: true,
+            selectedTalent: sampleCandidate,
+          },
+        },
+      });
+    });
+
+    expect(screen.getByText('Resume Match Score')).toBeInTheDocument();
+    expect(screen.getByText('Verified Candidate Score')).toBeInTheDocument();
+    expect(screen.getByText(/Integrity Verification/i)).toBeInTheDocument();
+    expect(screen.getByText(/Proctored Technical Assessment Breakdown/i)).toBeInTheDocument();
+  });
 });
 

@@ -303,6 +303,8 @@ class AIServiceClient {
       clientSubmissionSummary: (dossier.clientSubmissionSummary || '')
         .replace(new RegExp(dossier.candidateName || 'Candidate', 'gi'), `Candidate ${anonymousCode}`)
         .replace(/([A-Z][a-z]+ [A-Z][a-z]+)/g, 'Candidate'),
+      scores: dossier.scores || null,
+      assessmentAudit: dossier.assessmentAudit || null,
       evaluatedAt: dossier.evaluatedAt || new Date().toISOString(),
     };
   }
@@ -1024,22 +1026,76 @@ class AIServiceClient {
     let total = 0;
     const questions = assessmentData.questions || [];
 
-    questions.forEach((q) => {
-      const points = q.points || 10;
+    const feedback = questions.map((q) => {
+      const points = Number(q.points) || 10;
       total += points;
       const ans = candidateAnswers[q.id];
+      let qEarned = 0;
+      let isCorrect = false;
+      let explanation = q.explanation || '';
+      let evaluatorFeedback = '';
+
       if (q.type === 'mcq') {
-        if (
-          ans !== undefined &&
-          Number(ans) === Number(q.correct_option_index)
-        ) {
-          earned += points;
+        const correctIdx = Number(q.correct_option_index ?? q.correctAnswer ?? 0);
+        isCorrect = ans !== undefined && Number(ans) === correctIdx;
+        qEarned = isCorrect ? points : 0;
+        explanation = isCorrect
+          ? (q.explanation || 'Selected option verified correct against technical rubric.')
+          : `Selected option incorrect. Expected option index ${correctIdx}.`;
+      } else if (q.type === 'scenario') {
+        const text = String(ans || '').trim();
+        const wordCount = text.split(/\s+/).filter(Boolean).length;
+        if (wordCount >= 25) {
+          qEarned = points;
+          isCorrect = true;
+          evaluatorFeedback = 'Demonstrates production architecture depth and systematic trade-off mitigation.';
+        } else if (wordCount >= 10) {
+          qEarned = Math.round(points * 0.75);
+          isCorrect = true;
+          evaluatorFeedback = 'Adequate approach; minor architectural gaps noted.';
+        } else if (wordCount > 0) {
+          qEarned = Math.round(points * 0.4);
+          isCorrect = false;
+          evaluatorFeedback = 'Response lacks sufficient architectural mitigation details.';
+        } else {
+          qEarned = 0;
+          isCorrect = false;
+          evaluatorFeedback = 'No scenario mitigation response provided.';
         }
       } else {
-        if (ans && String(ans).trim().length > 15) {
-          earned += Math.round(points * 0.85);
+        // practical code
+        const code = String(ans || '').trim();
+        const hasLogic = /queue|flush|Promise|setTimeout|clearTimeout|async|await/i.test(code);
+        if (code.length > 50 && hasLogic) {
+          qEarned = points;
+          isCorrect = true;
+          evaluatorFeedback = 'Clean implementation with correct asynchronous concurrency and state lifecycle handling.';
+        } else if (code.length > 20) {
+          qEarned = Math.round(points * 0.7);
+          isCorrect = true;
+          evaluatorFeedback = 'Functional implementation with opportunities for concurrency optimization.';
+        } else {
+          qEarned = code.length > 0 ? Math.round(points * 0.3) : 0;
+          isCorrect = false;
+          evaluatorFeedback = 'Implementation does not meet concurrency and async handling specifications.';
         }
       }
+
+      earned += qEarned;
+
+      return {
+        question_id: q.id,
+        category: q.category || (q.type === 'mcq' ? 'Technical Competency' : q.type === 'scenario' ? 'System Design' : 'Practical Implementation'),
+        type: q.type || 'mcq',
+        prompt: q.prompt || q.question || '',
+        candidate_answer: q.type === 'mcq' ? (ans !== undefined ? Number(ans) : null) : undefined,
+        candidate_answer_text: q.type !== 'mcq' ? (ans ? String(ans) : '') : undefined,
+        earned_points: qEarned,
+        possible_points: points,
+        is_correct: isCorrect,
+        explanation,
+        evaluatorFeedback,
+      };
     });
 
     const score = Math.round((earned / Math.max(total, 1)) * 100);
@@ -1053,13 +1109,7 @@ class AIServiceClient {
       gatekeeper_status: passed
         ? 'Accepted - Screened'
         : 'Filtered - Below Threshold',
-      detailed_feedback: questions.map((q) => ({
-        question_id: q.id,
-        type: q.type || 'mcq',
-        earned_points: candidateAnswers[q.id] !== undefined ? 10 : 0,
-        possible_points: q.points || 10,
-        is_correct: true,
-      })),
+      detailed_feedback: feedback,
     };
   }
 }

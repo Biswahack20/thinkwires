@@ -104,4 +104,130 @@ describe('CandidateEvaluationModal Component Resilient Array Rendering', () => {
       expect(screen.queryByText(/undefined/i)).not.toBeInTheDocument();
     });
   });
+
+  it('renders Dual-Score Architecture (Resume Match vs. Verified Candidate Score) with Integrity Divergence banner', async () => {
+    adminApi.getCandidateDossier.mockResolvedValueOnce({
+      success: true,
+      candidate: {
+        id: 'cand_dual_01',
+        name: 'Jordan Sparks',
+        jobTitle: 'Senior Systems Architect',
+      },
+      dossier: {
+        overallMatchScore: 92,
+        recommendation: 'HIGH-PRIORITY SHORTLIST',
+        scores: {
+          resumeScore: {
+            overall: 92,
+            tier: 'Strong Fit (Paper)',
+            mandatorySkillsMatch: 95,
+            roleMatch: 88,
+            tenureMatch: 90,
+          },
+          candidateScore: {
+            overall: 85,
+            tier: 'Verified Technical Talent',
+            status: 'PASSED',
+            passingThreshold: 75,
+            assessmentScore: 85,
+            recruiterScreenScore: 84,
+            verifiedArtifactsScore: 85,
+          },
+          divergenceAnalysis: {
+            delta: 7,
+            inflationRisk: 'Low',
+            penalty: 0,
+            summary: 'Verified assessment confirms resume claims. Low risk of AI resume embellishment.',
+          },
+        },
+        assessmentAudit: {
+          testId: 'eval_react_node_arch_9021',
+          timeSpentMinutes: 14,
+          totalPointsPossible: 100,
+          totalPointsEarned: 85,
+          passingThreshold: 75,
+          passed: true,
+          questions: [
+            {
+              id: 'q1',
+              type: 'mcq',
+              category: 'Architecture & Optimization',
+              prompt: 'In React, how should you optimize resource rendering?',
+              candidateAnswer: 1,
+              isCorrect: true,
+              pointsEarned: 10,
+              pointsPossible: 10,
+              explanation: 'Memoization primitives and stable callbacks.',
+            },
+          ],
+        },
+      },
+    });
+
+    render(
+      <CandidateEvaluationModal
+        isOpen={true}
+        onClose={vi.fn()}
+        candidateId="cand_dual_01"
+        showToast={vi.fn()}
+      />
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText('Resume Match Score')).toBeInTheDocument();
+      expect(screen.getByText('Verified Candidate Score')).toBeInTheDocument();
+      expect(screen.getAllByText('92%').length).toBeGreaterThanOrEqual(1);
+      expect(screen.getAllByText('85%').length).toBeGreaterThanOrEqual(1);
+      expect(screen.getByText(/Integrity Verification: High Alignment/i)).toBeInTheDocument();
+      expect(screen.getByText(/Proctored Technical Assessment Breakdown/i)).toBeInTheDocument();
+      expect(screen.getByText(/In React, how should you optimize resource rendering\?/i)).toBeInTheDocument();
+    });
+  });
+
+  it('renders High Inflation Risk banner and penalty when paper claims severely diverge from empirical proof', async () => {
+    adminApi.getCandidateDossier.mockResolvedValueOnce({
+      success: true,
+      candidate: {
+        id: 'cand_inflated_02',
+        name: 'AI Embellished Candidate',
+        jobTitle: 'Full Stack Engineer',
+      },
+      dossier: {
+        overallMatchScore: 96,
+        scores: {
+          resumeScore: {
+            overall: 96,
+            tier: 'Strong Fit (Paper)',
+          },
+          candidateScore: {
+            overall: 40,
+            tier: 'Below Threshold',
+            status: 'FAILED',
+            passingThreshold: 75,
+          },
+          divergenceAnalysis: {
+            delta: 46,
+            inflationRisk: 'High',
+            penalty: 10,
+            summary: 'Significant divergence detected. High AI resume embellishment risk.',
+          },
+        },
+      },
+    });
+
+    render(
+      <CandidateEvaluationModal
+        isOpen={true}
+        onClose={vi.fn()}
+        candidateId="cand_inflated_02"
+        showToast={vi.fn()}
+      />
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText(/Integrity Verification: High Embellishment Risk/i)).toBeInTheDocument();
+      expect(screen.getByText(/Penalty: -10 pts/i)).toBeInTheDocument();
+      expect(screen.getByText(/Significant divergence detected/i)).toBeInTheDocument();
+    });
+  });
 });
