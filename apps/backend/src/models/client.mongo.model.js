@@ -51,6 +51,10 @@ const clientSchema = new mongoose.Schema(
   }
 );
 
+clientSchema.index({ email: 1 }, { unique: true });
+clientSchema.index({ companyName: 1, status: 1 });
+clientSchema.index({ createdAt: -1 });
+
 const Client = mongoose.models.Client || mongoose.model('Client', clientSchema);
 
 export default Client;

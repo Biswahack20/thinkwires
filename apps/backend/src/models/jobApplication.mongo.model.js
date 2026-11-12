@@ -317,8 +317,20 @@ jobApplicationSchema.pre('save', function (next) {
   next();
 });
 
-// Compound unique index so a candidate cannot accidentally apply twice for the exact same job
-jobApplicationSchema.index({ candidate: 1, jobId: 1 }, { unique: true });
+// Compound partial unique index to prevent duplicate active applications while permitting re-applications after cooldown closure (Issue #208)
+jobApplicationSchema.index(
+  { candidate: 1, jobId: 1 },
+  {
+    unique: true,
+    partialFilterExpression: {
+      status: { $in: ['Applied', 'Screening', 'Interview', 'Offered'] },
+    },
+  }
+);
+jobApplicationSchema.index({ anonymousCode: 1 }, { unique: true, sparse: true });
+jobApplicationSchema.index({ candidate: 1, createdAt: -1 });
+jobApplicationSchema.index({ status: 1, createdAt: -1 });
+jobApplicationSchema.index({ resumeUrl: 1 });
 
 const JobApplication =
   mongoose.models.JobApplication ||

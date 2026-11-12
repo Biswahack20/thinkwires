@@ -74,6 +74,10 @@ const employeeSchema = new mongoose.Schema(
   }
 );
 
+employeeSchema.index({ id: 1 }, { unique: true, sparse: true });
+employeeSchema.index({ deploymentStatus: 1 });
+employeeSchema.index({ createdAt: -1 });
+
 const Employee =
   mongoose.models.Employee || mongoose.model('Employee', employeeSchema);
 

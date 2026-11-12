@@ -1322,6 +1322,14 @@ export const updateCandidate = async (req, res) => {
 
 export const deleteCandidate = async (req, res) => {
   try {
+    const userRole = (req.user?.role || '').toLowerCase();
+    if (userRole === 'cms_admin') {
+      return res.status(403).json({
+        success: false,
+        error:
+          'Access denied: CMS Administrators are restricted from deleting candidate records (RBAC_CMS_ADMIN_RESTRICTED).',
+      });
+    }
     if (!requireProductionDb(res)) return;
     const { id } = req.params;
 
@@ -1946,6 +1954,14 @@ export const updateJob = async (req, res) => {
 
 export const deleteJob = async (req, res) => {
   try {
+    const userRole = (req.user?.role || '').toLowerCase();
+    if (userRole === 'cms_admin') {
+      return res.status(403).json({
+        success: false,
+        error:
+          'Access denied: CMS Administrators are restricted from deleting recruitment mandates (RBAC_CMS_ADMIN_RESTRICTED).',
+      });
+    }
     if (!requireProductionDb(res)) return;
     const { id } = req.params;
 
@@ -2126,12 +2142,21 @@ export const recordInboundRequisition = async (reqData = {}) => {
 // ============================================================================
 export const getPlacements = async (req, res) => {
   try {
+    const role = (req.user?.role || '').toLowerCase();
     let items = [];
     if (isMongoActive()) {
       items = await Placement.find().sort({ createdAt: -1 }).lean();
       if (items.length === 0) items = inMemoryData.placements;
     } else {
       items = inMemoryData.placements;
+    }
+    if (role === 'cms_admin') {
+      items = items.map((p) => {
+        const item = typeof p.toObject === 'function' ? p.toObject() : { ...p };
+        delete item.billingRate;
+        delete item.grossMargin;
+        return item;
+      });
     }
     res.json({ success: true, placements: items });
   } catch (err) {
