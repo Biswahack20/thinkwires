@@ -130,7 +130,7 @@ const LiquidAuroraRibbons = React.memo(() => {
           </g>
 
           {/* Ribbon 2: Secondary Flowing Glass (Floating opposite direction) */}
-          <g className="tw-glass-ribbon-2">
+          <g className="tw-glass-ribbon-2 tw-glass-group-secondary">
             <path
               d="M 1390 80 C 1160 180, 1010 320, 990 490 C 970 660, 1060 730, 1160 820 L 1120 845 C 1015 745, 930 655, 950 480 C 970 300, 1120 160, 1350 60 Z"
               fill="url(#twGlassGrad2)"
@@ -154,7 +154,7 @@ const LiquidAuroraRibbons = React.memo(() => {
           </g>
 
           {/* Ribbon 1: Primary Foreground Flowing Glass */}
-          <g className="tw-glass-ribbon-1">
+          <g className="tw-glass-ribbon-1 tw-glass-group-primary">
             <path
               d="M 920 -40 C 1140 80, 1340 240, 1370 430 C 1400 620, 1260 720, 960 790 L 935 830 C 1285 770, 1435 640, 1405 420 C 1375 200, 1175 40, 955 -40 Z"
               fill="url(#twGlassGrad1)"
