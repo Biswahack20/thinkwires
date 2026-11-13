@@ -234,10 +234,20 @@ const Industries = () => {
                           el.scrollIntoView({ behavior: 'smooth' });
                         }
                       }}
-                      className="Industries-exploreLink cursor-pointer relative z-10"
+                      className="Industries-exploreLink cursor-pointer relative z-10 no-underline"
+                      style={{ textDecoration: 'none', borderBottom: 'none' }}
                     >
-                      <span>Explore Practice</span>
-                      <span className="material-symbols-outlined text-[16px] group-hover:translate-x-1 transition-transform">
+                      <span>Explore</span>
+                      <span
+                        className="material-symbols-outlined text-[16px] group-hover:translate-x-1 transition-transform"
+                        style={{
+                          textDecoration: 'none',
+                          borderBottom: 'none',
+                          display: 'inline-block',
+                          lineHeight: 1,
+                          verticalAlign: 'middle',
+                        }}
+                      >
                         arrow_forward
                       </span>
                     </a>
