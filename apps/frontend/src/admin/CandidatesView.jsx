@@ -7,9 +7,13 @@ import {
   TrashIcon,
   CloseIcon,
   AlertCircleIcon,
+  DownloadIcon,
+  UploadIcon,
 } from './AdminIcons';
 import CandidateEvaluationModal from './CandidateEvaluationModal';
 import SkillSearchInput from '../components/common/SkillSearchInput';
+import DataImportModal from './components/DataImportModal';
+import { exportToExcel, CANDIDATE_ATS_COLUMNS } from './utils/excelDataUtils';
 
 const PIPELINE_STAGES = [
   'Applied',
@@ -30,6 +34,7 @@ const CandidatesView = () => {
 
   // Modals & Drawers
   const [modalOpen, setModalOpen] = useState(false);
+  const [importModalOpen, setImportModalOpen] = useState(false);
   const [selectedCandidate, setSelectedCandidate] = useState(null);
   const [evaluationModalCandidateId, setEvaluationModalCandidateId] = useState(null);
   const [deleteConfirmId, setDeleteConfirmId] = useState(null);
@@ -144,6 +149,27 @@ const CandidatesView = () => {
       .catch((err) => showToast(`Delete failed: ${err.message}`));
   };
 
+  const handleExport = (format = 'xlsx') => {
+    try {
+      if (!candidates || candidates.length === 0) {
+        showToast('No candidate records available to export.');
+        return;
+      }
+      const filename = `thinkwires_candidates_${new Date().toISOString().split('T')[0]}`;
+      exportToExcel({
+        data: candidates,
+        columns: CANDIDATE_ATS_COLUMNS,
+        filename,
+        format,
+      });
+      showToast(
+        `Exported ${candidates.length} candidate(s) as ${format.toUpperCase()}.`
+      );
+    } catch (err) {
+      showToast(`Export failed: ${err.message}`);
+    }
+  };
+
   return (
     <div>
       {/* Header */}
@@ -156,7 +182,72 @@ const CandidatesView = () => {
           </p>
         </div>
 
-        <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
+        <div
+          style={{
+            display: 'flex',
+            gap: '0.65rem',
+            alignItems: 'center',
+            flexWrap: 'wrap',
+          }}
+        >
+          <div style={{ display: 'flex', gap: '0.35rem' }}>
+            <button
+              type="button"
+              className="tw-btn-secondary"
+              onClick={() => handleExport('xlsx')}
+              title="Export candidates as Excel (.xlsx)"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.35rem',
+                fontSize: '0.82rem',
+                padding: '0.5rem 0.8rem',
+              }}
+            >
+              <DownloadIcon size={14} />
+              <span>Export Excel</span>
+            </button>
+            <button
+              type="button"
+              className="tw-btn-secondary"
+              onClick={() => handleExport('csv')}
+              title="Export candidates as CSV (.csv)"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.35rem',
+                fontSize: '0.82rem',
+                padding: '0.5rem 0.8rem',
+              }}
+            >
+              <DownloadIcon size={14} />
+              <span>Export CSV</span>
+            </button>
+          </div>
+
+          <button
+            type="button"
+            className="tw-btn-secondary"
+            onClick={() => {
+              if (activeRole === 'viewer') {
+                showToast('Viewer accounts cannot import candidate data.');
+                return;
+              }
+              setImportModalOpen(true);
+            }}
+            title="Import candidates from Excel or CSV"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.35rem',
+              fontSize: '0.82rem',
+              padding: '0.5rem 0.85rem',
+            }}
+          >
+            <UploadIcon size={14} />
+            <span>Import</span>
+          </button>
+
           <div className="tw-period-filter-group">
             <button
               className={`tw-period-btn ${viewMode === 'pipeline' ? 'active' : ''}`}
@@ -1325,6 +1416,28 @@ const CandidatesView = () => {
           showToast={showToast}
         />
       )}
+
+      {/* Import Modal */}
+      <DataImportModal
+        isOpen={importModalOpen}
+        onClose={() => setImportModalOpen(false)}
+        title="Import Candidate ATS Data"
+        subtitle="Bulk import candidate profiles into the ATS pipeline from an Excel (.xlsx, .xls) or CSV tracker. No passwords required."
+        columns={CANDIDATE_ATS_COLUMNS}
+        templateFilename="thinkwires_candidate_ats_template"
+        entityName="candidates"
+        showUpdateToggle={true}
+        apiImportFn={async (validRows, options) => {
+          const res = await adminApi.bulkImportCandidates(
+            validRows,
+            options.updateExisting
+          );
+          return res;
+        }}
+        onSuccess={() => {
+          fetchCandidates();
+        }}
+      />
     </div>
   );
 };
