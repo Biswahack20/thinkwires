@@ -394,7 +394,7 @@ const NewHero = ({ onOpenModal }) => {
                 <strong className="text-primary font-semibold">48 to 72 hours</strong>.
               </motion.p>
 
-              {/* Dual Action CTAs with Motion Physics */}
+              {/* Dual Action CTAs with Motion Physics - Single Horizontal Row */}
               <motion.div
                 variants={itemVariants}
                 className="NewHero-actionGroup"
@@ -412,19 +412,6 @@ const NewHero = ({ onOpenModal }) => {
                   <span>Deploy Bench Pool</span>
                 </motion.a>
 
-                <motion.a
-                  href="/hot-jobs"
-                  className="NewHero-btnSecondary"
-                  onClick={handleExploreJobs}
-                  whileHover={{ scale: 1.02, y: -2 }}
-                  whileTap={{ scale: 0.98 }}
-                >
-                  <span>Explore Hot Jobs</span>
-                  <span className="material-symbols-outlined NewHero-btnIcon">
-                    arrow_forward
-                  </span>
-                </motion.a>
-
                 <motion.button
                   type="button"
                   className="NewHero-btnScoping"
@@ -437,6 +424,19 @@ const NewHero = ({ onOpenModal }) => {
                   </span>
                   <span>Schedule Scoping Call</span>
                 </motion.button>
+
+                <motion.a
+                  href="/hot-jobs"
+                  className="NewHero-btnSecondary"
+                  onClick={handleExploreJobs}
+                  whileHover={{ scale: 1.02, y: -2 }}
+                  whileTap={{ scale: 0.98 }}
+                >
+                  <span>Explore Hot Jobs</span>
+                  <span className="material-symbols-outlined NewHero-btnIcon">
+                    arrow_forward
+                  </span>
+                </motion.a>
               </motion.div>
 
               {/* Trust Metrics Bar */}

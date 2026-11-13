@@ -395,7 +395,7 @@ const Reports = () => {
                 className="Reports-slide"
               >
                 <article className="Reports-card">
-                  <div style={{ display: 'flex', flexDirection: 'column', flex: '1 1 auto' }}>
+                  <div className="Reports-cardBody">
                     {/* Standardized Card Image Header */}
                     <div className="Reports-imageContainer">
                       <img
