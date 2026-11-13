@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useOutletContext } from 'react-router-dom';
 import { adminApi } from './adminService';
 import {
@@ -8,6 +8,81 @@ import {
   CloseIcon,
   AlertCircleIcon,
 } from './AdminIcons';
+
+// Lucide/Feather upload cloud icon
+const UploadCloudIcon = ({ size = 20, color = 'currentColor', style }) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke={color}
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    style={style}
+  >
+    <polyline points="16 16 12 12 8 16" />
+    <line x1="12" y1="12" x2="12" y2="21" />
+    <path d="M20.39 18.39A5 5 0 0 0 18 9h-1.26A8 8 0 1 0 3 16.3" />
+    <polyline points="16 16 12 12 8 16" />
+  </svg>
+);
+
+// Reads an image file from the user's computer/file manager,
+// resizes via HTML5 canvas if necessary to keep base64 payload optimized,
+// and returns a Base64 data URL string.
+const processImageFile = (file, maxDim = 1600, quality = 0.88) => {
+  return new Promise((resolve, reject) => {
+    if (!file) return reject(new Error('No file selected'));
+    if (!file.type || !file.type.startsWith('image/')) {
+      return reject(
+        new Error('Selected file is not an image (PNG, JPG, WebP, SVG supported).')
+      );
+    }
+
+    // Direct read for vector or small files
+    if (file.type === 'image/svg+xml' || file.size < 120 * 1024) {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = () => reject(new Error('Failed to read image file.'));
+      reader.readAsDataURL(file);
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        let { width, height } = img;
+        if (width > maxDim || height > maxDim) {
+          if (width > height) {
+            height = Math.round((height * maxDim) / width);
+            width = maxDim;
+          } else {
+            width = Math.round((width * maxDim) / height);
+            height = maxDim;
+          }
+        }
+        const canvas = document.createElement('canvas');
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+        const outputType =
+          file.type === 'image/png' ? 'image/png' : 'image/jpeg';
+        const dataUrl = canvas.toDataURL(outputType, quality);
+        resolve(dataUrl);
+      };
+      img.onerror = () => {
+        resolve(e.target.result);
+      };
+      img.src = e.target.result;
+    };
+    reader.onerror = () => reject(new Error('Failed to read image file.'));
+    reader.readAsDataURL(file);
+  });
+};
 
 // Helper to render article body paragraphs and markdown images in preview modal
 const renderArticleContent = (content) => {
@@ -109,6 +184,94 @@ const BlogManager = () => {
 
   const [formError, setFormError] = useState('');
 
+  // Image Upload File References & Upload Mode States
+  const featuredFileInputRef = useRef(null);
+  const authorFileInputRef = useRef(null);
+  const bodyImageFileInputRef = useRef(null);
+
+  const [featuredInputMode, setFeaturedInputMode] = useState('file'); // 'file' | 'url'
+  const [authorInputMode, setAuthorInputMode] = useState('file'); // 'file' | 'url'
+  const [isDraggingFeatured, setIsDraggingFeatured] = useState(false);
+
+  const handleFeaturedFileSelect = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    try {
+      const dataUrl = await processImageFile(file, 1600, 0.88);
+      setFormData((prev) => ({ ...prev, featuredImageUrl: dataUrl }));
+      showToast(`Featured banner loaded from '${file.name}'.`);
+    } catch (err) {
+      showToast(err.message || 'Could not process featured image.');
+    }
+    e.target.value = '';
+  };
+
+  const handleFeaturedDrop = async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDraggingFeatured(false);
+    const file = e.dataTransfer.files?.[0];
+    if (!file) return;
+    try {
+      const dataUrl = await processImageFile(file, 1600, 0.88);
+      setFormData((prev) => ({ ...prev, featuredImageUrl: dataUrl }));
+      showToast(`Featured banner loaded from '${file.name}'.`);
+    } catch (err) {
+      showToast(err.message || 'Could not process dropped image.');
+    }
+  };
+
+  const handleAuthorFileSelect = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    try {
+      const dataUrl = await processImageFile(file, 500, 0.88);
+      setFormData((prev) => ({ ...prev, authorAvatar: dataUrl }));
+      showToast(`Author photo loaded from '${file.name}'.`);
+    } catch (err) {
+      showToast(err.message || 'Could not process author photo.');
+    }
+    e.target.value = '';
+  };
+
+  const handleBodyImageFileSelect = async (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    try {
+      const dataUrl = await processImageFile(file, 1400, 0.88);
+      const defaultCaption = file.name.replace(/\.[^/.]+$/, '');
+      const caption =
+        window.prompt(
+          'Enter Image Caption / Alt text (optional):',
+          defaultCaption
+        ) ||
+        defaultCaption ||
+        'Visual Analysis';
+      const mdImage = `\n\n![${caption}](${dataUrl})\n\n`;
+      setFormData((prev) => ({
+        ...prev,
+        body: (prev.body || '') + mdImage,
+      }));
+      showToast(`Image '${file.name}' inserted into body.`);
+    } catch (err) {
+      showToast(err.message || 'Could not process body image.');
+    }
+    e.target.value = '';
+  };
+
+  const handleInsertBodyImageUrl = () => {
+    const url = window.prompt('Enter Image URL:');
+    if (!url) return;
+    const caption =
+      window.prompt('Enter Image Caption / Alt text (optional):') ||
+      'Visual Analysis';
+    const mdImage = `\n\n![${caption}](${url})\n\n`;
+    setFormData((prev) => ({
+      ...prev,
+      body: (prev.body || '') + mdImage,
+    }));
+  };
+
   const fetchArticles = () => {
     setLoading(true);
     adminApi
@@ -159,10 +322,12 @@ const BlogManager = () => {
       authorRole: 'Chief Technology Advisor',
       authorAvatar: '',
       category: 'Industry Insights',
-      featuredImageUrl: '/assets/blog_ai_gcc_dashboard.jpg',
+      featuredImageUrl: '',
       tags: 'GCC, Staffing, Enterprise Innovation',
       status: 'draft',
     });
+    setFeaturedInputMode('file');
+    setAuthorInputMode('file');
     setFormError('');
     setEditorOpen(true);
   };
@@ -188,6 +353,8 @@ const BlogManager = () => {
       tags: Array.isArray(art.tags) ? art.tags.join(', ') : art.tags || '',
       status: art.status || 'published',
     });
+    setFeaturedInputMode('file');
+    setAuthorInputMode('file');
     setFormError('');
     setEditorOpen(true);
   };
@@ -784,81 +951,277 @@ const BlogManager = () => {
                 </div>
 
                 <div className="tw-form-group">
-                  <label className="tw-form-label">
-                    Author Image / Avatar URL
-                  </label>
                   <div
                     style={{
                       display: 'flex',
+                      justifyContent: 'space-between',
                       alignItems: 'center',
-                      gap: '0.75rem',
+                      marginBottom: '0.4rem',
                     }}
                   >
-                    <input
-                      type="text"
-                      className="tw-form-input"
-                      value={formData.authorAvatar}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          authorAvatar: e.target.value,
-                        })
-                      }
-                      placeholder="https://... or /assets/authors/avatar.jpg"
-                      style={{ flex: 1 }}
-                    />
-                    {formData.authorAvatar ? (
-                      <img
-                        src={formData.authorAvatar}
-                        alt="Author Preview"
+                    <label className="tw-form-label" style={{ marginBottom: 0 }}>
+                      Author Image / Avatar
+                    </label>
+                    <div
+                      style={{
+                        display: 'inline-flex',
+                        backgroundColor: '#F1F5F9',
+                        borderRadius: '6px',
+                        padding: '2px',
+                        gap: '2px',
+                      }}
+                    >
+                      <button
+                        type="button"
+                        onClick={() => setAuthorInputMode('file')}
                         style={{
-                          width: '38px',
-                          height: '38px',
-                          borderRadius: '50%',
-                          objectFit: 'cover',
-                          border: '2px solid #E2E8F0',
-                          flexShrink: 0,
-                        }}
-                        onError={(e) => {
-                          e.target.style.display = 'none';
-                        }}
-                      />
-                    ) : (
-                      <div
-                        style={{
-                          width: '38px',
-                          height: '38px',
-                          borderRadius: '50%',
-                          backgroundColor: '#E2E8F0',
-                          color: '#475569',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          fontSize: '0.75rem',
+                          border: 'none',
+                          padding: '0.2rem 0.55rem',
+                          borderRadius: '4px',
+                          fontSize: '0.72rem',
                           fontWeight: 600,
-                          flexShrink: 0,
+                          cursor: 'pointer',
+                          backgroundColor:
+                            authorInputMode === 'file' ? '#FFFFFF' : 'transparent',
+                          color:
+                            authorInputMode === 'file' ? '#0F172A' : '#64748B',
+                          boxShadow:
+                            authorInputMode === 'file'
+                              ? '0 1px 2px rgba(0,0,0,0.06)'
+                              : 'none',
                         }}
                       >
-                        {formData.authorName
-                          ? formData.authorName
-                              .split(' ')
-                              .map((n) => n[0])
-                              .join('')
-                              .slice(0, 2)
-                              .toUpperCase()
-                          : 'TW'}
-                      </div>
-                    )}
+                        📁 Upload from Device
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setAuthorInputMode('url')}
+                        style={{
+                          border: 'none',
+                          padding: '0.2rem 0.55rem',
+                          borderRadius: '4px',
+                          fontSize: '0.72rem',
+                          fontWeight: 600,
+                          cursor: 'pointer',
+                          backgroundColor:
+                            authorInputMode === 'url' ? '#FFFFFF' : 'transparent',
+                          color:
+                            authorInputMode === 'url' ? '#0F172A' : '#64748B',
+                          boxShadow:
+                            authorInputMode === 'url'
+                              ? '0 1px 2px rgba(0,0,0,0.06)'
+                              : 'none',
+                        }}
+                      >
+                        🔗 Image URL
+                      </button>
+                    </div>
                   </div>
+
+                  {/* Hidden file input for Author Photo */}
+                  <input
+                    type="file"
+                    ref={authorFileInputRef}
+                    accept="image/png,image/jpeg,image/jpg,image/webp,image/svg+xml"
+                    style={{ display: 'none' }}
+                    onChange={handleAuthorFileSelect}
+                  />
+
+                  {authorInputMode === 'file' ? (
+                    <div
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.85rem',
+                        padding: '0.65rem 0.85rem',
+                        borderRadius: '8px',
+                        border: '1px solid #E2E8F0',
+                        backgroundColor: '#F8FAFC',
+                      }}
+                    >
+                      {formData.authorAvatar ? (
+                        <img
+                          src={formData.authorAvatar}
+                          alt="Author Preview"
+                          style={{
+                            width: '44px',
+                            height: '44px',
+                            borderRadius: '50%',
+                            objectFit: 'cover',
+                            border: '2px solid #059669',
+                            flexShrink: 0,
+                          }}
+                          onError={(e) => {
+                            e.target.style.display = 'none';
+                          }}
+                        />
+                      ) : (
+                        <div
+                          style={{
+                            width: '44px',
+                            height: '44px',
+                            borderRadius: '50%',
+                            backgroundColor: '#E2E8F0',
+                            color: '#475569',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            fontSize: '0.85rem',
+                            fontWeight: 700,
+                            flexShrink: 0,
+                          }}
+                        >
+                          {formData.authorName
+                            ? formData.authorName
+                                .split(' ')
+                                .map((n) => n[0])
+                                .join('')
+                                .slice(0, 2)
+                                .toUpperCase()
+                            : 'TW'}
+                        </div>
+                      )}
+
+                      <div style={{ flex: 1 }}>
+                        <div
+                          style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '0.5rem',
+                            flexWrap: 'wrap',
+                          }}
+                        >
+                          <button
+                            type="button"
+                            onClick={() => authorFileInputRef.current?.click()}
+                            style={{
+                              display: 'inline-flex',
+                              alignItems: 'center',
+                              gap: '0.4rem',
+                              padding: '0.35rem 0.75rem',
+                              fontSize: '0.78rem',
+                              fontWeight: 600,
+                              borderRadius: '6px',
+                              backgroundColor: '#FFFFFF',
+                              color: '#0F172A',
+                              border: '1px solid #CBD5E1',
+                              cursor: 'pointer',
+                              boxShadow: '0 1px 2px rgba(0,0,0,0.04)',
+                            }}
+                          >
+                            📁 Choose Photo from Files / Document
+                          </button>
+                          {formData.authorAvatar && (
+                            <button
+                              type="button"
+                              onClick={() =>
+                                setFormData((prev) => ({
+                                  ...prev,
+                                  authorAvatar: '',
+                                }))
+                              }
+                              style={{
+                                border: 'none',
+                                background: 'transparent',
+                                color: '#EF4444',
+                                fontSize: '0.75rem',
+                                fontWeight: 600,
+                                cursor: 'pointer',
+                                padding: '0.2rem 0.4rem',
+                              }}
+                            >
+                              ✕ Remove Photo
+                            </button>
+                          )}
+                        </div>
+                        <span
+                          style={{
+                            fontSize: '0.72rem',
+                            color: '#64748B',
+                            marginTop: '0.3rem',
+                            display: 'block',
+                          }}
+                        >
+                          {formData.authorAvatar
+                            ? 'Custom profile photo loaded from your computer.'
+                            : 'Pick a headshot or avatar from your computer (JPG, PNG, WebP).'}
+                        </span>
+                      </div>
+                    </div>
+                  ) : (
+                    <div
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.75rem',
+                      }}
+                    >
+                      <input
+                        type="text"
+                        className="tw-form-input"
+                        value={formData.authorAvatar}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            authorAvatar: e.target.value,
+                          })
+                        }
+                        placeholder="https://... or /assets/authors/avatar.jpg"
+                        style={{ flex: 1 }}
+                      />
+                      {formData.authorAvatar ? (
+                        <img
+                          src={formData.authorAvatar}
+                          alt="Author Preview"
+                          style={{
+                            width: '38px',
+                            height: '38px',
+                            borderRadius: '50%',
+                            objectFit: 'cover',
+                            border: '2px solid #E2E8F0',
+                            flexShrink: 0,
+                          }}
+                          onError={(e) => {
+                            e.target.style.display = 'none';
+                          }}
+                        />
+                      ) : (
+                        <div
+                          style={{
+                            width: '38px',
+                            height: '38px',
+                            borderRadius: '50%',
+                            backgroundColor: '#E2E8F0',
+                            color: '#475569',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            fontSize: '0.75rem',
+                            fontWeight: 600,
+                            flexShrink: 0,
+                          }}
+                        >
+                          {formData.authorName
+                            ? formData.authorName
+                                .split(' ')
+                                .map((n) => n[0])
+                                .join('')
+                                .slice(0, 2)
+                                .toUpperCase()
+                            : 'TW'}
+                        </div>
+                      )}
+                    </div>
+                  )}
                   <span
                     style={{
                       fontSize: '0.72rem',
                       color: '#64748B',
-                      marginTop: '0.25rem',
+                      marginTop: '0.3rem',
                       display: 'block',
                     }}
                   >
-                    Direct image URL for the author profile picture (displayed on blog cards and reader modal).
+                    Author profile picture displayed on blog cards, insights carousel, and reader modal.
                   </span>
                 </div>
 
@@ -914,43 +1277,70 @@ const BlogManager = () => {
                       display: 'flex',
                       justifyContent: 'space-between',
                       alignItems: 'center',
-                      marginBottom: '0.35rem',
+                      marginBottom: '0.4rem',
+                      flexWrap: 'wrap',
+                      gap: '0.5rem',
                     }}
                   >
                     <label className="tw-form-label" style={{ marginBottom: 0 }}>
                       Full Article Body *
                     </label>
-                    <button
-                      type="button"
-                      onClick={() => {
-                        const url = window.prompt('Enter Image URL:');
-                        if (!url) return;
-                        const caption =
-                          window.prompt('Enter Image Caption / Alt text (optional):') ||
-                          'Visual Analysis';
-                        const mdImage = `\n\n![${caption}](${url})\n\n`;
-                        setFormData((prev) => ({
-                          ...prev,
-                          body: prev.body + mdImage,
-                        }));
-                      }}
+                    <div
                       style={{
-                        display: 'inline-flex',
+                        display: 'flex',
                         alignItems: 'center',
-                        gap: '0.35rem',
-                        padding: '0.2rem 0.65rem',
-                        fontSize: '0.75rem',
-                        fontWeight: 600,
-                        borderRadius: '6px',
-                        backgroundColor: '#EEF2FF',
-                        color: '#4F46E5',
-                        border: '1px solid #C7D2FE',
-                        cursor: 'pointer',
+                        gap: '0.4rem',
                       }}
-                      title="Insert markdown image syntax into body"
                     >
-                      🖼️ Insert Image into Body
-                    </button>
+                      {/* Hidden file input for inserting image into markdown body */}
+                      <input
+                        type="file"
+                        ref={bodyImageFileInputRef}
+                        accept="image/png,image/jpeg,image/jpg,image/webp,image/svg+xml"
+                        style={{ display: 'none' }}
+                        onChange={handleBodyImageFileSelect}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => bodyImageFileInputRef.current?.click()}
+                        style={{
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '0.35rem',
+                          padding: '0.25rem 0.7rem',
+                          fontSize: '0.75rem',
+                          fontWeight: 600,
+                          borderRadius: '6px',
+                          backgroundColor: '#ECFDF5',
+                          color: '#059669',
+                          border: '1px solid #A7F3D0',
+                          cursor: 'pointer',
+                        }}
+                        title="Upload picture from your computer and insert into article body"
+                      >
+                        📁 Insert Image from Document
+                      </button>
+                      <button
+                        type="button"
+                        onClick={handleInsertBodyImageUrl}
+                        style={{
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '0.35rem',
+                          padding: '0.25rem 0.6rem',
+                          fontSize: '0.75rem',
+                          fontWeight: 600,
+                          borderRadius: '6px',
+                          backgroundColor: '#EEF2FF',
+                          color: '#4F46E5',
+                          border: '1px solid #C7D2FE',
+                          cursor: 'pointer',
+                        }}
+                        title="Insert image by external web URL"
+                      >
+                        🔗 Via URL
+                      </button>
+                    </div>
                   </div>
                   <textarea
                     className="tw-form-textarea"
@@ -959,7 +1349,7 @@ const BlogManager = () => {
                     onChange={(e) =>
                       setFormData({ ...formData, body: e.target.value })
                     }
-                    placeholder="Enter full article paragraphs, analysis, benchmarks... Markdown images supported: ![Caption](https://url.com/image.jpg)"
+                    placeholder="Enter full article paragraphs, analysis, benchmarks... Markdown images supported: ![Caption](image-url)"
                     required
                   ></textarea>
                   <span
@@ -970,50 +1360,284 @@ const BlogManager = () => {
                       display: 'block',
                     }}
                   >
-                    💡 <strong>Tip:</strong> Embed visuals anytime using <code>![Caption](image-url)</code> or click <strong>🖼️ Insert Image into Body</strong> above.
+                    💡 <strong>Tip:</strong> Upload visuals directly from your computer with <strong>📁 Insert Image from Document</strong> above, or embed using <code>![Caption](url)</code>.
                   </span>
                 </div>
 
                 <div className="tw-form-group">
-                  <label className="tw-form-label">Featured Image URL (Card & Header Banner)</label>
                   <div
                     style={{
                       display: 'flex',
+                      justifyContent: 'space-between',
                       alignItems: 'center',
-                      gap: '0.75rem',
+                      marginBottom: '0.4rem',
                     }}
                   >
-                    <input
-                      type="text"
-                      className="tw-form-input"
-                      value={formData.featuredImageUrl}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          featuredImageUrl: e.target.value,
-                        })
-                      }
-                      placeholder="/assets/blog_ai_gcc_dashboard.jpg or https://..."
-                      style={{ flex: 1 }}
-                    />
-                    {formData.featuredImageUrl && (
-                      <img
-                        src={formData.featuredImageUrl}
-                        alt="Banner Preview"
+                    <label className="tw-form-label" style={{ marginBottom: 0 }}>
+                      Featured Image (Card & Header Banner)
+                    </label>
+                    <div
+                      style={{
+                        display: 'inline-flex',
+                        backgroundColor: '#F1F5F9',
+                        borderRadius: '6px',
+                        padding: '2px',
+                        gap: '2px',
+                      }}
+                    >
+                      <button
+                        type="button"
+                        onClick={() => setFeaturedInputMode('file')}
                         style={{
-                          width: '54px',
-                          height: '36px',
-                          borderRadius: '6px',
-                          objectFit: 'cover',
-                          border: '1px solid #CBD5E1',
-                          flexShrink: 0,
+                          border: 'none',
+                          padding: '0.2rem 0.55rem',
+                          borderRadius: '4px',
+                          fontSize: '0.72rem',
+                          fontWeight: 600,
+                          cursor: 'pointer',
+                          backgroundColor:
+                            featuredInputMode === 'file' ? '#FFFFFF' : 'transparent',
+                          color:
+                            featuredInputMode === 'file' ? '#0F172A' : '#64748B',
+                          boxShadow:
+                            featuredInputMode === 'file'
+                              ? '0 1px 2px rgba(0,0,0,0.06)'
+                              : 'none',
                         }}
-                        onError={(e) => {
-                          e.target.style.display = 'none';
+                      >
+                        📁 Upload from Device
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setFeaturedInputMode('url')}
+                        style={{
+                          border: 'none',
+                          padding: '0.2rem 0.55rem',
+                          borderRadius: '4px',
+                          fontSize: '0.72rem',
+                          fontWeight: 600,
+                          cursor: 'pointer',
+                          backgroundColor:
+                            featuredInputMode === 'url' ? '#FFFFFF' : 'transparent',
+                          color:
+                            featuredInputMode === 'url' ? '#0F172A' : '#64748B',
+                          boxShadow:
+                            featuredInputMode === 'url'
+                              ? '0 1px 2px rgba(0,0,0,0.06)'
+                              : 'none',
                         }}
-                      />
-                    )}
+                      >
+                        🔗 Image URL
+                      </button>
+                    </div>
                   </div>
+
+                  {/* Hidden file input for Featured Banner */}
+                  <input
+                    type="file"
+                    ref={featuredFileInputRef}
+                    accept="image/png,image/jpeg,image/jpg,image/webp,image/svg+xml"
+                    style={{ display: 'none' }}
+                    onChange={handleFeaturedFileSelect}
+                  />
+
+                  {featuredInputMode === 'file' ? (
+                    formData.featuredImageUrl ? (
+                      <div
+                        style={{
+                          position: 'relative',
+                          borderRadius: '8px',
+                          overflow: 'hidden',
+                          border: '1px solid #CBD5E1',
+                          backgroundColor: '#0F172A',
+                          height: '160px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                        }}
+                      >
+                        <img
+                          src={formData.featuredImageUrl}
+                          alt="Banner Preview"
+                          style={{
+                            width: '100%',
+                            height: '100%',
+                            objectFit: 'cover',
+                          }}
+                          onError={(e) => {
+                            e.target.style.display = 'none';
+                          }}
+                        />
+                        <div
+                          style={{
+                            position: 'absolute',
+                            inset: 0,
+                            background:
+                              'linear-gradient(to top, rgba(15,23,42,0.85) 0%, rgba(15,23,42,0.15) 50%, rgba(15,23,42,0.4) 100%)',
+                            display: 'flex',
+                            alignItems: 'flex-end',
+                            justifyContent: 'space-between',
+                            padding: '0.75rem 1rem',
+                          }}
+                        >
+                          <span
+                            style={{
+                              color: '#F8FAFC',
+                              fontSize: '0.78rem',
+                              fontWeight: 600,
+                              display: 'inline-flex',
+                              alignItems: 'center',
+                              gap: '0.35rem',
+                              backgroundColor: 'rgba(0,0,0,0.4)',
+                              padding: '0.2rem 0.5rem',
+                              borderRadius: '4px',
+                            }}
+                          >
+                            ✓ Featured Banner Ready
+                          </span>
+                          <div style={{ display: 'flex', gap: '0.5rem' }}>
+                            <button
+                              type="button"
+                              onClick={() => featuredFileInputRef.current?.click()}
+                              style={{
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: '0.35rem',
+                                backgroundColor: '#FFFFFF',
+                                color: '#0F172A',
+                                border: 'none',
+                                borderRadius: '6px',
+                                padding: '0.35rem 0.75rem',
+                                fontSize: '0.75rem',
+                                fontWeight: 600,
+                                cursor: 'pointer',
+                                boxShadow: '0 2px 4px rgba(0,0,0,0.15)',
+                              }}
+                            >
+                              📁 Replace from Device
+                            </button>
+                            <button
+                              type="button"
+                              onClick={() =>
+                                setFormData((prev) => ({
+                                  ...prev,
+                                  featuredImageUrl: '',
+                                }))
+                              }
+                              style={{
+                                backgroundColor: 'rgba(239, 68, 68, 0.95)',
+                                color: '#FFFFFF',
+                                border: 'none',
+                                borderRadius: '6px',
+                                padding: '0.35rem 0.65rem',
+                                fontSize: '0.75rem',
+                                fontWeight: 600,
+                                cursor: 'pointer',
+                              }}
+                            >
+                              ✕ Remove
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    ) : (
+                      <div
+                        onClick={() => featuredFileInputRef.current?.click()}
+                        onDragOver={(e) => {
+                          e.preventDefault();
+                          setIsDraggingFeatured(true);
+                        }}
+                        onDragLeave={() => setIsDraggingFeatured(false)}
+                        onDrop={handleFeaturedDrop}
+                        style={{
+                          border: isDraggingFeatured
+                            ? '2px dashed #059669'
+                            : '2px dashed #CBD5E1',
+                          backgroundColor: isDraggingFeatured
+                            ? '#ECFDF5'
+                            : '#F8FAFC',
+                          borderRadius: '8px',
+                          padding: '1.75rem 1rem',
+                          textAlign: 'center',
+                          cursor: 'pointer',
+                          transition: 'all 0.15s ease-in-out',
+                        }}
+                      >
+                        <div
+                          style={{
+                            color: '#059669',
+                            marginBottom: '0.5rem',
+                            display: 'flex',
+                            justifyContent: 'center',
+                          }}
+                        >
+                          <UploadCloudIcon size={32} />
+                        </div>
+                        <div
+                          style={{
+                            fontSize: '0.88rem',
+                            fontWeight: 600,
+                            color: '#1E293B',
+                            marginBottom: '0.25rem',
+                          }}
+                        >
+                          Click to choose image from Windows Documents / File Manager
+                        </div>
+                        <div style={{ fontSize: '0.75rem', color: '#64748B' }}>
+                          or drag and drop your image file here • Supports PNG, JPG, WebP, SVG
+                        </div>
+                      </div>
+                    )
+                  ) : (
+                    <div
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.75rem',
+                      }}
+                    >
+                      <input
+                        type="text"
+                        className="tw-form-input"
+                        value={formData.featuredImageUrl}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            featuredImageUrl: e.target.value,
+                          })
+                        }
+                        placeholder="/assets/blog_ai_gcc_dashboard.jpg or https://..."
+                        style={{ flex: 1 }}
+                      />
+                      {formData.featuredImageUrl && (
+                        <img
+                          src={formData.featuredImageUrl}
+                          alt="Banner Preview"
+                          style={{
+                            width: '54px',
+                            height: '36px',
+                            borderRadius: '6px',
+                            objectFit: 'cover',
+                            border: '1px solid #CBD5E1',
+                            flexShrink: 0,
+                          }}
+                          onError={(e) => {
+                            e.target.style.display = 'none';
+                          }}
+                        />
+                      )}
+                    </div>
+                  )}
+                  <span
+                    style={{
+                      fontSize: '0.72rem',
+                      color: '#64748B',
+                      marginTop: '0.3rem',
+                      display: 'block',
+                    }}
+                  >
+                    Main headline visual displayed on the Talent Advisory Insights carousel and article page banner.
+                  </span>
                 </div>
               </div>
 
