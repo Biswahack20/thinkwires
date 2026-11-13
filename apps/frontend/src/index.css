@@ -20635,6 +20635,25 @@ textarea {
   }
 }
 
+/* Card 2 Footer Spacing Enhancement */
+.Eor-cardFooter--second {
+  gap: 1rem !important;
+  justify-content: space-between !important;
+}
+
+.Eor-cardFooterLeft--second {
+  text-align: left;
+  flex: 1 1 auto;
+  min-width: 0;
+  line-height: 1.4;
+}
+
+.Eor-cardFooterRight--second {
+  text-align: right;
+  flex-shrink: 0;
+  line-height: 1.4;
+}
+
 /* Separation Model */
 .Eor-separationGrid {
   display: grid;
