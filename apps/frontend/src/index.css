@@ -11188,6 +11188,36 @@ textarea {
   font-family: inherit;
 }
 
+.AboutCTA-select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23475569' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 22px center;
+  background-size: 15px 15px;
+  padding-right: 48px;
+  cursor: pointer;
+}
+
+.AboutCTA-select::-ms-expand {
+  display: none;
+}
+
+[data-theme='dark'] .AboutCTA-select {
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+}
+
+.AboutCTA-select option {
+  background-color: var(--color-surface, #ffffff);
+  color: var(--color-navy-dark, #0f172a);
+}
+
+[data-theme='dark'] .AboutCTA-select option {
+  background-color: var(--color-surface-container, #1e2230);
+  color: #f8fafc;
+}
+
 .AboutCTA-input:focus,
 .AboutCTA-select:focus,
 .AboutCTA-textarea:focus {
