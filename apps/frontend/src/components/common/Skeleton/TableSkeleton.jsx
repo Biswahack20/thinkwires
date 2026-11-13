@@ -47,7 +47,6 @@ export const TableSkeleton = ({
           {rowIndices.map((rowIdx) => (
             <tr key={rowIdx}>
               {columnIndices.map((colIdx) => {
-                // Vary widths slightly across columns to simulate real text
                 const widths = ['80%', '65%', '90%', '70%', '55%'];
                 const width = widths[colIdx % widths.length];
                 return (

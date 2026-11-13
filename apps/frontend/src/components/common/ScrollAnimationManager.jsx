@@ -29,7 +29,7 @@ const TARGET_SELECTORS = [
   '.Industries-header',
   '.Industries-card',
   '.Reports-header',
-  '.Reports-card',
+  '.Reports-carouselTrack',
   '.CTA-card',
 
   // --- About Page ---

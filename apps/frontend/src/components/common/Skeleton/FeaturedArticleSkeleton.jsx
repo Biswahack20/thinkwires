@@ -3,73 +3,64 @@ import Skeleton from './Skeleton';
 import './skeleton.css';
 
 /**
- * Skeleton Loader matching Thinkwires Featured Flagship Paper Layout
+ * Skeleton Loader matching Thinkwires Flagship Featured Article Layout
  *
  * @param {Object} props
  * @param {string} [props.className] - Optional extra class
  */
 export const FeaturedArticleSkeleton = ({ className = '' }) => {
   return (
-    <section
+    <article
       className={`tw-skeleton-featured-card ${className}`}
       role="status"
       aria-busy="true"
-      aria-label="Loading featured flagship research..."
+      aria-label="Loading featured article..."
     >
-      {/* Left Column: Image with Overlays */}
-      <div style={{ position: 'relative', width: '100%', minHeight: '340px' }}>
-        <Skeleton variant="rounded" width="100%" height="100%" style={{ minHeight: '340px' }} />
-      </div>
-
-      {/* Right Column: Article Details */}
+      {/* Left Column: Flagship Article Details */}
       <div className="tw-skeleton-featured-content">
-        {/* Categories Bar */}
-        <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-          <Skeleton variant="rounded" width={115} height={24} />
-          <Skeleton variant="rounded" width={95} height={24} />
-          <Skeleton variant="rounded" width={105} height={24} />
+        {/* Top Badges */}
+        <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
+          <Skeleton variant="rounded" width={130} height={28} />
+          <Skeleton variant="rounded" width={90} height={28} />
         </div>
 
-        {/* Flagship Title */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.6rem' }}>
+        {/* Title (2 lines) */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
           <Skeleton variant="text" width="95%" height={32} />
-          <Skeleton variant="text" width="80%" height={32} />
+          <Skeleton variant="text" width="70%" height={32} />
         </div>
 
-        {/* Excerpt */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.45rem' }}>
+        {/* Excerpt (3 lines) */}
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
           <Skeleton variant="text" width="100%" height={16} />
-          <Skeleton variant="text" width="96%" height={16} />
-          <Skeleton variant="text" width="70%" height={16} />
+          <Skeleton variant="text" width="92%" height={16} />
+          <Skeleton variant="text" width="80%" height={16} />
         </div>
 
-        {/* Primary Finding Callout */}
+        {/* Callout Box */}
         <div className="tw-skeleton-featured-callout">
           <Skeleton variant="text" width={140} height={14} />
-          <Skeleton variant="text" width="95%" height={16} />
+          <Skeleton variant="text" width="90%" height={14} />
         </div>
 
-        {/* Author Metadata & Actions */}
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            marginTop: 'auto',
-            paddingTop: '1rem',
-          }}
-        >
+        {/* Author & Read Time */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 'auto' }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
             <Skeleton variant="circular" width={42} height={42} />
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.25rem' }}>
-              <Skeleton variant="text" width={140} height={16} />
-              <Skeleton variant="text" width={100} height={13} />
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.3rem' }}>
+              <Skeleton variant="text" width={120} height={16} />
+              <Skeleton variant="text" width={80} height={12} />
             </div>
           </div>
-          <Skeleton variant="rounded" width={140} height={42} />
+          <Skeleton variant="rounded" width={110} height={36} />
         </div>
       </div>
-    </section>
+
+      {/* Right Column: Hero Graphic Preview */}
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', minHeight: 280 }}>
+        <Skeleton variant="rounded" width="100%" height="100%" style={{ minHeight: 280, borderRadius: '16px' }} />
+      </div>
+    </article>
   );
 };
 

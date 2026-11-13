@@ -8,9 +8,22 @@ import {
   JobCardSkeleton,
   BenchTalentSkeleton,
   TableSkeleton,
+  CapabilityCardSkeleton,
+  CapabilitiesSkeleton,
+  OpeningsCardSkeleton,
+  OpeningsSkeleton,
+  IndustriesSkeleton,
+  ProcessSkeleton,
+  StatsJourneySkeleton,
+  ReportsSkeleton,
+  CTASkeleton,
+  HomePageSkeleton,
 } from '../../components/common/Skeleton';
 import BlogGrid from '../../components/BlogComponents/BlogGrid';
 import BenchCandidateGrid from '../../components/BenchComponents/BenchCandidateGrid';
+import Openings from '../../components/HomeComponents/Openings';
+import Capabilities from '../../components/HomeComponents/Capabilities';
+import Reports from '../../components/HomeComponents/Reports';
 import { renderWithProviders } from '../test-utils';
 
 describe('Thinkwires Custom Skeleton Loading Suite', () => {
@@ -130,7 +143,69 @@ describe('Thinkwires Custom Skeleton Loading Suite', () => {
     });
   });
 
-  describe('Integration in Grid Components', () => {
+  describe('Homepage Preset Skeletons', () => {
+    it('renders CapabilityCardSkeleton and CapabilitiesSkeleton', () => {
+      const { container, rerender } = render(<CapabilityCardSkeleton count={3} />);
+      expect(container.querySelectorAll('.tw-skeleton-capability-card')).toHaveLength(3);
+
+      rerender(<CapabilitiesSkeleton count={4} />);
+      expect(container.querySelector('.tw-skeleton-capabilities-section')).toBeInTheDocument();
+      expect(container.querySelectorAll('.tw-skeleton-capability-card')).toHaveLength(4);
+    });
+
+    it('renders OpeningsCardSkeleton and OpeningsSkeleton', () => {
+      const { container, rerender } = render(<OpeningsCardSkeleton count={2} />);
+      expect(container.querySelectorAll('.tw-skeleton-openings-card')).toHaveLength(2);
+
+      rerender(<OpeningsSkeleton count={4} />);
+      expect(container.querySelector('.tw-skeleton-openings-section')).toBeInTheDocument();
+      expect(container.querySelectorAll('.tw-skeleton-openings-card')).toHaveLength(4);
+    });
+
+    it('renders IndustriesSkeleton with carousel cards', () => {
+      const { container } = render(<IndustriesSkeleton count={3} />);
+      expect(container.querySelector('.tw-skeleton-industries-section')).toBeInTheDocument();
+      expect(container.querySelectorAll('.tw-skeleton-industries-card')).toHaveLength(3);
+    });
+
+    it('renders ProcessSkeleton with step cards', () => {
+      const { container } = render(<ProcessSkeleton count={5} />);
+      expect(container.querySelector('.tw-skeleton-process-section')).toBeInTheDocument();
+      expect(container.querySelectorAll('.tw-skeleton-process-card')).toHaveLength(5);
+    });
+
+    it('renders StatsJourneySkeleton with metrics cards', () => {
+      const { container } = render(<StatsJourneySkeleton />);
+      expect(container.querySelector('.tw-skeleton-stats-section')).toBeInTheDocument();
+      expect(container.querySelectorAll('.tw-skeleton-stats-card')).toHaveLength(4);
+    });
+
+    it('renders ReportsSkeleton with report cards', () => {
+      const { container } = render(<ReportsSkeleton count={3} />);
+      expect(container.querySelector('.tw-skeleton-reports-section')).toBeInTheDocument();
+      expect(container.querySelectorAll('.tw-skeleton-blog-card')).toHaveLength(3);
+    });
+
+    it('renders CTASkeleton banner layout', () => {
+      const { container } = render(<CTASkeleton />);
+      expect(container.querySelector('.tw-skeleton-cta-section')).toBeInTheDocument();
+      expect(container.querySelector('.tw-skeleton-cta-banner')).toBeInTheDocument();
+    });
+
+    it('renders HomePageSkeleton composite suite', () => {
+      const { container } = render(<HomePageSkeleton />);
+      expect(container.querySelector('.tw-skeleton-homepage')).toBeInTheDocument();
+      expect(container.querySelector('.tw-skeleton-capabilities-section')).toBeInTheDocument();
+      expect(container.querySelector('.tw-skeleton-openings-section')).toBeInTheDocument();
+      expect(container.querySelector('.tw-skeleton-process-section')).toBeInTheDocument();
+      expect(container.querySelector('.tw-skeleton-stats-section')).toBeInTheDocument();
+      expect(container.querySelector('.tw-skeleton-industries-section')).toBeInTheDocument();
+      expect(container.querySelector('.tw-skeleton-reports-section')).toBeInTheDocument();
+      expect(container.querySelector('.tw-skeleton-cta-section')).toBeInTheDocument();
+    });
+  });
+
+  describe('Integration in Grid & Homepage Components', () => {
     it('renders BlogCardSkeleton in BlogGrid when isLoading is true', () => {
       const { container } = render(
         <BlogGrid articles={[]} isLoading={true} />
@@ -145,6 +220,46 @@ describe('Thinkwires Custom Skeleton Loading Suite', () => {
       );
       const skeletons = container.querySelectorAll('.tw-skeleton-bench-card');
       expect(skeletons).toHaveLength(6);
+    });
+
+    it('renders OpeningsCardSkeleton in Openings when status.openings is loading', () => {
+      const preloadedState = {
+        home: {
+          openings: [],
+          status: { openings: 'loading', capabilities: 'idle', stats: 'idle' },
+          errors: {},
+        },
+      };
+      const { container } = renderWithProviders(<Openings />, { preloadedState });
+      const skeletons = container.querySelectorAll('.tw-skeleton-openings-card');
+      expect(skeletons).toHaveLength(4);
+    });
+
+    it('renders CapabilityCardSkeleton in Capabilities when status.capabilities is loading', () => {
+      const preloadedState = {
+        home: {
+          capabilities: [],
+          status: { openings: 'idle', capabilities: 'loading', stats: 'idle' },
+          errors: {},
+        },
+      };
+      const { container } = renderWithProviders(<Capabilities />, { preloadedState });
+      const skeletons = container.querySelectorAll('.tw-skeleton-capability-card');
+      expect(skeletons).toHaveLength(4);
+    });
+
+    it('renders BlogCardSkeleton in Reports when blogStatus is loading', () => {
+      const preloadedState = {
+        blog: {
+          articles: [],
+          featuredArticle: null,
+          status: 'loading',
+          error: null,
+        },
+      };
+      const { container } = renderWithProviders(<Reports />, { preloadedState });
+      const skeletons = container.querySelectorAll('.tw-skeleton-blog-card');
+      expect(skeletons.length).toBeGreaterThan(0);
     });
   });
 });

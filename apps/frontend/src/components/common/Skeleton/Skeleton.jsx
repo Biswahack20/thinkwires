@@ -71,7 +71,7 @@ export const Skeleton = ({
 
   return (
     <>
-      {Array.from({ length: count }, (_, idx) => renderSingle(idx))}
+      {Array.from({ length: count }, (_, i) => renderSingle(i))}
     </>
   );
 };
