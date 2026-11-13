@@ -18,6 +18,7 @@ import {
 import ApplyModal from '../common/ApplyModal';
 import ScopeCallModal from '../common/ScopeCallModal';
 import SkillSearchInput from '../common/SkillSearchInput';
+import LiquidAuroraRibbons from './LiquidAuroraRibbons';
 import CustomSelect from '../common/CustomSelect';
 
 const LOCATION_OPTIONS = [
@@ -341,6 +342,9 @@ const NewHero = ({ onOpenModal }) => {
           <div className="NewHero-glowOrb NewHero-glowPrimary" />
           <div className="NewHero-glowOrb NewHero-glowTeal" />
         </div>
+
+        {/* Premium Liquid Aurora + 3D Glass Ribbons Background */}
+        <LiquidAuroraRibbons />
 
         <div className="NewHero-container">
           {/* Main 2-Column Hero Grid with Staggered Motion */}
