@@ -1928,8 +1928,9 @@ body {
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
   -ms-overflow-style: none;
-  padding-bottom: 0.5rem;
-  padding-top: 0.25rem;
+  padding: 1.25rem 0.5rem 1.5rem 0.5rem;
+  margin-top: -0.75rem;
+  margin-bottom: -0.5rem;
   width: 100%;
 }
 
@@ -1976,27 +1977,45 @@ body {
   display: flex;
   flex-direction: column;
   height: 100%;
-  transition: all 0.25s ease;
+  width: 100%;
+  position: relative;
+  z-index: 1;
+  box-sizing: border-box;
+  will-change: transform, box-shadow;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease, border-color 0.3s ease;
 }
 
 .Reports-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 16px 24px -4px rgba(15, 23, 42, 0.08);
-  border-color: rgba(37, 99, 235, 0.3);
+  transform: translateY(-4px);
+  box-shadow: 0 20px 30px -6px rgba(15, 23, 42, 0.12), 0 0 1px rgba(37, 99, 235, 0.2);
+  border-color: rgba(37, 99, 235, 0.35);
+  z-index: 5;
+}
+
+.Reports-cardBody {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
 }
 
 .Reports-imageContainer {
   position: relative;
+  width: 100%;
   height: 200px;
+  min-height: 200px;
+  max-height: 200px;
   overflow: hidden;
   background-color: var(--color-surface-container-low, #f3f2fe);
   flex-shrink: 0;
+  border-top-left-radius: 1rem;
+  border-top-right-radius: 1rem;
 }
 
 .Reports-image {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  display: block;
   transition: transform 0.5s ease;
 }
 
@@ -2008,6 +2027,7 @@ body {
   position: absolute;
   top: 0.875rem;
   left: 0.875rem;
+  z-index: 2;
   background-color: rgba(15, 23, 42, 0.85);
   color: #ffffff;
   padding: 0.25rem 0.65rem;
@@ -2016,12 +2036,20 @@ body {
   font-weight: 600;
   backdrop-filter: blur(8px);
   letter-spacing: 0.02em;
+  display: inline-flex;
+  align-items: center;
+  max-width: calc(100% - 7.5rem);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.2;
 }
 
 .Reports-readBadge {
   position: absolute;
   top: 0.875rem;
   right: 0.875rem;
+  z-index: 2;
   background-color: rgba(15, 23, 42, 0.75);
   color: #ffffff;
   padding: 0.25rem 0.65rem;
@@ -2029,9 +2057,11 @@ body {
   font-size: 0.7rem;
   font-weight: 500;
   backdrop-filter: blur(8px);
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 0.25rem;
+  white-space: nowrap;
+  line-height: 1.2;
 }
 
 .Reports-content {
