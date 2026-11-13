@@ -24,6 +24,7 @@ const TARGET_SELECTORS = [
   '.StatsJourney-header',
   '.StatsJourney-statCard',
   '.StatsJourney-timelineCard',
+  '.StatsJourney-spineCard',
   '.StatsJourney-spineSection',
   '.Industries-header',
   '.Industries-card',

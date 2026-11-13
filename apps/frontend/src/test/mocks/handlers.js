@@ -28,6 +28,16 @@ export const mockApplicationsList = [
 ];
 
 export const handlers = [
+  // Homepage stats
+  http.get('/api/stats', () => {
+    return HttpResponse.json({
+      jobsFilled: 130,
+      corePlacements: 55,
+      contingentHired: 125,
+      clientRetention: 95,
+    });
+  }),
+
   // Session check
   http.get('/api/auth/me', () => {
     return HttpResponse.json({

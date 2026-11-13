@@ -24,7 +24,7 @@ const TIMELINE_DATA = [
   },
   {
     year: '2024',
-    threshold: 0.65,
+    threshold: 0.62,
     phase: 'PHASE 03 • GLOBAL EXPANSION',
     title: 'Global Expansion',
     desc: 'Launched bilateral cross-border US & Canada talent corridors, establishing comprehensive Employer of Record (EOR) and cross-currency payroll frameworks.',
@@ -33,7 +33,7 @@ const TIMELINE_DATA = [
   },
   {
     year: '2025+',
-    threshold: 0.88,
+    threshold: 0.84,
     phase: 'PHASE 04 • INNOVATION LEADER',
     title: 'Innovation Leader',
     desc: 'Pioneering AI-driven automated vetting pipelines, predictive bench matching, and statutory multi-currency talent infrastructure for Fortune 500 enterprises.',
@@ -47,6 +47,9 @@ const StatsJourney = () => {
   const { stats, status } = useSelector((state) => state.home);
   const spineRef = useRef(null);
   const [scrollProgress, setScrollProgress] = useState(0);
+  const [thresholds, setThresholds] = useState(() =>
+    TIMELINE_DATA.map((item) => item.threshold)
+  );
 
   useEffect(() => {
     if (status.stats === 'idle') {
@@ -54,24 +57,46 @@ const StatsJourney = () => {
     }
   }, [dispatch, status.stats]);
 
-  // Track scroll progress along the timeline spine
+  // Track scroll progress along the timeline spine with node synchronization
   useEffect(() => {
     let rafId;
+
+    const updateThresholds = () => {
+      if (!spineRef.current) return;
+      const spine = spineRef.current;
+      const spineHeight = spine.offsetHeight;
+      if (!spineHeight) return;
+
+      const rows = spine.querySelectorAll('.StatsJourney-spineRow');
+      if (rows.length === TIMELINE_DATA.length) {
+        const calculated = Array.from(rows).map((row) => {
+          const node = row.querySelector('.StatsJourney-spineNode');
+          const nodeCenter = node
+            ? node.offsetTop + node.offsetHeight / 2
+            : row.offsetTop + row.offsetHeight / 2;
+          const ratio = (row.offsetTop + nodeCenter) / spineHeight;
+          return Math.max(0.05, Math.min(0.95, Number(ratio.toFixed(2))));
+        });
+        setThresholds(calculated);
+      }
+    };
+
+    updateThresholds();
+    window.addEventListener('resize', updateThresholds);
 
     const handleScroll = () => {
       if (!spineRef.current) return;
       const rect = spineRef.current.getBoundingClientRect();
       const windowHeight = window.innerHeight;
 
-      // Start illuminating when top enters viewport mid-screen, complete near bottom
-      const startTrigger = windowHeight * 0.75;
-      const endTrigger = windowHeight * 0.35;
+      // Start illuminating when top enters viewport; synchronize line height with node positions
+      const viewTrigger = windowHeight * 0.65;
       const totalDistance = rect.height;
-      const currentPos = startTrigger - rect.top;
+      const currentPos = viewTrigger - rect.top;
 
       const progress = Math.max(
         0,
-        Math.min(1, currentPos / (totalDistance + (startTrigger - endTrigger)))
+        Math.min(1, currentPos / (totalDistance || 1))
       );
       setScrollProgress(progress);
     };
@@ -83,10 +108,11 @@ const StatsJourney = () => {
 
     window.addEventListener('scroll', onScroll, { passive: true });
     // Initial calculation after render
-    onScroll();
+    handleScroll();
 
     return () => {
       window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', updateThresholds);
       cancelAnimationFrame(rafId);
     };
   }, []);
@@ -199,7 +225,8 @@ const StatsJourney = () => {
 
           {/* Timeline Rows with Junction Nodes */}
           {TIMELINE_DATA.map((item, index) => {
-            const isReached = scrollProgress >= item.threshold;
+            const milestoneThreshold = thresholds[index] ?? item.threshold;
+            const isReached = scrollProgress >= milestoneThreshold;
             const isLeft = index % 2 === 0;
 
             return (
@@ -222,7 +249,7 @@ const StatsJourney = () => {
 
                 {/* Milestone Content Card */}
                 <div
-                  className={`StatsJourney-spineCard ${isReached ? 'is-active' : ''}`}
+                  className={`StatsJourney-spineCard StatsJourney-timelineCard ${isReached ? 'is-active' : ''}`}
                 >
                   <div className="StatsJourney-cardGlowCorner" />
 
@@ -231,7 +258,11 @@ const StatsJourney = () => {
                     <span className="StatsJourney-phaseBadge">
                       {item.phase}
                     </span>
-                    <span className="StatsJourney-cardYear">{item.year}</span>
+                    <span
+                      className={`StatsJourney-cardYear ${isReached ? 'is-active is-glowing' : ''}`}
+                    >
+                      {item.year}
+                    </span>
                   </div>
 
                   <h3 className="StatsJourney-timelineCardTitle">
