@@ -19,6 +19,11 @@ export default defineConfig(({ mode }) => {
 
   return {
     plugins: [react()],
+    resolve: {
+      alias: {
+        xlsx: path.resolve(__dirname, './src/admin/utils/xlsxStub.js'),
+      },
+    },
     server: {
       port: frontendPort,
       proxy: {
