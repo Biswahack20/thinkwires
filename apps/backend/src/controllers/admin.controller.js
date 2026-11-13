@@ -1869,6 +1869,284 @@ export const createJob = async (req, res) => {
   }
 };
 
+export const bulkImportJobs = async (req, res) => {
+  try {
+    if (!requireProductionDb(res)) return;
+    const { jobs } = req.body;
+    if (!Array.isArray(jobs) || jobs.length === 0) {
+      return res.status(400).json({
+        success: false,
+        error: 'Please provide an array of jobs to import.',
+      });
+    }
+
+    const importedJobs = [];
+    const now = Date.now();
+
+    for (let i = 0; i < jobs.length; i++) {
+      const item = jobs[i];
+      if (!item.title || !item.client) continue;
+
+      const skillsArray = Array.isArray(item.requiredSkills)
+        ? item.requiredSkills
+        : typeof item.requiredSkills === 'string'
+          ? item.requiredSkills
+              .split(',')
+              .map((s) => s.trim())
+              .filter(Boolean)
+          : [];
+
+      const jobRecord = {
+        id: `job_${now}_${i}`,
+        jobId: item.jobId || `JOB-${(now + i).toString().slice(-5)}`,
+        title: String(item.title).trim(),
+        client: String(item.client).trim(),
+        industry: item.industry || 'Information Technology & Cloud',
+        jobMode: item.jobMode || 'Permanent',
+        workMode: item.workMode || 'Work From Office',
+        officeLocation: item.officeLocation || '',
+        location:
+          item.workMode === 'Work From Office' && item.officeLocation
+            ? item.officeLocation
+            : item.location ||
+              (item.workMode === 'Work From Home'
+                ? 'Remote (India/US)'
+                : 'Hybrid'),
+        noticePeriod: item.noticePeriod || 'Immediate',
+        noticePeriodOther: item.noticePeriodOther || '',
+        requiredSkills: skillsArray,
+        skills: skillsArray,
+        experienceRequired: Number(item.experienceRequired) || 3,
+        openingsCount: Number(item.openingsCount) || 1,
+        fulfilledCount: 0,
+        priority: item.priority || 'High',
+        status: item.status || 'Open',
+        budget: item.budget || '',
+        description: item.description || '',
+        requirements: item.requirements || '',
+        isRequisition: false,
+        category: 'Staffing Requirement',
+        source: 'Bulk Import',
+        createdAt: new Date().toISOString(),
+      };
+
+      importedJobs.push(jobRecord);
+    }
+
+    if (importedJobs.length === 0) {
+      return res.status(400).json({
+        success: false,
+        error:
+          'No valid job records found in payload. Each row must have Title and Client.',
+      });
+    }
+
+    // Prepend to in-memory store
+    inMemoryData.jobs = inMemoryData.jobs || [];
+    inMemoryData.jobs.unshift(...importedJobs);
+
+    // Persist to MongoDB
+    if (isMongoActive()) {
+      await JobRequirement.insertMany(importedJobs);
+    }
+
+    await logActivity(
+      'Bulk Imported Jobs',
+      'Jobs',
+      `bulk_${now}`,
+      `Imported ${importedJobs.length} job requirements via Excel/CSV.`,
+      req.user,
+      '#10B981'
+    );
+
+    res.status(201).json({
+      success: true,
+      message: `Successfully imported ${importedJobs.length} job requirements.`,
+      count: importedJobs.length,
+      importedJobs,
+    });
+  } catch (err) {
+    console.error('bulkImportJobs error:', err);
+    res.status(500).json({ success: false, error: err.message });
+  }
+};
+
+export const bulkImportCandidates = async (req, res) => {
+  try {
+    if (!requireProductionDb(res)) return;
+    const { candidates, updateExisting = false } = req.body;
+    if (!Array.isArray(candidates) || candidates.length === 0) {
+      return res.status(400).json({
+        success: false,
+        error: 'Please provide an array of candidates to import.',
+      });
+    }
+
+    const importedCandidates = [];
+    const skippedEmails = [];
+    const now = Date.now();
+
+    // Generate secure random default password hash for database schema integrity (NO password in file!)
+    const autoPasswordHash = await hashPassword(
+      'Thinkwires@' + Math.random().toString(36).slice(-6)
+    );
+
+    for (let i = 0; i < candidates.length; i++) {
+      const item = candidates[i];
+      const name = String(item.name || '').trim();
+      const email = String(item.email || '').toLowerCase().trim();
+      const phone = String(item.phone || item.contactNo || '').trim();
+
+      if (!name || !email || !phone) continue;
+
+      // Duplicate check against existing in-memory / MongoDB
+      let existingInDb = null;
+      if (isMongoActive()) {
+        existingInDb = await Candidate.findOne({ email });
+      } else {
+        existingInDb = (inMemoryData.candidates || []).find(
+          (c) => (c.email || '').toLowerCase() === email
+        );
+      }
+
+      const rawSkills = item.primarySkill || item.technicalSkills || '';
+      const skillsArray = Array.isArray(rawSkills)
+        ? rawSkills
+        : typeof rawSkills === 'string'
+          ? rawSkills
+              .split(',')
+              .map((s) => s.trim())
+              .filter(Boolean)
+          : [];
+
+      const candidateRecord = {
+        name,
+        email,
+        phone,
+        password: autoPasswordHash,
+        currentRole:
+          item.currentRole ||
+          (skillsArray[0]
+            ? `${skillsArray[0]} Engineer`
+            : 'Software Engineer'),
+        technicalSkills: skillsArray,
+        experience: Number(item.totalExperience || item.experience) || 0,
+        relevantExperience: Number(item.relevantExperience) || 0,
+        expectedSalary:
+          item.expectedCTC || item.expectedSalary || 'Market Standard',
+        currentCTC: item.currentCTC || item.ctc || '',
+        location: item.currentLocation || item.location || '',
+        preferredLocation: item.preferredLocation || '',
+        currentCompany: item.currentCompany || '',
+        client: item.client || 'Enterprise Partner',
+        rateCard: item.rateCard || '',
+        noticePeriod: item.noticePeriod || 'Immediate',
+        applicationDate:
+          item.applicationDate || new Date().toISOString().split('T')[0],
+        month:
+          item.month ||
+          new Date().toLocaleString('default', {
+            month: 'long',
+            year: 'numeric',
+          }),
+        workMode: item.mode || 'Full-Time Looking',
+        status: item.status || 'Applied',
+        notes: item.notes || item.candidateNotes || '',
+        createdAt: new Date().toISOString(),
+      };
+
+      if (existingInDb) {
+        if (updateExisting) {
+          if (isMongoActive()) {
+            await Candidate.updateOne({ email }, { $set: candidateRecord });
+          }
+          const idx = (inMemoryData.candidates || []).findIndex(
+            (c) => (c.email || '').toLowerCase() === email
+          );
+          if (idx !== -1) {
+            inMemoryData.candidates[idx] = {
+              ...inMemoryData.candidates[idx],
+              ...candidateRecord,
+            };
+          }
+          importedCandidates.push({ ...candidateRecord, updated: true });
+        } else {
+          skippedEmails.push(email);
+        }
+      } else {
+        candidateRecord.id = `cand_${now}_${i}`;
+        if (isMongoActive()) {
+          const createdDoc = await Candidate.create(candidateRecord);
+          candidateRecord._id = createdDoc._id;
+
+          // Create associated intake JobApplication record in ATS
+          await JobApplication.create({
+            candidate: createdDoc._id,
+            jobId: 'direct-admin-intake',
+            jobTitle: candidateRecord.currentRole,
+            candidateName: name,
+            email,
+            mobileNumber: phone,
+            lastName: name.split(' ').slice(1).join(' ') || name,
+            firstName: name.split(' ')[0],
+            status: candidateRecord.status || 'Applied',
+            skills: skillsArray,
+            totalExperienceYears: String(candidateRecord.experience || 0),
+            relevantExperienceYears: String(
+              candidateRecord.relevantExperience || 0
+            ),
+            currentEmployer: candidateRecord.currentCompany,
+            currentCTC: candidateRecord.currentCTC,
+            expectedCTC: candidateRecord.expectedSalary,
+            city: candidateRecord.location,
+            client: candidateRecord.client,
+            rateCard: candidateRecord.rateCard,
+            preferredLocation: candidateRecord.preferredLocation,
+            applicationDate: candidateRecord.applicationDate,
+            month: candidateRecord.month,
+            noticePeriod: candidateRecord.noticePeriod,
+            candidateNote: candidateRecord.notes,
+          });
+        }
+        inMemoryData.candidates = inMemoryData.candidates || [];
+        inMemoryData.candidates.unshift(candidateRecord);
+        importedCandidates.push(candidateRecord);
+      }
+    }
+
+    if (importedCandidates.length === 0 && skippedEmails.length > 0) {
+      return res.status(200).json({
+        success: true,
+        message: `All ${skippedEmails.length} candidates were skipped because their emails already exist in the database.`,
+        importedCount: 0,
+        skippedCount: skippedEmails.length,
+        skippedEmails,
+      });
+    }
+
+    await logActivity(
+      'Bulk Imported Candidates',
+      'ATS',
+      `bulk_${now}`,
+      `Imported ${importedCandidates.length} candidates (${skippedEmails.length} skipped duplicates).`,
+      req.user,
+      '#7C3AED'
+    );
+
+    res.status(201).json({
+      success: true,
+      message: `Successfully imported ${importedCandidates.length} candidate(s). ${skippedEmails.length > 0 ? `(${skippedEmails.length} existing duplicate(s) skipped)` : ''}`,
+      importedCount: importedCandidates.length,
+      skippedCount: skippedEmails.length,
+      skippedEmails,
+      importedCandidates,
+    });
+  } catch (err) {
+    console.error('bulkImportCandidates error:', err);
+    res.status(500).json({ success: false, error: err.message });
+  }
+};
+
 export const updateJob = async (req, res) => {
   try {
     if (!requireProductionDb(res)) return;

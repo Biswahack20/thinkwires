@@ -355,6 +355,16 @@ export const adminApi = {
     return json;
   },
 
+  async bulkImportCandidates(candidates, updateExisting = false) {
+    const res = await adminFetch('/candidates/bulk-import', {
+      method: 'POST',
+      body: JSON.stringify({ candidates, updateExisting }),
+    });
+    const json = await res.json();
+    if (!res.ok) throw new Error(json.error || `HTTP error ${res.status}`);
+    return json;
+  },
+
   async updateCandidateStatus(id, status) {
     const res = await adminFetch(`/candidates/${id}/status`, {
       method: 'PATCH',
@@ -454,6 +464,16 @@ export const adminApi = {
     const res = await adminFetch('/jobs', {
       method: 'POST',
       body: JSON.stringify(data),
+    });
+    const json = await res.json();
+    if (!res.ok) throw new Error(json.error || `HTTP error ${res.status}`);
+    return json;
+  },
+
+  async bulkImportJobs(jobs) {
+    const res = await adminFetch('/jobs/bulk-import', {
+      method: 'POST',
+      body: JSON.stringify({ jobs }),
     });
     const json = await res.json();
     if (!res.ok) throw new Error(json.error || `HTTP error ${res.status}`);

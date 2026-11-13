@@ -9,6 +9,8 @@ import {
   AlertCircleIcon,
   LocationIcon,
   BuildingIcon,
+  DownloadIcon,
+  UploadIcon,
 } from './AdminIcons';
 
 import {
@@ -19,6 +21,8 @@ import {
 } from './jobConstants';
 import SkillTagInput from '../components/common/SkillTagInput';
 import SkillSearchInput from '../components/common/SkillSearchInput';
+import DataImportModal from './components/DataImportModal';
+import { exportToExcel, JOB_REQUIREMENT_COLUMNS } from './utils/excelDataUtils';
 
 const formatPriority = (p) => {
   if (typeof p === 'number') {
@@ -273,6 +277,7 @@ const JobsView = ({ defaultFilter }) => {
   const [categoryFilter, setCategoryFilter] = useState('All');
 
   const [modalOpen, setModalOpen] = useState(false);
+  const [importModalOpen, setImportModalOpen] = useState(false);
   const [editingJob, setEditingJob] = useState(null);
   const [deleteConfirmId, setDeleteConfirmId] = useState(null);
 
@@ -524,6 +529,27 @@ const JobsView = ({ defaultFilter }) => {
       .catch((err) => showToast(`Delete failed: ${err.message}`));
   };
 
+  const handleExport = (format = 'xlsx') => {
+    try {
+      if (!jobs || jobs.length === 0) {
+        showToast('No job requirements available to export.');
+        return;
+      }
+      const filename = `thinkwires_job_requirements_${new Date().toISOString().split('T')[0]}`;
+      exportToExcel({
+        data: jobs,
+        columns: JOB_REQUIREMENT_COLUMNS,
+        filename,
+        format,
+      });
+      showToast(
+        `Exported ${jobs.length} job requirement(s) as ${format.toUpperCase()}.`
+      );
+    } catch (err) {
+      showToast(`Export failed: ${err.message}`);
+    }
+  };
+
   return (
     <div>
       <div className="tw-view-header">
@@ -535,18 +561,85 @@ const JobsView = ({ defaultFilter }) => {
           </p>
         </div>
 
-        <button
-          className="tw-btn-primary"
-          onClick={openAddModal}
+        <div
           style={{
-            display: 'inline-flex',
+            display: 'flex',
+            gap: '0.65rem',
             alignItems: 'center',
-            gap: '0.45rem',
+            flexWrap: 'wrap',
           }}
         >
-          <PlusIcon size={15} />
-          <span>Post Job Requirement</span>
-        </button>
+          <div style={{ display: 'flex', gap: '0.35rem' }}>
+            <button
+              type="button"
+              className="tw-btn-secondary"
+              onClick={() => handleExport('xlsx')}
+              title="Export current job requirements as Excel (.xlsx)"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.35rem',
+                fontSize: '0.82rem',
+                padding: '0.5rem 0.8rem',
+              }}
+            >
+              <DownloadIcon size={14} />
+              <span>Export Excel</span>
+            </button>
+            <button
+              type="button"
+              className="tw-btn-secondary"
+              onClick={() => handleExport('csv')}
+              title="Export current job requirements as CSV (.csv)"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.35rem',
+                fontSize: '0.82rem',
+                padding: '0.5rem 0.8rem',
+              }}
+            >
+              <DownloadIcon size={14} />
+              <span>Export CSV</span>
+            </button>
+          </div>
+
+          <button
+            type="button"
+            className="tw-btn-secondary"
+            onClick={() => {
+              if (activeRole === 'viewer') {
+                showToast('Viewer accounts cannot import job requirements.');
+                return;
+              }
+              setImportModalOpen(true);
+            }}
+            title="Import job requirements from Excel or CSV"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.35rem',
+              fontSize: '0.82rem',
+              padding: '0.5rem 0.85rem',
+            }}
+          >
+            <UploadIcon size={14} />
+            <span>Import</span>
+          </button>
+
+          <button
+            className="tw-btn-primary"
+            onClick={openAddModal}
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '0.45rem',
+            }}
+          >
+            <PlusIcon size={15} />
+            <span>Post Job Requirement</span>
+          </button>
+        </div>
       </div>
 
       <div className="tw-table-container">
@@ -1518,6 +1611,24 @@ const JobsView = ({ defaultFilter }) => {
           </div>
         </div>
       )}
+      {/* Import Modal */}
+      <DataImportModal
+        isOpen={importModalOpen}
+        onClose={() => setImportModalOpen(false)}
+        title="Import Job Requirements"
+        subtitle="Bulk import staffing requisitions & job requirements from an Excel (.xlsx, .xls) or CSV file."
+        columns={JOB_REQUIREMENT_COLUMNS}
+        templateFilename="thinkwires_job_requirements_template"
+        entityName="job requirements"
+        apiImportFn={async (validRows) => {
+          const res = await adminApi.bulkImportJobs(validRows);
+          return res;
+        }}
+        onImportSuccess={(res) => {
+          showToast(res.message || 'Job requirements imported successfully!');
+          fetchJobs();
+        }}
+      />
     </div>
   );
 };

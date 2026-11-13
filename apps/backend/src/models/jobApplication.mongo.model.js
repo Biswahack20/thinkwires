@@ -172,6 +172,35 @@ const jobApplicationSchema = new mongoose.Schema(
       default: '',
       trim: true,
     },
+    client: {
+      type: String,
+      default: '',
+      trim: true,
+    },
+    preferredLocation: {
+      type: String,
+      default: '',
+      trim: true,
+    },
+    rateCard: {
+      type: String,
+      default: '',
+      trim: true,
+    },
+    applicationDate: {
+      type: String,
+      default: () => new Date().toISOString().split('T')[0],
+      trim: true,
+    },
+    month: {
+      type: String,
+      default: () =>
+        new Date().toLocaleString('default', {
+          month: 'long',
+          year: 'numeric',
+        }),
+      trim: true,
+    },
 
     // Candidate Legacy Compatibility fields
     candidateName: {
