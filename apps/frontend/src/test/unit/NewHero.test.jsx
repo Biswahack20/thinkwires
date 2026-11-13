@@ -34,6 +34,28 @@ describe('NewHero Component Layout & Headline Visibility', () => {
 });
 
 describe('NewHero Component CTAs and Search Form', () => {
+  it('renders all three CTA buttons in the exact requested order within NewHero-actionGroup', () => {
+    const { container } = renderWithProviders(<NewHero />);
+
+    const actionGroup = container.querySelector('.NewHero-actionGroup');
+    expect(actionGroup).toBeInTheDocument();
+
+    const ctaButtons = actionGroup.querySelectorAll('a, button');
+    expect(ctaButtons.length).toBe(3);
+
+    // 1. Deploy Bench Pool
+    expect(ctaButtons[0]).toHaveTextContent(/Deploy Bench Pool/i);
+    expect(ctaButtons[0]).toHaveClass('NewHero-btnPrimary');
+
+    // 2. Schedule Scoping Call
+    expect(ctaButtons[1]).toHaveTextContent(/Schedule Scoping Call/i);
+    expect(ctaButtons[1]).toHaveClass('NewHero-btnScoping');
+
+    // 3. Explore Hot Jobs
+    expect(ctaButtons[2]).toHaveTextContent(/Explore Hot Jobs/i);
+    expect(ctaButtons[2]).toHaveClass('NewHero-btnSecondary');
+  });
+
   it('renders primary CTA linking and redirecting to /talent-cloud', () => {
     mockNavigate.mockClear();
     renderWithProviders(<NewHero />);
