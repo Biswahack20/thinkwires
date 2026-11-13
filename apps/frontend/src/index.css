@@ -26858,11 +26858,25 @@ textarea {
   color: #64748b;
   letter-spacing: -0.02em;
   line-height: 1;
+  transition: color 0.4s ease, text-shadow 0.4s ease, filter 0.4s ease;
+  display: inline-block;
 }
 
-.StatsJourney-spineCard.is-active .StatsJourney-cardYear {
+.StatsJourney-spineCard.is-active .StatsJourney-cardYear,
+.StatsJourney-cardYear.is-active,
+.StatsJourney-cardYear.is-glowing {
   color: #34d399;
-  text-shadow: 0 0 14px rgba(52, 211, 153, 0.45);
+  text-shadow: 0 0 14px rgba(52, 211, 153, 0.45), 0 0 28px rgba(52, 211, 153, 0.25);
+  animation: twYearGlow 2.5s ease-in-out infinite alternate;
+}
+
+@keyframes twYearGlow {
+  0% {
+    text-shadow: 0 0 10px rgba(52, 211, 153, 0.35), 0 0 20px rgba(52, 211, 153, 0.15);
+  }
+  100% {
+    text-shadow: 0 0 16px rgba(52, 211, 153, 0.75), 0 0 32px rgba(52, 211, 153, 0.35);
+  }
 }
 
 .StatsJourney-cardFooter {
