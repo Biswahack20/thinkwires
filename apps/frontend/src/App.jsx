@@ -18,6 +18,7 @@ import PermanentStaffingPage from './pages/PermanentStaffingPage';
 import ServicesPage from './pages/ServicesPage';
 import FindTalentPage from './pages/FindTalentPage';
 import LegalPage from './pages/LegalPage';
+import FaqPage from './pages/FaqPage';
 import NotFoundPage from './pages/NotFoundPage';
 import MissionVisionPage from './pages/MissionVisionPage';
 import ValuesCodeOfConductPage from './pages/ValuesCodeOfConductPage';
@@ -89,8 +90,9 @@ function App() {
           {/* Resources Routes (Issue #170) */}
           <Route path="/events" element={<ComingSoonPage />} />
           <Route path="/resources/events" element={<ComingSoonPage />} />
-          <Route path="/faqs" element={<JobPage />} />
-          <Route path="/resources/faqs" element={<JobPage />} />
+          <Route path="/faq" element={<FaqPage />} />
+          <Route path="/faqs" element={<FaqPage />} />
+          <Route path="/resources/faqs" element={<FaqPage />} />
           <Route path="/policies" element={<LegalPage />} />
           <Route path="/life-at-thinkwires" element={<ComingSoonPage />} />
           <Route path="/benefits" element={<JobPage />} />
