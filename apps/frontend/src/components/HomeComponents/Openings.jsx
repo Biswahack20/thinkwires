@@ -103,75 +103,63 @@ const Openings = () => {
                         <span className={'Openings-companyName'}>
                           Enterprise Client (Confidential)
                         </span>
-                        <span className={'Openings-jobTitle'}>{job.title}</span>
+                        <h3 className={'Openings-jobTitle'}>{job.title}</h3>
                       </div>
                     </div>
                     <div
                       className={`Openings-badge Openings-${job.tagColor || job.badgeColor || 'green'}`}
                     >
                       <span className="Openings-pulseDot"></span>
-                      {job.tag || job.badge || 'Active Opening'}
+                      <span>{job.tag || job.badge || 'Active Opening'}</span>
                     </div>
                   </div>
 
                   <div className={'Openings-metaInfo'}>
-                    <div className={'Openings-metaItem'}>
-                      <span
-                        className="material-symbols-outlined"
-                        style={{
-                          fontSize: '18px',
-                          color: 'var(--color-secondary)',
-                        }}
-                      >
-                        {job.workMode === 'Work From Home'
-                          ? 'home'
-                          : job.workMode === 'Work From Office'
-                            ? 'domain'
-                            : 'location_on'}
-                      </span>
-                      <span>
-                        {job.location} ({job.workMode || 'Hybrid'})
-                      </span>
+                    <div className={'Openings-metaRow Openings-metaRowPrimary'}>
+                      <div className={'Openings-metaItem Openings-metaItemLocation'}>
+                        <span
+                          className="material-symbols-outlined Openings-metaIcon"
+                        >
+                          {job.workMode === 'Work From Home'
+                            ? 'home'
+                            : job.workMode === 'Work From Office'
+                              ? 'domain'
+                              : 'location_on'}
+                        </span>
+                        <span className={'Openings-metaText'}>
+                          {job.location} ({job.workMode || 'Hybrid'})
+                        </span>
+                      </div>
+                      <div className={'Openings-metaItem Openings-metaItemExp'}>
+                        <span
+                          className="material-symbols-outlined Openings-metaIcon"
+                        >
+                          schedule
+                        </span>
+                        <span className={'Openings-metaText'}>
+                          {job.experience} • {job.jobMode || 'Permanent'}
+                        </span>
+                      </div>
+                      <div className={'Openings-metaItem Openings-metaItemSalary'}>
+                        <span
+                          className="material-symbols-outlined Openings-metaIcon"
+                        >
+                          payments
+                        </span>
+                        <span className={'Openings-metaText'}>{job.salary}</span>
+                      </div>
                     </div>
-                    <div className={'Openings-metaItem'}>
-                      <span
-                        className="material-symbols-outlined"
-                        style={{
-                          fontSize: '18px',
-                          color: 'var(--color-secondary)',
-                        }}
-                      >
-                        schedule
-                      </span>
-                      <span>
-                        {job.experience} • {job.jobMode || 'Permanent'}
-                      </span>
-                    </div>
-                    <div className={'Openings-metaItem'}>
-                      <span
-                        className="material-symbols-outlined"
-                        style={{
-                          fontSize: '18px',
-                          color: 'var(--color-secondary)',
-                        }}
-                      >
-                        payments
-                      </span>
-                      <span>{job.salary}</span>
-                    </div>
-                    <div className={'Openings-metaItem'}>
-                      <span
-                        className="material-symbols-outlined"
-                        style={{
-                          fontSize: '18px',
-                          color: 'var(--color-secondary)',
-                        }}
-                      >
-                        timer
-                      </span>
-                      <span>
-                        Notice: {job.noticePeriod || job.joining || 'Immediate'}
-                      </span>
+                    <div className={'Openings-metaRow Openings-metaRowSecondary'}>
+                      <div className={'Openings-metaItem Openings-metaItemNotice'}>
+                        <span
+                          className="material-symbols-outlined Openings-metaIcon"
+                        >
+                          timer
+                        </span>
+                        <span className={'Openings-metaText'}>
+                          Notice: {job.noticePeriod || job.joining || 'Immediate'}
+                        </span>
+                      </div>
                     </div>
                   </div>
 
@@ -197,26 +185,11 @@ const Openings = () => {
                           })
                         : 'Recently'}
                     </span>
-                    <div
-                      style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '0.65rem',
-                      }}
-                    >
+                    <div className={'Openings-footerActions'}>
                       <button
                         type="button"
                         onClick={() => setSelectedJobForSpec(job)}
-                        style={{
-                          background: 'none',
-                          border: 'none',
-                          color: '#2563eb',
-                          fontWeight: 700,
-                          fontSize: '0.8125rem',
-                          cursor: 'pointer',
-                          padding: '0.35rem 0.5rem',
-                          textDecoration: 'underline',
-                        }}
+                        className={'Openings-viewSpecBtn'}
                       >
                         View Job Spec
                       </button>
@@ -226,8 +199,7 @@ const Openings = () => {
                         className={'Openings-applyBtn'}
                       >
                         <span
-                          className="material-symbols-outlined"
-                          style={{ fontSize: '16px' }}
+                          className="material-symbols-outlined Openings-btnIcon"
                         >
                           bolt
                         </span>
