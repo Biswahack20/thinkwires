@@ -49,7 +49,11 @@ export default defineConfig(({ mode }) => {
     },
     build: {
       chunkSizeWarningLimit: 1200,
+      rolldownOptions: {
+        external: ['xlsx'],
+      },
       rollupOptions: {
+        external: ['xlsx'],
         output: {
           manualChunks(id) {
             const normalizedId = id.replace(/\\/g, '/');
