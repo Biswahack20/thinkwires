@@ -19,6 +19,23 @@ import ApplyModal from '../common/ApplyModal';
 import ScopeCallModal from '../common/ScopeCallModal';
 import SkillSearchInput from '../common/SkillSearchInput';
 import LiquidAuroraRibbons from './LiquidAuroraRibbons';
+import CustomSelect from '../common/CustomSelect';
+
+const LOCATION_OPTIONS = [
+  { value: '', label: 'All Locations (India / US / Remote)' },
+  { value: 'bangalore', label: 'Bangalore Hub' },
+  { value: 'remote', label: 'Remote / Borderless' },
+  { value: 'hyderabad', label: 'Hyderabad' },
+  { value: 'chennai', label: 'Chennai / Pune' },
+  { value: 'noida', label: 'Noida (HQ)' },
+];
+
+const EXPERIENCE_OPTIONS = [
+  { value: '', label: 'Any Seniority' },
+  { value: '3-5', label: 'Mid-Senior (3 - 5 Years)' },
+  { value: '8-12', label: 'Lead / Specialist (8 - 12 Years)' },
+  { value: '15', label: 'Staff / Principal Architect (15+ Years)' },
+];
 
 const SLIDE_IMAGES = [
   'https://lh3.googleusercontent.com/aida-public/AB6AXuA5nGnSn6TrjHRXk6Yrr1hngBL_Ptdje8dtE8juA2qY036lQqvHvN6avSAYmFKXi3Ws1s1GOGxDg1UJxSBPj1bormKO3GX6ikbORRKq0xiEnRjFfHJo92S4rMz1pkRIj6a5ttei2dUbSMuy8XDy119wvMZL2XWo1xcVcwOq7iaR0aXLZuhNnMM_WFqdq-qjIFA2YtN4dBM2z7SYgEFLd9VAlLdP7jvkhrd0JGOiVZuUwZkeI7SvLyKJQA',
@@ -308,27 +325,23 @@ const NewHero = ({ onOpenModal }) => {
         onMouseMove={handleHeroMouseMove}
       >
 
-        {/* OSS Dynamic Mouse-Tracking Spotlight */}
-        <motion.div
-          style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            bottom: 0,
-            pointerEvents: 'none',
-            zIndex: 0,
-            background: spotlightBg,
-          }}
-          aria-hidden="true"
-        />
+        {/* Ambient Visual Wrapper with Edge Containment */}
+        <div className="NewHero-ambientWrapper" aria-hidden="true">
+          {/* Dynamic Mouse-Tracking Spotlight */}
+          <motion.div
+            style={{
+              position: 'absolute',
+              inset: 0,
+              pointerEvents: 'none',
+              zIndex: 0,
+              background: spotlightBg,
+            }}
+          />
 
-        {/* Ambient Glows */}
-        <div
-          className="NewHero-glowOrb NewHero-glowPrimary"
-          aria-hidden="true"
-        />
-        <div className="NewHero-glowOrb NewHero-glowTeal" aria-hidden="true" />
+          {/* Ambient Glows */}
+          <div className="NewHero-glowOrb NewHero-glowPrimary" />
+          <div className="NewHero-glowOrb NewHero-glowTeal" />
+        </div>
 
         {/* Premium Liquid Aurora + 3D Glass Ribbons Background */}
         <LiquidAuroraRibbons />
@@ -678,66 +691,28 @@ const NewHero = ({ onOpenModal }) => {
               </div>
 
               {/* Location Selector */}
-              <div className="NewHero-searchField NewHero-searchFieldLocation">
-                <span className="material-symbols-outlined NewHero-searchIcon">
-                  location_on
-                </span>
-                <div className="NewHero-inputBlock">
-                  <label
-                    htmlFor="hero-location-select"
-                    className="NewHero-fieldLabel"
-                  >
-                    Location
-                  </label>
-                  <select
-                    id="hero-location-select"
-                    className="NewHero-fieldSelect"
-                    aria-label="Location"
-                    value={locationInput}
-                    onChange={(e) => setLocationInput(e.target.value)}
-                  >
-                    <option value="">
-                      All Locations (India / US / Remote)
-                    </option>
-                    <option value="bangalore">Bangalore Hub</option>
-                    <option value="remote">Remote / Borderless</option>
-                    <option value="hyderabad">Hyderabad</option>
-                    <option value="chennai">Chennai / Pune</option>
-                    <option value="noida">Noida (HQ)</option>
-                  </select>
-                </div>
-              </div>
+              <CustomSelect
+                id="hero-location-select"
+                name="location"
+                label="Location"
+                icon="location_on"
+                value={locationInput}
+                onChange={setLocationInput}
+                options={LOCATION_OPTIONS}
+                fieldClassName="NewHero-searchFieldLocation"
+              />
 
               {/* Experience Selector */}
-              <div className="NewHero-searchField NewHero-searchFieldExp">
-                <span className="material-symbols-outlined NewHero-searchIcon">
-                  layers
-                </span>
-                <div className="NewHero-inputBlock">
-                  <label
-                    htmlFor="hero-experience-select"
-                    className="NewHero-fieldLabel"
-                  >
-                    Experience
-                  </label>
-                  <select
-                    id="hero-experience-select"
-                    className="NewHero-fieldSelect"
-                    aria-label="Experience"
-                    value={experienceInput}
-                    onChange={(e) => setExperienceInput(e.target.value)}
-                  >
-                    <option value="">Any Seniority</option>
-                    <option value="3-5">Mid-Senior (3 - 5 Years)</option>
-                    <option value="8-12">
-                      Lead / Specialist (8 - 12 Years)
-                    </option>
-                    <option value="15">
-                      Staff / Principal Architect (15+ Years)
-                    </option>
-                  </select>
-                </div>
-              </div>
+              <CustomSelect
+                id="hero-experience-select"
+                name="experience"
+                label="Experience"
+                icon="layers"
+                value={experienceInput}
+                onChange={setExperienceInput}
+                options={EXPERIENCE_OPTIONS}
+                fieldClassName="NewHero-searchFieldExp"
+              />
 
               {/* Search Submit Button */}
               <div className="NewHero-searchAction">

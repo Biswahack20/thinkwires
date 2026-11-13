@@ -10,6 +10,7 @@ import {
   getCandidateDossier,
   reEvaluateCandidate,
   createCandidate,
+  bulkImportCandidates,
   updateCandidateStatus,
   updateCandidate,
   deleteCandidate,
@@ -19,6 +20,7 @@ import {
   deleteClient,
   getJobs,
   createJob,
+  bulkImportJobs,
   updateJob,
   deleteJob,
   getPlacements,
@@ -132,6 +134,7 @@ router.get('/candidates', manpowerGuard, getCandidates);
 router.get('/candidates/:id/dossier', manpowerGuard, getCandidateDossier);
 router.post('/candidates/:id/re-evaluate', manpowerGuard, reEvaluateCandidate);
 router.post('/candidates', manpowerGuard, createCandidate);
+router.post('/candidates/bulk-import', manpowerGuard, bulkImportCandidates);
 router.put('/candidates/:id', manpowerGuard, updateCandidate);
 router.patch('/candidates/:id/status', manpowerGuard, updateCandidateStatus);
 router.delete('/candidates/:id', manpowerGuard, deleteCandidate);
@@ -143,6 +146,7 @@ router.delete('/clients/:id', manpowerGuard, deleteClient);
 
 router.get('/jobs', manpowerGuard, getJobs);
 router.post('/jobs', manpowerGuard, createJob);
+router.post('/jobs/bulk-import', manpowerGuard, bulkImportJobs);
 router.put('/jobs/:id', manpowerGuard, updateJob);
 router.delete('/jobs/:id', manpowerGuard, deleteJob);
 

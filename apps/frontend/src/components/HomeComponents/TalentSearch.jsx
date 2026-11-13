@@ -1,6 +1,23 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import SkillSearchInput from '../common/SkillSearchInput';
+import CustomSelect from '../common/CustomSelect';
+
+const LOCATION_OPTIONS = [
+  { value: '', label: 'All Locations (India / US / Remote)' },
+  { value: 'bangalore', label: 'Bangalore Hub' },
+  { value: 'remote', label: 'Remote / Borderless' },
+  { value: 'hyderabad', label: 'Hyderabad' },
+  { value: 'chennai', label: 'Chennai / Pune' },
+  { value: 'noida', label: 'Noida (HQ)' },
+];
+
+const EXPERIENCE_OPTIONS = [
+  { value: '', label: 'Any Seniority' },
+  { value: '3-5', label: 'Mid-Senior (3 - 5 Years)' },
+  { value: '8-12', label: 'Lead / Specialist (8 - 12 Years)' },
+  { value: '15', label: 'Staff / Principal Architect (15+ Years)' },
+];
 
 const TalentSearch = ({ onSearch }) => {
   const navigate = useNavigate();
@@ -58,59 +75,27 @@ const TalentSearch = ({ onSearch }) => {
           </div>
         </div>
 
-        <div className="NewHero-searchField NewHero-searchFieldLocation">
-          <span className="material-symbols-outlined NewHero-searchIcon">
-            location_on
-          </span>
-          <div className="NewHero-inputBlock">
-            <label
-              htmlFor="talent-search-location"
-              className="NewHero-fieldLabel"
-            >
-              Location
-            </label>
-            <select
-              id="talent-search-location"
-              className="NewHero-fieldSelect"
-              value={locationInput}
-              onChange={(e) => setLocationInput(e.target.value)}
-            >
-              <option value="">All Locations (India / US / Remote)</option>
-              <option value="bangalore">Bangalore Hub</option>
-              <option value="remote">Remote / Borderless</option>
-              <option value="hyderabad">Hyderabad</option>
-              <option value="chennai">Chennai / Pune</option>
-              <option value="noida">Noida (HQ)</option>
-            </select>
-          </div>
-        </div>
+        <CustomSelect
+          id="talent-search-location"
+          name="location"
+          label="Location"
+          icon="location_on"
+          value={locationInput}
+          onChange={setLocationInput}
+          options={LOCATION_OPTIONS}
+          fieldClassName="NewHero-searchFieldLocation"
+        />
 
-        <div className="NewHero-searchField NewHero-searchFieldExp">
-          <span className="material-symbols-outlined NewHero-searchIcon">
-            layers
-          </span>
-          <div className="NewHero-inputBlock">
-            <label
-              htmlFor="talent-search-experience"
-              className="NewHero-fieldLabel"
-            >
-              Experience
-            </label>
-            <select
-              id="talent-search-experience"
-              className="NewHero-fieldSelect"
-              value={experienceInput}
-              onChange={(e) => setExperienceInput(e.target.value)}
-            >
-              <option value="">Any Seniority</option>
-              <option value="3-5">Mid-Senior (3 - 5 Years)</option>
-              <option value="8-12">Lead / Specialist (8 - 12 Years)</option>
-              <option value="15">
-                Staff / Principal Architect (15+ Years)
-              </option>
-            </select>
-          </div>
-        </div>
+        <CustomSelect
+          id="talent-search-experience"
+          name="experience"
+          label="Experience"
+          icon="layers"
+          value={experienceInput}
+          onChange={setExperienceInput}
+          options={EXPERIENCE_OPTIONS}
+          fieldClassName="NewHero-searchFieldExp"
+        />
 
         <div className="NewHero-searchAction">
           <button type="submit" className="NewHero-searchBtn">

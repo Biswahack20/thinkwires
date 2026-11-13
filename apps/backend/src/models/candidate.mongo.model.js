@@ -46,9 +46,46 @@ const candidateSchema = new mongoose.Schema(
       default: 0,
       min: 0,
     },
+    relevantExperience: {
+      type: Number,
+      default: 0,
+      min: 0,
+    },
     expectedSalary: {
       type: String,
       default: 'Market Standard',
+    },
+    currentCTC: {
+      type: String,
+      default: '',
+    },
+    preferredLocation: {
+      type: String,
+      default: '',
+    },
+    currentCompany: {
+      type: String,
+      default: '',
+    },
+    client: {
+      type: String,
+      default: '',
+    },
+    rateCard: {
+      type: String,
+      default: '',
+    },
+    applicationDate: {
+      type: String,
+      default: () => new Date().toISOString().split('T')[0],
+    },
+    month: {
+      type: String,
+      default: () =>
+        new Date().toLocaleString('default', {
+          month: 'long',
+          year: 'numeric',
+        }),
     },
     resumeUrl: {
       type: String,
