@@ -17944,6 +17944,23 @@ textarea {
   transform-origin: center center;
 }
 
+/* Center Orbital Aurora Connector */
+.tw-aurora-blob-center {
+  top: 10%;
+  left: 36%;
+  width: 580px;
+  height: 460px;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(56, 189, 248, 0.22) 0%,
+    rgba(165, 180, 252, 0.18) 45%,
+    rgba(37, 99, 235, 0.08) 68%,
+    transparent 78%
+  );
+  animation: twAuroraTravel5 18s ease-in-out infinite alternate;
+  transform-origin: center center;
+}
+
 /* Light Diffusion Bed (Soft blue/cyan blend into bottom of section) */
 .tw-aurora-bottom-diffusion {
   position: absolute;
@@ -18001,7 +18018,21 @@ textarea {
   will-change: transform;
 }
 
-/* Dynamic Specular Light Sweep Overlay */
+/* Ribbon 4: Left-Side & Lower Orbital Ribbon (Gracefully frames text safe zone) */
+.tw-glass-ribbon-left {
+  animation: twGlassRibbonFloatLeft 20s ease-in-out infinite alternate;
+  transform-origin: 30% 45%;
+  will-change: transform;
+}
+
+/* Ribbon 5: Full-Width Orbital Connecting Bridge */
+.tw-glass-ribbon-bridge {
+  animation: twGlassRibbonFloatBridge 22s ease-in-out infinite alternate;
+  transform-origin: 50% 20%;
+  will-change: transform;
+}
+
+/* Dynamic Specular Light Sweep Overlay (Right Carousel) */
 .tw-glass-light-sweep {
   position: absolute;
   top: 0;
@@ -18018,6 +18049,26 @@ textarea {
   pointer-events: none;
   z-index: 3;
   animation: twLightSweep 13s ease-in-out infinite alternate;
+  will-change: transform, opacity;
+}
+
+/* Dynamic Specular Light Sweep Overlay (Left Section) */
+.tw-glass-light-sweep-left {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    115deg,
+    transparent 15%,
+    rgba(255, 255, 255, 0.35) 42%,
+    rgba(56, 189, 248, 0.2) 54%,
+    transparent 72%
+  );
+  pointer-events: none;
+  z-index: 3;
+  animation: twLightSweepLeft 15s ease-in-out infinite alternate;
   will-change: transform, opacity;
 }
 
@@ -18057,6 +18108,36 @@ textarea {
     transparent 75%
   );
   animation: twCausticPulse2 10s ease-in-out infinite alternate;
+}
+
+.tw-glass-caustic-3 {
+  top: 7%;
+  left: 6%;
+  width: 140px;
+  height: 140px;
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.75) 0%,
+    rgba(56, 189, 248, 0.4) 35%,
+    rgba(165, 180, 252, 0.15) 60%,
+    transparent 75%
+  );
+  animation: twCausticPulse3 9s ease-in-out infinite alternate;
+}
+
+.tw-glass-caustic-4 {
+  top: 13%;
+  left: 48%;
+  width: 120px;
+  height: 120px;
+  background: radial-gradient(
+    circle,
+    rgba(255, 255, 255, 0.65) 0%,
+    rgba(56, 189, 248, 0.32) 40%,
+    rgba(37, 99, 235, 0.1) 60%,
+    transparent 75%
+  );
+  animation: twCausticPulse4 11s ease-in-out infinite alternate;
 }
 
 /* --------------------------------------------------------------------------
@@ -18194,6 +18275,90 @@ textarea {
   }
 }
 
+@keyframes twAuroraTravel5 {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(-45px, 30px, 0) scale(1.12);
+  }
+  100% {
+    transform: translate3d(40px, -25px, 0) scale(0.95);
+  }
+}
+
+@keyframes twGlassRibbonFloatLeft {
+  0% {
+    transform: translate3d(0, 0, 0) rotate(0deg) scale(1);
+  }
+  50% {
+    transform: translate3d(30px, -18px, 0) rotate(1.5deg) scale(1.04);
+  }
+  100% {
+    transform: translate3d(-24px, 22px, 0) rotate(-1.2deg) scale(0.97);
+  }
+}
+
+@keyframes twGlassRibbonFloatBridge {
+  0% {
+    transform: translate3d(0, 0, 0) rotate(0deg) scale(1);
+    opacity: 0.78;
+  }
+  50% {
+    transform: translate3d(-28px, 18px, 0) rotate(-1.4deg) scale(1.03);
+    opacity: 0.95;
+  }
+  100% {
+    transform: translate3d(24px, -14px, 0) rotate(1.1deg) scale(0.96);
+    opacity: 0.72;
+  }
+}
+
+@keyframes twLightSweepLeft {
+  0% {
+    transform: translate3d(-50px, -20px, 0) rotate(-3deg) scale(0.94);
+    opacity: 0.15;
+  }
+  50% {
+    transform: translate3d(25px, 20px, 0) rotate(2deg) scale(1.05);
+    opacity: 0.45;
+  }
+  100% {
+    transform: translate3d(70px, 35px, 0) rotate(-2deg) scale(1);
+    opacity: 0.18;
+  }
+}
+
+@keyframes twCausticPulse3 {
+  0% {
+    transform: translate3d(0, 0, 0) scale(0.94);
+    opacity: 0.45;
+  }
+  50% {
+    transform: translate3d(12px, -8px, 0) scale(1.14);
+    opacity: 0.88;
+  }
+  100% {
+    transform: translate3d(-10px, 10px, 0) scale(0.96);
+    opacity: 0.5;
+  }
+}
+
+@keyframes twCausticPulse4 {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1.04);
+    opacity: 0.65;
+  }
+  50% {
+    transform: translate3d(-14px, 12px, 0) scale(0.9);
+    opacity: 0.35;
+  }
+  100% {
+    transform: translate3d(10px, -6px, 0) scale(1.08);
+    opacity: 0.7;
+  }
+}
+
 /* --------------------------------------------------------------------------
    Responsive Adaptations
    -------------------------------------------------------------------------- */
@@ -18221,6 +18386,11 @@ textarea {
     height: 360px;
   }
 
+  .tw-aurora-blob-center {
+    width: 440px;
+    height: 360px;
+  }
+
   .tw-glass-caustic-1 {
     width: 130px;
     height: 130px;
@@ -18230,6 +18400,16 @@ textarea {
   .tw-glass-caustic-2 {
     width: 150px;
     height: 150px;
+  }
+
+  .tw-glass-caustic-3 {
+    width: 110px;
+    height: 110px;
+  }
+
+  .tw-glass-caustic-4 {
+    width: 100px;
+    height: 100px;
   }
 }
 
@@ -18263,8 +18443,19 @@ textarea {
     left: -20%;
   }
 
-  .tw-glass-caustic-2 {
+  .tw-aurora-blob-center {
     display: none;
+  }
+
+  .tw-glass-caustic-2,
+  .tw-glass-caustic-3,
+  .tw-glass-caustic-4,
+  .tw-glass-light-sweep-left {
+    display: none;
+  }
+
+  .tw-glass-ribbon-bridge {
+    opacity: 0.45;
   }
 }
 
@@ -18276,12 +18467,18 @@ textarea {
   .tw-aurora-blob-cyan,
   .tw-aurora-blob-green,
   .tw-aurora-blob-lavender,
+  .tw-aurora-blob-center,
   .tw-glass-ribbon-1,
   .tw-glass-ribbon-2,
   .tw-glass-ribbon-3,
+  .tw-glass-ribbon-left,
+  .tw-glass-ribbon-bridge,
   .tw-glass-light-sweep,
+  .tw-glass-light-sweep-left,
   .tw-glass-caustic-1,
-  .tw-glass-caustic-2 {
+  .tw-glass-caustic-2,
+  .tw-glass-caustic-3,
+  .tw-glass-caustic-4 {
     animation: none !important;
     transition: none !important;
   }
