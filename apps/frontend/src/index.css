@@ -20903,6 +20903,25 @@ textarea {
   }
 }
 
+/* Card 2 Footer Spacing Enhancement */
+.Eor-cardFooter--second {
+  gap: 1rem !important;
+  justify-content: space-between !important;
+}
+
+.Eor-cardFooterLeft--second {
+  text-align: left;
+  flex: 1 1 auto;
+  min-width: 0;
+  line-height: 1.4;
+}
+
+.Eor-cardFooterRight--second {
+  text-align: right;
+  flex-shrink: 0;
+  line-height: 1.4;
+}
+
 /* Separation Model */
 .Eor-separationGrid {
   display: grid;
@@ -22764,6 +22783,7 @@ textarea {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 1.5rem;
+  align-items: stretch;
 }
 
 @media (max-width: 1200px) {
@@ -22778,22 +22798,37 @@ textarea {
   }
 }
 
+.PermStaff-pillarReveal {
+  display: flex;
+  width: 100%;
+  height: 100%;
+}
+
 .PermStaff-pillarCard {
   background-color: var(--color-surface-container-lowest, #ffffff);
   border: 1px solid var(--color-card-stroke, #e2e8f0);
   border-radius: 1.25rem;
-  padding: 2rem;
+  padding: 2rem 1.65rem;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  box-shadow: 0 4px 6px -1px rgba(15, 23, 42, 0.04);
-  transition: all 0.25s ease;
+  width: 100%;
+  height: 100%;
+  box-shadow: 0 4px 6px -1px rgba(15, 23, 42, 0.04), 0 2px 4px -2px rgba(15, 23, 42, 0.02);
+  transition: transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease;
+  position: relative;
 }
 
 .PermStaff-pillarCard:hover {
   transform: translateY(-4px);
-  box-shadow: 0 16px 28px -4px rgba(15, 23, 42, 0.08);
-  border-color: rgba(37, 99, 235, 0.3);
+  box-shadow: 0 16px 28px -4px rgba(15, 23, 42, 0.08), 0 6px 12px -3px rgba(15, 23, 42, 0.04);
+  border-color: rgba(37, 99, 235, 0.35);
+}
+
+.PermStaff-pillarCard .pillar-top {
+  display: flex;
+  flex-direction: column;
+  flex: 1 0 auto;
+  margin-bottom: 1.5rem;
 }
 
 .PermStaff-pillarCard .pillar-header-row {
@@ -22801,6 +22836,7 @@ textarea {
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1.25rem;
+  min-height: 48px;
 }
 
 .PermStaff-pillarCard .pillar-icon-box {
@@ -22810,69 +22846,118 @@ textarea {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 26px;
+  font-size: 24px;
+}
+
+.PermStaff-pillarCard .pillar-icon-box .material-symbols-outlined {
+  font-size: 24px;
 }
 
 .PermStaff-pillarCard .pillar-icon-box.primary {
-  background-color: rgba(29, 78, 216, 0.1);
+  background-color: rgba(37, 99, 235, 0.1);
   color: var(--color-primary, #0037b0);
 }
 
 .PermStaff-pillarCard .pillar-icon-box.cobalt {
-  background-color: rgba(37, 99, 235, 0.1);
+  background-color: rgba(37, 99, 235, 0.12);
   color: var(--color-cobalt-bright, #2563eb);
 }
 
 .PermStaff-pillarCard .pillar-icon-box.emerald {
-  background-color: rgba(34, 197, 94, 0.12);
-  color: var(--color-tertiary, #004f35);
+  background-color: rgba(16, 185, 129, 0.12);
+  color: var(--color-tertiary, #059669);
 }
 
 .PermStaff-pillarCard .pillar-step-tag {
   font-size: 0.6875rem;
   font-weight: 800;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
   color: var(--color-outline, #747686);
 }
 
 .PermStaff-pillarCard .pillar-title {
   font-size: 1.15rem;
   font-weight: 700;
+  line-height: 1.35;
   color: var(--color-navy-dark, #0f172a);
-  margin: 0 0 0.5rem 0;
+  margin: 0 0 0.85rem 0;
+  min-height: 3.2rem;
+  display: flex;
+  align-items: flex-start;
 }
 
 .PermStaff-pillarCard .pillar-desc {
   font-size: 0.875rem;
-  line-height: 1.55;
+  line-height: 1.6;
   color: var(--color-secondary, #49607e);
-  margin: 0 0 1.25rem 0;
+  margin: 0;
+  min-height: 8.5rem;
 }
 
 .PermStaff-pillarCard .pillar-points {
   list-style: none;
-  padding: 0.75rem;
-  margin: 0;
-  background-color: var(--color-slate-surface, #f8fafc);
+  padding: 1.15rem 1rem;
+  margin: auto 0 0 0;
+  background-color: var(--color-surface-container-low, #f8fafc);
+  border: 1px solid var(--color-card-stroke, #e2e8f0);
   border-radius: 0.75rem;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  justify-content: center;
+  gap: 0.75rem;
+  min-height: 155px;
 }
 
 .PermStaff-pillarCard .pillar-points li {
   display: flex;
-  align-items: center;
-  gap: 0.5rem;
+  align-items: flex-start;
+  gap: 0.625rem;
   font-size: 0.75rem;
-  font-weight: 600;
-  color: var(--color-navy-dark, #0f172a);
+  font-weight: 500;
+  line-height: 1.45;
+  color: var(--color-navy-dark, #1e293b);
 }
 
 .PermStaff-pillarCard .pillar-points .material-symbols-outlined {
-  color: var(--color-emerald-accent, #22c55e);
+  color: var(--color-emerald-accent, #10b981);
   font-size: 16px;
+  line-height: 1;
   flex-shrink: 0;
+  margin-top: 2px;
+}
+
+@media (max-width: 1200px) {
+  .PermStaff-pillarCard .pillar-title {
+    min-height: 2.8rem;
+  }
+
+  .PermStaff-pillarCard .pillar-desc {
+    min-height: 5.75rem;
+  }
+
+  .PermStaff-pillarCard .pillar-points {
+    min-height: 125px;
+  }
+}
+
+@media (max-width: 640px) {
+  .PermStaff-pillarCard {
+    padding: 1.5rem 1.25rem;
+  }
+
+  .PermStaff-pillarCard .pillar-title {
+    min-height: auto;
+  }
+
+  .PermStaff-pillarCard .pillar-desc {
+    min-height: auto;
+    margin-bottom: 1.25rem;
+  }
+
+  .PermStaff-pillarCard .pillar-points {
+    min-height: auto;
+  }
 }
 
 /* 4-Step Recruitment Process */
@@ -23728,6 +23813,23 @@ textarea {
 [data-theme='dark'] .PermStaff-form select option {
   background-color: #1a1b23;
   color: #ffffff;
+}
+
+[data-theme='dark'] .PermStaff-pillarCard .pillar-desc {
+  color: var(--color-outline-variant, #a0a3bd);
+}
+
+[data-theme='dark'] .PermStaff-pillarCard .pillar-points {
+  background-color: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+[data-theme='dark'] .PermStaff-pillarCard .pillar-points li {
+  color: var(--color-on-surface, #e2e8f0);
+}
+
+[data-theme='dark'] .PermStaff-pillarCard .pillar-step-tag {
+  color: var(--color-outline, #94a3b8);
 }
 
 /* ==========================================================================

@@ -81,6 +81,7 @@ const EorCapabilities = ({ data }) => {
                 </div>
 
                 <div
+                  className={`Eor-cardFooter ${idx === 1 ? 'Eor-cardFooter--second' : ''}`}
                   style={{
                     display: 'flex',
                     justifyContent: 'space-between',
@@ -90,13 +91,36 @@ const EorCapabilities = ({ data }) => {
                     borderTop: '1px solid var(--color-card-stroke, #e2e8f0)',
                     fontSize: '0.75rem',
                     color: 'var(--color-outline, #747686)',
+                    ...(idx === 1 ? { gap: '1rem' } : {}),
                   }}
                 >
-                  <span>{cap.footerLeft}</span>
                   <span
+                    className={idx === 1 ? 'Eor-cardFooterLeft--second' : undefined}
+                    style={
+                      idx === 1
+                        ? {
+                            textAlign: 'left',
+                            flex: '1 1 auto',
+                            minWidth: 0,
+                            lineHeight: 1.4,
+                          }
+                        : undefined
+                    }
+                  >
+                    {cap.footerLeft}
+                  </span>
+                  <span
+                    className={idx === 1 ? 'Eor-cardFooterRight--second' : undefined}
                     style={{
                       fontWeight: 700,
                       color: 'var(--color-primary, #0037b0)',
+                      ...(idx === 1
+                        ? {
+                            textAlign: 'right',
+                            flexShrink: 0,
+                            lineHeight: 1.4,
+                          }
+                        : {}),
                     }}
                   >
                     {cap.footerRight}
