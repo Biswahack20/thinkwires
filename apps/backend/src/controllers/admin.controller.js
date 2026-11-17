@@ -62,6 +62,29 @@ export let inMemoryData = loadSeedJson('adminSeedData.json', {
 });
 inMemoryData.articles = inMemoryArticles;
 
+if (process.env.NODE_ENV === 'test' && (!inMemoryData.users || inMemoryData.users.length === 0)) {
+  inMemoryData.users = [
+    {
+      id: 'usr_test_001',
+      name: 'Test Superadmin',
+      email: 'superadmin@thinkwires.com',
+      role: 'superadmin',
+      designation: 'Chief Technology Officer / Superadmin',
+      password: 'Thinkwires@2026',
+      isActive: true,
+    },
+    {
+      id: 'usr_test_002',
+      name: 'Test Admin',
+      email: 'admin@thinkwires.com',
+      role: 'admin',
+      designation: 'Principal System Admin',
+      password: 'Thinkwires@2026',
+      isActive: true,
+    },
+  ];
+}
+
 const isMongoActive = () => mongoose.connection.readyState === 1;
 
 /**

@@ -1,10 +1,14 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
+import mongoose from 'mongoose';
+import UserMongo from '../../models/user.mongo.model.js';
 import {
+  requireAuth,
   requireCandidateAuth,
   requireRole,
 } from '../../middlewares/auth.middleware.js';
 import {
   generateCandidateToken,
+  generateAdminToken,
   revokeToken,
   clearRevocationStore,
 } from '../../utils/auth.util.js';
@@ -27,6 +31,7 @@ describe('Auth Middleware (Unit Tests)', () => {
         this.jsonData = data;
         return this;
       }),
+      set: vi.fn().mockReturnThis(),
     };
     const next = vi.fn();
     return { req, res, next };
@@ -287,6 +292,136 @@ describe('Auth Middleware (Unit Tests)', () => {
       expect(res.status).toHaveBeenCalledWith(403);
       expect(res.jsonData.error).toMatch(/access denied|cms admins have access restricted/i);
       expect(next).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('requireAuth (SEC-04 Fail-Closed Security)', () => {
+    const originalEnv = process.env.NODE_ENV;
+
+    afterEach(() => {
+      process.env.NODE_ENV = originalEnv;
+    });
+
+    it('fails closed with 503 Service Unavailable when MongoDB is disconnected in production', async () => {
+      process.env.NODE_ENV = 'production';
+      vi.spyOn(mongoose.connection, 'readyState', 'get').mockReturnValue(0); // disconnected
+
+      const token = generateAdminToken({
+        id: '65f1c2d3e4f5a6b7c8d9e0f1',
+        email: 'admin@thinkwires.com',
+        role: 'admin',
+      });
+
+      const { req, res, next } = createMockReqRes({
+        headers: { authorization: `Bearer ${token}` },
+      });
+
+      const middleware = requireAuth(['admin']);
+      await middleware(req, res, next);
+
+      expect(res.status).toHaveBeenCalledWith(503);
+      expect(res.jsonData.success).toBe(false);
+      expect(res.jsonData.error).toMatch(/Database connection temporarily unavailable/i);
+      expect(res.jsonData.retryAfterSeconds).toBe(5);
+      expect(next).not.toHaveBeenCalled();
+    });
+
+    it('rejects deactivated admin user with 403 Forbidden', async () => {
+      vi.spyOn(mongoose.connection, 'readyState', 'get').mockReturnValue(1);
+      vi.spyOn(UserMongo, 'findById').mockReturnValue({
+        select: vi.fn().mockReturnValue({
+          lean: vi.fn().mockResolvedValue({
+            _id: '65f1c2d3e4f5a6b7c8d9e0f1',
+            email: 'admin@thinkwires.com',
+            role: 'admin',
+            isActive: false,
+          }),
+        }),
+      });
+
+      const token = generateAdminToken({
+        id: '65f1c2d3e4f5a6b7c8d9e0f1',
+        email: 'admin@thinkwires.com',
+        role: 'admin',
+      });
+
+      const { req, res, next } = createMockReqRes({
+        headers: { authorization: `Bearer ${token}` },
+      });
+
+      const middleware = requireAuth(['admin']);
+      await middleware(req, res, next);
+
+      expect(res.status).toHaveBeenCalledWith(403);
+      expect(res.jsonData.error).toMatch(/account has been deactivated/i);
+      expect(next).not.toHaveBeenCalled();
+    });
+
+    it('rejects invalidated session with mismatched tokenVersion with 401 Unauthorized', async () => {
+      vi.spyOn(mongoose.connection, 'readyState', 'get').mockReturnValue(1);
+      vi.spyOn(UserMongo, 'findById').mockReturnValue({
+        select: vi.fn().mockReturnValue({
+          lean: vi.fn().mockResolvedValue({
+            _id: '65f1c2d3e4f5a6b7c8d9e0f1',
+            email: 'admin@thinkwires.com',
+            role: 'admin',
+            isActive: true,
+            tokenVersion: 2,
+          }),
+        }),
+      });
+
+      const token = generateAdminToken({
+        id: '65f1c2d3e4f5a6b7c8d9e0f1',
+        email: 'admin@thinkwires.com',
+        role: 'admin',
+        tokenVersion: 1, // older version
+      });
+
+      const { req, res, next } = createMockReqRes({
+        headers: { authorization: `Bearer ${token}` },
+      });
+
+      const middleware = requireAuth(['admin']);
+      await middleware(req, res, next);
+
+      expect(res.status).toHaveBeenCalledWith(401);
+      expect(res.jsonData.error).toMatch(/Session has been invalidated/i);
+      expect(next).not.toHaveBeenCalled();
+    });
+
+    it('allows valid authenticated admin and sets authoritative database role on req.user', async () => {
+      vi.spyOn(mongoose.connection, 'readyState', 'get').mockReturnValue(1);
+      vi.spyOn(UserMongo, 'findById').mockReturnValue({
+        select: vi.fn().mockReturnValue({
+          lean: vi.fn().mockResolvedValue({
+            _id: '65f1c2d3e4f5a6b7c8d9e0f1',
+            email: 'admin@thinkwires.com',
+            role: 'admin',
+            isActive: true,
+            tokenVersion: 1,
+          }),
+        }),
+      });
+
+      const token = generateAdminToken({
+        id: '65f1c2d3e4f5a6b7c8d9e0f1',
+        email: 'admin@thinkwires.com',
+        role: 'admin',
+        tokenVersion: 1,
+      });
+
+      const { req, res, next } = createMockReqRes({
+        headers: { authorization: `Bearer ${token}` },
+      });
+
+      const middleware = requireAuth(['admin']);
+      await middleware(req, res, next);
+
+      expect(next).toHaveBeenCalled();
+      expect(req.user).toBeDefined();
+      expect(req.user.email).toBe('admin@thinkwires.com');
+      expect(req.user.role).toBe('admin');
     });
   });
 });

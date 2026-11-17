@@ -1,4 +1,5 @@
 import { createRequire } from 'module';
+import zlib from 'zlib';
 import config from '../configs/dotenv.js';
 
 const require = createRequire(import.meta.url);
@@ -107,6 +108,48 @@ export const sanitizeUntrustedText = (text = '') => {
 };
 
 /**
+ * Extracts plain text streams from DOCX files using native Deflate decompression.
+ * Inspects zip archive entries for word/document.xml without external binaries.
+ * @param {Buffer} buffer
+ * @returns {string}
+ */
+export const extractTextFromDocxBuffer = (buffer) => {
+  if (!buffer || !Buffer.isBuffer(buffer)) return '';
+  try {
+    let offset = 0;
+    while (offset < buffer.length - 30) {
+      if (buffer.readUInt32LE(offset) === 0x04034b50) {
+        const compMethod = buffer.readUInt16LE(offset + 8);
+        const compSize = buffer.readUInt32LE(offset + 18);
+        const fileNameLen = buffer.readUInt16LE(offset + 26);
+        const extraFieldLen = buffer.readUInt16LE(offset + 28);
+        const fileName = buffer.toString('utf8', offset + 30, offset + 30 + fileNameLen);
+        const dataOffset = offset + 30 + fileNameLen + extraFieldLen;
+
+        if (fileName === 'word/document.xml') {
+          const compressedData = buffer.slice(dataOffset, dataOffset + compSize);
+          const xmlBuffer = compMethod === 8
+            ? zlib.inflateRawSync(compressedData)
+            : compressedData;
+          const xml = xmlBuffer.toString('utf8');
+          const matches = xml.match(/<w:t[^>]*>(.*?)<\/w:t>/g) || [];
+          return matches
+            .map((m) => m.replace(/<[^>]+>/g, ''))
+            .filter(Boolean)
+            .join(' ');
+        }
+        offset = dataOffset + compSize;
+      } else {
+        offset++;
+      }
+    }
+  } catch (err) {
+    console.warn('DOCX buffer extraction warning:', err.message);
+  }
+  return '';
+};
+
+/**
  * AI Service Integration Client
  * Communicates with the FastAPI AI Microservice on port 8000.
  * Includes resilient fallbacks to ensure uninterrupted candidate portal operations
@@ -115,6 +158,20 @@ export const sanitizeUntrustedText = (text = '') => {
 class AIServiceClient {
   constructor() {
     // Dynamic service binding: base URL is resolved dynamically at runtime per request
+  }
+
+  /**
+   * Generates authentication headers for inter-service security (SEC-02)
+   * @returns {Object}
+   */
+  getAuthHeaders() {
+    const headers = {};
+    const apiKey = process.env.AI_SERVICE_API_KEY || config.AI_SERVICE_API_KEY;
+    if (apiKey) {
+      headers['X-API-Key'] = apiKey;
+      headers['Authorization'] = `Bearer ${apiKey}`;
+    }
+    return headers;
   }
 
   /**
@@ -152,6 +209,7 @@ class AIServiceClient {
 
         const response = await fetch(this.resolveUrl('api/resume/parse'), {
           method: 'POST',
+          headers: this.getAuthHeaders(),
           body: formData,
           signal: AbortSignal.timeout(10000),
         });
@@ -170,6 +228,7 @@ class AIServiceClient {
 
         const response = await fetch(this.resolveUrl('api/resume/parse'), {
           method: 'POST',
+          headers: this.getAuthHeaders(),
           body: formData,
           signal: AbortSignal.timeout(10000),
         });
@@ -215,7 +274,7 @@ class AIServiceClient {
     try {
       const response = await fetch(this.resolveUrl('api/resume/match-score'), {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', ...this.getAuthHeaders() },
         body: JSON.stringify(payload),
         signal: AbortSignal.timeout(8000),
       });
@@ -250,7 +309,7 @@ class AIServiceClient {
     try {
       const response = await fetch(this.resolveUrl('api/screening/evaluate-candidate'), {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', ...this.getAuthHeaders() },
         body: JSON.stringify(payload),
         signal: AbortSignal.timeout(10000),
       });
@@ -336,7 +395,7 @@ class AIServiceClient {
         this.resolveUrl('api/screening/generate-test'),
         {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 'Content-Type': 'application/json', ...this.getAuthHeaders() },
           body: JSON.stringify(payload),
           signal: AbortSignal.timeout(8000),
         }
@@ -371,7 +430,7 @@ class AIServiceClient {
         this.resolveUrl('api/screening/evaluate-test'),
         {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 'Content-Type': 'application/json', ...this.getAuthHeaders() },
           body: JSON.stringify(payload),
           signal: AbortSignal.timeout(8000),
         }
@@ -402,10 +461,17 @@ class AIServiceClient {
     let text = rawText || '';
 
     if (!text && fileBuffer) {
-      if (
+      const lowerName = originalname.toLowerCase();
+      if (lowerName.endsWith('.docx')) {
+        try {
+          const docxText = extractTextFromDocxBuffer(fileBuffer);
+          if (docxText) text = docxText;
+        } catch (docxErr) {
+          console.warn('Node DOCX extraction error:', docxErr.message);
+        }
+      } else if (
         pdfParse &&
-        (originalname.toLowerCase().endsWith('.pdf') ||
-          !originalname.includes('.'))
+        (lowerName.endsWith('.pdf') || !lowerName.includes('.'))
       ) {
         try {
           const parser = new pdfParse.PDFParse({ data: fileBuffer });
@@ -414,8 +480,7 @@ class AIServiceClient {
         } catch (pdfErr) {
           console.warn('Node PDF extraction error:', pdfErr.message);
         }
-      }
-      if (!text) {
+      } else if (lowerName.endsWith('.txt')) {
         try {
           text = fileBuffer.toString('utf-8');
         } catch {

@@ -132,7 +132,7 @@ app.get(['/health', '/api/health'], (req, res) => {
   const isProduction = process.env.NODE_ENV === 'production';
 
   // Liveness / Health check: process is alive and responsive; datastore readiness is reflected in payload and on /ready
-  const isHealthy = isMongoReady;
+  const isHealthy = isProduction ? isMongoReady : true;
   const statusCode = 200;
 
   const mongoStatusMap = {

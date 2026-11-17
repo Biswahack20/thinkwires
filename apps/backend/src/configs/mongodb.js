@@ -110,6 +110,22 @@ export const connectMongoDB = async () => {
   }
 };
 
+export const connectMongoDBWithRetry = async (maxRetries = 5, delayMs = 2000) => {
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      console.log(`[MongoDB] Attempting connection (${attempt}/${maxRetries})...`);
+      const conn = await connectMongoDB();
+      return conn;
+    } catch (err) {
+      console.warn(`[MongoDB] Connection attempt ${attempt} failed: ${err.message}`);
+      if (attempt === maxRetries) {
+        throw new Error(`Failed to connect to MongoDB after ${maxRetries} attempts: ${err.message}`);
+      }
+      await new Promise((resolve) => setTimeout(resolve, delayMs));
+    }
+  }
+};
+
 export const disconnectMongoDB = async () => {
   isExplicitDisconnect = true;
   if (reconnectTimer) {
@@ -131,8 +147,9 @@ export const synchronizeIndexes = async () => {
   try {
     const models = Object.values(mongoose.models);
     for (const model of models) {
-      if (model && typeof model.syncIndexes === 'function') {
-        await model.syncIndexes();
+      if (model && typeof model.createIndexes === 'function') {
+        // Safe, non-destructive index creation (DB-01): creates schema indexes without dropping migration indexes
+        await model.createIndexes();
       }
     }
     console.log('[MongoDB] Production compound indexes synchronized successfully.');

@@ -110,6 +110,10 @@ export const runUp = async () => {
 
       await migrationModule.up({ db, mongoose });
 
+      if (typeof migrationModule.verify === 'function') {
+        await migrationModule.verify({ db, mongoose });
+      }
+
       await MigrationRecord.create({
         name: file,
         batch: nextBatch,

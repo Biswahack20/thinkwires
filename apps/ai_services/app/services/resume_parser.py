@@ -53,6 +53,23 @@ def sanitize_untrusted_text(text: str) -> str:
 
     return sanitized
 
+import zipfile
+import xml.etree.ElementTree as ET
+
+def extract_text_from_docx(file_bytes: bytes) -> str:
+    """Extracts text streams from uploaded DOCX bytes using standard zipfile and xml parsing."""
+    try:
+        with zipfile.ZipFile(io.BytesIO(file_bytes)) as docx_zip:
+            if "word/document.xml" not in docx_zip.namelist():
+                return ""
+            xml_content = docx_zip.read("word/document.xml").decode("utf-8", errors="ignore")
+            # Extract text elements within <w:t> tags
+            text_chunks = re.findall(r"<w:t[^>]*>(.*?)</w:t>", xml_content)
+            return " ".join(text_chunks)
+    except Exception as e:
+        logger.warning(f"DOCX extraction error: {e}")
+        return ""
+
 def extract_text_from_pdf(file_bytes: bytes) -> str:
     """Extracts text streams from uploaded PDF bytes using pypdf."""
     text, _ = extract_text_and_links_from_pdf(file_bytes)
@@ -283,31 +300,26 @@ async def parse_resume_content(
     file_bytes: Optional[bytes] = None,
     filename: Optional[str] = None,
     raw_text: Optional[str] = None,
-    file_path: Optional[str] = None,
 ) -> Dict[str, Any]:
     """
-    Parses resume content from PDF bytes, raw text, or a file path.
+    Parses resume content from PDF/DOCX bytes or raw text.
+    SEC-01: Removed arbitrary local file opening.
     Uses OpenAI LLM if configured; otherwise gracefully executes rule-based heuristic parsing.
     """
     extracted_text = ""
     extracted_links = []
 
     if file_bytes and filename:
-        if filename.lower().endswith(".pdf"):
+        ext = os.path.splitext(filename)[1].lower()
+        if ext == ".pdf":
             extracted_text, extracted_links = extract_text_and_links_from_pdf(file_bytes)
+        elif ext == ".docx":
+            extracted_text = extract_text_from_docx(file_bytes)
         else:
             try:
                 extracted_text = file_bytes.decode("utf-8", errors="ignore")
             except Exception:
                 extracted_text = ""
-
-    if not extracted_text and file_path and os.path.exists(file_path):
-        if file_path.lower().endswith(".pdf"):
-            with open(file_path, "rb") as f:
-                extracted_text, extracted_links = extract_text_and_links_from_pdf(f.read())
-        else:
-            with open(file_path, "r", encoding="utf-8", errors="ignore") as f:
-                extracted_text = f.read()
 
     if not extracted_text and raw_text:
         extracted_text = raw_text
@@ -317,6 +329,8 @@ async def parse_resume_content(
             "Senior Full Stack Software Engineer with 5+ years of experience in React, Node.js, TypeScript, "
             "PostgreSQL, Docker, and AWS cloud deployments. Email: candidate@example.com, Phone: +1-555-0199."
         )
+
+    logger.info(f"Resume text extracted successfully: length={len(extracted_text)}, filename={filename}")
 
     parsed_data = None
     sanitized_text = sanitize_untrusted_text(extracted_text[:4000])
@@ -377,6 +391,6 @@ async def parse_resume_content(
                 parsed_data["portfolio_url"] = link
 
     return {
-        "raw_text": extracted_text[:3000],
+        "raw_text": sanitize_untrusted_text(extracted_text[:1000]),
         **parsed_data,
     }

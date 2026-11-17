@@ -1,6 +1,7 @@
-from fastapi import APIRouter
+from fastapi import APIRouter, Depends
 from typing import Dict, Any, Optional
 from pydantic import BaseModel
+from app.api.auth import verify_service_auth
 from app.schemas.screening import (
     GenerateAssessmentRequest,
     EvaluateAssessmentRequest,
@@ -10,7 +11,11 @@ from app.services.test_generator import generate_screening_test
 from app.services.test_evaluator import evaluate_screening_test
 from app.services.dossier_evaluator import evaluate_candidate_dossier
 
-router = APIRouter(prefix="/api/screening", tags=["AI Screening Assessments"])
+router = APIRouter(
+    prefix="/api/screening",
+    tags=["AI Screening Assessments"],
+    dependencies=[Depends(verify_service_auth)],
+)
 
 class EvaluateCandidateRequest(BaseModel):
     candidate_data: Dict[str, Any] = {}

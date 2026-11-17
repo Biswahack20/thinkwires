@@ -144,16 +144,24 @@ JWT_SECRET=your_development_jwt_secret_key_32_chars_min
 JWT_ADMIN_SECRET=your_development_admin_jwt_secret_32_chars
 JWT_CANDIDATE_SECRET=your_development_candidate_jwt_secret_32
 
+# Initial Superadmin Setup (Production Security Requirement)
+INITIAL_SUPERADMIN_EMAIL=admin@yourcompany.com
+INITIAL_SUPERADMIN_PASSWORD=ConfigureAStrongRandomPassword16Chars!
+ALLOW_PRODUCTION_SEED=false
+
 # Cloud Object Storage (optional; defaults to local disk if omitted)
 STORAGE_DRIVER=local
 # STORAGE_DRIVER=s3
 # S3_BUCKET=thinkwires-storage
 # S3_ENDPOINT=https://<account_id>.r2.cloudflarestorage.com
 # S3_REGION=auto
+# S3_ACCESS_KEY_ID=your_access_key_id
+# S3_SECRET_ACCESS_KEY=your_secret_access_key
 # CDN_DOMAIN=cdn.thinkwires.com
 
-# Microservices
+# Microservices & Inter-Service Security
 AI_SERVICE_URL=http://localhost:8000
+AI_SERVICE_API_KEY=your_secure_shared_ai_service_api_key_min_32_chars
 ```
 
 ---
@@ -229,3 +237,32 @@ npm --prefix apps/frontend run test
 # Production bundle build
 npm run vercel-build
 ```
+
+---
+
+## 7. Production Deployment & Security Requirements
+
+### 1. Boot-Time Secret Enforcement
+In production (`NODE_ENV=production`), the application halts startup immediately if critical secrets are omitted or set to localhost:
+- `JWT_SECRET`, `JWT_ADMIN_SECRET`, and `JWT_CANDIDATE_SECRET` must each be at least 32 characters, cryptographically random, and pairwise distinct.
+- `MONGODB_URI` and `DATABASE_URL` must point to production-managed database clusters, not `127.0.0.1` or `localhost`.
+- `AI_SERVICE_API_KEY` must match between the backend and AI microservice containers.
+
+### 2. Initial Superadmin Provisioning
+On first production deployment:
+1. Configure `INITIAL_SUPERADMIN_EMAIL` and a strong `INITIAL_SUPERADMIN_PASSWORD` (min 16 characters, uppercase, lowercase, numbers, symbols).
+2. Set `ALLOW_PRODUCTION_SEED=true` during the initial deployment run only.
+3. Execute `npm run seed`. Only the superadmin administrator account is provisioned; demo candidates, mock clients, and fake placements are skipped.
+4. Unset or set `ALLOW_PRODUCTION_SEED=false` for ongoing production runtime.
+
+### 3. Cloud Object Storage (S3 / Cloudflare R2)
+For production container environments (Render, Railway, AWS ECS, GCP Cloud Run), ephemeral local disk storage must be decoupled:
+1. Set `STORAGE_DRIVER=s3`.
+2. Configure `S3_BUCKET`, `S3_REGION`, `S3_ACCESS_KEY_ID`, `S3_SECRET_ACCESS_KEY`, and optionally `S3_ENDPOINT` (e.g. `https://<account_id>.r2.cloudflarestorage.com`) and `CDN_DOMAIN`.
+3. Pre-signed download URLs and SigV4 signed PUT/DELETE requests are generated automatically with zero external dependencies.
+
+### 4. Health Checks & SRE Probes
+- **Liveness Probe**: `GET /healthz` returns HTTP 200 `{ status: "alive" }` for Kubernetes/Docker container restarts.
+- **Readiness Probe**: `GET /ready` returns HTTP 200 if MongoDB is connected, or HTTP 503 if disconnected, preventing traffic routing to unready replicas.
+- **Public Health Check**: `GET /api/health` returns minimal `{ status: "healthy" }` without leaking infrastructure details. Detailed diagnostics require authenticated operator credentials or `x-monitoring-key`.
+

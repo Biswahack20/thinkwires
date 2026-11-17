@@ -51,6 +51,9 @@ const resolvePostgresUri = () => {
   if (process.env.DATABASE_URL) {
     return process.env.DATABASE_URL;
   }
+  if (process.env.POSTGRES_URL) {
+    return process.env.POSTGRES_URL;
+  }
   const user = process.env.POSTGRES_USER || process.env.PGUSER;
   const password = process.env.POSTGRES_PASSWORD || process.env.PGPASSWORD;
   const host = process.env.POSTGRES_HOST || process.env.PGHOST || 'localhost';
@@ -90,6 +93,7 @@ export default {
   MONGODB_URI: resolveMongoUri(),
   REDIS_URL: process.env.REDIS_URL || 'redis://localhost:6379',
   AI_SERVICE_URL: process.env.AI_SERVICE_URL || 'http://localhost:8000',
+  AI_SERVICE_API_KEY: process.env.AI_SERVICE_API_KEY || '',
   JWT_SECRET: process.env.JWT_SECRET,
   JWT_ADMIN_SECRET: process.env.JWT_ADMIN_SECRET || process.env.ADMIN_JWT_SECRET,
   ADMIN_JWT_SECRET: process.env.ADMIN_JWT_SECRET || process.env.JWT_ADMIN_SECRET,

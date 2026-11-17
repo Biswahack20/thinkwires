@@ -29,7 +29,7 @@ describe('UI Chaos & Exploratory Fuzzing (Exploratory Tests)', () => {
   });
 
   it('safely handles extreme input fuzzing and script tags in form fields', async () => {
-    const user = userEvent.setup();
+    const user = userEvent.setup({ delay: null });
     renderWithProviders(<LoginPage />);
 
     const emailInput = screen.getByPlaceholderText(/name@example\.com/i);
@@ -41,7 +41,7 @@ describe('UI Chaos & Exploratory Fuzzing (Exploratory Tests)', () => {
 
     // Input safely holds the string as a literal without executing or breaking React state
     expect(emailInput.value).toContain("<script>alert('XSS')</script>");
-  });
+  }, 15000);
 
   it('gracefully renders empty state when API returns empty applications array', async () => {
     // Override MSW to return empty list

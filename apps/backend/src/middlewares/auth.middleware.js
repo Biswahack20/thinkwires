@@ -138,13 +138,23 @@ export const requireAuth = (
           console.error('Admin user DB verification notice:', dbErr.message);
           // Issue #200: Fail-closed in production if authorization check cannot be verified
           if (process.env.NODE_ENV === 'production') {
+            if (typeof res.set === 'function') res.set('Retry-After', '5');
             return res.status(503).json({
               success: false,
               error:
-                'Authorization verification service temporarily unavailable. Please retry.',
+                'Database connection temporarily unavailable. Authorization verification service temporarily unavailable. Please retry.',
+              retryAfterSeconds: 5,
             });
           }
         }
+      } else if (process.env.NODE_ENV === 'production') {
+        if (typeof res.set === 'function') res.set('Retry-After', '5');
+        return res.status(503).json({
+          success: false,
+          error:
+            'Database connection temporarily unavailable. Authorization verification service temporarily unavailable. Please retry.',
+          retryAfterSeconds: 5,
+        });
       }
 
       req.user = userObj;

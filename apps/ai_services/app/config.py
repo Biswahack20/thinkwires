@@ -43,6 +43,11 @@ class Settings:
         ]
         return parsed or self._DEFAULT_CORS_ORIGINS
 
+    # Inter-service Authentication & Resource Boundaries (SEC-01 & SEC-02)
+    AI_SERVICE_API_KEY: str = os.getenv("AI_SERVICE_API_KEY", "").strip()
+    MAX_UPLOAD_SIZE_BYTES: int = int(os.getenv("MAX_UPLOAD_SIZE_BYTES", 10 * 1024 * 1024)) # 10 MB limit
+    PARSER_TIMEOUT_SECONDS: int = int(os.getenv("PARSER_TIMEOUT_SECONDS", 15))
+
     # Multi-Provider Free LLM Integration
     PRIMARY_LLM_PROVIDER: str = os.getenv("PRIMARY_LLM_PROVIDER", "auto").lower().strip()
 

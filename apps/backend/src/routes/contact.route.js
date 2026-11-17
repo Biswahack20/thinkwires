@@ -48,6 +48,14 @@ const router = express.Router();
 
 // --- Old Contact Form (kept for backward compat) ---
 router.post('/contact', publicSubmissionRateLimiter, async (req, res) => {
+  if (process.env.NODE_ENV === 'production' && !isMongoActive()) {
+    return res.status(503).json({
+      success: false,
+      error: 'Database connection temporarily unavailable. Please retry in a few moments.',
+      retryAfterSeconds: 5,
+    });
+  }
+
   const { email, phone } = req.body;
   if (!email || !phone) {
     return res.status(400).json({ error: 'Email and Phone are required' });
@@ -190,6 +198,14 @@ router.post('/contact/faq', cmsGuard, async (req, res) => {
 
 // Handle contact form submission
 router.post('/contact/message', publicSubmissionRateLimiter, async (req, res) => {
+  if (process.env.NODE_ENV === 'production' && !isMongoActive()) {
+    return res.status(503).json({
+      success: false,
+      error: 'Database connection temporarily unavailable. Please retry in a few moments.',
+      retryAfterSeconds: 5,
+    });
+  }
+
   const { fullName, workEmail, email, inquiryType, subject, message, phone, company } = req.body;
   const contactEmail = workEmail || email;
   const inquiryCategory = inquiryType || subject || 'General Inquiry';
@@ -254,6 +270,14 @@ router.get('/company/contact', async (req, res) => {
 const consultationSubmissions = [];
 
 const handleConsultationSubmission = async (req, res) => {
+  if (process.env.NODE_ENV === 'production' && !isMongoActive()) {
+    return res.status(503).json({
+      success: false,
+      error: 'Database connection temporarily unavailable. Please retry in a few moments.',
+      retryAfterSeconds: 5,
+    });
+  }
+
   const { fullName, workEmail, phone, primaryNeed, techRoles } = req.body;
 
   if (!fullName || !fullName.trim()) {

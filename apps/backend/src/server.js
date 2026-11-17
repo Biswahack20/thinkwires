@@ -2,6 +2,7 @@ import app, { setShuttingDown } from './app.js';
 import { connectDB, sequelize } from './configs/db.js';
 import {
   connectMongoDB,
+  connectMongoDBWithRetry,
   disconnectMongoDB,
   synchronizeIndexes,
 } from './configs/mongodb.js';
@@ -22,7 +23,29 @@ const startServer = async () => {
   // Fail fast on startup if JWT_SECRET is missing, insecure, or weak
   getJwtSecret();
 
-  // Start HTTP server immediately bound to 0.0.0.0 for containerized environments (DEP-03)
+  // In production, ensure required MongoDB connection is established with bounded retries before serving traffic (REL-01)
+  if (process.env.NODE_ENV === 'production') {
+    try {
+      await connectMongoDBWithRetry(5, 2000);
+      console.log('[MongoDB] Connected: production active persistence verified.');
+      await synchronizeIndexes();
+    } catch (err) {
+      console.error('🚨 [FATAL] Database connection failed during production startup:', err.message);
+      process.exit(1);
+    }
+  } else {
+    // Development mode non-blocking connection
+    connectMongoDB()
+      .then(async () => {
+        console.log('[MongoDB] Connected: dual-mode active persistence enabled.');
+        await synchronizeIndexes();
+      })
+      .catch((error) => {
+        console.warn('⚠️ [MongoDB] Initial connection notice:', error.message || error);
+      });
+  }
+
+  // Start HTTP server bound to 0.0.0.0 for containerized environments (DEP-03)
   const server = app.listen(PORT, HOST, () => {
     console.log(
       `[Server] Thinkwires API server running on http://${HOST}:${PORT}`
@@ -35,44 +58,10 @@ const startServer = async () => {
       const isDevelopment = process.env.NODE_ENV !== 'production';
       if (isDevelopment) {
         await sequelize.sync({ alter: true });
-        console.log(
-          '[PostgreSQL] Models synced with schema auto-alter enabled (development)'
-        );
-      } else {
-        console.log(
-          '[PostgreSQL] Connected in production mode. Schema synchronization is managed via deterministic migrations (postgresRunner.js).'
-        );
       }
     })
     .catch((error) => {
-      console.warn(
-        '[PostgreSQL] Connection optional/bypassed:',
-        error.message || error
-      );
-      console.log(
-        '[PostgreSQL] Operating with in-memory seed dataset for API routes.'
-      );
-    });
-
-  // MongoDB (Mongoose) - Graceful connection with automatic retry
-  connectMongoDB()
-    .then(async () => {
-      console.log('[MongoDB] Connected: dual-mode active persistence enabled.');
-      await synchronizeIndexes();
-    })
-    .catch((error) => {
-      console.warn(
-        '⚠️ [MongoDB] Initial connection notice:',
-        error.message || error
-      );
-      if (process.env.NODE_ENV === 'production') {
-        console.warn(
-          '⚠️ [MongoDB] Production note: Ensure Render outbound IPs are permitted in your MongoDB Atlas Network Access (0.0.0.0/0 recommended for dynamic cloud containers).'
-        );
-      }
-      console.log(
-        '[MongoDB] Operating with dual-mode in-memory store for Admin & CMS while reconnection proceeds.'
-      );
+      console.warn('[PostgreSQL] Connection optional/bypassed:', error.message || error);
     });
 
   // Redis (Upstash / Local) - Graceful non-blocking connection

@@ -16,6 +16,21 @@ import { storageService } from '../utils/storage.adapter.js';
 export const localDevApplications = [];
 
 /**
+ * Safely removes a temporary uploaded file from disk
+ */
+export const cleanupUploadedFile = async (file) => {
+  if (file && file.path) {
+    try {
+      if (fs.existsSync(file.path)) {
+        await fs.promises.unlink(file.path);
+      }
+    } catch (err) {
+      console.warn('[UploadCleanup] Failed to unlink file:', err.message);
+    }
+  }
+};
+
+/**
  * Fail closed in production when MongoDB connection is inactive to prevent silent data loss (Issue #196)
  */
 export const requireProductionDb = (res) => {
@@ -261,6 +276,7 @@ export const applyForJob = async (req, res) => {
     const clientResumeUrl = passedClientResumeUrl || bodyResumeUrl || '';
 
     if (!jobId || !jobTitle) {
+      await cleanupUploadedFile(req.file);
       return res.status(400).json({
         success: false,
         error: 'Job ID and Job Title are required.',
@@ -298,6 +314,7 @@ export const applyForJob = async (req, res) => {
       !resolvedEmail ||
       !resolvedMobile
     ) {
+      await cleanupUploadedFile(req.file);
       return res.status(400).json({
         success: false,
         error: 'First Name, Last Name, Email, and Mobile Number are required.',
@@ -305,6 +322,7 @@ export const applyForJob = async (req, res) => {
     }
 
     if (agreedToTerms !== 'true' && agreedToTerms !== true) {
+      await cleanupUploadedFile(req.file);
       return res.status(400).json({
         success: false,
         error:
@@ -324,7 +342,13 @@ export const applyForJob = async (req, res) => {
     // BOLA-2 Remediation: Only allow genuine uploaded files or candidate's verified existing resume
     let finalResumeUrl = '';
     if (uploadedFile) {
-      finalResumeUrl = `/uploads/resumes/${uploadedFile.filename}`;
+      const fileBuffer = await fs.promises.readFile(uploadedFile.path);
+      finalResumeUrl = await storageService.saveFile(
+        fileBuffer,
+        uploadedFile.filename,
+        uploadedFile.mimetype || 'application/octet-stream',
+        'resumes'
+      );
     } else if (candidate && candidate.resumeUrl) {
       if (clientResumeUrl && clientResumeUrl !== candidate.resumeUrl) {
         return res.status(400).json({
@@ -360,6 +384,7 @@ export const applyForJob = async (req, res) => {
 
     // Strictly require logged-in candidate authentication (No guest applies)
     if (!candidateId) {
+      await cleanupUploadedFile(uploadedFile);
       return res.status(401).json({
         success: false,
         authenticated: false,
@@ -368,7 +393,10 @@ export const applyForJob = async (req, res) => {
       });
     }
 
-    if (!requireProductionDb(res)) return;
+    if (!requireProductionDb(res)) {
+      await cleanupUploadedFile(uploadedFile);
+      return;
+    }
 
     // Cooldown policy: Active applications permanently block re-applying;
     // Closed ('Rejected', 'Withdrawn') applications block only during 90-day cooldown (Issue #208)
@@ -386,6 +414,7 @@ export const applyForJob = async (req, res) => {
       });
 
       if (existingApplication) {
+        await cleanupUploadedFile(uploadedFile);
         const isTerminal = ['Rejected', 'Withdrawn'].includes(existingApplication.status);
         const errorMsg = isTerminal
           ? `You have already applied for this position previously. Re-applications are open ${COOLDOWN_DAYS} days after closure.`
@@ -629,6 +658,11 @@ export const applyForJob = async (req, res) => {
           await JobApplication.findByIdAndUpdate(application._id, {
             emailNotificationStatus: 'Failed',
           }).catch(() => {});
+        })
+        .finally(() => {
+          if (storageService.driver === 's3') {
+            cleanupUploadedFile(uploadedFile);
+          }
         });
 
       return res.status(201).json({
@@ -656,6 +690,7 @@ export const applyForJob = async (req, res) => {
       });
 
       if (inMemExisting) {
+        await cleanupUploadedFile(uploadedFile);
         const isTerminal = ['Rejected', 'Withdrawn'].includes(inMemExisting.status);
         const errorMsg = isTerminal
           ? `You have already applied for this position previously. Re-applications are open ${COOLDOWN_DAYS} days after closure.`
@@ -740,7 +775,13 @@ export const applyForJob = async (req, res) => {
         uploadedFile
           ? { filename: uploadedFile.originalname, path: uploadedFile.path }
           : null
-      ).catch((err) => console.error('Dev email error:', err.message));
+      )
+        .catch((err) => console.error('Dev email error:', err.message))
+        .finally(() => {
+          if (storageService.driver === 's3') {
+            cleanupUploadedFile(uploadedFile);
+          }
+        });
 
       return res.status(201).json({
         success: true,
@@ -752,6 +793,7 @@ export const applyForJob = async (req, res) => {
       });
     }
   } catch (error) {
+    await cleanupUploadedFile(req.file);
     console.error('Job application error:', error);
     if (error.code === 11000) {
       return res.status(409).json({
@@ -774,8 +816,12 @@ export const parseResumeForAutoFill = async (req, res) => {
   try {
     let parsed;
     if (req.file) {
-      const fileBuffer = fs.readFileSync(req.file.path);
-      parsed = await aiService.parseResume(fileBuffer, req.file.originalname);
+      try {
+        const fileBuffer = await fs.promises.readFile(req.file.path);
+        parsed = await aiService.parseResume(fileBuffer, req.file.originalname);
+      } finally {
+        await cleanupUploadedFile(req.file);
+      }
     } else if (req.body && (req.body.resumeText || req.body.text)) {
       const text = req.body.resumeText || req.body.text;
       parsed = await aiService.parseResume(
@@ -1320,7 +1366,10 @@ export const getApplicationDossier = async (req, res) => {
 export const uploadAvatar = async (req, res) => {
   try {
     const candidateId = req.candidate?._id || req.candidate?.id;
-    if (!requireProductionDb(res)) return;
+    if (!requireProductionDb(res)) {
+      await cleanupUploadedFile(req.file);
+      return;
+    }
     if (!req.file) {
       return res.status(400).json({
         success: false,
@@ -1328,7 +1377,17 @@ export const uploadAvatar = async (req, res) => {
       });
     }
 
-    const avatarUrl = `/uploads/avatars/${req.file.filename}`;
+    let avatarUrl = `/uploads/avatars/${req.file.filename}`;
+    if (storageService.driver === 's3') {
+      const fileBuffer = await fs.promises.readFile(req.file.path);
+      avatarUrl = await storageService.saveFile(
+        fileBuffer,
+        req.file.filename,
+        req.file.mimetype || 'image/jpeg',
+        'avatars'
+      );
+      await cleanupUploadedFile(req.file);
+    }
 
     if (mongoose.connection.readyState === 1) {
       await Candidate.findByIdAndUpdate(candidateId, {
@@ -1349,6 +1408,7 @@ export const uploadAvatar = async (req, res) => {
       avatarType: 'upload',
     });
   } catch (error) {
+    await cleanupUploadedFile(req.file);
     console.error('Upload avatar error:', error);
     return res.status(500).json({
       success: false,
@@ -1559,8 +1619,8 @@ export const downloadResume = async (req, res) => {
     }
 
     if (storageService.driver === 's3') {
-      const remoteUrl = storageService.getFileUrl(safeFilename, 'resumes');
-      return res.redirect(remoteUrl);
+      const downloadUrl = await storageService.getSignedDownloadUrl(safeFilename, 'resumes', 300);
+      return res.redirect(downloadUrl);
     }
 
     const resumesDir = process.env.VERCEL
